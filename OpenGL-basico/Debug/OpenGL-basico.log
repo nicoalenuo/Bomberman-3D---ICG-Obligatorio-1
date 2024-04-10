@@ -1,2 +1,9 @@
 ﻿  main.cpp
-  OpenGL-basico.vcxproj -> C:\Users\nicoa\Desktop\ICG\OpenGL-basico2\Debug\OpenGL-basico.exe
+C:\Users\nicoa\Desktop\ICG\ICG-Obligatorio-1\main.cpp(118,55): warning C4305: 'argumento': truncamiento de 'double' a 'GLfloat'
+C:\Users\nicoa\Desktop\ICG\ICG-Obligatorio-1\main.cpp(118,40): warning C4305: 'argumento': truncamiento de 'double' a 'GLfloat'
+C:\Users\nicoa\Desktop\ICG\ICG-Obligatorio-1\main.cpp(118,25): warning C4305: 'argumento': truncamiento de 'double' a 'GLfloat'
+C:\Users\nicoa\Desktop\ICG\ICG-Obligatorio-1\main.cpp(169,28): warning C4305: '+=': truncamiento de 'double' a 'GLfloat'
+C:\Users\nicoa\Desktop\ICG\ICG-Obligatorio-1\main.cpp(171,28): warning C4305: '-=': truncamiento de 'double' a 'GLfloat'
+C:\Users\nicoa\Desktop\ICG\ICG-Obligatorio-1\main.cpp(173,28): warning C4305: '+=': truncamiento de 'double' a 'GLfloat'
+C:\Users\nicoa\Desktop\ICG\ICG-Obligatorio-1\main.cpp(175,28): warning C4305: '-=': truncamiento de 'double' a 'GLfloat'
+  OpenGL-basico.vcxproj -> C:\Users\nicoa\Desktop\ICG\ICG-Obligatorio-1\Debug\OpenGL-basico.exe
