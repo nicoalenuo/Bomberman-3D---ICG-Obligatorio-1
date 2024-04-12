@@ -5,3 +5,5 @@ Freeimage/
 OpenGL-basico/Debug/
 OpenGL-basico/Release/
 
+# Visual Studio cache/options directory
+.vs/
