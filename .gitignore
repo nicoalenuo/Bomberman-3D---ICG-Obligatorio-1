@@ -1,9 +1,5 @@
-Debug/
-Release/
-SDL2-2.0.12/
-Freeimage/
-OpenGL-basico/Debug/
-OpenGL-basico/Release/
-
-# Visual Studio cache/options directory
 .vs/
+*.log
+*.obj
+*.iobj
+*.user
