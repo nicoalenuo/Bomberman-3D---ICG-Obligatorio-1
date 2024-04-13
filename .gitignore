@@ -3,3 +3,5 @@
 *.obj
 *.iobj
 *.user
+OpenGL-basico/Debug/
+OpenGL-basico/Release/
