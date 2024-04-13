@@ -39,10 +39,10 @@
     <ClCompile Include="src\estructura.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\personajes.cpp">
+    <ClCompile Include="src\global.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\global.cpp">
+    <ClCompile Include="src\personaje.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -68,10 +68,10 @@
     <ClInclude Include="lib\estructura.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="lib\personajes.h">
+    <ClInclude Include="lib\global.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="lib\global.h">
+    <ClInclude Include="lib\personaje.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

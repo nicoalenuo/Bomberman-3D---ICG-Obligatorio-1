@@ -1,11 +1,19 @@
 #pragma once
 
-#include "personajes.h"
+#ifndef ENEMIGO_H
+#define ENEMIGO_H
 
-class enemigo : public personajes {
+#include "personaje.h"
+
+
+class enemigo : public personaje {
 private:
 	//en principio no tiene
 public:
 	enemigo(int x, int z);
+	void actualizar();
+	void dibujar();
 };
 
+
+#endif

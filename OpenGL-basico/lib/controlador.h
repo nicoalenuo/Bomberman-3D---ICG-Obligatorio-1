@@ -1,7 +1,13 @@
-#include "personajes.h"
+#pragma once
+
+#ifndef CONTROLADOR_H
+#define CONTROLADOR_H
+
+#include "personaje.h"
 #include "SDL.h"
 #include "SDL_opengl.h"
 #include <GL/glu.h>
+
 #include <stdio.h>
 #include <iostream>
 
@@ -11,18 +17,6 @@
 #include "objeto.h"
 #include "enemigo.h"
 #include "bomberman.h"
-
-#ifndef CONTROLADOR_H
-#define CONTROLADOR_H
-#endif
-
-using namespace std;
-
-class bomba;
-class estructura;
-class objeto;
-class enemigo;
-class bomberman;
 
 using namespace std;
 
@@ -36,12 +30,7 @@ private:
 	SDL_GLContext context;
 	SDL_Event evento;
 
-	bool moverArriba;
-	bool moverIzquierda;
-	bool moverDerecha;
-	bool moverAbajo;
-
-	int mouseX;
+	global* global;
 
 	bool pausa;
 	int nivel;
@@ -51,14 +40,13 @@ private:
 	bool fin;
 
 	objeto*** tablero = new objeto * *[largoTablero];
-	list<estructura*> estructuraDestructible = list<estructura*>(); //aqui van las estructuras destructibles
-	list<bomba*> bombas = list<bomba*>(); //lista de todas las bombas, ordenadas de tiempo de menor a mayor
+	list<estructura*> estructuraDestructible = list<estructura*>(); 
+	list<bomba*> bombas = list<bomba*>(); 
 	list<enemigo*> enemigos = list<enemigo*>();
-	bomberman* jugador; //en principio solo hay un jugador
+
+	objeto* jugador; 
 public:
 	static Controlador* getInstance();
-
-	void inicializar();
 
 	void manejarEventos();
 	void actualizar();
@@ -75,25 +63,14 @@ public:
 	bool getFin();
 	void setFin(bool fin);
 
-	bool getMoverArriba();
-	bool getMoverAbajo();
-	bool getMoverDerecha();
-	bool getMoverIzquierda();
-
-	void setMoverArriba(bool moverArriba);
-	void setMoverDerecha(bool moverDerecha);
-	void setMoverIzquierda(bool moverIzquierda);
-	void setMoverAbajo(bool moverAbajo);
-
-	int getMouseX();
-	void setMouseX(int mouseX);
-
 	void pausar(); //pausa o despausa
 	void aumentarNivel();
-	void crearBomba(int x, int z, personajes* pers);
-	void ponerBomba(int x, int z, personajes* pers);
+	void crearBomba(int x, int z, personaje* pers);
+	void ponerBomba(int x, int z, personaje* pers);
 
 	~Controlador();
 };
 
+
+#endif
 

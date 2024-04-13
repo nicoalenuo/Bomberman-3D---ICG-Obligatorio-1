@@ -1,10 +1,18 @@
 #pragma once
-#include "personajes.h"
 
-class bomberman : public personajes {
+#ifndef BOMBERMAN_H
+#define BOMBERMAN_H
+
+#include "personaje.h"
+
+class bomberman : public personaje {
 private:
-	//en principio no tiene
 public:
 	bomberman(int x, int z);
+	void actualizar();
+	void dibujar();
 };
+
+
+#endif
 

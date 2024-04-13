@@ -1,7 +1,6 @@
-#include "../lib/personajes.h"
-#include "../lib/controlador.h"
+#include "../lib/personaje.h"
 
-personajes::personajes() : objeto() {
+personaje::personaje() : objeto() {
 	this->vida = 1;
 	this->moverBomba = false;
 	this->largoBomba = 1;
@@ -10,71 +9,67 @@ personajes::personajes() : objeto() {
 	this->maxBomba = 1;
 }
 
-int personajes::getVida() {
+int personaje::getVida() {
 	return this->vida;
 }
 
-void personajes::setVida(int vid) {
+void personaje::setVida(int vid) {
 	this->vida = vid;
 }
 
-list<bomba*> personajes::getBomba() {
+list<bomba*> personaje::getBomba() {
 	return this->bombas;
 }
 
-void personajes::setBomba(list<bomba*> bomb) {
+void personaje::setBomba(list<bomba*> bomb) {
 	this->bombas = bomb;
 }
 
-int personajes::getMaxBomba() {
+int personaje::getMaxBomba() {
 	return this->maxBomba;
 }
 
-void personajes::setMaxBomba(int max) {
+void personaje::setMaxBomba(int max) {
 	this->maxBomba = max;
 }
 
-bool personajes::getMoverBomba() {
+bool personaje::getMoverBomba() {
 	return this->moverBomba;
 }
 
-void personajes::setMoverBomba(bool mov) {
+void personaje::setMoverBomba(bool mov) {
 	this->moverBomba = mov;
 }
 
-float personajes::getTiempoBomba() {
+float personaje::getTiempoBomba() {
 	return this->tiempoBomba;
 }
 
-void personajes::setTiempoBomba(float tiempo) {
+void personaje::setTiempoBomba(float tiempo) {
 	this->tiempoBomba = tiempo;
 }
 
-int personajes::getLargoBomba() {
+int personaje::getLargoBomba() {
 	return this->largoBomba;
 }
 
-void personajes::setLargoBomba(int largo) {
+void personaje::setLargoBomba(int largo) {
 	this->largoBomba = largo;
 }
 
-float personajes::getVelocidad() {
+float personaje::getVelocidad() {
 	return this->velocidad;
 }
 
-void personajes::setVelocidad(float vel) {
+void personaje::setVelocidad(float vel) {
 	this->velocidad = vel;
 }
 
-bool personajes::bombaDisponible() {
+bool personaje::bombaDisponible() {
 	return (this->maxBomba > 0 && (this->maxBomba == this->bombas.size()));
 }
 
 // el personaje manda una solicitud de que quiere poner una bomba, ya el controlador se encargará si puede o no
 // las coordenadas las va a sacar la clase de la parte grafica mediante el controlador? o un controlador (nuevo) para grafico? (como? A)
-void personajes::ponerBomba(int x, int z) {
-	if (bombaDisponible()) {
-		Controlador* controlador = Controlador::getInstance();
-		controlador->ponerBomba(x, z, this);
-	}
+void personaje::ponerBomba(int x, int z) {
 }

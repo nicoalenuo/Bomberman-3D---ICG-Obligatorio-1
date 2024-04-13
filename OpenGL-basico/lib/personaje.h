@@ -1,5 +1,8 @@
 #pragma once
 
+#ifndef PERSONAJE_H
+#define PERSONAJE_H
+
 #include <list>
 #include "objeto.h"
 
@@ -7,17 +10,17 @@ using namespace std;
 
 class bomba;
 
-class personajes : public objeto { //abstracta
+class personaje : public objeto { 
 protected:
 	int vida;
-	list<bomba*> bombas = list<bomba*>(); //se ordenan por tiempo de menor a mayor
+	list<bomba*> bombas = list<bomba*>(); 
 	int maxBomba;
 	bool moverBomba;
 	float tiempoBomba;
 	int largoBomba;
 	float velocidad;
 public:
-	personajes();
+	personaje();
 	virtual int getVida();
 	virtual void setVida(int vid);
 	virtual list<bomba*> getBomba();
@@ -34,5 +37,9 @@ public:
 	virtual void setVelocidad(float vel);
 	virtual bool bombaDisponible();
 	virtual void ponerBomba(int x, int z);
+	virtual void actualizar() = 0;
+	virtual void dibujar() = 0;
 };
+
+#endif
 

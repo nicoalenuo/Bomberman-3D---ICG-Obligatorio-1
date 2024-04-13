@@ -1,9 +1,13 @@
 #pragma once
+
+#ifndef BONIFICADOR_H
+#define BONIFICADOR_H
+
+#include "objeto.h"
 #include <string>
 
 using namespace std;
 
-#include "objeto.h"
 
 class bonificador : public objeto {
 private:
@@ -12,5 +16,10 @@ public:
 	bonificador(int x, int z);
 	virtual string getNombre();
 	virtual void setNombre(string nom);
+	void actualizar();
+	void dibujar();
 };
+
+
+#endif
 

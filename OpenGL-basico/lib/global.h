@@ -1,15 +1,49 @@
 #pragma once
 
-using namespace std;
+#ifndef GLOBAL_H
+#define GLOBAL_H
 
-#include "bomba.h"
 #include <list>
 
-class global { //abstracta
+#include "SDL.h"
+#include "SDL_opengl.h"
+#include <GL/glu.h>
+
+
+#include <stdio.h>
+#include <iostream>
+
+using namespace std;
+
+
+class global { 
 private:
-	//no debe tener nada
+	static global* instancia;
+	global();
+
+	bool moverArriba;
+	bool moverIzquierda;
+	bool moverDerecha;
+	bool moverAbajo;
+
+	int mouseX;
+
 public:
-	//aqui van funciones que sean utilizadas por varias clases pero que no dependan del controlador
-	// TODA FUNCION DEBE IR CON STATIC
-	static void insertarBomba(list<bomba*> listBomb, bomba* bomb);
+	static global* getInstance();
+
+	bool getMoverArriba();
+	bool getMoverAbajo();
+	bool getMoverDerecha();
+	bool getMoverIzquierda();
+
+	void setMoverArriba(bool moverArriba);
+	void setMoverDerecha(bool moverDerecha);
+	void setMoverIzquierda(bool moverIzquierda);
+	void setMoverAbajo(bool moverAbajo);
+
+	int getMouseX();
+	void setMouseX(int mouseX);
 };
+
+
+#endif

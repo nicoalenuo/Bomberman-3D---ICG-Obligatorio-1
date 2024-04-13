@@ -22,3 +22,11 @@ bonificador* estructura::getPowerUp() {
 void estructura::setPowerUp(bonificador* power) {
 	this->powerUp = power;
 }
+
+void estructura::actualizar() {
+
+}
+
+void estructura::dibujar() {
+
+}

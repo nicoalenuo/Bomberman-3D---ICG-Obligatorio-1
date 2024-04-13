@@ -13,3 +13,11 @@ string bonificador::getNombre() {
 void bonificador::setNombre(string nom) {
 	this->nombre = nom;
 }
+
+void bonificador::actualizar() {
+
+}
+
+void bonificador::dibujar() {
+
+}

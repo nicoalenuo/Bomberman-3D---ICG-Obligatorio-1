@@ -1,9 +1,10 @@
 #pragma once
-#include "objeto.h"
 
 #ifndef BOMBA_H
 #define BOMBA_H
-#endif
+
+#include "objeto.h"
+
 
 class personajes;
 
@@ -11,7 +12,7 @@ class bomba : public objeto {
 private:
 	float tiempoBomba;
 	int largoBomba;
-	personajes* jugador; //tiene una referencia del mamaguevazo que la puso
+	personajes* jugador;
 public:
 	bomba(int x, int z, float tiempo, int largo);
 	float getTiempoBomba();
@@ -20,5 +21,10 @@ public:
 	void setLargoBomba(int largo);
 	personajes* getJugador();
 	void setJugador(personajes* jug);
+	void actualizar();
+	void dibujar();
 };
+
+
+#endif
 

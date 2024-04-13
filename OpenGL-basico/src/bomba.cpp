@@ -31,3 +31,11 @@ personajes* bomba::getJugador() {
 void bomba::setJugador(personajes* jug) {
 	this->jugador = jug;
 }
+
+void bomba::actualizar() {
+
+}
+
+void bomba::dibujar() {
+
+}

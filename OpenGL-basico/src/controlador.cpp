@@ -3,22 +3,39 @@
 Controlador* Controlador::instancia = nullptr; 
 
 Controlador::Controlador() {
-	this->pausa = false;
-	this->nivel = 1;
+    this->global = global::getInstance();
+
+    this->pausa = false;
+    this->nivel = 1;
     this->fin = false;
 
-    this->moverArriba = false;
-    this->moverAbajo = false;
-    this->moverDerecha = false;
-    this->moverIzquierda = false;
-    this->mouseX = 0;
+    this->jugador = new bomberman(20, 20);
 
-	for (int i = 0; i < this->largoTablero; ++i) {
-		this->tablero[i] = new objeto * [anchoTablero];
-		for (int j = 0; j < this->anchoTablero; j++) {
-			this->tablero[i][j] = nullptr; 
-		}
-	}
+    for (int i = 0; i < this->largoTablero; ++i) {
+        this->tablero[i] = new objeto * [anchoTablero];
+        for (int j = 0; j < this->anchoTablero; j++) {
+            this->tablero[i][j] = nullptr;
+        }
+    }
+
+    if (SDL_Init(SDL_INIT_VIDEO) < 0) {
+        cerr << "No se pudo iniciar SDL: " << SDL_GetError() << endl;
+        exit(1);
+    }
+
+    this->window = SDL_CreateWindow("Bomberman-ICG",
+        SDL_WINDOWPOS_CENTERED,
+        SDL_WINDOWPOS_CENTERED,
+        1280, 720, SDL_WINDOW_OPENGL | SDL_WINDOW_SHOWN);
+    this->context = SDL_GL_CreateContext(window);
+
+    glMatrixMode(GL_PROJECTION);
+
+    glClearColor(135.0f / 255.0f, 206.0f / 255.0f, 235.0f / 255.0f, 1.0f);
+
+    gluPerspective(45, 1280 / 720.f, 1, 200);
+    glEnable(GL_DEPTH_TEST);
+    glMatrixMode(GL_MODELVIEW);
 }
 
 Controlador::~Controlador() {};
@@ -28,28 +45,6 @@ Controlador* Controlador::getInstance() {
 		instancia = new Controlador();
 	}
 	return instancia;
-}
-
-
-void Controlador::inicializar() {
-	if (SDL_Init(SDL_INIT_VIDEO) < 0) {
-		cerr << "No se pudo iniciar SDL: " << SDL_GetError() << endl;
-		exit(1);
-	}
-
-	window = SDL_CreateWindow("Bomberman-ICG",
-		SDL_WINDOWPOS_CENTERED,
-		SDL_WINDOWPOS_CENTERED,
-		1280, 720, SDL_WINDOW_OPENGL | SDL_WINDOW_SHOWN);
-	context = SDL_GL_CreateContext(window);
-
-	glMatrixMode(GL_PROJECTION);
-
-	glClearColor(135.0f / 255.0f, 206.0f / 255.0f, 235.0f / 255.0f, 1.0f);
-
-	gluPerspective(45, 1280 / 720.f, 1, 200);
-	glEnable(GL_DEPTH_TEST);
-	glMatrixMode(GL_MODELVIEW);
 }
 
 void Controlador::manejarEventos() {
@@ -64,47 +59,62 @@ void Controlador::manejarEventos() {
                 fin = true;
                 break;
             case SDLK_UP:
-                moverArriba = true;
+                (*global).setMoverArriba(true);
                 break;
             case SDLK_RIGHT:
-                moverDerecha = true;
+                (*global).setMoverDerecha(true);
                 break;
             case SDLK_DOWN:
-                moverAbajo = true;
+                (*global).setMoverAbajo(true);
                 break;
             case SDLK_LEFT:
-                moverIzquierda = true;
+                (*global).setMoverIzquierda(true);
                 break;
             }
             break;
         case SDL_KEYUP:
             switch (evento.key.keysym.sym) {
             case SDLK_UP:
-                moverArriba = false;
+                (*global).setMoverArriba(false);
                 break;
             case SDLK_RIGHT:
-                moverDerecha = false;
+                (*global).setMoverDerecha(false);
                 break;
             case SDLK_DOWN:
-                moverAbajo = false;
+                (*global).setMoverAbajo(false);
                 break;
             case SDLK_LEFT:
-                moverIzquierda = false;
+                (*global).setMoverIzquierda(false);
                 break;
             }
             break;
         case SDL_MOUSEMOTION:
-            mouseX = evento.motion.x % 360;
+            (*global).setMouseX(evento.motion.x % 360);
             break;
         }
     }
 }
 
 void Controlador::actualizar() {
-	SDL_GL_SwapWindow(window);
+    (*jugador).actualizar();
 }
 
 void Controlador::dibujar() {
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+    glLoadIdentity();
+
+    (*jugador).dibujar();
+
+
+    glBegin(GL_QUADS);
+    glColor3f(GLfloat(227.0 / 255.0), GLfloat(186.0 / 255.0), GLfloat(143.0 / 255.0));
+    glVertex3f(20., 0., 20.);
+    glVertex3f(20., 0., -20.);
+    glVertex3f(-20., 0., -20.);
+    glVertex3f(-20., 0., 20.);
+    glEnd();
+
+    SDL_GL_SwapWindow(window);
 
 }
 
@@ -115,7 +125,7 @@ void Controlador::limpiar() {
 }
 
 bool Controlador::getPausa() {
-	return this->getPausa();
+	return this->pausa;
 }
 
 void Controlador::setPausa(bool pau) {
@@ -146,56 +156,13 @@ void Controlador::setFin(bool fin) {
     this->fin = fin;
 }
 
-bool Controlador::getMoverArriba() {
-    return this->moverArriba;
-}
-
-bool Controlador::getMoverAbajo() {
-    return this->moverAbajo;
-}
-
-bool Controlador::getMoverDerecha() {
-    return this->moverDerecha;
-}
-
-bool Controlador::getMoverIzquierda() {
-    return this->moverIzquierda;
-}
-
-void Controlador::setMoverArriba(bool moverArriba) {
-    this->moverArriba = moverArriba;
-}
-
-void Controlador::setMoverDerecha(bool moverDerecha) {
-    this->moverIzquierda = moverDerecha;
-}
-
-void Controlador::setMoverIzquierda(bool moverIzquierda) {
-    this->moverIzquierda = moverIzquierda;
-}
-
-void Controlador::setMoverAbajo(bool moverAbajo) {
-    this->moverAbajo = moverAbajo;
-}
-
-int Controlador::getMouseX() {
-    return this->mouseX;
-}
-
-void Controlador::setMouseX(int mouseX) {
-    this->mouseX = mouseX;
-}
-
-
-
-
 //crea la instancia de bomba, la asigna al arreglo de bombas en controlador, al del personaje que lo colocó y asigna el dueño a la bomba
-void Controlador::crearBomba(int x, int z, personajes* pers) {
+void Controlador::crearBomba(int x, int z, personaje* pers) {
 }
 
 //ponerBomba lo que hace es obtener gracias a la matriz de objetos, si es valido poner una bomba en la posicion x, z. Y en caso de serlo crea la bomba
 // si no, no hace nada
-void Controlador::ponerBomba(int x, int z, personajes* pers) {
+void Controlador::ponerBomba(int x, int z, personaje* pers) {
 	if (pers->bombaDisponible() && this->tablero[x][z] == nullptr) {
 		crearBomba(x, z, pers);
 	}

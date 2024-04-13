@@ -14,6 +14,7 @@
     <ProjectGuid>{253970C5-4794-4D0E-AC65-24BFFE03C8A7}</ProjectGuid>
     <RootNamespace>OpenGLbasico</RootNamespace>
     <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
+    <ProjectName>Bomberman</ProjectName>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
@@ -93,7 +94,7 @@
     <ClCompile Include="src\estructura.cpp" />
     <ClCompile Include="src\global.cpp" />
     <ClCompile Include="src\objeto.cpp" />
-    <ClCompile Include="src\personajes.cpp" />
+    <ClCompile Include="src\personaje.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="lib\bomba.h" />
@@ -104,7 +105,7 @@
     <ClInclude Include="lib\estructura.h" />
     <ClInclude Include="lib\global.h" />
     <ClInclude Include="lib\objeto.h" />
-    <ClInclude Include="lib\personajes.h" />
+    <ClInclude Include="lib\personaje.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
