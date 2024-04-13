@@ -3,7 +3,7 @@
 #include <iostream>
 #include "FreeImage.h"
 #include <set>
-#include "OpenGL-basico/headers/bloque-destructible.cpp"
+#include "OpenGL-basico/src/bloque-destructible.cpp"
 #include "OpenGL-basico/lib/controlador.h"
 
 using namespace std;
