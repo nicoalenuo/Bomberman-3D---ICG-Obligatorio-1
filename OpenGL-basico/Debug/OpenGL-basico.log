@@ -1,9 +1,20 @@
 ﻿  main.cpp
-C:\Users\nicoa\Desktop\ICG\ICG-Obligatorio-1\main.cpp(118,55): warning C4305: 'argumento': truncamiento de 'double' a 'GLfloat'
-C:\Users\nicoa\Desktop\ICG\ICG-Obligatorio-1\main.cpp(118,40): warning C4305: 'argumento': truncamiento de 'double' a 'GLfloat'
-C:\Users\nicoa\Desktop\ICG\ICG-Obligatorio-1\main.cpp(118,25): warning C4305: 'argumento': truncamiento de 'double' a 'GLfloat'
-C:\Users\nicoa\Desktop\ICG\ICG-Obligatorio-1\main.cpp(169,28): warning C4305: '+=': truncamiento de 'double' a 'GLfloat'
-C:\Users\nicoa\Desktop\ICG\ICG-Obligatorio-1\main.cpp(171,28): warning C4305: '-=': truncamiento de 'double' a 'GLfloat'
-C:\Users\nicoa\Desktop\ICG\ICG-Obligatorio-1\main.cpp(173,28): warning C4305: '+=': truncamiento de 'double' a 'GLfloat'
-C:\Users\nicoa\Desktop\ICG\ICG-Obligatorio-1\main.cpp(175,28): warning C4305: '-=': truncamiento de 'double' a 'GLfloat'
+  bomba.cpp
+  bomberman.cpp
+C:\Users\nicoa\Desktop\ICG\ICG-Obligatorio-1\main.cpp(90,55): warning C4305: 'argumento': truncamiento de 'double' a 'GLfloat'
+C:\Users\nicoa\Desktop\ICG\ICG-Obligatorio-1\main.cpp(90,40): warning C4305: 'argumento': truncamiento de 'double' a 'GLfloat'
+C:\Users\nicoa\Desktop\ICG\ICG-Obligatorio-1\main.cpp(90,25): warning C4305: 'argumento': truncamiento de 'double' a 'GLfloat'
+C:\Users\nicoa\Desktop\ICG\ICG-Obligatorio-1\main.cpp(141,28): warning C4305: '+=': truncamiento de 'double' a 'GLfloat'
+C:\Users\nicoa\Desktop\ICG\ICG-Obligatorio-1\main.cpp(143,28): warning C4305: '-=': truncamiento de 'double' a 'GLfloat'
+C:\Users\nicoa\Desktop\ICG\ICG-Obligatorio-1\main.cpp(145,28): warning C4305: '+=': truncamiento de 'double' a 'GLfloat'
+C:\Users\nicoa\Desktop\ICG\ICG-Obligatorio-1\main.cpp(147,28): warning C4305: '-=': truncamiento de 'double' a 'GLfloat'
+  bonificador.cpp
+  controlador.cpp
+  enemigo.cpp
+  estructura.cpp
+  global.cpp
+  objeto.cpp
+  personajes.cpp
+  Generando código...
+C:\Users\nicoa\Desktop\ICG\ICG-Obligatorio-1\OpenGL-basico\src\controlador.cpp(119,1): warning C4717: 'Controlador::getPausa': recursiva para todas las rutas de acceso de control; la función provocará el desbordamiento de la pila en tiempo de ejecución
   OpenGL-basico.vcxproj -> C:\Users\nicoa\Desktop\ICG\ICG-Obligatorio-1\Debug\OpenGL-basico.exe

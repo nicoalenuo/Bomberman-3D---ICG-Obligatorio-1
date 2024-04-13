@@ -2,11 +2,9 @@
 #include "SDL_opengl.h"
 #include <iostream>
 #include "FreeImage.h"
-#include <stdio.h>
-#include <conio.h>
-#include <GL/glu.h>
 #include <set>
-#include "OpenGL-basico/bloque-destructible.cpp"
+#include "OpenGL-basico/headers/bloque-destructible.cpp"
+#include "OpenGL-basico/lib/controlador.h"
 
 using namespace std;
 
@@ -52,30 +50,7 @@ void construir_bloque(bloque_destructible bloque) {
 }
 
 int main(int argc, char* argv[]) {
-    if (SDL_Init(SDL_INIT_VIDEO) < 0) {
-        cerr << "No se pudo iniciar SDL: " << SDL_GetError() << endl;
-        exit(1);
-    }
-
-    SDL_Window* win = SDL_CreateWindow("ICG-UdelaR",
-        SDL_WINDOWPOS_CENTERED,
-        SDL_WINDOWPOS_CENTERED,
-        1280, 720, SDL_WINDOW_OPENGL | SDL_WINDOW_SHOWN);
-    SDL_GLContext context = SDL_GL_CreateContext(win);
-
-    glMatrixMode(GL_PROJECTION);
-
-    glClearColor(135.0f / 255.0f, 206.0f / 255.0f, 235.0f / 255.0f, 1.0f);
-
-    gluPerspective(45, 1280 / 720.f, 1, 200);
-    glEnable(GL_DEPTH_TEST);
-    glMatrixMode(GL_MODELVIEW);
-
-    bool fin = false;
-
-    SDL_Event evento;
-
-    int mouseX = 0;
+    Controlador* controlador = Controlador::getInstance();
 
     GLfloat posX = 20.0;
     GLfloat posZ = 20.0;
@@ -83,14 +58,9 @@ int main(int argc, char* argv[]) {
     GLfloat posXreal = 20.0;
     GLfloat posZreal = 20.0;
 
-    bool moverArriba = false;
-    bool moverAbajo = false;
-    bool moverIzquierda = false;
-    bool moverDerecha = false;
-
     float radius = 20.0f;
 
-    float angleRadians = mouseX * (3.14159f / 180.0f); 
+    float angleRadians = (*controlador).getMouseX() * (3.14159f / 180.0f); 
 
     float camX = posXreal + radius * sin(angleRadians);
     float camZ = posZreal + radius * cos(angleRadians);
@@ -103,8 +73,10 @@ int main(int argc, char* argv[]) {
     bloques.insert(new bloque_destructible(7, 14));
     bloques.insert(new bloque_destructible(-14, -2));
 
+    (*controlador).inicializar();
+
     do {
-        angleRadians = mouseX * (3.14159f / 180.0f);
+        angleRadians = (*controlador).getMouseX() * (3.14159f / 180.0f);
         camX = posXreal + radius * sin(angleRadians);
         camZ = posZreal + radius * cos(angleRadians);
 
@@ -122,46 +94,46 @@ int main(int argc, char* argv[]) {
         glVertex3f(-20., 0., 20.);
         glEnd();
 
-        if (moverArriba && posX == posXreal && posZ == posZreal) {
-            if (mouseX >= 45 && mouseX < 135) 
+        if ((*controlador).getMoverArriba() && posX == posXreal && posZ == posZreal) {
+            if ((*controlador).getMouseX() >= 45 && (*controlador).getMouseX() < 135) 
                 posX -= lado;;
-            if (mouseX >= 135 && mouseX < 225) 
+            if ((*controlador).getMouseX() >= 135 && (*controlador).getMouseX() < 225) 
                 posZ += lado;;
-            if (mouseX >= 225 && mouseX < 315) 
+            if ((*controlador).getMouseX() >= 225 && (*controlador).getMouseX() < 315) 
                 posX += lado;;
-            if (mouseX  >=315 || mouseX < 45) 
+            if ((*controlador).getMouseX()  >=315 || (*controlador).getMouseX() < 45) 
                 posZ -= lado;;
         }
-        if (moverAbajo && posX == posXreal && posZ == posZreal) {
-            if (mouseX >= 45 && mouseX < 135) 
+        if ((*controlador).getMoverAbajo() && posX == posXreal && posZ == posZreal) {
+            if ((*controlador).getMouseX() >= 45 && (*controlador).getMouseX() < 135) 
                 posX += lado;;
-            if (mouseX >= 135 && mouseX < 225)
+            if ((*controlador).getMouseX() >= 135 && (*controlador).getMouseX() < 225)
                 posZ -= lado;;
-            if (mouseX >= 225 && mouseX < 315)
+            if ((*controlador).getMouseX() >= 225 && (*controlador).getMouseX() < 315)
                 posX -= lado;;
-            if (mouseX >= 315 || mouseX < 45)
+            if ((*controlador).getMouseX() >= 315 || (*controlador).getMouseX() < 45)
                 posZ += lado;;
-        }
-
-        if (moverDerecha && posX == posXreal && posZ == posZreal) {
-            if (mouseX >= 45 && mouseX < 135) 
-                posZ -= lado;;
-            if (mouseX >= 135 && mouseX < 225) 
-                posX -= lado;;
-            if (mouseX >= 225 && mouseX < 315) 
-                posZ += lado;;
-            if (mouseX >= 315 || mouseX < 45)
-                posX += lado;;
         }
 
-        if (moverIzquierda && posX == posXreal && posZ == posZreal) {
-            if (mouseX >= 45 && mouseX < 135) 
-                posZ += lado;;
-            if (mouseX >= 135 && mouseX < 225) 
-                posX += lado;;
-            if (mouseX >= 225 && mouseX < 315) 
+        if ((*controlador).getMoverDerecha() && posX == posXreal && posZ == posZreal) {
+            if ((*controlador).getMouseX() >= 45 && (*controlador).getMouseX() < 135) 
                 posZ -= lado;;
-            if (mouseX >= 315 || mouseX < 45)
+            if ((*controlador).getMouseX() >= 135 && (*controlador).getMouseX() < 225) 
+                posX -= lado;;
+            if ((*controlador).getMouseX() >= 225 && (*controlador).getMouseX() < 315) 
+                posZ += lado;;
+            if ((*controlador).getMouseX() >= 315 || (*controlador).getMouseX() < 45)
+                posX += lado;;
+        }
+
+        if ((*controlador).getMoverIzquierda() && posX == posXreal && posZ == posZreal) {
+            if ((*controlador).getMouseX() >= 45 && (*controlador).getMouseX() < 135) 
+                posZ += lado;;
+            if ((*controlador).getMouseX() >= 135 && (*controlador).getMouseX() < 225) 
+                posX += lado;;
+            if ((*controlador).getMouseX() >= 225 && (*controlador).getMouseX() < 315) 
+                posZ -= lado;;
+            if ((*controlador).getMouseX() >= 315 || (*controlador).getMouseX() < 45)
                 posX -= lado;;
         }
 
@@ -228,63 +200,12 @@ int main(int argc, char* argv[]) {
         glVertex3f(lado / 2 + posXreal, 0, lado / 2 + posZreal);
         glVertex3f(lado / 2 + posXreal, lado, lado / 2 + posZreal);
         glVertex3f(lado / 2 + posXreal, lado, -lado / 2 + posZreal);
-
         glEnd(); 
 
+        (*controlador).manejarEventos();
+        (*controlador).actualizar();
+    } while (!(*controlador).getFin());
 
-
-        //MANEJO DE EVENTOS
-        while (SDL_PollEvent(&evento)) {
-            switch (evento.type) {
-            case SDL_QUIT:
-                fin = true;
-                break;
-            case SDL_KEYDOWN:
-                switch (evento.key.keysym.sym) {
-                    case SDLK_ESCAPE:
-                        fin = true;
-                        break;
-                    case SDLK_UP:
-                        moverArriba = true;
-                        break;
-                    case SDLK_RIGHT:
-                        moverDerecha = true;
-                        break;
-                    case SDLK_DOWN:
-                        moverAbajo = true;
-                        break;
-                    case SDLK_LEFT:
-                        moverIzquierda = true;
-                        break;
-                }
-                break;
-            case SDL_KEYUP:
-                switch (evento.key.keysym.sym) {
-                case SDLK_UP:
-                    moverArriba = false;
-                    break;
-                case SDLK_RIGHT:
-                    moverDerecha = false;
-                    break;
-                case SDLK_DOWN:
-                    moverAbajo = false;
-                    break;
-                case SDLK_LEFT:
-                    moverIzquierda = false;
-                    break;
-                }
-                break;
-            case SDL_MOUSEMOTION:
-                mouseX = evento.motion.x % 360;
-                break;
-            }
-        }
-        SDL_GL_SwapWindow(win);
-    } while (!fin);
-
-    // LIMPIEZA
-    SDL_GL_DeleteContext(context);
-    SDL_DestroyWindow(win);
-    SDL_Quit();
+    (*controlador).limpiar();
     return 0;
 }
