@@ -6,7 +6,7 @@
 *.pdb
 *.ipdb
 *.ilk
-OpenGL-basico/Debug/
-OpenGL-basico/Release/
+Bomberman/Debug/
+Bomberman/Release/
 Release/*.exe
 Debug/*.exe

@@ -4,9 +4,9 @@ bomberman::bomberman(GLfloat x, GLfloat z): personaje(x,z) {
     this->vida = 1;
     this->moverBomba = false;
     this->largoBomba = 1;
-    this->velocidad = 1; //Para poner algo pongo 1, falta probar y ajustar mediante la parte grafica
     this->tiempoBomba = 1; //Para poner algo pongo 1, falta probar y ajustar mediante la parte grafica
     this->maxBomba = 1;
+    velocidad = GLfloat(0.3);
 }
 
 void bomberman::actualizar() {
@@ -14,45 +14,45 @@ void bomberman::actualizar() {
 
     if ((*global).getMoverArriba()) {
         if (mouseX >= 45 && mouseX < 135)
-            coord_x -= 0.3;
+            coord_x -= velocidad;
         if (mouseX >= 135 && mouseX < 225)
-            coord_z += 0.3;
+            coord_z += velocidad;
         if (mouseX >= 225 && mouseX < 315)
-            coord_x += 0.3;
+            coord_x += velocidad;
         if (mouseX >= 315 || mouseX < 45)
-            coord_z -= 0.3;
+            coord_z -= velocidad;
     }
     if ((*global).getMoverAbajo()) {
         if (mouseX >= 45 && mouseX < 135)
-            coord_x += 0.3;
+            coord_x += velocidad;
         if (mouseX >= 135 && mouseX < 225)
-            coord_z -= 0.3;
+            coord_z -= velocidad;
         if (mouseX >= 225 && mouseX < 315)
-            coord_x -= 0.3;
+            coord_x -= velocidad;
         if (mouseX >= 315 || mouseX < 45)
-            coord_z += 0.3;
+            coord_z += velocidad;
     }
 
     if ((*global).getMoverDerecha()) {
         if (mouseX >= 45 && mouseX < 135)
-            coord_z -= 0.3;
+            coord_z -= velocidad;
         if (mouseX >= 135 && mouseX < 225)
-            coord_x -= 0.3;
+            coord_x -= velocidad;
         if (mouseX >= 225 && mouseX < 315)
-            coord_z += 0.3;
+            coord_z += velocidad;
         if (mouseX >= 315 || mouseX < 45)
-            coord_x += 0.3;
+            coord_x += velocidad;
     }
 
     if ((*global).getMoverIzquierda()) {
         if (mouseX >= 45 && mouseX < 135)
-            coord_z += 0.3;
+            coord_z += velocidad;
         if (mouseX >= 135 && mouseX < 225)
-            coord_x += 0.3;
+            coord_x += velocidad;
         if (mouseX >= 225 && mouseX < 315)
-            coord_z -= 0.3;
+            coord_z -= velocidad;
         if (mouseX >= 315 || mouseX < 45)
-            coord_x -= 0.3;
+            coord_x -= velocidad;
     }
 }
 

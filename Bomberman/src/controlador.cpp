@@ -23,7 +23,7 @@ Controlador::Controlador() {
         exit(1);
     }
 
-    this->window = SDL_CreateWindow("Bomberman-ICG",
+    this->window = SDL_CreateWindow("Bomberman 3D",
         SDL_WINDOWPOS_CENTERED,
         SDL_WINDOWPOS_CENTERED,
         1280, 720, SDL_WINDOW_OPENGL | SDL_WINDOW_SHOWN);
@@ -156,7 +156,7 @@ void Controlador::setFin(bool fin) {
     this->fin = fin;
 }
 
-//crea la instancia de bomba, la asigna al arreglo de bombas en controlador, al del personaje que lo colocó y asigna el dueño a la bomba
+//crea la instancia de bomba, la asigna al arreglo de bombas en controlador, al del personaje que lo colocï¿½ y asigna el dueï¿½o a la bomba
 void Controlador::crearBomba(int x, int z, bomberman* pers) {
 }
 

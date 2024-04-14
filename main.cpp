@@ -2,7 +2,7 @@
 #include "SDL_opengl.h"
 #include <iostream>
 #include "FreeImage.h"
-#include "OpenGL-basico/lib/controlador.h"
+#include "Bomberman/lib/controlador.h"
 
 using namespace std;
 

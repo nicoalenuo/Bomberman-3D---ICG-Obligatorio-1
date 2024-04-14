@@ -13,7 +13,7 @@ private:
 	bool moverBomba;
 	float tiempoBomba;
 	int largoBomba;
-	float velocidad;
+	GLfloat velocidad;
 public:
 	bomberman(GLfloat x, GLfloat z);
 
