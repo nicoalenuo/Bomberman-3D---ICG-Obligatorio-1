@@ -9,11 +9,10 @@ using namespace std;
 int main(int argc, char* argv[]) {
     Controlador* controlador = Controlador::getInstance();
 
-    const int FPS = 30;
-    const int frameDelay = 1000 / FPS;
+    const int frameDelay = 33; //33 milisegundos entre cada frame
 
     Uint32 frameStart;
-    int frameTime;
+    Uint32 frameTime;
 
     do {
         frameStart = SDL_GetTicks();

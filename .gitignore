@@ -3,5 +3,10 @@
 *.obj
 *.iobj
 *.user
+*.pdb
+*.ipdb
+*.ilk
 OpenGL-basico/Debug/
 OpenGL-basico/Release/
+Release/*.exe
+Debug/*.exe

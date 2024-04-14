@@ -5,14 +5,13 @@
 
 #include "global.h"
 
-class Controlador;
-
 class objeto { //abstracta
 protected:
 	global* global;
-	float coord_x;
-	float coord_z;
+	GLfloat coord_x;
+	GLfloat coord_z;
 public:
+	objeto(GLfloat x, GLfloat z): coord_x(x), coord_z(z), global((*global).getInstance()){}
 	virtual float getCoordX();
 	virtual float getCoordZ();
 	virtual void setCoordX(float x);

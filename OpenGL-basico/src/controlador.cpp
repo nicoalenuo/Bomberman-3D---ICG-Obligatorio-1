@@ -157,13 +157,13 @@ void Controlador::setFin(bool fin) {
 }
 
 //crea la instancia de bomba, la asigna al arreglo de bombas en controlador, al del personaje que lo colocó y asigna el dueño a la bomba
-void Controlador::crearBomba(int x, int z, personaje* pers) {
+void Controlador::crearBomba(int x, int z, bomberman* pers) {
 }
 
 //ponerBomba lo que hace es obtener gracias a la matriz de objetos, si es valido poner una bomba en la posicion x, z. Y en caso de serlo crea la bomba
 // si no, no hace nada
-void Controlador::ponerBomba(int x, int z, personaje* pers) {
-	if (pers->bombaDisponible() && this->tablero[x][z] == nullptr) {
-		crearBomba(x, z, pers);
+void Controlador::ponerBomba(int x, int z, bomberman* bomberman) {
+	if (bomberman->bombaDisponible() && this->tablero[x][z] == nullptr) {
+		crearBomba(x, z, bomberman);
 	}
 }

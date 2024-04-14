@@ -8,9 +8,9 @@
 
 class enemigo : public personaje {
 private:
-	//en principio no tiene
+
 public:
-	enemigo(int x, int z);
+	enemigo(GLfloat x, GLfloat z);
 	void actualizar();
 	void dibujar();
 };

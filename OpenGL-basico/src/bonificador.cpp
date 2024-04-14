@@ -1,8 +1,6 @@
 #include "../lib/bonificador.h"
 
-bonificador::bonificador(int x, int z) : objeto() {
-	this->coord_x = (float)x;
-	this->coord_z = (float)z;
+bonificador::bonificador(GLfloat x, GLfloat z) : objeto(x,z) {
 	this->nombre = "bonificador XD";
 }
 

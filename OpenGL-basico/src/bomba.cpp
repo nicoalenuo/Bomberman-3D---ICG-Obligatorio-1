@@ -1,8 +1,6 @@
 #include "../lib/bomba.h"
 
-bomba::bomba(int x, int z, float tiempo, int largo) : objeto() {
-	this->coord_x = (float)x;
-	this->coord_z = (float)z;
+bomba::bomba(GLfloat x, GLfloat z, float tiempo, int largo) : objeto(x,z) {
 	this->tiempoBomba = tiempo;
 	this->largoBomba = largo;
 	this->jugador = nullptr;

@@ -65,8 +65,8 @@ public:
 
 	void pausar(); //pausa o despausa
 	void aumentarNivel();
-	void crearBomba(int x, int z, personaje* pers);
-	void ponerBomba(int x, int z, personaje* pers);
+	void crearBomba(int x, int z, bomberman* pers);
+	void ponerBomba(int x, int z, bomberman* pers);
 
 	~Controlador();
 };
