@@ -36,7 +36,6 @@ public:
 	virtual float getVelocidad();
 	virtual void setVelocidad(float vel);
 	virtual bool bombaDisponible();
-	virtual void ponerBomba(int x, int z);
 	virtual void actualizar() = 0;
 	virtual void dibujar() = 0;
 };

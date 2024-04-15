@@ -24,11 +24,11 @@ void bomba::setLargoBomba(int largo) {
 	this->largoBomba = largo;
 }
 
-personajes* bomba::getJugador() {
+personaje* bomba::getJugador() {
 	return this->jugador;
 }
 
-void bomba::setJugador(personajes* jug) {
+void bomba::setJugador(personaje* jug) {
 	this->jugador = jug;
 }
 

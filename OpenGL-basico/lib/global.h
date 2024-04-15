@@ -15,9 +15,10 @@
 
 using namespace std;
 
+class bomba;
 
 class global { 
-private:
+public:
 	static global* instancia;
 	global();
 
@@ -27,22 +28,10 @@ private:
 	bool moverAbajo;
 
 	int mouseX;
-
-public:
+	const double generadorTerreno = 0.6; //probabilidad de 0 a 1 de generar terreno destructible
+	const GLfloat largoEstructura = 2;
 	static global* getInstance();
-
-	bool getMoverArriba();
-	bool getMoverAbajo();
-	bool getMoverDerecha();
-	bool getMoverIzquierda();
-
-	void setMoverArriba(bool moverArriba);
-	void setMoverDerecha(bool moverDerecha);
-	void setMoverIzquierda(bool moverIzquierda);
-	void setMoverAbajo(bool moverAbajo);
-
-	int getMouseX();
-	void setMouseX(int mouseX);
+	void insertarBomba(list<bomba*> listBomba, bomba* bomb);
 };
 
 

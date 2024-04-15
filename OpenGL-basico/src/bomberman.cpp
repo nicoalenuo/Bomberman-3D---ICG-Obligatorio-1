@@ -9,98 +9,103 @@ bomberman::bomberman(int x, int z) {
 }
 
 void bomberman::actualizar() {
-    if ((*global).getMoverArriba()) {
-        if ((*global).getMouseX() >= 45 && (*global).getMouseX() < 135)
-            coord_x -= 0.3;
-        if ((*global).getMouseX() >= 135 && (*global).getMouseX() < 225)
-            coord_z += 0.3;
-        if ((*global).getMouseX() >= 225 && (*global).getMouseX() < 315)
-            coord_x += 0.3;
-        if ((*global).getMouseX() >= 315 || (*global).getMouseX() < 45)
-            coord_z -= 0.3;
+    if ((*global).moverArriba) {
+        if ((*global).mouseX >= 45 && (*global).mouseX < 135)
+            coord_x -= this->velocidad;
+        if ((*global).mouseX >= 135 && (*global).mouseX < 225)
+            coord_z += this->velocidad;
+        if ((*global).mouseX >= 225 && (*global).mouseX < 315)
+            coord_x += this->velocidad;
+        if ((*global).mouseX >= 315 || (*global).mouseX < 45)
+            coord_z -= this->velocidad;
     }
-    if ((*global).getMoverAbajo()) {
-        if ((*global).getMouseX() >= 45 && (*global).getMouseX() < 135)
-            coord_x += 0.3;
-        if ((*global).getMouseX() >= 135 && (*global).getMouseX() < 225)
-            coord_z -= 0.3;
-        if ((*global).getMouseX() >= 225 && (*global).getMouseX() < 315)
-            coord_x -= 0.3;
-        if ((*global).getMouseX() >= 315 || (*global).getMouseX() < 45)
-            coord_z += 0.3;
-    }
-
-    if ((*global).getMoverDerecha()) {
-        if ((*global).getMouseX() >= 45 && (*global).getMouseX() < 135)
-            coord_z -= 0.3;
-        if ((*global).getMouseX() >= 135 && (*global).getMouseX() < 225)
-            coord_x -= 0.3;
-        if ((*global).getMouseX() >= 225 && (*global).getMouseX() < 315)
-            coord_z += 0.3;
-        if ((*global).getMouseX() >= 315 || (*global).getMouseX() < 45)
-            coord_x += 0.3;
+    if ((*global).moverAbajo) {
+        if ((*global).mouseX >= 45 && (*global).mouseX < 135)
+            coord_x += this->velocidad;
+        if ((*global).mouseX >= 135 && (*global).mouseX < 225)
+            coord_z -= this->velocidad;
+        if ((*global).mouseX >= 225 && (*global).mouseX < 315)
+            coord_x -= this->velocidad;
+        if ((*global).mouseX >= 315 || (*global).mouseX < 45)
+            coord_z += this->velocidad;
     }
 
-    if ((*global).getMoverIzquierda()) {
-        if ((*global).getMouseX() >= 45 && (*global).getMouseX() < 135)
-            coord_z += 0.3;
-        if ((*global).getMouseX() >= 135 && (*global).getMouseX() < 225)
-            coord_x += 0.3;
-        if ((*global).getMouseX() >= 225 && (*global).getMouseX() < 315)
-            coord_z -= 0.3;
-        if ((*global).getMouseX() >= 315 || (*global).getMouseX() < 45)
-            coord_x -= 0.3;
+    if ((*global).moverDerecha) {
+        if ((*global).mouseX >= 45 && (*global).mouseX < 135)
+            coord_z -= this->velocidad;
+        if ((*global).mouseX >= 135 && (*global).mouseX < 225)
+            coord_x -= this->velocidad;
+        if ((*global).mouseX >= 225 && (*global).mouseX < 315)
+            coord_z += this->velocidad;
+        if ((*global).mouseX >= 315 || (*global).mouseX < 45)
+            coord_x += this->velocidad;
+    }
+
+    if ((*global).moverIzquierda) {
+        if ((*global).mouseX >= 45 && (*global).mouseX < 135)
+            coord_z += this->velocidad;
+        if ((*global).mouseX >= 135 && (*global).mouseX < 225)
+            coord_x += this->velocidad;
+        if ((*global).mouseX >= 225 && (*global).mouseX < 315)
+            coord_z -= this->velocidad;
+        if ((*global).mouseX >= 315 || (*global).mouseX < 45)
+            coord_x -= this->velocidad;
     }
 }
 
 void bomberman::dibujar() {
-    GLfloat angleRadians = (*global).getMouseX() * (3.14159f / 180.0f);
-    GLfloat camX = coord_x + 20.0f * sin(angleRadians);
-    GLfloat camZ = coord_z + 20.0f * cos(angleRadians);
+    GLfloat angleRadians = (*global).mouseX * (3.14159f / 180.0f);
 
-    gluLookAt(camX, 30, camZ, coord_x, 0, coord_z, 0, 1, 0);
+    GLfloat desplazamiento = global->largoEstructura / 2; // para que quede centrado
 
+    GLfloat xReal = (coord_x - 14.5) * global->largoEstructura + desplazamiento/2;
+    GLfloat zReal = (coord_z - 5.5) * global->largoEstructura + desplazamiento/2;
+
+    GLfloat camX = xReal + 20.0f * sin(angleRadians);
+    GLfloat camZ = zReal + 20.0f * cos(angleRadians);
+
+    gluLookAt(camX, 30, camZ, xReal, 0, zReal, 0, 1, 0);
     glBegin(GL_QUADS);
-    // Cara frontal (z = 1/2)
+    // Cara frontal (z = 1)
     glColor3f(1.0f, 0.0f, 0.0f); // Rojo
-    glVertex3f(-1 + coord_x, 0, 1 + coord_z);
-    glVertex3f(1 + coord_x, 0, 1 + coord_z);
-    glVertex3f(1 + coord_x, 1, 1 + coord_z);
-    glVertex3f(-1 + coord_x, 1, 1 + coord_z);
+    glVertex3f(xReal, 0, zReal + desplazamiento);
+    glVertex3f(xReal + desplazamiento, 0, zReal + desplazamiento);
+    glVertex3f(xReal + desplazamiento, 2, zReal + desplazamiento);
+    glVertex3f(xReal, 2, zReal + desplazamiento);
 
-    // Cara posterior (z = -1/2)
+    // Cara posterior (z = -1)
     glColor3f(0.0f, 1.0f, 0.0f); // Verde
-    glVertex3f(-1 + coord_x, 0, -1 + coord_z);
-    glVertex3f(1 + coord_x, 0, -1 + coord_z);
-    glVertex3f(1 + coord_x, 1, -1 + coord_z);
-    glVertex3f(-1 + coord_x, 1, -1 + coord_z);
+    glVertex3f(xReal, 0, zReal );
+    glVertex3f(xReal + desplazamiento, 0, zReal );
+    glVertex3f(xReal + desplazamiento, 2, zReal );
+    glVertex3f(xReal, 2, zReal );
 
-    // Cara superior (y = 1/2)
+    // Cara superior (y = 1)
     glColor3f(0.0f, 0.0f, 1.0f); // Azul
-    glVertex3f(-1 + coord_x, 1, -1 + coord_z);
-    glVertex3f(1 + coord_x, 1, -1 + coord_z);
-    glVertex3f(1 + coord_x, 1, 1 + coord_z);
-    glVertex3f(-1 + coord_x, 1, 1 + coord_z);
+    glVertex3f(xReal, 2, zReal );
+    glVertex3f(xReal + desplazamiento, 2, zReal );
+    glVertex3f(xReal + desplazamiento, 2, zReal + desplazamiento);
+    glVertex3f(xReal, 2, zReal + desplazamiento);
 
-    // Cara inferior (y = -1/2)
+    // Cara inferior (y = 0)
     glColor3f(1.0f, 1.0f, 0.0f); // Amarillo
-    glVertex3f(-1 + coord_x, 0, -1 + coord_z);
-    glVertex3f(1 + coord_x, 0, -1 + coord_z);
-    glVertex3f(1 + coord_x, 0, 1 + coord_z);
-    glVertex3f(-1 + coord_x, 0, 1 + coord_z);
+    glVertex3f(xReal, 0, zReal );
+    glVertex3f(xReal + desplazamiento, 0, zReal );
+    glVertex3f(xReal + desplazamiento, 0, zReal + desplazamiento);
+    glVertex3f(xReal, 0, zReal + desplazamiento);
 
-    // Cara izquierda (x = -1/2)
+    // Cara izquierda (x = -1)
     glColor3f(1.0f, 0.0f, 1.0f); // Magenta
-    glVertex3f(-1 + coord_x, 0, -1 + coord_z);
-    glVertex3f(-1 + coord_x, 0, 1 + coord_z);
-    glVertex3f(-1 + coord_x, 1, 1 + coord_z);
-    glVertex3f(-1 + coord_x, 1, -1 + coord_z);
+    glVertex3f(xReal, 0, zReal );
+    glVertex3f(xReal, 0, zReal + desplazamiento);
+    glVertex3f(xReal, 2, zReal + desplazamiento);
+    glVertex3f(xReal, 2, zReal );
 
-    // Cara derecha (x = 1/2)
+    // Cara derecha (x = 1)
     glColor3f(0.0f, 1.0f, 1.0f); // Cian
-    glVertex3f(1 + coord_x, 0, -1 + coord_z);
-    glVertex3f(1 + coord_x, 0, 1 + coord_z);
-    glVertex3f(1 + coord_x, 1, 1 + coord_z);
-    glVertex3f(1 + coord_x, 1, -1 + coord_z);
+    glVertex3f(xReal + desplazamiento, 0, zReal );
+    glVertex3f(xReal + desplazamiento, 0, zReal + desplazamiento);
+    glVertex3f(xReal + desplazamiento, 2, zReal + desplazamiento);
+    glVertex3f(xReal + desplazamiento, 2, zReal );
     glEnd();
 }

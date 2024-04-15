@@ -1,4 +1,5 @@
 #include "../lib/global.h"
+#include "../lib/bomba.h"
 
 global* global::instancia = nullptr;
 
@@ -17,43 +18,11 @@ global* global::getInstance() {
     return instancia;
 }
 
-
-bool global::getMoverArriba() {
-    return this->moverArriba;
-}
-
-bool global::getMoverAbajo() {
-    return this->moverAbajo;
-}
-
-bool global::getMoverDerecha() {
-    return this->moverDerecha;
-}
-
-bool global::getMoverIzquierda() {
-    return this->moverIzquierda;
-}
-
-void global::setMoverArriba(bool moverArriba) {
-    this->moverArriba = moverArriba;
-}
-
-void global::setMoverDerecha(bool moverDerecha) {
-    this->moverDerecha = moverDerecha;
-}
-
-void global::setMoverIzquierda(bool moverIzquierda) {
-    this->moverIzquierda = moverIzquierda;
-}
-
-void global::setMoverAbajo(bool moverAbajo) {
-    this->moverAbajo = moverAbajo;
-}
-
-int global::getMouseX() {
-    return this->mouseX;
-}
-
-void global::setMouseX(int mouseX) {
-    this->mouseX = mouseX;
+void global::insertarBomba(list<bomba*> listBomba, bomba* bomb) {
+    float tiempo = bomb->getTiempoBomba();
+    auto iter = listBomba.begin();
+    while (iter != listBomba.end() && (*iter)->getTiempoBomba() <= bomb->getTiempoBomba()) {
+        ++iter;
+    }
+    listBomba.insert(iter, bomb);
 }

@@ -21,6 +21,5 @@ public:
 	virtual void dibujar() = 0;
 };
 
-
 #endif
 
