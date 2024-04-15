@@ -45,6 +45,9 @@
     <ClCompile Include="src\personaje.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+	<ClCompile Include="src\interfazJuego.cpp">
+	  <Filter>Source Files</Filter>
+	</ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="lib\controlador.h">
@@ -74,5 +77,8 @@
     <ClInclude Include="lib\personaje.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+	<ClInclude Include="lib\interfazJuego.h">
+		<Filter>Header Files</Filter>
+	</ClInclude>
   </ItemGroup>
 </Project>

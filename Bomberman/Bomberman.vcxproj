@@ -95,6 +95,7 @@
     <ClCompile Include="src\global.cpp" />
     <ClCompile Include="src\objeto.cpp" />
     <ClCompile Include="src\personaje.cpp" />
+	<ClCompile Include="src\interfazJuego.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="lib\bomba.h" />
@@ -106,6 +107,7 @@
     <ClInclude Include="lib\global.h" />
     <ClInclude Include="lib\objeto.h" />
     <ClInclude Include="lib\personaje.h" />
+	<ClInclude Include="lib\interfazJuego.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

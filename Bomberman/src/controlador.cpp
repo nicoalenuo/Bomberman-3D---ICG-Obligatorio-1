@@ -5,6 +5,8 @@ Controlador* Controlador::instancia = nullptr;
 Controlador::Controlador() {
     this->global = global::getInstance();
 
+    this->interfazJuego = interfazJuego::getInstance();
+
     this->pausa = false;
     this->nivel = 1;
     this->fin = false;
@@ -36,6 +38,7 @@ Controlador::Controlador() {
     gluPerspective(45, 1280 / 720.f, 1, 200);
     glEnable(GL_DEPTH_TEST);
     glMatrixMode(GL_MODELVIEW);
+
 }
 
 Controlador::~Controlador() {};
@@ -86,6 +89,9 @@ void Controlador::manejarEventos() {
             case SDLK_LEFT:
                 (*global).setMoverIzquierda(false);
                 break;
+            case SDLK_h:
+                (*interfazJuego).swapVisible();
+                break;
             }
             break;
         case SDL_MOUSEMOTION:
@@ -105,6 +111,7 @@ void Controlador::dibujar() {
 
     (*jugador).dibujar();
 
+    (*interfazJuego).dibujar();
 
     glBegin(GL_QUADS);
     glColor3f(GLfloat(227.0 / 255.0), GLfloat(186.0 / 255.0), GLfloat(143.0 / 255.0));

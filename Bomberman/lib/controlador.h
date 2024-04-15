@@ -17,6 +17,7 @@
 #include "objeto.h"
 #include "enemigo.h"
 #include "bomberman.h"
+#include "interfazJuego.h"
 
 using namespace std;
 
@@ -32,6 +33,8 @@ private:
 
 	global* global;
 
+	interfazJuego* interfazJuego;
+
 	bool pausa;
 	int nivel;
 	int largoTablero = 6;
@@ -40,11 +43,11 @@ private:
 	bool fin;
 
 	objeto*** tablero = new objeto * *[largoTablero];
-	list<estructura*> estructuraDestructible = list<estructura*>(); 
-	list<bomba*> bombas = list<bomba*>(); 
+	list<estructura*> estructuraDestructible = list<estructura*>();
+	list<bomba*> bombas = list<bomba*>();
 	list<enemigo*> enemigos = list<enemigo*>();
 
-	objeto* jugador; 
+	objeto* jugador;
 public:
 	static Controlador* getInstance();
 
