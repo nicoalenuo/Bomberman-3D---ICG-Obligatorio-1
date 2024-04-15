@@ -70,6 +70,8 @@ void Controlador::manejarEventos() {
             case SDLK_LEFT:
                 (*global).setMoverIzquierda(true);
                 break;
+            case SDLK_p:
+                toggle_pausa();
             }
             break;
         case SDL_KEYUP:
@@ -140,7 +142,7 @@ void Controlador::setNivel(int niv) {
 	this->nivel = niv;
 }
 
-void Controlador::pausar() {
+void Controlador::toggle_pausa() {
 	this->pausa = !(this->pausa);
 }
 
