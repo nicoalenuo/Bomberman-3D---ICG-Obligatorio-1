@@ -24,7 +24,6 @@ int main(int argc, char* argv[]) {
 
     } while (!(*controlador).getFin());
 
-    (*controlador).limpiar();
     delete controlador;
 
     return 0;

@@ -1,11 +1,8 @@
 #include "../lib/estructura.h"
-#include "../lib/controlador.h"
 
-estructura::estructura(GLfloat x, GLfloat z, bool dest) : objeto(x,z) {
+estructura::estructura(GLfloat x, GLfloat z, GLfloat anchoX, GLfloat anchoZ, GLfloat alt, bool dest) : objeto(x, z, anchoX, anchoZ, alt) {
 	this->destructible = dest;
 	this->powerUp = nullptr;
-
-	global = global::getInstance();
 }
 
 bool estructura::getDestructible() {
@@ -31,135 +28,68 @@ void estructura::actualizar() {
 }
 
 void estructura::dibujar() {
-    Controlador* controlador = Controlador::getInstance();
-    bool textura = controlador->getTextura();
-    if (textura) {
-        estructura* est = dynamic_cast<estructura*>(controlador->getTablero()[(int) this->coord_x][(int) this->coord_z]);
-        if (est->getDestructible()) {
-            glBindTexture(GL_TEXTURE_2D, controlador->getTextura1());
-        }
-        else {
-            glBindTexture(GL_TEXTURE_2D, controlador->getTextura2());
-        }
-
-    }
-
-    GLfloat xReal = (this->coord_x - 14.5f) * global->largoEstructura;
-    GLfloat zReal = (this->coord_z - 5.5f) * global->largoEstructura;
+    glBindTexture(GL_TEXTURE_2D, ControladorTexturas::getTextura(destructible ? ESTRUCTURA_DESTRUCTIBLE : ESTRUCTURA_NO_DESTRUCTIBLE));
 
     glBegin(GL_QUADS);
-    glColor3f(1.0, 1.0, 1.0);
-    // Cara frontal (z = 1/2)
-    if (textura) {
-        glTexCoord2f(0, 0);
-    }
-    glVertex3f(xReal, 0, zReal + global->largoEstructura);
-    if (textura) {
-        glTexCoord2f(0, 1);
-    }
-    glVertex3f(xReal + global->largoEstructura, 0, zReal + global->largoEstructura);
-    if (textura) {
-        glTexCoord2f(1, 1);
-    }
-    glVertex3f(xReal + global->largoEstructura, global->largoEstructura, zReal + global->largoEstructura);
-    if (textura) {
-        glTexCoord2f(1, 0);
-    }
-    glVertex3f(xReal, global->largoEstructura, zReal + global->largoEstructura);
 
-    // Cara posterior (z = -1/2)
     glColor3f(1.0, 1.0, 1.0);
-    if (textura) {
-        glTexCoord2f(0, 0);
-    }
-    glVertex3f(xReal, 0, zReal);
-    if (textura) {
-        glTexCoord2f(0, 1);
-    }
-    glVertex3f(xReal + global->largoEstructura, 0, zReal);
-    if (textura) {
-        glTexCoord2f(1, 1);
-    }
-    glVertex3f(xReal + global->largoEstructura, global->largoEstructura, zReal);
-    if (textura) {
-        glTexCoord2f(1, 0);
-    }
-    glVertex3f(xReal, global->largoEstructura, zReal);
+    glTexCoord2f(0, 0);
+    glVertex3f(coord_x, 0, coord_z);
+    glTexCoord2f(0, 1);
+    glVertex3f(coord_x + ancho_x, 0, coord_z);
+    glTexCoord2f(1, 1);
+    glVertex3f(coord_x + ancho_x, 0, coord_z + ancho_z);
+    glTexCoord2f(1, 0);
+    glVertex3f(coord_x, 0, coord_z + ancho_z);
 
-    // Cara superior (y = 1/2)
-    glColor3f(1.0, 1.0, 1.0);
-    if (textura) {
-        glTexCoord2f(0, 0);
-    }
-    glVertex3f(xReal, global->largoEstructura, zReal);
-    if (textura) {
-        glTexCoord2f(0, 1);
-    }
-    glVertex3f(xReal + global->largoEstructura, global->largoEstructura, zReal);
-    if (textura) {
-        glTexCoord2f(1, 1);
-    }
-    glVertex3f(xReal + global->largoEstructura, global->largoEstructura, zReal + global->largoEstructura);
-    if (textura) {
-        glTexCoord2f(1, 0);
-    }
-    glVertex3f(xReal, global->largoEstructura, zReal + global->largoEstructura);
+    // Cara de arriba
+    glTexCoord2f(0, 0);
+    glVertex3f(coord_x, altura, coord_z);
+    glTexCoord2f(0, 1);
+    glVertex3f(coord_x + ancho_x, altura, coord_z);
+    glTexCoord2f(1, 1);
+    glVertex3f(coord_x + ancho_x, altura, coord_z + ancho_z);
+    glTexCoord2f(1, 0);
+    glVertex3f(coord_x, altura, coord_z + ancho_z);
 
-    // Cara inferior (y = -1/2)
-    glColor3f(1.0, 1.0, 1.0);
-    if (textura) {
-        glTexCoord2f(0, 0);
-    }
-    glVertex3f(xReal, 0, zReal);
-    if (textura) {
-        glTexCoord2f(0, 1);
-    }
-    glVertex3f(xReal + global->largoEstructura, 0, zReal);
-    if (textura) {
-        glTexCoord2f(1, 1);
-    }
-    glVertex3f(xReal + global->largoEstructura, 0, zReal + global->largoEstructura);
-    if (textura) {
-        glTexCoord2f(1, 0);
-    }
-    glVertex3f(xReal, 0, zReal + global->largoEstructura);
+    // Cara de atras
+    glTexCoord2f(0, 0);
+    glVertex3f(coord_x, 0, coord_z);
+    glTexCoord2f(0, 1);
+    glVertex3f(coord_x + ancho_x, 0, coord_z);
+    glTexCoord2f(1, 1);
+    glVertex3f(coord_x + ancho_x, altura, coord_z);
+    glTexCoord2f(1, 0);
+    glVertex3f(coord_x, altura, coord_z);
 
-    // Cara izquierda (x = -1/2)
-    glColor3f(1.0, 1.0, 1.0);
-    if (textura) {
-        glTexCoord2f(0, 0);
-    }
-    glVertex3f(xReal, 0, zReal);
-    if (textura) {
-        glTexCoord2f(0, 1);
-    }
-    glVertex3f(xReal, 0, zReal + global->largoEstructura);
-    if (textura) {
-        glTexCoord2f(1, 1);
-    }
-    glVertex3f(xReal, global->largoEstructura, zReal + global->largoEstructura);
-    if (textura) {
-        glTexCoord2f(1, 0);
-    }
-    glVertex3f(xReal, global->largoEstructura, zReal);
+    // Cara de adelante
+    glTexCoord2f(0, 0);
+    glVertex3f(coord_x, 0, coord_z + ancho_z);
+    glTexCoord2f(0, 1);
+    glVertex3f(coord_x + ancho_x, 0, coord_z + ancho_z);
+    glTexCoord2f(1, 1);
+    glVertex3f(coord_x + ancho_x, altura, coord_z + ancho_z);
+    glTexCoord2f(1, 0);
+    glVertex3f(coord_x, altura, coord_z + ancho_z);
 
-    // Cara derecha (x = 1/2)
-    glColor3f(1.0, 1.0, 1.0);
-    if (textura) {
-        glTexCoord2f(0, 0);
-    }
-    glVertex3f(xReal + global->largoEstructura, 0, zReal);
-    if (textura) {
-        glTexCoord2f(0, 1);
-    }
-    glVertex3f(xReal + global->largoEstructura, 0, zReal + global->largoEstructura);
-    if (textura) {
-        glTexCoord2f(1, 1);
-    }
-    glVertex3f(xReal + global->largoEstructura, global->largoEstructura, zReal + global->largoEstructura);
-    if (textura) {
-        glTexCoord2f(1, 0);
-    }
-    glVertex3f(xReal + global->largoEstructura, global->largoEstructura, zReal);
+    // Cara izquierda
+    glTexCoord2f(0, 0);
+    glVertex3f(coord_x, 0, coord_z);
+    glTexCoord2f(0, 1);
+    glVertex3f(coord_x, 0, coord_z + ancho_z);
+    glTexCoord2f(1, 1);
+    glVertex3f(coord_x, altura, coord_z + ancho_z);
+    glTexCoord2f(1, 0);
+    glVertex3f(coord_x, altura, coord_z);
+
+    // Cara derecha (x = 1)
+    glTexCoord2f(0, 0);
+    glVertex3f(coord_x + ancho_x, 0, coord_z);
+    glTexCoord2f(0, 1);
+    glVertex3f(coord_x + ancho_x, 0, coord_z + ancho_z);
+    glTexCoord2f(1, 1);
+    glVertex3f(coord_x + ancho_x, altura, coord_z + ancho_z);
+    glTexCoord2f(1, 0);
+    glVertex3f(coord_x + ancho_x, altura, coord_z);
     glEnd();
 }

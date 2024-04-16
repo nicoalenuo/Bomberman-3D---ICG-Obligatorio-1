@@ -8,8 +8,10 @@
 #include "FreeImage.h"
 #include <GL/glu.h>
 
+
 #include <stdio.h>
 #include <iostream>
+#include <random>
 
 #include "global.h"
 #include "personaje.h"
@@ -19,6 +21,7 @@
 #include "enemigo.h"
 #include "bomberman.h"
 #include "personaje.h"
+#include "ControladorTexturas.h"
 
 using namespace std;
 
@@ -34,7 +37,7 @@ private:
 
 	global* global;
 	
-	bool textura;
+	bool texturas_habilitadas;
 	bool pausa;
 	int nivel;
 	int largoTablero = 29;
@@ -49,9 +52,6 @@ private:
 	list<enemigo*> enemigos = list<enemigo*>();
 
 	bomberman* jugador; 
-	
-	GLuint textura1;
-	GLuint textura2;
 public:
 	static Controlador* getInstance();
 
@@ -59,20 +59,10 @@ public:
 	void actualizar();
 	void dibujar();
 
-	void limpiar();
-
 	SDL_Window* getWindow();
 
-	bool getTextura();
-	void setTextura(bool text);
-
-	GLuint getTextura1();
-	void setTextura1(GLuint text);
-
-	GLuint getTextura2();
-	void setTextura2(GLuint text);
-
-	void cargarTextura();
+	bool getTexturasHabilitadas();
+	void setTexturasHabilitadas(bool text);
 
 	bool getPausa();
 	void setPausa(bool pau);

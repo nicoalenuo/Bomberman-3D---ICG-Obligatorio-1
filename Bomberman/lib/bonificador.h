@@ -13,7 +13,7 @@ class bonificador : public objeto {
 private:
 	string nombre; //tipo de poder
 public:
-	bonificador(GLfloat x, GLfloat z);
+	bonificador(GLfloat x, GLfloat z, GLfloat anchoX, GLfloat anchoZ, GLfloat alt);
 	virtual string getNombre();
 	virtual void setNombre(string nom);
 	void actualizar();

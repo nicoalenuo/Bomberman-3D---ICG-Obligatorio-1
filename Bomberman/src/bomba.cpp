@@ -1,11 +1,9 @@
 #include "../lib/bomba.h"
-#include "lib/controlador.h"
-#include "lib/global.h"
+#include "../lib/controlador.h"
 
-bomba::bomba(GLfloat x, GLfloat z, float tiempo, int largo) : objeto(x,z) {
+bomba::bomba(GLfloat x, GLfloat z, GLfloat anchoX, GLfloat anchoZ, GLfloat alt, float tiempo, int largo) : objeto(x, z, anchoX, anchoZ, alt) {
 	this->tiempoBomba = tiempo;
 	this->largoBomba = largo;
-	this->jugador = nullptr;
 }
 
 float bomba::getTiempoBomba() {
@@ -22,14 +20,6 @@ int bomba::getLargoBomba() {
 
 void bomba::setLargoBomba(int largo) {
 	this->largoBomba = largo;
-}
-
-personaje* bomba::getJugador() {
-	return this->jugador;
-}
-
-void bomba::setJugador(personaje* jug) {
-	this->jugador = jug;
 }
 
 void bomba::restarTiempo(int tiempo) {

@@ -1,134 +1,138 @@
 #include "../lib/bomberman.h"
 #include "../lib/controlador.h"
 
-bomberman::bomberman(GLfloat x, GLfloat z): personaje(x,z) {
+bomberman::bomberman(GLfloat x, GLfloat z, GLfloat anchoX, GLfloat anchoZ, GLfloat alt): personaje(x,z, anchoX, anchoZ, alt, GLfloat(0.1)) {
     this->vida = 1;
     this->moverBomba = false;
     this->largoBomba = 1;
     this->tiempoBomba = 1.0; //Para poner algo pongo 1, falta probar y ajustar mediante la parte grafica
     this->maxBomba = 1;
     this->cantActual = 0;
-    velocidad = GLfloat(0.1);
+}
+
+bool bomberman::posicion_valida(GLfloat coord_x, GLfloat coord_z, GLfloat ancho_x, GLfloat ancho_z, int largoTablero, int anchoTablero, objeto*** tablero) {
+    return 
+        coord_x >= 0 &&
+        coord_x + ancho_x <= largoTablero &&
+        coord_z >= 0 &&
+        coord_z + ancho_z <= anchoTablero &&
+        dynamic_cast<estructura*>(tablero[int(coord_x) / int(global->tile_size)][int(coord_z) / int(global->tile_size)]) == nullptr &&
+        dynamic_cast<estructura*>(tablero[int(coord_x) / int(global->tile_size)][int(coord_z + ancho_z) / int(global->tile_size)]) == nullptr &&
+        dynamic_cast<estructura*>(tablero[int(coord_x + ancho_x) / int(global->tile_size)][int(coord_z) / int(global->tile_size)]) == nullptr &&
+        dynamic_cast<estructura*>(tablero[int(coord_x + ancho_x) / int(global->tile_size)][int(coord_z + ancho_z) / int(global->tile_size)]) == nullptr;
 }
 
 void bomberman::actualizar() {
     Controlador* controlador = Controlador::getInstance();
+    objeto*** tablero = (*controlador).getTablero();
+    int largoTablero = controlador->getLargoTablero() * global->tile_size;
+    int anchoTablero = controlador->getAnchoTablero() * global->tile_size;
     int mouseX = (*global).mouseX;
 
     if ((*global).moverArriba) {
         if (mouseX >= 45 && mouseX < 135)
-            coord_x -= velocidad;
+            if (posicion_valida(coord_x - velocidad, coord_z, ancho_x, ancho_z, largoTablero, anchoTablero, tablero))
+                coord_x -= velocidad;
         if (mouseX >= 135 && mouseX < 225)
-            coord_z += velocidad;
-        if (mouseX >= 225 && mouseX < 315)
-            coord_x += velocidad;
+            if (posicion_valida(coord_x, coord_z + velocidad, ancho_x, ancho_z, largoTablero, anchoTablero, tablero))
+                coord_z += velocidad;
+        if (mouseX >= 225 && mouseX < 315) 
+            if (posicion_valida(coord_x + velocidad, coord_z, ancho_x, ancho_z, largoTablero, anchoTablero, tablero))
+                coord_x += velocidad;
         if (mouseX >= 315 || mouseX < 45)
-            coord_z -= velocidad;
+            if (posicion_valida(coord_x, coord_z - velocidad, ancho_x, ancho_z, largoTablero, anchoTablero, tablero))
+                coord_z -= velocidad;
     }
     if ((*global).moverAbajo) {
         if (mouseX >= 45 && mouseX < 135)
-            coord_x += velocidad;
+            if (posicion_valida(coord_x + velocidad, coord_z, ancho_x, ancho_z, largoTablero, anchoTablero, tablero))
+                coord_x += velocidad;
         if (mouseX >= 135 && mouseX < 225)
-            coord_z -= velocidad;
+            if (posicion_valida(coord_x, coord_z - velocidad, ancho_x, ancho_z, largoTablero, anchoTablero, tablero))
+                coord_z -= velocidad;
         if (mouseX >= 225 && mouseX < 315)
-            coord_x -= velocidad;
+            if (posicion_valida(coord_x - velocidad, coord_z, ancho_x, ancho_z, largoTablero, anchoTablero, tablero))
+                coord_x -= velocidad;
         if (mouseX >= 315 || mouseX < 45)
-            coord_z += velocidad;
+            if (posicion_valida(coord_x, coord_z + velocidad, ancho_x, ancho_z, largoTablero, anchoTablero, tablero))
+                coord_z += velocidad;
     }
 
     if ((*global).moverDerecha) {
         if (mouseX >= 45 && mouseX < 135)
-            coord_z -= velocidad;
+            if (posicion_valida(coord_x, coord_z - velocidad, ancho_x, ancho_z, largoTablero, anchoTablero, tablero))
+                coord_z -= velocidad;
         if (mouseX >= 135 && mouseX < 225)
-            coord_x -= velocidad;
+            if (posicion_valida(coord_x - velocidad, coord_z, ancho_x, ancho_z, largoTablero, anchoTablero, tablero))
+                coord_x -= velocidad;
         if (mouseX >= 225 && mouseX < 315)
-            coord_z += velocidad;
+            if (posicion_valida(coord_x, coord_z + velocidad, ancho_x, ancho_z, largoTablero, anchoTablero, tablero))
+                coord_z += velocidad;
         if (mouseX >= 315 || mouseX < 45)
-            coord_x += velocidad;
+            if (posicion_valida(coord_x + velocidad, coord_z, ancho_x, ancho_z, largoTablero, anchoTablero, tablero))
+                coord_x += velocidad;
     }
 
     if ((*global).moverIzquierda) {
         if (mouseX >= 45 && mouseX < 135)
-            coord_z += velocidad;
+            if (posicion_valida(coord_x, coord_z + velocidad, ancho_x, ancho_z, largoTablero, anchoTablero, tablero))
+                coord_z += velocidad;
         if (mouseX >= 135 && mouseX < 225)
-            coord_x += velocidad;
+            if (posicion_valida(coord_x + velocidad, coord_z, ancho_x, ancho_z, largoTablero, anchoTablero, tablero))
+                coord_x += velocidad;
         if (mouseX >= 225 && mouseX < 315)
-            coord_z -= velocidad;
+            if (posicion_valida(coord_x, coord_z - velocidad, ancho_x, ancho_z, largoTablero, anchoTablero, tablero))
+                coord_z -= velocidad;
         if (mouseX >= 315 || mouseX < 45)
-            coord_x -= velocidad;
-    }
-
-    int mouseY;
-    Uint32 mouseState = SDL_GetMouseState(&mouseX, &mouseY);
-
-    // Obtener el tamaño de la ventana
-    int windowWidth, windowHeight;
-    SDL_GetWindowSize(controlador->getWindow(), &windowWidth, &windowHeight);
-
-    // Obtener el centro de la ventana
-    int centerX = windowWidth / 2;
-    int centerY = windowHeight / 2;
-
-    // Mover el cursor del mouse al centro de la ventana
-    if (abs(mouseX - centerX) > windowWidth/4 || abs(mouseY - centerY) > windowHeight/4) {
-        SDL_WarpMouseInWindow(controlador->getWindow(), centerX, centerY);
+            if (posicion_valida(coord_x - velocidad, coord_z, ancho_x, ancho_z, largoTablero, anchoTablero, tablero))
+                coord_x -= velocidad;
     }
 }
 
 void bomberman::dibujar() {
-    GLfloat angleRadians = (*global).mouseX * (3.14159f / 180.0f); //cambiar esto pq gira a todo trapo
-
-    GLfloat desplazamiento = global->largoEstructura / 2; // para que quede centrado
-
-    GLfloat xReal = (coord_x - 14.5f) * global->largoEstructura + desplazamiento/2;
-    GLfloat zReal = (coord_z - 5.5f) * global->largoEstructura + desplazamiento/2;
-
-    GLfloat camX = xReal + 20.0f * sin(angleRadians);
-    GLfloat camZ = zReal + 20.0f * cos(angleRadians);
-
-    gluLookAt(camX, 30, camZ, xReal, 0, zReal, 0, 1, 0);
     glBegin(GL_QUADS);
-    // Cara frontal (z = 1)
+
+    // Cara de abajo
     glColor3f(1.0f, 0.0f, 0.0f); // Rojo
-    glVertex3f(xReal, 0, zReal + desplazamiento);
-    glVertex3f(xReal + desplazamiento, 0, zReal + desplazamiento);
-    glVertex3f(xReal + desplazamiento, 2, zReal + desplazamiento);
-    glVertex3f(xReal, 2, zReal + desplazamiento);
+    glVertex3f(coord_x, 0, coord_z);
+    glVertex3f(coord_x + ancho_x, 0, coord_z);
+    glVertex3f(coord_x + ancho_x, 0, coord_z + ancho_z);
+    glVertex3f(coord_x, 0, coord_z + ancho_z);
 
-    // Cara posterior (z = -1)
+    // Cara de arriba
     glColor3f(0.0f, 1.0f, 0.0f); // Verde
-    glVertex3f(xReal, 0, zReal );
-    glVertex3f(xReal + desplazamiento, 0, zReal );
-    glVertex3f(xReal + desplazamiento, 2, zReal );
-    glVertex3f(xReal, 2, zReal );
+    glVertex3f(coord_x, altura, coord_z);
+    glVertex3f(coord_x + ancho_x, altura, coord_z);
+    glVertex3f(coord_x + ancho_x, altura, coord_z + ancho_z);
+    glVertex3f(coord_x, altura, coord_z + ancho_z);
 
-    // Cara superior (y = 1)
+    // Cara de atras
     glColor3f(0.0f, 0.0f, 1.0f); // Azul
-    glVertex3f(xReal, 2, zReal );
-    glVertex3f(xReal + desplazamiento, 2, zReal );
-    glVertex3f(xReal + desplazamiento, 2, zReal + desplazamiento);
-    glVertex3f(xReal, 2, zReal + desplazamiento);
+    glVertex3f(coord_x, 0, coord_z);
+    glVertex3f(coord_x + ancho_x, 0, coord_z );
+    glVertex3f(coord_x + ancho_x, altura, coord_z);
+    glVertex3f(coord_x, altura, coord_z);
 
-    // Cara inferior (y = 0)
+    // Cara de adelante
     glColor3f(1.0f, 1.0f, 0.0f); // Amarillo
-    glVertex3f(xReal, 0, zReal );
-    glVertex3f(xReal + desplazamiento, 0, zReal );
-    glVertex3f(xReal + desplazamiento, 0, zReal + desplazamiento);
-    glVertex3f(xReal, 0, zReal + desplazamiento);
+    glVertex3f(coord_x, 0, coord_z + ancho_z);
+    glVertex3f(coord_x + ancho_x, 0, coord_z + ancho_z);
+    glVertex3f(coord_x + ancho_x, altura, coord_z + ancho_z);
+    glVertex3f(coord_x, altura, coord_z + ancho_z);
 
-    // Cara izquierda (x = -1)
+    // Cara izquierda
     glColor3f(1.0f, 0.0f, 1.0f); // Magenta
-    glVertex3f(xReal, 0, zReal );
-    glVertex3f(xReal, 0, zReal + desplazamiento);
-    glVertex3f(xReal, 2, zReal + desplazamiento);
-    glVertex3f(xReal, 2, zReal );
+    glVertex3f(coord_x, 0, coord_z );
+    glVertex3f(coord_x, 0, coord_z + ancho_z);
+    glVertex3f(coord_x, altura, coord_z + ancho_z);
+    glVertex3f(coord_x, altura, coord_z );
 
     // Cara derecha (x = 1)
     glColor3f(0.0f, 1.0f, 1.0f); // Cian
-    glVertex3f(xReal + desplazamiento, 0, zReal );
-    glVertex3f(xReal + desplazamiento, 0, zReal + desplazamiento);
-    glVertex3f(xReal + desplazamiento, 2, zReal + desplazamiento);
-    glVertex3f(xReal + desplazamiento, 2, zReal );
+    glVertex3f(coord_x + ancho_x, 0, coord_z);
+    glVertex3f(coord_x + ancho_x, 0, coord_z + ancho_z);
+    glVertex3f(coord_x + ancho_x, altura, coord_z + ancho_z);
+    glVertex3f(coord_x + ancho_x, altura, coord_z);
     glEnd();
     
 }

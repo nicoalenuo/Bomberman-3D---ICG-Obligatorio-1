@@ -13,9 +13,8 @@ private:
 	bool moverBomba;
 	float tiempoBomba;
 	int largoBomba;
-	GLfloat velocidad;
 public:
-	bomberman(GLfloat x, GLfloat z);
+	bomberman(GLfloat x, GLfloat z, GLfloat anchoX, GLfloat anchoZ, GLfloat alt);
 
 	int getVida();
 	void setVida(int vid);
@@ -34,6 +33,8 @@ public:
 	float getVelocidad();
 	void setVelocidad(float vel);
 	bool bombaDisponible();
+
+	bool posicion_valida(GLfloat coord_x, GLfloat ancho_x, GLfloat coord_z, GLfloat ancho_z, int largoTablero, int anchoTablero, objeto*** tablero);
 	void actualizar();
 	void dibujar();
 };

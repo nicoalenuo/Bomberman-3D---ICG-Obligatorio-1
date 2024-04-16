@@ -1,4 +1,4 @@
-#include "../lib/global.h"
+﻿#include "../lib/global.h"
 
 global* global::instancia = nullptr;
 
@@ -15,9 +15,5 @@ global* global::getInstance() {
         instancia = new global();
     }
     return instancia;
-}
-
-void global::setFPS(unsigned int delay) {
-    this->frameDelay = delay;
 }
 

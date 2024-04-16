@@ -90,6 +90,7 @@
     <ClCompile Include="src\bomberman.cpp" />
     <ClCompile Include="src\bonificador.cpp" />
     <ClCompile Include="src\controlador.cpp" />
+    <ClCompile Include="src\ControladorTexturas.cpp" />
     <ClCompile Include="src\enemigo.cpp" />
     <ClCompile Include="src\estructura.cpp" />
     <ClCompile Include="src\global.cpp" />
@@ -101,6 +102,7 @@
     <ClInclude Include="lib\bomberman.h" />
     <ClInclude Include="lib\bonificador.h" />
     <ClInclude Include="lib\controlador.h" />
+    <ClInclude Include="lib\ControladorTexturas.h" />
     <ClInclude Include="lib\enemigo.h" />
     <ClInclude Include="lib\estructura.h" />
     <ClInclude Include="lib\global.h" />
