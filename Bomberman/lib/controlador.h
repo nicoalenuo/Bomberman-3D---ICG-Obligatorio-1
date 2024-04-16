@@ -61,6 +61,8 @@ public:
 
 	void limpiar();
 
+	SDL_Window* getWindow();
+
 	bool getTextura();
 	void setTextura(bool text);
 
@@ -81,9 +83,20 @@ public:
 	bool getFin();
 	void setFin(bool fin);
 
+	int getLargoTablero();
+	void setLargoTablero(int largo);
+
+	int getAnchoTablero();
+	void setAnchoTablero(int ancho);
+
+	bomberman* getBomberman();
+
+	void aumentarPuntaje(int punt);
+
+	objeto*** getTablero();
+
 	void toggle_pausa(); 
 	void aumentarNivel();
-	void explotarBomba(bomba* bomb);
 	void ponerBomba(int x, int z);
 
 	~Controlador();

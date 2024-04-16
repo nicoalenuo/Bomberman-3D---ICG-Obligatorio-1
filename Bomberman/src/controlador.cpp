@@ -36,11 +36,11 @@ Controlador::Controlador() {
     for (int i = 0; i < this->largoTablero; i++) {
         for (int j = 0; j < this->anchoTablero; j++) {
             if (((i % 2) == 1) && ((j % 2) == 1)) {
-                this->tablero[i][j] = new estructura(i,j,false); //no destructible
+                this->tablero[i][j] = new estructura((float) i, (float) j, false); //no destructible
             } else {
                 random_num = dis(gen);
                 if (random_num <= (*global).generadorTerreno) {
-                    this->tablero[i][j] = new estructura(i, j, true); //destructible
+                    this->tablero[i][j] = new estructura((float) i, (float) j, true); //destructible
                 }
             }
         }
@@ -84,6 +84,8 @@ Controlador::Controlador() {
     gluPerspective(45, 1280 / 720.f, 1, 200);
     glEnable(GL_DEPTH_TEST);
     glMatrixMode(GL_MODELVIEW);
+
+    //SDL_ShowCursor(SDL_DISABLE); // Esta línea oculta el cursor del mouse
 
     this->cargarTextura();
 }
@@ -139,13 +141,13 @@ void Controlador::manejarEventos() {
             }
             break;
         case SDL_MOUSEMOTION:
-            (*global).mouseX = evento.motion.x % 360; //cambiar esto pq gira a todo trapo
+            (*global).mouseX = (evento.motion.x % 360);
             break;
         }
     }
 }
 
-void Controlador::actualizar() {
+void Controlador::actualizar() { //faltan actualizar las bombas
     (*jugador).actualizar();
 }
 
@@ -164,135 +166,7 @@ void Controlador::dibujar() {
     for (int i = 0; i < this->largoTablero; i++) {
         for (int j = 0; j < this->anchoTablero; j++) {
             if (this->tablero[i][j] != nullptr && (this->tablero[i][j] != this->jugador)) {
-                
-                if (textura) {
-                    estructura* est = dynamic_cast<estructura*>(this->tablero[i][j]);
-                    if (est->getDestructible()) {
-                        glBindTexture(GL_TEXTURE_2D, this->textura1);
-                    } else {
-                        glBindTexture(GL_TEXTURE_2D, this->textura2);
-                    }
-                        
-                }
-
-                GLfloat xReal = (i - 14.5) * global->largoEstructura;
-                GLfloat zReal = (j - 5.5) * global->largoEstructura;
-
-                glBegin(GL_QUADS);
-                glColor3f(1.0, 1.0, 1.0);
-                // Cara frontal (z = 1/2)
-                if (textura) {
-                    glTexCoord2f(0, 0);
-                }
-                glVertex3f(xReal, 0, zReal + global->largoEstructura);
-                if (textura) {
-                    glTexCoord2f(0, 1);
-                }
-                glVertex3f(xReal + global->largoEstructura, 0, zReal + global->largoEstructura);
-                if (textura) {
-                    glTexCoord2f(1, 1);
-                }
-                glVertex3f(xReal + global->largoEstructura, global->largoEstructura, zReal + global->largoEstructura);
-                if (textura) {
-                    glTexCoord2f(1, 0);
-                }
-                glVertex3f(xReal, global->largoEstructura, zReal + global->largoEstructura);
-
-                // Cara posterior (z = -1/2)
-                glColor3f(1.0, 1.0, 1.0);
-                if (textura) {
-                    glTexCoord2f(0, 0);
-                }
-                glVertex3f(xReal, 0, zReal);
-                if (textura) {
-                    glTexCoord2f(0, 1);
-                }
-                glVertex3f(xReal + global->largoEstructura, 0, zReal);
-                if (textura) {
-                    glTexCoord2f(1, 1);
-                }
-                glVertex3f(xReal + global->largoEstructura, global->largoEstructura, zReal);
-                if (textura) {
-                    glTexCoord2f(1, 0);
-                }
-                glVertex3f(xReal, global->largoEstructura, zReal);
-
-                // Cara superior (y = 1/2)
-                glColor3f(1.0, 1.0, 1.0);
-                if (textura) {
-                    glTexCoord2f(0, 0);
-                }
-                glVertex3f(xReal, global->largoEstructura, zReal);
-                if (textura) {
-                    glTexCoord2f(0, 1);
-                }
-                glVertex3f(xReal + global->largoEstructura, global->largoEstructura, zReal);
-                if (textura) {
-                    glTexCoord2f(1, 1);
-                }
-                glVertex3f(xReal + global->largoEstructura, global->largoEstructura, zReal + global->largoEstructura);
-                if (textura) {
-                    glTexCoord2f(1, 0);
-                }
-                glVertex3f(xReal, global->largoEstructura, zReal + global->largoEstructura);
-
-                // Cara inferior (y = -1/2)
-                glColor3f(1.0, 1.0, 1.0);
-                if (textura) {
-                    glTexCoord2f(0, 0);
-                }
-                glVertex3f(xReal, 0, zReal);
-                if (textura) {
-                    glTexCoord2f(0, 1);
-                }
-                glVertex3f(xReal + global->largoEstructura, 0, zReal);
-                if (textura) {
-                    glTexCoord2f(1, 1);
-                }
-                glVertex3f(xReal + global->largoEstructura, 0, zReal + global->largoEstructura);
-                if (textura) {
-                    glTexCoord2f(1, 0);
-                }
-                glVertex3f(xReal, 0, zReal + global->largoEstructura);
-
-                // Cara izquierda (x = -1/2)
-                glColor3f(1.0, 1.0, 1.0);
-                if (textura) {
-                    glTexCoord2f(0, 0);
-                }
-                glVertex3f(xReal, 0, zReal);
-                if (textura) {
-                    glTexCoord2f(0, 1);
-                }
-                glVertex3f(xReal, 0, zReal + global->largoEstructura);
-                if (textura) {
-                    glTexCoord2f(1, 1);
-                }
-                glVertex3f(xReal, global->largoEstructura, zReal + global->largoEstructura);
-                if (textura) {
-                    glTexCoord2f(1, 0);
-                }
-                glVertex3f(xReal, global->largoEstructura, zReal);
-
-                // Cara derecha (x = 1/2)
-                glColor3f(1.0, 1.0, 1.0);
-                if (textura) {
-                    glTexCoord2f(0, 0);
-                }
-                glVertex3f(xReal + global->largoEstructura, 0, zReal);
-                if (textura) {
-                    glTexCoord2f(0, 1);
-                }
-                glVertex3f(xReal + global->largoEstructura, 0, zReal + global->largoEstructura);
-                if (textura) {
-                    glTexCoord2f(1, 1);
-                }
-                glVertex3f(xReal + global->largoEstructura, global->largoEstructura, zReal + global->largoEstructura);
-                if (textura) {
-                    glTexCoord2f(1, 0);
-                }
-                glVertex3f(xReal + global->largoEstructura, global->largoEstructura, zReal);
-                glEnd();
+                this->tablero[i][j]->dibujar();
             }       
         }
     }
@@ -323,13 +197,17 @@ void Controlador::limpiar() {
     SDL_Quit();
 }
 
+SDL_Window* Controlador::getWindow() {
+    return this->window;
+}
+
 void Controlador::cargarTextura(){
     bool textura = this->getTextura();
 
     if (textura) {
         //TEXTURA
         char* archivo1 = new char[20];
-        archivo1 = "../Bomberman/texturas/estT.jpg"; //sacar
+        archivo1 = "../Bomberman/texturas/estructuraTrue.jpg"; //sacar
         //CARGAR IMAGEN
         FREE_IMAGE_FORMAT fif1 = FreeImage_GetFIFFromFilename(archivo1);
         FIBITMAP* bitmap1 = FreeImage_Load(fif1, archivo1); //estoy recibiendo bitmap null
@@ -354,7 +232,7 @@ void Controlador::cargarTextura(){
 
         //TEXTURA
         char* archivo2 = new char[20];
-        archivo2 = "../Bomberman/texturas/estF.png"; //sacar
+        archivo2 = "../Bomberman/texturas/estructuraFalse.png"; //sacar
 
         //CARGAR IMAGEN
         FREE_IMAGE_FORMAT fif2 = FreeImage_GetFIFFromFilename(archivo2);
@@ -435,43 +313,37 @@ void Controlador::setFin(bool fin) {
     this->fin = fin;
 }
 
+int Controlador::getLargoTablero() {
+    return this->largoTablero;
+}
+void Controlador::setLargoTablero(int largo) {
+    this->largoTablero = largo;
+}
+
+int Controlador::getAnchoTablero() {
+    return this->anchoTablero;
+}
+
+void Controlador::setAnchoTablero(int ancho) {
+    this->anchoTablero = ancho;
+}
+
+bomberman* Controlador::getBomberman() {
+    return this->jugador;
+}
+
+void Controlador::aumentarPuntaje(int punt) {
+    this->puntaje += punt;
+}
+
+objeto*** Controlador::getTablero() {
+    return this->tablero;
+}
+
 //ponerBomba lo que hace es obtener gracias a la matriz de objetos, si es valido poner una bomba en la posicion x, z. Y en caso de serlo crea la bomba
 // si no, no hace nada
 void Controlador::ponerBomba(int x, int z) {
 	if (jugador->bombaDisponible() && this->tablero[x][z] == nullptr) {
         //Validar si es posible colocar bomba, y hacerlo en caso de ser posible
 	}
-}
-
-void Controlador::explotarBomba(bomba* bomb) { //borrar esto porfa
-    int largo = bomb->getLargoBomba();
-    int x = (int) bomb->getCoordX();
-    int z = (int) bomb->getCoordZ();
-    bool alcanzaX = false;
-    bool alcanzaZ = false;
-    list<bomba*> explotadas;
-    for (auto it = this->bombas.begin(); it != this->bombas.end(); it++) {
-        int coordX = (int) (*it)->getCoordX();
-        int coordZ = (int) (*it)->getCoordZ();
-        if (x <= coordX && x + largo >= coordX) {
-            alcanzaX = true;
-        }
-        else if (x >= coordX && x - largo <= coordX) {
-            alcanzaX = true;
-        }
-        if (z <= coordZ && z + largo >= coordZ) {
-            alcanzaZ = true;
-        }
-        else if (z >= coordZ && z - largo <= coordZ) {
-            alcanzaZ = true;
-        }
-        if (alcanzaX && alcanzaZ) {
-            this->bombas.erase(it);
-            //aca hay que llamar al grafico para que haga efectos de exploci�n
-            explotadas.push_back((*it));
-        }
-    }
-    for (auto it = explotadas.begin(); it != explotadas.end(); it++) {
-        this->explotarBomba(*it);
-    }
 }

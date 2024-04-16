@@ -9,6 +9,7 @@ class bomberman : public personaje {
 private:
 	int vida;
 	int maxBomba;
+	int cantActual;
 	bool moverBomba;
 	float tiempoBomba;
 	int largoBomba;
@@ -20,6 +21,10 @@ public:
 	void setVida(int vid);
 	int getMaxBomba();
 	void setMaxBomba(int max);
+	int getCantBomba();
+	void setCantBomba(int cant);
+	void aumentarCantBomba();
+	void disminuirCantBomba();
 	bool getMoverBomba();
 	void setMoverBomba(bool mov);
 	float getTiempoBomba();

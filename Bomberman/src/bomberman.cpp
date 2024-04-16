@@ -1,15 +1,18 @@
 #include "../lib/bomberman.h"
+#include "../lib/controlador.h"
 
 bomberman::bomberman(GLfloat x, GLfloat z): personaje(x,z) {
     this->vida = 1;
     this->moverBomba = false;
     this->largoBomba = 1;
-    this->tiempoBomba = 1; //Para poner algo pongo 1, falta probar y ajustar mediante la parte grafica
+    this->tiempoBomba = 1.0; //Para poner algo pongo 1, falta probar y ajustar mediante la parte grafica
     this->maxBomba = 1;
-    velocidad = GLfloat(0.3);
+    this->cantActual = 0;
+    velocidad = GLfloat(0.1);
 }
 
 void bomberman::actualizar() {
+    Controlador* controlador = Controlador::getInstance();
     int mouseX = (*global).mouseX;
 
     if ((*global).moverArriba) {
@@ -54,15 +57,31 @@ void bomberman::actualizar() {
         if (mouseX >= 315 || mouseX < 45)
             coord_x -= velocidad;
     }
+
+    int mouseY;
+    Uint32 mouseState = SDL_GetMouseState(&mouseX, &mouseY);
+
+    // Obtener el tamaño de la ventana
+    int windowWidth, windowHeight;
+    SDL_GetWindowSize(controlador->getWindow(), &windowWidth, &windowHeight);
+
+    // Obtener el centro de la ventana
+    int centerX = windowWidth / 2;
+    int centerY = windowHeight / 2;
+
+    // Mover el cursor del mouse al centro de la ventana
+    if (abs(mouseX - centerX) > windowWidth/4 || abs(mouseY - centerY) > windowHeight/4) {
+        SDL_WarpMouseInWindow(controlador->getWindow(), centerX, centerY);
+    }
 }
 
 void bomberman::dibujar() {
-    GLfloat angleRadians = (*global).mouseX * (3.14159f / 180.0f);
+    GLfloat angleRadians = (*global).mouseX * (3.14159f / 180.0f); //cambiar esto pq gira a todo trapo
 
     GLfloat desplazamiento = global->largoEstructura / 2; // para que quede centrado
 
-    GLfloat xReal = (coord_x - 14.5) * global->largoEstructura + desplazamiento/2;
-    GLfloat zReal = (coord_z - 5.5) * global->largoEstructura + desplazamiento/2;
+    GLfloat xReal = (coord_x - 14.5f) * global->largoEstructura + desplazamiento/2;
+    GLfloat zReal = (coord_z - 5.5f) * global->largoEstructura + desplazamiento/2;
 
     GLfloat camX = xReal + 20.0f * sin(angleRadians);
     GLfloat camZ = zReal + 20.0f * cos(angleRadians);
@@ -131,6 +150,22 @@ void bomberman::setMaxBomba(int max) {
     this->maxBomba = max;
 }
 
+int bomberman::getCantBomba() {
+    return this->cantActual;
+}
+
+void bomberman::setCantBomba(int cant) {
+    this->cantActual = cant;
+}
+
+void bomberman::aumentarCantBomba() {
+    this->cantActual += 1;
+}
+
+void bomberman::disminuirCantBomba() {
+    this->cantActual -= 1;
+}
+
 bool bomberman::getMoverBomba() {
     return this->moverBomba;
 }
@@ -164,5 +199,5 @@ void bomberman::setVelocidad(float vel) {
 }
 
 bool bomberman::bombaDisponible() {
-    return (this->maxBomba > 0); //Agregar los casos
+    return (this->maxBomba > this->cantActual);
 }

@@ -17,3 +17,7 @@ global* global::getInstance() {
     return instancia;
 }
 
+void global::setFPS(unsigned int delay) {
+    this->frameDelay = delay;
+}
+

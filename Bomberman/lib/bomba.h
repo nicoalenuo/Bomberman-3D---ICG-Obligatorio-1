@@ -21,6 +21,7 @@ public:
 	void setLargoBomba(int largo);
 	personaje* getJugador();
 	void setJugador(personaje* jug);
+	void restarTiempo(int tiempo);
 	void actualizar();
 	void dibujar();
 };

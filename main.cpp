@@ -4,8 +4,9 @@ using namespace std;
 
 int main(int argc, char* argv[]) {
     Controlador* controlador = Controlador::getInstance();
+    global* global = global::getInstance();
 
-    const int frameDelay = 33; //33 milisegundos entre cada frame
+    unsigned int frameDelay = global->frameDelay;
 
     Uint32 frameStart;
     Uint32 frameTime;
