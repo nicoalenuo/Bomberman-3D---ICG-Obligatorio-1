@@ -14,7 +14,7 @@ private:
 	int largoBomba;
 	personaje* jugador;
 public:
-	bomba(int x, int z, float tiempo, int largo);
+	bomba(GLfloat x, GLfloat z, float tiempo, int largo);
 	float getTiempoBomba();
 	void setTiempoBomba(float tiempo);
 	int getLargoBomba();

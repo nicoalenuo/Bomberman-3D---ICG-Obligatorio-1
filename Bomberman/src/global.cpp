@@ -1,5 +1,4 @@
 #include "../lib/global.h"
-#include "../lib/bomba.h"
 
 global* global::instancia = nullptr;
 
@@ -18,11 +17,3 @@ global* global::getInstance() {
     return instancia;
 }
 
-void global::insertarBomba(list<bomba*> listBomba, bomba* bomb) {
-    float tiempo = bomb->getTiempoBomba();
-    auto iter = listBomba.begin();
-    while (iter != listBomba.end() && (*iter)->getTiempoBomba() <= bomb->getTiempoBomba()) {
-        ++iter;
-    }
-    listBomba.insert(iter, bomb);
-}

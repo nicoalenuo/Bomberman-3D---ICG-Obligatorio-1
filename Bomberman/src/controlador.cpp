@@ -71,7 +71,7 @@ Controlador::Controlador() {
         exit(1);
     }
 
-    this->window = SDL_CreateWindow("Bomberman-ICG",
+    this->window = SDL_CreateWindow("Bomberman 3D",
         SDL_WINDOWPOS_CENTERED,
         SDL_WINDOWPOS_CENTERED,
         1280, 720, SDL_WINDOW_OPENGL | SDL_WINDOW_SHOWN);
@@ -419,7 +419,7 @@ void Controlador::setNivel(int niv) {
 	this->nivel = niv;
 }
 
-void Controlador::pausar() {
+void Controlador::toggle_pausa() {
 	this->pausa = !(this->pausa);
 }
 
@@ -435,25 +435,15 @@ void Controlador::setFin(bool fin) {
     this->fin = fin;
 }
 
-//crea la instancia de bomba, la asigna al arreglo de bombas en controlador, al del personaje que lo coloc� y asigna el due�o a la bomba
-void Controlador::crearBomba(int x, int z, personaje* pers) {
-    /*
-    bomba* bomb = new bomba(x, z, pers->getTiempoBomba(), pers->getLargoBomba());
-    global::insertarBomba(this->bombas, bomb);
-    bomb->setJugador(pers);
-    global::insertarBomba(pers->getBomba(), bomb);
-    */
-}
-
 //ponerBomba lo que hace es obtener gracias a la matriz de objetos, si es valido poner una bomba en la posicion x, z. Y en caso de serlo crea la bomba
 // si no, no hace nada
-void Controlador::ponerBomba(int x, int z, personaje* pers) {
-	if (pers->bombaDisponible() && this->tablero[x][z] == nullptr) {
-		crearBomba(x, z, pers);
+void Controlador::ponerBomba(int x, int z) {
+	if (jugador->bombaDisponible() && this->tablero[x][z] == nullptr) {
+        //Validar si es posible colocar bomba, y hacerlo en caso de ser posible
 	}
 }
 
-void Controlador::explotarBomba(bomba* bomb) {
+void Controlador::explotarBomba(bomba* bomb) { //borrar esto porfa
     int largo = bomb->getLargoBomba();
     int x = (int) bomb->getCoordX();
     int z = (int) bomb->getCoordZ();
@@ -483,22 +473,5 @@ void Controlador::explotarBomba(bomba* bomb) {
     }
     for (auto it = explotadas.begin(); it != explotadas.end(); it++) {
         this->explotarBomba(*it);
-    }
-}
-
-void Controlador::actualizarTiempoBomba(Uint32 ms) {
-    list<bomba*> explotadas;
-    for (auto it = this->bombas.begin(); it != this->bombas.end(); it++) {
-        (*it)->setTiempoBomba((*it)->getTiempoBomba() - ms);
-        if ((*it)->getTiempoBomba() <= 0) {
-            explotadas.push_back((*it));
-            if ((*it)->getJugador() != nullptr) {
-                (*it)->getJugador()->getBomba().erase(it);
-            }
-            this->bombas.erase(it);
-        }
-    }
-    for (auto it = explotadas.begin(); it != explotadas.end(); it++) {
-        this->explotarBomba((*it));
     }
 }

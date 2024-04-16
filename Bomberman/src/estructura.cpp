@@ -1,8 +1,6 @@
 #include "../lib/estructura.h"
 
-estructura::estructura(int x, int z, bool dest) : objeto() {
-	this->coord_x = (float)x;
-	this->coord_z = (float)z;
+estructura::estructura(GLfloat x, GLfloat z, bool dest) : objeto(x,z) {
 	this->destructible = dest;
 	this->powerUp = nullptr;
 

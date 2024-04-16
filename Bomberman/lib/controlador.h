@@ -3,9 +3,9 @@
 #ifndef CONTROLADOR_H
 #define CONTROLADOR_H
 
-#include "personaje.h"
 #include "SDL.h"
 #include "SDL_opengl.h"
+#include "FreeImage.h"
 #include <GL/glu.h>
 
 #include <stdio.h>
@@ -18,6 +18,7 @@
 #include "objeto.h"
 #include "enemigo.h"
 #include "bomberman.h"
+#include "personaje.h"
 
 using namespace std;
 
@@ -80,12 +81,12 @@ public:
 	bool getFin();
 	void setFin(bool fin);
 
-	void pausar(); //pausa o despausa
+	void toggle_pausa(); //pausa o despausa
 	void aumentarNivel();
-	void crearBomba(int x, int z, personaje* pers);
-	void ponerBomba(int x, int z, personaje* pers);
 	void explotarBomba(bomba* bomb);
 	void actualizarTiempoBomba(Uint32 ms);
+	void crearBomba(int x, int z, bomberman* pers);
+	void ponerBomba(int x, int z, bomberman* pers);
 
 	~Controlador();
 };

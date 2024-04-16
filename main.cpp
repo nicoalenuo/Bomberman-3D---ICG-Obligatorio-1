@@ -1,7 +1,3 @@
-#include "SDL.h"
-#include "SDL_opengl.h"
-#include <iostream>
-#include "FreeImage.h"
 #include "Bomberman/lib/controlador.h"
 
 using namespace std;
@@ -9,11 +5,10 @@ using namespace std;
 int main(int argc, char* argv[]) {
     Controlador* controlador = Controlador::getInstance();
 
-    const int FPS = 30;
-    const int frameDelay = 1000 / FPS;
+    const int frameDelay = 33; //33 milisegundos entre cada frame
 
     Uint32 frameStart;
-    int frameTime;
+    Uint32 frameTime;
 
     do {
         frameStart = SDL_GetTicks();
@@ -29,5 +24,7 @@ int main(int argc, char* argv[]) {
     } while (!(*controlador).getFin());
 
     (*controlador).limpiar();
+    delete controlador;
+
     return 0;
 }

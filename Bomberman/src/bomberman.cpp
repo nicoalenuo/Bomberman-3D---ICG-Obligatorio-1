@@ -1,55 +1,58 @@
 #include "../lib/bomberman.h"
 
-bomberman::bomberman(int x, int z) {
-	this->coord_x = (float)x;
-	this->coord_z = (float)z;
-	this->maxBomba = 1;
-
-    global = global::getInstance();
+bomberman::bomberman(GLfloat x, GLfloat z): personaje(x,z) {
+    this->vida = 1;
+    this->moverBomba = false;
+    this->largoBomba = 1;
+    this->tiempoBomba = 1; //Para poner algo pongo 1, falta probar y ajustar mediante la parte grafica
+    this->maxBomba = 1;
+    velocidad = GLfloat(0.3);
 }
 
 void bomberman::actualizar() {
+    int mouseX = (*global).mouseX;
+
     if ((*global).moverArriba) {
-        if ((*global).mouseX >= 45 && (*global).mouseX < 135)
-            coord_x -= this->velocidad;
-        if ((*global).mouseX >= 135 && (*global).mouseX < 225)
-            coord_z += this->velocidad;
-        if ((*global).mouseX >= 225 && (*global).mouseX < 315)
-            coord_x += this->velocidad;
-        if ((*global).mouseX >= 315 || (*global).mouseX < 45)
-            coord_z -= this->velocidad;
+        if (mouseX >= 45 && mouseX < 135)
+            coord_x -= velocidad;
+        if (mouseX >= 135 && mouseX < 225)
+            coord_z += velocidad;
+        if (mouseX >= 225 && mouseX < 315)
+            coord_x += velocidad;
+        if (mouseX >= 315 || mouseX < 45)
+            coord_z -= velocidad;
     }
     if ((*global).moverAbajo) {
-        if ((*global).mouseX >= 45 && (*global).mouseX < 135)
-            coord_x += this->velocidad;
-        if ((*global).mouseX >= 135 && (*global).mouseX < 225)
-            coord_z -= this->velocidad;
-        if ((*global).mouseX >= 225 && (*global).mouseX < 315)
-            coord_x -= this->velocidad;
-        if ((*global).mouseX >= 315 || (*global).mouseX < 45)
-            coord_z += this->velocidad;
+        if (mouseX >= 45 && mouseX < 135)
+            coord_x += velocidad;
+        if (mouseX >= 135 && mouseX < 225)
+            coord_z -= velocidad;
+        if (mouseX >= 225 && mouseX < 315)
+            coord_x -= velocidad;
+        if (mouseX >= 315 || mouseX < 45)
+            coord_z += velocidad;
     }
 
     if ((*global).moverDerecha) {
-        if ((*global).mouseX >= 45 && (*global).mouseX < 135)
-            coord_z -= this->velocidad;
-        if ((*global).mouseX >= 135 && (*global).mouseX < 225)
-            coord_x -= this->velocidad;
-        if ((*global).mouseX >= 225 && (*global).mouseX < 315)
-            coord_z += this->velocidad;
-        if ((*global).mouseX >= 315 || (*global).mouseX < 45)
-            coord_x += this->velocidad;
+        if (mouseX >= 45 && mouseX < 135)
+            coord_z -= velocidad;
+        if (mouseX >= 135 && mouseX < 225)
+            coord_x -= velocidad;
+        if (mouseX >= 225 && mouseX < 315)
+            coord_z += velocidad;
+        if (mouseX >= 315 || mouseX < 45)
+            coord_x += velocidad;
     }
 
     if ((*global).moverIzquierda) {
-        if ((*global).mouseX >= 45 && (*global).mouseX < 135)
-            coord_z += this->velocidad;
-        if ((*global).mouseX >= 135 && (*global).mouseX < 225)
-            coord_x += this->velocidad;
-        if ((*global).mouseX >= 225 && (*global).mouseX < 315)
-            coord_z -= this->velocidad;
-        if ((*global).mouseX >= 315 || (*global).mouseX < 45)
-            coord_x -= this->velocidad;
+        if (mouseX >= 45 && mouseX < 135)
+            coord_z += velocidad;
+        if (mouseX >= 135 && mouseX < 225)
+            coord_x += velocidad;
+        if (mouseX >= 225 && mouseX < 315)
+            coord_z -= velocidad;
+        if (mouseX >= 315 || mouseX < 45)
+            coord_x -= velocidad;
     }
 }
 
@@ -108,4 +111,71 @@ void bomberman::dibujar() {
     glVertex3f(xReal + desplazamiento, 2, zReal + desplazamiento);
     glVertex3f(xReal + desplazamiento, 2, zReal );
     glEnd();
+    
+}
+
+
+int bomberman::getVida() {
+    return this->vida;
+}
+
+void bomberman::setVida(int vid) {
+    this->vida = vid;
+}
+
+list<bomba*> bomberman::getBomba() {
+    return this->bombas;
+}
+
+void bomberman::setBomba(list<bomba*> bomb) {
+    this->bombas = bomb;
+}
+
+int bomberman::getMaxBomba() {
+    return this->maxBomba;
+}
+
+void bomberman::setMaxBomba(int max) {
+    this->maxBomba = max;
+}
+
+bool bomberman::getMoverBomba() {
+    return this->moverBomba;
+}
+
+void bomberman::setMoverBomba(bool mov) {
+    this->moverBomba = mov;
+}
+
+float bomberman::getTiempoBomba() {
+    return this->tiempoBomba;
+}
+
+void bomberman::setTiempoBomba(float tiempo) {
+    this->tiempoBomba = tiempo;
+}
+
+int bomberman::getLargoBomba() {
+    return this->largoBomba;
+}
+
+void bomberman::setLargoBomba(int largo) {
+    this->largoBomba = largo;
+}
+
+float bomberman::getVelocidad() {
+    return this->velocidad;
+}
+
+void bomberman::setVelocidad(float vel) {
+    this->velocidad = vel;
+}
+
+bool bomberman::bombaDisponible() {
+    return (this->maxBomba > 0 && (this->maxBomba == this->bombas.size()));
+}
+
+// el bomberman manda una solicitud de que quiere poner una bomba, ya el controlador se encargar� si puede o no
+// las coordenadas las va a sacar la clase de la parte grafica mediante el controlador? o un controlador (nuevo) para grafico? (como? A)
+void bomberman::ponerBomba(int x, int z) {
 }

@@ -3,3 +3,10 @@
 *.obj
 *.iobj
 *.user
+*.pdb
+*.ipdb
+*.ilk
+Bomberman/Debug/
+Bomberman/Release/
+Release/*.exe
+Debug/*.exe
