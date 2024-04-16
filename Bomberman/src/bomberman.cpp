@@ -123,14 +123,6 @@ void bomberman::setVida(int vid) {
     this->vida = vid;
 }
 
-list<bomba*> bomberman::getBomba() {
-    return this->bombas;
-}
-
-void bomberman::setBomba(list<bomba*> bomb) {
-    this->bombas = bomb;
-}
-
 int bomberman::getMaxBomba() {
     return this->maxBomba;
 }
@@ -172,10 +164,5 @@ void bomberman::setVelocidad(float vel) {
 }
 
 bool bomberman::bombaDisponible() {
-    return (this->maxBomba > 0 && (this->maxBomba == this->bombas.size()));
-}
-
-// el bomberman manda una solicitud de que quiere poner una bomba, ya el controlador se encargar� si puede o no
-// las coordenadas las va a sacar la clase de la parte grafica mediante el controlador? o un controlador (nuevo) para grafico? (como? A)
-void bomberman::ponerBomba(int x, int z) {
+    return (this->maxBomba > 0); //Agregar los casos
 }

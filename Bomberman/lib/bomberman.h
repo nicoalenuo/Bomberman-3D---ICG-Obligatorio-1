@@ -8,7 +8,6 @@
 class bomberman : public personaje {
 private:
 	int vida;
-	list<bomba*> bombas = list<bomba*>();
 	int maxBomba;
 	bool moverBomba;
 	float tiempoBomba;
@@ -17,22 +16,19 @@ private:
 public:
 	bomberman(GLfloat x, GLfloat z);
 
-	virtual int getVida();
-	virtual void setVida(int vid);
-	virtual list<bomba*> getBomba();
-	virtual void setBomba(list<bomba*> bomb);
-	virtual int getMaxBomba();
-	virtual void setMaxBomba(int max);
-	virtual bool getMoverBomba();
-	virtual void setMoverBomba(bool mov);
-	virtual float getTiempoBomba();
-	virtual void setTiempoBomba(float tiempo);
-	virtual int getLargoBomba();
-	virtual void setLargoBomba(int largo);
-	virtual float getVelocidad();
-	virtual void setVelocidad(float vel);
-	virtual bool bombaDisponible();
-	virtual void ponerBomba(int x, int z);
+	int getVida();
+	void setVida(int vid);
+	int getMaxBomba();
+	void setMaxBomba(int max);
+	bool getMoverBomba();
+	void setMoverBomba(bool mov);
+	float getTiempoBomba();
+	void setTiempoBomba(float tiempo);
+	int getLargoBomba();
+	void setLargoBomba(int largo);
+	float getVelocidad();
+	void setVelocidad(float vel);
+	bool bombaDisponible();
 	void actualizar();
 	void dibujar();
 };

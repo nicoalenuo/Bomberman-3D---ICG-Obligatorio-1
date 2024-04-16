@@ -18,9 +18,10 @@ using namespace std;
 class bomba;
 
 class global { 
-public:
+private:
 	static global* instancia;
 	global();
+public:
 
 	bool moverArriba;
 	bool moverIzquierda;
@@ -31,7 +32,6 @@ public:
 	const double generadorTerreno = 0.6; //probabilidad de 0 a 1 de generar terreno destructible
 	const GLfloat largoEstructura = 2;
 	static global* getInstance();
-	void insertarBomba(list<bomba*> listBomba, bomba* bomb);
 };
 
 

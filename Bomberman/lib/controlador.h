@@ -48,7 +48,7 @@ private:
 	list<bomba*> bombas = list<bomba*>(); 
 	list<enemigo*> enemigos = list<enemigo*>();
 
-	objeto* jugador; 
+	bomberman* jugador; 
 	
 	GLuint textura1;
 	GLuint textura2;
@@ -81,12 +81,10 @@ public:
 	bool getFin();
 	void setFin(bool fin);
 
-	void toggle_pausa(); //pausa o despausa
+	void toggle_pausa(); 
 	void aumentarNivel();
 	void explotarBomba(bomba* bomb);
-	void actualizarTiempoBomba(Uint32 ms);
-	void crearBomba(int x, int z, bomberman* pers);
-	void ponerBomba(int x, int z, bomberman* pers);
+	void ponerBomba(int x, int z);
 
 	~Controlador();
 };
