@@ -6,8 +6,6 @@ int main(int argc, char* argv[]) {
     Controlador* controlador = Controlador::getInstance();
     global* global = global::getInstance();
 
-    unsigned int frameDelay = global->frameDelay;
-
     Uint32 frameStart;
     Uint32 frameTime;
 

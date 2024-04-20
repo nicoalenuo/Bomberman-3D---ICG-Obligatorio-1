@@ -1,16 +1,16 @@
 #include "../lib/bomba.h"
 #include "../lib/controlador.h"
 
-bomba::bomba(GLfloat x, GLfloat z, GLfloat anchoX, GLfloat anchoZ, GLfloat alt, float tiempo, int largo) : objeto(x, z, anchoX, anchoZ, alt) {
+bomba::bomba(posicion pos, tamanio tam, int tiempo, int largo) : objeto(pos, tam) {
 	this->tiempoBomba = tiempo;
 	this->largoBomba = largo;
 }
 
-float bomba::getTiempoBomba() {
+int bomba::getTiempoBomba() {
 	return this->tiempoBomba;
 }
 
-void bomba::setTiempoBomba(float tiempo) {
+void bomba::setTiempoBomba(int tiempo) {
 	this->tiempoBomba = tiempo;
 }
 
@@ -22,71 +22,143 @@ void bomba::setLargoBomba(int largo) {
 	this->largoBomba = largo;
 }
 
-void bomba::restarTiempo(int tiempo) {
-    this->tiempoBomba -= tiempo;
-    if (this->tiempoBomba <= 0) {
-        this->tiempoBomba = 0;
-    }
-}
 
 void bomba::actualizar() { // actualiza el tiempo, y si es cero, explota
-    Controlador* controlador = Controlador::getInstance();
-    objeto*** tablero = controlador->getTablero();
-    bomberman* jugador = controlador->getBomberman();
-    restarTiempo(global->frameDelay);
+
+    tiempoBomba -= frameDelay;
     if (this->tiempoBomba <= 0) {
-        int largoTablero = controlador->getLargoTablero();
-        int anchoTablero = controlador->getAnchoTablero();
-        int x = (int)this->getCoordX();
-        int z = (int)this->getCoordZ();
-        bool alcanzaX = false;
-        bool alcanzaZ = false;
-        bool jugadorAlcanzado = false;
+        Controlador* controlador = Controlador::getInstance();
+        objeto*** estructuras = controlador->getEstructuras();
+        objeto*** bombas = controlador->getBombas();
+        objeto*** fuegos = controlador->getFuegos();
 
-        for (int i = z+1; !alcanzaX && i < min(x + this->largoBomba+1, largoTablero);i++) { // x fijo, z incrementa
-            if (tablero[x][i] != nullptr && tablero[x][i] != jugador) { // por ahora no toma en cuenta jugador
-                alcanzaX = true;
-                tablero[x][i]->actualizar();
-            } else if (tablero[x][i] != nullptr) {
-                jugadorAlcanzado = true;
-            }
-        }
-        alcanzaX = false;
-        for (int i = z - 1; !alcanzaX && i > max(x - this->largoBomba - 1, 0); i--) { // x fijo, z decrementa
-            if (tablero[x][i] != nullptr && tablero[x][i] != jugador) { // por ahora no toma en cuenta jugador
-                alcanzaX = true;
-                tablero[x][i]->actualizar();
-            } else if (tablero[x][i] != nullptr) {
-                jugadorAlcanzado = true;
-            }
-        }
+        int largoEstructuras = controlador->getLargoTablero();
+        int anchoEstructuras = controlador->getAnchoTablero();
 
-        for (int i = x + 1; !alcanzaX && i < min(z + this->largoBomba + 1, anchoTablero); i++) { // z fijo, x incrementa
-            if (tablero[i][z] != nullptr && tablero[i][z] != jugador) { // por ahora no toma en cuenta jugador
-                alcanzaZ = true;
-                tablero[i][z]->actualizar();
+        int x = controlador->getPosicionXEnTablero(pos.x, tam.x);
+        int z = controlador->getPosicionZEnTablero(pos.z, tam.z);
+
+        bool alcanza = false;
+
+        for (int i = z+1; !alcanza && i < min(z + this->largoBomba + 1, anchoEstructuras); i++) { // x fijo, z incrementa
+            if (estructuras[x][i] != nullptr) { // por ahora no toma en cuenta jugador
+                alcanza = true;
+                estructura* est = dynamic_cast<estructura*>(estructuras[x][i]);
+                if (est->getDestructible()) { //Pasarle un mensaje a la estructura para que comience la animacion de destruccion, 
+                    delete estructuras[x][i];
+                    estructuras[x][i] = nullptr;
+                }
             }
-            else if (tablero[i][z] != nullptr) {
-                jugadorAlcanzado = true;
-            }
-        }
-        alcanzaZ = false;
-        for (int i = x - 1; !alcanzaX && i > max(z - this->largoBomba - 1, 0); i--) { // z fijo, x decrementa
-            if (tablero[i][z] != nullptr && tablero[i][z] != jugador) { // por ahora no toma en cuenta jugador
-                alcanzaZ = true;
-                tablero[i][z]->actualizar();
-            }
-            else if (tablero[i][z] != nullptr) {
-                jugadorAlcanzado = true;
+            else {
+                if (fuegos[x][i] != nullptr) {
+                    delete fuegos[x][i];
+                }
+                fuegos[x][i] = new fuego({ GLfloat(x * tile_size) , 0.5, GLfloat(i * tile_size)}, {GLfloat(tile_size), GLfloat(tile_size), GLfloat(tile_size)}, 2000);
             }
         }
 
-        // si el bomberman es alcanzado, debería de pasarle un bool de que murió en actualizar?
-    } else {
+        alcanza = false;
+        for (int i = z - 1; !alcanza && i >= max(z - this->largoBomba, 0); i--) { // x fijo, z decrementa
+            if (estructuras[x][i] != nullptr) { // por ahora no toma en cuenta jugador
+                alcanza = true;
+                estructura* est = dynamic_cast<estructura*>(estructuras[x][i]);
+                if (est->getDestructible()) {
+                    delete estructuras[x][i];
+                    estructuras[x][i] = nullptr;
+                }
+            }
+            else {
+                if (fuegos[x][i] != nullptr) {
+                    delete fuegos[x][i];
+                }
+                fuegos[x][i] = new fuego({ GLfloat(x * tile_size) , 0.5, GLfloat(i * tile_size) }, { GLfloat(tile_size), GLfloat(tile_size), GLfloat(tile_size) }, 2000);
+            }
+        }
 
-    }
+        alcanza = false;
+        for (int i = x + 1; !alcanza && i < min(x + this->largoBomba + 1, largoEstructuras); i++) { // z fijo, x incrementa
+            if (estructuras[i][z] != nullptr) { // por ahora no toma en cuenta jugador
+                alcanza = true;
+                estructura* est = dynamic_cast<estructura*>(estructuras[i][z]);
+                if (est->getDestructible()) {
+                    delete estructuras[i][z];
+                    estructuras[i][z] = nullptr;
+                }
+            }
+            else {
+                if (fuegos[i][z] != nullptr) {
+                    delete fuegos[i][z];
+                }
+                fuegos[i][z] = new fuego({ GLfloat(i * tile_size) , 0.5, GLfloat(z * tile_size) }, { GLfloat(tile_size), GLfloat(tile_size), GLfloat(tile_size) }, 2000);
+            }
+        }
+
+        alcanza = false;
+        for (int i = x - 1; !alcanza && i >= max(x - this->largoBomba, 0); i--) { // z fijo, x decrementa
+            if (estructuras[i][z] != nullptr) { // por ahora no toma en cuenta jugador
+                alcanza = true;
+                estructura* est = dynamic_cast<estructura*>(estructuras[i][z]);
+                if (est->getDestructible()) {
+                    delete estructuras[i][z];
+                    estructuras[i][z] = nullptr;
+                }
+            }
+            else {
+                if (fuegos[i][z] != nullptr) {
+                    delete fuegos[i][z];
+                }
+                fuegos[i][z] = new fuego({ GLfloat(i * tile_size) , 0.5, GLfloat(z * tile_size) }, { GLfloat(tile_size), GLfloat(tile_size), GLfloat(tile_size) }, 2000);
+            }
+        }
+
+        fuegos[x][z] = new fuego({ GLfloat(x * tile_size) , 0.5, GLfloat(z * tile_size) }, { GLfloat(tile_size), GLfloat(tile_size), GLfloat(tile_size) }, 3000); //Hago que dure un poquito mas
+        bombas[x][z] = nullptr;
+        delete this;
+    } 
 }
 
 void bomba::dibujar() {
+    glPushMatrix();
 
+    glTranslatef(pos.x, pos.y, pos.z);
+    glBegin(GL_QUADS);
+
+
+    glColor3f(1.0, 1.0, 1.0);
+    glVertex3f(0, 0, 0);
+    glVertex3f(tam.x, 0, 0);
+    glVertex3f(tam.x, 0, tam.z);
+    glVertex3f(0, 0, tam.z);
+
+    // Cara de arriba
+    glVertex3f(0, tam.y, 0);
+    glVertex3f(tam.x, tam.y, 0);
+    glVertex3f(tam.x, tam.y, tam.z);
+    glVertex3f(0, tam.y, tam.z);
+
+    // Cara de atras
+    glVertex3f(0, 0, 0);
+    glVertex3f(tam.x, 0, 0);
+    glVertex3f(tam.x, tam.y, 0);
+    glVertex3f(0, tam.y, 0);
+
+    // Cara de adelante
+    glVertex3f(0, 0, tam.z);
+    glVertex3f(tam.x, 0, tam.z);
+    glVertex3f(tam.x, tam.y, tam.z);
+    glVertex3f(0, tam.y, tam.z);
+
+    // Cara izquierda
+    glVertex3f(0, 0, 0);
+    glVertex3f(0, 0, tam.z);
+    glVertex3f(0, tam.y, tam.z);
+    glVertex3f(0, tam.y, 0);
+
+    // Cara derecha (x = 1)
+    glVertex3f(tam.x, 0, 0);
+    glVertex3f(tam.x, 0, tam.z);
+    glVertex3f(tam.x, tam.y, tam.z);
+    glVertex3f(tam.x, tam.y, 0);
+    glEnd();
+    glPopMatrix();
 }

@@ -13,7 +13,7 @@ private:
 	bool destructible; //true si se puede destruir, false si es indestructible
 	bonificador* powerUp; // [ (powerUp != nullptr) -> destructible ] /\ [ not(destructible -> (powerUp != nullptr)) ]
 public:
-	estructura(GLfloat x, GLfloat z, GLfloat anchoX, GLfloat anchoZ, GLfloat alt, bool dest);
+	estructura(posicion pos, tamanio tam, bool dest);
 	bool getDestructible();
 	void setDestructible(bool dest);
 	bonificador* getPowerUp();

@@ -2,55 +2,71 @@
 
 GLuint ControladorTexturas::texturaEstructuraDestructible = 0;
 GLuint ControladorTexturas::texturaEstructuraNoDestructible = 0;
+GLuint ControladorTexturas::player = 0;
 
 void ControladorTexturas::cargarTexturas() {
-    //TEXTURA
-    const char* archivo1 = "../Bomberman/texturas/estructuraTrue.jpg"; //sacar
     //CARGAR IMAGEN
-    FREE_IMAGE_FORMAT fif1 = FreeImage_GetFIFFromFilename(archivo1);
-    FIBITMAP* bitmap1 = FreeImage_Load(fif1, archivo1); //estoy recibiendo bitmap null
-    bitmap1 = FreeImage_ConvertTo24Bits(bitmap1);
-    int w1 = FreeImage_GetWidth(bitmap1);
-    int h1 = FreeImage_GetHeight(bitmap1);
-    void* datos1 = FreeImage_GetBits(bitmap1);
+    FREE_IMAGE_FORMAT fif = FreeImage_GetFIFFromFilename("texturas/estructura_destructible.jpg");
+    FIBITMAP* bitmap = FreeImage_Load(fif, "texturas/estructura_destructible.jpg"); //estoy recibiendo bitmap null
+    bitmap = FreeImage_ConvertTo24Bits(bitmap);
+    int w = FreeImage_GetWidth(bitmap);
+    int h = FreeImage_GetHeight(bitmap);
+    void* datos = FreeImage_GetBits(bitmap);
     //FIN CARGAR IMAGEN
 
-    GLuint textura1;
-    glGenTextures(1, &textura1);
-    glBindTexture(GL_TEXTURE_2D, textura1);
+    GLuint textura;
+    glGenTextures(1, &textura);
+    glBindTexture(GL_TEXTURE_2D, textura);
     glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
     glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
     glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
     glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, w1, h1, 0, GL_BGR, GL_UNSIGNED_BYTE, datos1);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, w, h, 0, GL_BGR, GL_UNSIGNED_BYTE, datos);
     glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
+
+    ControladorTexturas::texturaEstructuraDestructible = textura;
     //FIN TEXTURA
 
-    ControladorTexturas::texturaEstructuraDestructible = textura1;
-
-    //TEXTURA
-    const char* archivo2 = "../Bomberman/texturas/estructuraFalse.png"; //sacar
-
     //CARGAR IMAGEN
-    FREE_IMAGE_FORMAT fif2 = FreeImage_GetFIFFromFilename(archivo2);
-    FIBITMAP* bitmap2 = FreeImage_Load(fif2, archivo2); //estoy reciviendo bitmap null
-    bitmap2 = FreeImage_ConvertTo24Bits(bitmap2);
-    int w2 = FreeImage_GetWidth(bitmap2);
-    int h2 = FreeImage_GetHeight(bitmap2);
-    void* datos2 = FreeImage_GetBits(bitmap2);
+    fif = FreeImage_GetFIFFromFilename("texturas/estrcutura_no_destructible.png");
+    bitmap = FreeImage_Load(fif, "texturas/estrcutura_no_destructible.png"); //estoy reciviendo bitmap null
+    bitmap = FreeImage_ConvertTo24Bits(bitmap);
+    w = FreeImage_GetWidth(bitmap);
+    h = FreeImage_GetHeight(bitmap);
+    datos = FreeImage_GetBits(bitmap);
     //FIN CARGAR IMAGEN
 
-    GLuint textura2;
-    glGenTextures(1, &textura2);
-    glBindTexture(GL_TEXTURE_2D, textura2);
+    glGenTextures(1, &textura);
+    glBindTexture(GL_TEXTURE_2D, textura);
     glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
     glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
     glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
     glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, w2, h2, 0, GL_BGR, GL_UNSIGNED_BYTE, datos2);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, w, h, 0, GL_BGR, GL_UNSIGNED_BYTE, datos);
     glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
 
-    ControladorTexturas::texturaEstructuraNoDestructible = textura2;
+    ControladorTexturas::texturaEstructuraNoDestructible = textura;
+    //FIN TEXTURA
+
+    //CARGAR IMAGEN
+    fif = FreeImage_GetFIFFromFilename("texturas/Chicken02Col.jpg");
+    bitmap = FreeImage_Load(fif, "texturas/Chicken02Col.jpg"); //estoy reciviendo bitmap null
+    bitmap = FreeImage_ConvertTo24Bits(bitmap);
+    w = FreeImage_GetWidth(bitmap);
+    h = FreeImage_GetHeight(bitmap);
+    datos = FreeImage_GetBits(bitmap);
+    //FIN CARGAR IMAGEN
+
+    glGenTextures(1, &textura);
+    glBindTexture(GL_TEXTURE_2D, textura);
+    glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+    glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+    glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+    glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, w, h, 0, GL_BGR, GL_UNSIGNED_BYTE, datos);
+    glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
+
+    ControladorTexturas::player = textura;
     //FIN TEXTURA
 }
 
@@ -61,6 +77,9 @@ GLuint ControladorTexturas::getTextura(tipo_textura tipo) {
             break;
         case ESTRUCTURA_NO_DESTRUCTIBLE:
             return ControladorTexturas::texturaEstructuraNoDestructible;
+            break;
+        case PLAYER:
+            return ControladorTexturas::player;
             break;
         default:
             return 0;

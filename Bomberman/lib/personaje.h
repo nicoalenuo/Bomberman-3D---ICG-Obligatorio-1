@@ -14,7 +14,7 @@ class personaje : public objeto {
 protected:
 	GLfloat velocidad;
 public:
-	personaje(GLfloat x, GLfloat z, GLfloat anchoX, GLfloat anchoZ, GLfloat alt, GLfloat velocidad);
+	personaje(posicion pos, tamanio tam, GLfloat velocidad);
 	virtual void actualizar() = 0;
 	virtual void dibujar() = 0;
 };

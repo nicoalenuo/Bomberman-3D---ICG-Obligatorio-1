@@ -4,22 +4,37 @@
 #define OBJETO_H
 
 #include "global.h"
+#include "../constantes/constantes.h"
 
-class objeto { //abstracta
+struct posicion {
+	GLfloat x;
+	GLfloat y;
+	GLfloat z;
+};
+
+struct tamanio {
+	GLfloat x;
+	GLfloat y;
+	GLfloat z;
+};
+
+class objeto {
 protected:
 	global* global;
-	GLfloat coord_x;
-	GLfloat coord_z;
-	GLfloat ancho_x;
-	GLfloat ancho_z;
-	GLfloat altura;
+	posicion pos;
+	tamanio tam;
 public:
-	objeto(GLfloat x, GLfloat z, GLfloat anchoX, GLfloat anchoZ, GLfloat alt):
-		coord_x(x), coord_z(z), ancho_x(anchoX), ancho_z(anchoZ), altura(alt), global((*global).getInstance()){}
-	virtual GLfloat getCoordX();
-	virtual GLfloat getCoordZ();
-	virtual void setCoordX(GLfloat x);
-	virtual void setCoordZ(GLfloat z);
+	objeto(posicion pos, tamanio tam):
+		pos(pos), tam(tam), global((*global).getInstance()) {}
+	virtual posicion getPosicion();
+	virtual tamanio getTamanio();
+	virtual void setPosicionX(GLfloat x);
+	virtual void setPosicionY(GLfloat y);
+	virtual void setPosicionZ(GLfloat z);
+	virtual void setTamanioX(GLfloat x);
+	virtual void setTamanioY(GLfloat y);
+	virtual void setTamanioZ(GLfloat z);
+
 	virtual void actualizar() = 0;
 	virtual void dibujar() = 0;
 };

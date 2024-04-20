@@ -4,6 +4,7 @@
 #define BOMBERMAN_H
 
 #include "personaje.h"
+#include "../lib/ControladorObjetos.h"
 
 class bomberman : public personaje {
 private:
@@ -13,8 +14,11 @@ private:
 	bool moverBomba;
 	float tiempoBomba;
 	int largoBomba;
+
+	vector<char>  player_commands;
+	vector<vector<float>> player_data;
 public:
-	bomberman(GLfloat x, GLfloat z, GLfloat anchoX, GLfloat anchoZ, GLfloat alt);
+	bomberman(posicion pos, tamanio tam);
 
 	int getVida();
 	void setVida(int vid);
@@ -34,7 +38,6 @@ public:
 	void setVelocidad(float vel);
 	bool bombaDisponible();
 
-	bool posicion_valida(GLfloat coord_x, GLfloat ancho_x, GLfloat coord_z, GLfloat ancho_z, int largoTablero, int anchoTablero, objeto*** tablero);
 	void actualizar();
 	void dibujar();
 };

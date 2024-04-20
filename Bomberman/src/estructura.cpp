@@ -1,6 +1,6 @@
 #include "../lib/estructura.h"
 
-estructura::estructura(GLfloat x, GLfloat z, GLfloat anchoX, GLfloat anchoZ, GLfloat alt, bool dest) : objeto(x, z, anchoX, anchoZ, alt) {
+estructura::estructura(posicion pos, tamanio tam, bool dest) : objeto(pos, tam) {
 	this->destructible = dest;
 	this->powerUp = nullptr;
 }
@@ -22,74 +22,76 @@ void estructura::setPowerUp(bonificador* power) {
 }
 
 void estructura::actualizar() {
-	if (this->destructible) {
-		//si es destructible entonces hace cosas en actualizar
-	}
 }
 
 void estructura::dibujar() {
+    glPushMatrix();
+    glTranslatef(pos.x, pos.y, pos.z);
+
+    glEnable(GL_TEXTURE_2D);
     glBindTexture(GL_TEXTURE_2D, ControladorTexturas::getTextura(destructible ? ESTRUCTURA_DESTRUCTIBLE : ESTRUCTURA_NO_DESTRUCTIBLE));
 
     glBegin(GL_QUADS);
 
     glColor3f(1.0, 1.0, 1.0);
     glTexCoord2f(0, 0);
-    glVertex3f(coord_x, 0, coord_z);
+    glVertex3f(0, 0, 0);
     glTexCoord2f(0, 1);
-    glVertex3f(coord_x + ancho_x, 0, coord_z);
+    glVertex3f(tam.x, 0, 0);
     glTexCoord2f(1, 1);
-    glVertex3f(coord_x + ancho_x, 0, coord_z + ancho_z);
+    glVertex3f(tam.x, 0, tam.z);
     glTexCoord2f(1, 0);
-    glVertex3f(coord_x, 0, coord_z + ancho_z);
+    glVertex3f(0, 0, tam.z);
 
     // Cara de arriba
     glTexCoord2f(0, 0);
-    glVertex3f(coord_x, altura, coord_z);
+    glVertex3f(0, tam.y, 0);
     glTexCoord2f(0, 1);
-    glVertex3f(coord_x + ancho_x, altura, coord_z);
+    glVertex3f(tam.x, tam.y, 0);
     glTexCoord2f(1, 1);
-    glVertex3f(coord_x + ancho_x, altura, coord_z + ancho_z);
+    glVertex3f(tam.x, tam.y, tam.z);
     glTexCoord2f(1, 0);
-    glVertex3f(coord_x, altura, coord_z + ancho_z);
+    glVertex3f(0, tam.y, tam.z);
 
     // Cara de atras
     glTexCoord2f(0, 0);
-    glVertex3f(coord_x, 0, coord_z);
+    glVertex3f(0, 0, 0);
     glTexCoord2f(0, 1);
-    glVertex3f(coord_x + ancho_x, 0, coord_z);
+    glVertex3f(tam.x, 0, 0);
     glTexCoord2f(1, 1);
-    glVertex3f(coord_x + ancho_x, altura, coord_z);
+    glVertex3f(tam.x, tam.y, 0);
     glTexCoord2f(1, 0);
-    glVertex3f(coord_x, altura, coord_z);
+    glVertex3f(0, tam.y, 0);
 
     // Cara de adelante
     glTexCoord2f(0, 0);
-    glVertex3f(coord_x, 0, coord_z + ancho_z);
+    glVertex3f(0, 0, tam.z);
     glTexCoord2f(0, 1);
-    glVertex3f(coord_x + ancho_x, 0, coord_z + ancho_z);
+    glVertex3f(tam.x, 0, tam.z);
     glTexCoord2f(1, 1);
-    glVertex3f(coord_x + ancho_x, altura, coord_z + ancho_z);
+    glVertex3f(tam.x, tam.y, tam.z);
     glTexCoord2f(1, 0);
-    glVertex3f(coord_x, altura, coord_z + ancho_z);
+    glVertex3f(0, tam.y, tam.z);
 
     // Cara izquierda
     glTexCoord2f(0, 0);
-    glVertex3f(coord_x, 0, coord_z);
+    glVertex3f(0, 0, 0);
     glTexCoord2f(0, 1);
-    glVertex3f(coord_x, 0, coord_z + ancho_z);
+    glVertex3f(0, 0, tam.z);
     glTexCoord2f(1, 1);
-    glVertex3f(coord_x, altura, coord_z + ancho_z);
+    glVertex3f(0, tam.y, tam.z);
     glTexCoord2f(1, 0);
-    glVertex3f(coord_x, altura, coord_z);
+    glVertex3f(0, tam.y, 0);
 
     // Cara derecha (x = 1)
     glTexCoord2f(0, 0);
-    glVertex3f(coord_x + ancho_x, 0, coord_z);
+    glVertex3f(tam.x, 0, 0);
     glTexCoord2f(0, 1);
-    glVertex3f(coord_x + ancho_x, 0, coord_z + ancho_z);
+    glVertex3f(tam.x, 0, tam.z);
     glTexCoord2f(1, 1);
-    glVertex3f(coord_x + ancho_x, altura, coord_z + ancho_z);
+    glVertex3f(tam.x, tam.y, tam.z);
     glTexCoord2f(1, 0);
-    glVertex3f(coord_x + ancho_x, altura, coord_z);
+    glVertex3f(tam.x, tam.y, 0);
     glEnd();
+    glPopMatrix();
 }

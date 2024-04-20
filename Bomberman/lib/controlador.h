@@ -8,7 +8,6 @@
 #include "FreeImage.h"
 #include <GL/glu.h>
 
-
 #include <stdio.h>
 #include <iostream>
 #include <random>
@@ -21,6 +20,7 @@
 #include "enemigo.h"
 #include "bomberman.h"
 #include "personaje.h"
+
 #include "ControladorTexturas.h"
 
 using namespace std;
@@ -46,10 +46,10 @@ private:
 	int puntaje;
 	bool fin;
 
-	objeto*** tablero = new objeto **[largoTablero];
-	list<estructura*> estructuraDestructible = list<estructura*>(); 
-	list<bomba*> bombas = list<bomba*>(); 
-	list<enemigo*> enemigos = list<enemigo*>();
+	objeto*** estructuras = new objeto **[largoTablero];
+	objeto*** bombas = new objeto * *[largoTablero];
+	objeto*** enemigos = new objeto * *[largoTablero];
+	objeto*** fuegos = new objeto * *[largoTablero];
 
 	bomberman* jugador; 
 public:
@@ -83,11 +83,19 @@ public:
 
 	void aumentarPuntaje(int punt);
 
-	objeto*** getTablero();
+	objeto*** getEstructuras();
+	objeto*** getEnemigos();
+	objeto*** getBombas();
+	objeto*** getFuegos();
 
 	void toggle_pausa(); 
 	void aumentarNivel();
-	void ponerBomba(int x, int z);
+
+	bool posicion_valida(posicion pos, tamanio tam);
+
+	int getPosicionXEnTablero(GLfloat coord_x, GLfloat ancho_x);
+	int getPosicionZEnTablero(GLfloat coord_z, GLfloat ancho_z);
+
 
 	~Controlador();
 };

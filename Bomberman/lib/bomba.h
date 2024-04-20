@@ -4,18 +4,18 @@
 #define BOMBA_H
 
 #include "objeto.h"
+#include "fuego.h"
 
 class bomba : public objeto {
 private:
-	float tiempoBomba;
+	int tiempoBomba;
 	int largoBomba;
 public:
-	bomba(GLfloat x, GLfloat z, GLfloat anchoX, GLfloat anchoZ, GLfloat alt, float tiempo, int largo);
-	float getTiempoBomba();
-	void setTiempoBomba(float tiempo);
+	bomba(posicion pos, tamanio tam, int tiempo, int largo);
+	int getTiempoBomba();
+	void setTiempoBomba(int tiempo);
 	int getLargoBomba();
 	void setLargoBomba(int largo);
-	void restarTiempo(int tiempo);
 	void actualizar();
 	void dibujar();
 };

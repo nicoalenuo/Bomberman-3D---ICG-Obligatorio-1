@@ -10,7 +10,7 @@ class enemigo : public personaje {
 private:
 
 public:
-	enemigo(GLfloat x, GLfloat z, GLfloat anchoX, GLfloat anchoZ, GLfloat alt);
+	enemigo(posicion pos, tamanio tam);
 	void actualizar();
 	void dibujar();
 };
