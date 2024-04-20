@@ -5,6 +5,9 @@ Controlador* Controlador::instancia = nullptr;
 Controlador::Controlador() {
     this->global = global::getInstance();
 
+    //this->interfazJuego = interfazJuego::getInstance();
+    this->ui = UI::getInstance();
+
     this->texturas_habilitadas = true;
     this->pausa = false;
     this->nivel = 1;
@@ -119,6 +122,9 @@ void Controlador::manejarEventos() {
                 case SDLK_LEFT:
                     (*global).moverIzquierda = true;
                     break;
+                /*case SDLK_h:
+                    (*interfazJuego).swapVisible();
+                    break;*/
             }
             break;
         case SDL_KEYUP:
@@ -166,6 +172,8 @@ void Controlador::dibujar() {
     //Fin de colocacion de camara
 
     (*jugador).dibujar();
+
+    ui->draw();
 
     if (texturas_habilitadas) 
         glEnable(GL_TEXTURE_2D);

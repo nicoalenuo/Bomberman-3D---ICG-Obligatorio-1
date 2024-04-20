@@ -22,6 +22,7 @@
 #include "bomberman.h"
 #include "personaje.h"
 #include "ControladorTexturas.h"
+#include "ui_manager.h"
 
 using namespace std;
 
@@ -36,6 +37,7 @@ private:
 	SDL_Event evento;
 
 	global* global;
+	UI* ui;
 	
 	bool texturas_habilitadas;
 	bool pausa;
