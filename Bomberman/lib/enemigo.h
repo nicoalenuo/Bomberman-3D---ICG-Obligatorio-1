@@ -10,6 +10,7 @@ private:
 
 public:
 	enemigo(posicion pos, tamanio tam);
+
 	void actualizar();
 	void dibujar();
 };

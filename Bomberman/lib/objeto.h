@@ -5,6 +5,7 @@
 
 #include "global.h"
 #include "../constantes/constantes.h"
+
 #include "ControladorObjetos.h"
 #include "ControladorTexturas.h"
 
@@ -26,14 +27,17 @@ protected:
 	tamanio tam;
 public:
 	objeto(posicion pos, tamanio tam) : pos(pos), tam(tam) {}
-	virtual posicion getPosicion();
-	virtual tamanio getTamanio();
-	virtual void setPosicionX(GLfloat x);
-	virtual void setPosicionY(GLfloat y);
-	virtual void setPosicionZ(GLfloat z);
-	virtual void setTamanioX(GLfloat x);
-	virtual void setTamanioY(GLfloat y);
-	virtual void setTamanioZ(GLfloat z);
+
+	posicion getPosicion();
+	tamanio getTamanio();
+
+	void setPosicionX(GLfloat x);
+	void setPosicionY(GLfloat y);
+	void setPosicionZ(GLfloat z);
+
+	void setTamanioX(GLfloat x);
+	void setTamanioY(GLfloat y);
+	void setTamanioZ(GLfloat z);
 
 	virtual void actualizar() = 0;
 	virtual void dibujar() = 0;

@@ -1,8 +1,8 @@
 #include "../lib/bomberman.h"
 
 bool posicion_valida(posicion pos, tamanio tam) {
-    int largoTableroAux = largoTablero * tile_size;
-    int anchoTableroAux = anchoTablero * tile_size;
+    int largoTableroAux = largoTablero * int(tile_size);
+    int anchoTableroAux = anchoTablero * int(tile_size);
 
     objeto* obj_1 = estructuras[int(pos.x) / int(tile_size)][int(pos.z) / int(tile_size)];
     objeto* obj_2 = estructuras[int(pos.x) / int(tile_size)][int(pos.z + tam.z) / int(tile_size)];
@@ -16,9 +16,9 @@ bool posicion_valida(posicion pos, tamanio tam) {
 
     return
         pos.x >= 0 &&
-        pos.x + tam.x <= largoTableroAux &&
+        pos.x + tam.x < largoTableroAux &&
         pos.z >= 0 &&
-        pos.z + tam.z <= anchoTableroAux &&
+        pos.z + tam.z < anchoTableroAux &&
         (obj_1 == nullptr || pos.x < obj_1->getPosicion().x || pos.x > obj_1->getPosicion().x + obj_1->getTamanio().x || pos.z < obj_1->getPosicion().z || pos.z > obj_1->getPosicion().z + obj_1->getTamanio().z) &&
         (obj_2 == nullptr || pos.x < obj_2->getPosicion().x || pos.x > obj_2->getPosicion().x + obj_2->getTamanio().x || pos.z + tam.z < obj_2->getPosicion().z || pos.z + tam.z > obj_2->getPosicion().z + obj_2->getTamanio().z) &&
         (obj_3 == nullptr || pos.x + tam.x < obj_3->getPosicion().x || pos.x + tam.x > obj_3->getPosicion().x + obj_3->getTamanio().x || pos.z < obj_3->getPosicion().z || pos.z > obj_3->getPosicion().z + obj_3->getTamanio().z) &&
@@ -33,8 +33,8 @@ bool posicion_valida(posicion pos, tamanio tam) {
 bomberman::bomberman(posicion pos, tamanio tam, GLfloat velocidad) : personaje(pos, tam, velocidad) {
     this->vida = 1;
     this->moverBomba = false;
-    this->largoBomba = 1;
-    this->tiempoBomba = 1.0; //Para poner algo pongo 1, falta probar y ajustar mediante la parte grafica
+    this->largoBomba = 2;
+    this->tiempoBomba = 2000;
     this->maxBomba = 1;
     this->cantActual = 0;
 
@@ -42,64 +42,79 @@ bomberman::bomberman(posicion pos, tamanio tam, GLfloat velocidad) : personaje(p
 }
 
 void bomberman::actualizar() {
-
     if (moverArriba) {
-        if (mouseX >= 45 && mouseX < 135)
+        if (mouseX >= 45 && mouseX < 135) {
             if (posicion_valida({ pos.x - velocidad, 0, pos.z }, { tam.x, 0, tam.z }))
                 pos.x -= velocidad;
-        if (mouseX >= 135 && mouseX < 225)
+        }
+        else if (mouseX >= 135 && mouseX < 225) {
             if (posicion_valida({ pos.x, 0, pos.z + velocidad }, { tam.x, 0,tam.z }))
                 pos.z += velocidad;
-        if (mouseX >= 225 && mouseX < 315) 
+        }
+        else if (mouseX >= 225 && mouseX < 315) {
             if (posicion_valida({ pos.x + velocidad, 0, pos.z }, { tam.x, 0, tam.z }))
                 pos.x += velocidad;
-        if (mouseX >= 315 || mouseX < 45)
+        }
+        else {
             if (posicion_valida({ pos.x, 0,pos.z - velocidad }, { tam.x, 0,tam.z }))
                 pos.z -= velocidad;
+        }
     }
     if (moverAbajo) {
-        if (mouseX >= 45 && mouseX < 135)
+        if (mouseX >= 45 && mouseX < 135) {
             if (posicion_valida({ pos.x + velocidad, 0, pos.z }, { tam.x, 0, tam.z }))
                 pos.x += velocidad;
-        if (mouseX >= 135 && mouseX < 225)
+        }
+        else if (mouseX >= 135 && mouseX < 225) {
             if (posicion_valida({ pos.x, 0, pos.z - velocidad }, { tam.x, 0, tam.z }))
                 pos.z -= velocidad;
-        if (mouseX >= 225 && mouseX < 315)
+        }
+        else if (mouseX >= 225 && mouseX < 315) {
             if (posicion_valida({ pos.x - velocidad, 0, pos.z }, { tam.x, 0, tam.z }))
                 pos.x -= velocidad;
-        if (mouseX >= 315 || mouseX < 45)
+        }
+        else {
             if (posicion_valida({ pos.x, 0, pos.z + velocidad }, { tam.x, 0, tam.z }))
                 pos.z += velocidad;
+        }
     }
 
     if (moverDerecha) {
-        if (mouseX >= 45 && mouseX < 135)
+        if (mouseX >= 45 && mouseX < 135) {
             if (posicion_valida({ pos.x, 0, pos.z - velocidad }, { tam.x, 0, tam.z }))
                 pos.z -= velocidad;
-        if (mouseX >= 135 && mouseX < 225)
+        }
+        else if (mouseX >= 135 && mouseX < 225) {
             if (posicion_valida({ pos.x - velocidad, 0, pos.z }, { tam.x, 0, tam.z }))
                 pos.x -= velocidad;
-        if (mouseX >= 225 && mouseX < 315)
+        }
+        else if (mouseX >= 225 && mouseX < 315) {
             if (posicion_valida({ pos.x, 0, pos.z + velocidad }, { tam.x, 0, tam.z }))
                 pos.z += velocidad;
-        if (mouseX >= 315 || mouseX < 45)
+        }
+        else {
             if (posicion_valida({ pos.x + velocidad, 0, pos.z }, { tam.x, 0, tam.z }))
                 pos.x += velocidad;
+        }
     }
 
     if (moverIzquierda) {
-        if (mouseX >= 45 && mouseX < 135)
+        if (mouseX >= 45 && mouseX < 135) {
             if (posicion_valida({ pos.x, 0, pos.z + velocidad }, { tam.x, 0, tam.z }))
                 pos.z += velocidad;
-        if (mouseX >= 135 && mouseX < 225)
+        }
+        else if (mouseX >= 135 && mouseX < 225) {
             if (posicion_valida({ pos.x + velocidad, 0, pos.z }, { tam.x, 0, tam.z }))
                 pos.x += velocidad;
-        if (mouseX >= 225 && mouseX < 315)
+        }
+        else if (mouseX >= 225 && mouseX < 315) {
             if (posicion_valida({ pos.x, 0, pos.z - velocidad }, { tam.x, 0, tam.z }))
                 pos.z -= velocidad;
-        if (mouseX >= 315 || mouseX < 45)
+        }
+        else {
             if (posicion_valida({ pos.x - velocidad, 0, pos.z }, { tam.x, 0, tam.z }))
                 pos.x -= velocidad;
+        }
     }
 }
 
@@ -109,7 +124,6 @@ void bomberman::dibujar() {
     ControladorObjetos::DrawMultiplePoints(GL_QUADS, player_commands, player_data, ControladorTexturas::getTextura(PLAYER));
     glPopMatrix();
 }
-
 
 int bomberman::getVida() {
     return this->vida;
@@ -151,11 +165,11 @@ void bomberman::setMoverBomba(bool mov) {
     this->moverBomba = mov;
 }
 
-float bomberman::getTiempoBomba() {
-    return this->tiempoBomba;
+int bomberman::getTiempoBomba() {
+    return tiempoBomba;
 }
 
-void bomberman::setTiempoBomba(float tiempo) {
+void bomberman::setTiempoBomba(int tiempo) {
     this->tiempoBomba = tiempo;
 }
 
@@ -165,14 +179,6 @@ int bomberman::getLargoBomba() {
 
 void bomberman::setLargoBomba(int largo) {
     this->largoBomba = largo;
-}
-
-float bomberman::getVelocidad() {
-    return this->velocidad;
-}
-
-void bomberman::setVelocidad(float vel) {
-    this->velocidad = vel;
 }
 
 bool bomberman::bombaDisponible() {

@@ -1,7 +1,5 @@
 #include "Bomberman/lib/controlador.h"
 
-using namespace std;
-
 int main(int argc, char* argv[]) {
     Controlador* controlador = Controlador::getInstance();
 
@@ -12,7 +10,8 @@ int main(int argc, char* argv[]) {
         frameStart = SDL_GetTicks();
 
         (*controlador).manejarEventos();
-        (*controlador).actualizar();
+        if (!(*controlador).getPausa()) 
+            (*controlador).actualizar();
         (*controlador).dibujar();
 
         frameTime = SDL_GetTicks() - frameStart;

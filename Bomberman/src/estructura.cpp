@@ -4,14 +4,6 @@ estructura::estructura(posicion pos, tamanio tam, bool dest) : objeto(pos, tam) 
 	this->destructible = dest;
 }
 
-bool estructura::getDestructible() {
-	return this->destructible;
-}
-
-void estructura::setDestructible(bool dest) {
-	this->destructible = dest;
-}
-
 void estructura::actualizar() {
 }
 
@@ -85,4 +77,12 @@ void estructura::dibujar() {
     glVertex3f(tam.x, tam.y, 0);
     glEnd();
     glPopMatrix();
+}
+
+bool estructura::getDestructible() {
+    return this->destructible;
+}
+
+void estructura::setDestructible(bool dest) {
+    this->destructible = dest;
 }

@@ -1,18 +1,18 @@
 #include "../lib/objeto.h"
 
 
-posicion objeto::getPosicion() {return pos;}
+posicion objeto::getPosicion() { return pos; }
 
-tamanio objeto::getTamanio() {return tam;}
+tamanio objeto::getTamanio() { return tam; }
 
-void objeto::setPosicionX(GLfloat x) {this->pos.x = x;}
+void objeto::setPosicionX(GLfloat x) { pos.x = x; }
 
-void objeto::setPosicionY(GLfloat y) {this->pos.y = y;}
+void objeto::setPosicionY(GLfloat y) { pos.y = y; }
 
-void objeto::setPosicionZ(GLfloat z) {this->pos.z = z;}
+void objeto::setPosicionZ(GLfloat z) { pos.z = z; }
 
-void objeto::setTamanioX(GLfloat x) {this->tam.x = x;}
+void objeto::setTamanioX(GLfloat x)  { tam.x = x; }
 
-void objeto::setTamanioY(GLfloat y) {this->tam.y = y;}
+void objeto::setTamanioY(GLfloat y)  { tam.y = y; }
 
-void objeto::setTamanioZ(GLfloat z) {this->tam.z = z;}
+void objeto::setTamanioZ(GLfloat z)  { tam.z = z; }

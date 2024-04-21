@@ -4,18 +4,18 @@ bonificador::bonificador(posicion pos, tamanio tam, tipo_poder tipo) : objeto(po
 	this->tipo = tipo;
 }
 
-tipo_poder bonificador::getTipo() {
-	return tipo;
-}
-
-void bonificador::setTipo(tipo_poder tipo) {
-	this->tipo = tipo;
-}
-
 void bonificador::actualizar() {
 
 }
 
 void bonificador::dibujar() {
 
+}
+
+tipo_poder bonificador::getTipo() {
+	return tipo;
+}
+
+void bonificador::setTipo(tipo_poder tipo) {
+	this->tipo = tipo;
 }

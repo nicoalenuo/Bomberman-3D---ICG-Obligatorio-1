@@ -3,8 +3,6 @@
 Controlador* Controlador::instancia = nullptr; 
 
 Controlador::Controlador() {
-    texturas_habilitadas = true;
-    pausa = false;
     nivel = 1;
     fin = false;
     tiempoJuego = 200; //segundos
@@ -119,28 +117,37 @@ void Controlador::manejarEventos() {
                         posBombaXTablero = getPosicionXEnTablero(jugador->getPosicion().x - tile_size, 1);
                         posBombaZTablero = getPosicionXEnTablero(jugador->getPosicion().z, 1);
                     }
-                    if (mouseX >= 135 && mouseX < 225) {
+                    else if (mouseX >= 135 && mouseX < 225) {
                         posBombaXTablero = getPosicionXEnTablero(jugador->getPosicion().x, 1);
                         posBombaZTablero = getPosicionXEnTablero(jugador->getPosicion().z + tile_size, 1);
                     }
-                    if (mouseX >= 225 && mouseX < 315) {
+                    else if (mouseX >= 225 && mouseX < 315) {
                         posBombaXTablero = getPosicionXEnTablero(jugador->getPosicion().x + tile_size, 1);
                         posBombaZTablero = getPosicionXEnTablero(jugador->getPosicion().z, 1);
                     }
-                    if (mouseX >= 315 || mouseX < 45) {
+                    else {
                         posBombaXTablero = getPosicionXEnTablero(jugador->getPosicion().x, 1);
                         posBombaZTablero = getPosicionXEnTablero(jugador->getPosicion().z - tile_size, 1);
                     }
 
-                    if (bombas[posBombaXTablero][posBombaZTablero] == nullptr) {
+                    if (bombas[posBombaXTablero][posBombaZTablero] == nullptr && estructuras[posBombaXTablero][posBombaZTablero] == nullptr) {
                         objeto* bomba_obj = new bomba({ posBombaXTablero * tile_size + GLfloat(0.5), 0, posBombaZTablero * tile_size + GLfloat(0.5) },
                             { tile_size / 2, tile_size / 2, tile_size / 2},
-                            2000,
+                            2000, //2 segundos
                             2
                         );
 
                         bombas[posBombaXTablero][posBombaZTablero] = bomba_obj;
                     }
+                    break;
+                case SDLK_t:
+                    ControladorCamara::cambiarTipoCamara(CAMARA_TERCERA_PERSONA);
+                    break;
+                case SDLK_o:
+                    ControladorCamara::cambiarTipoCamara(CAMARA_ORIGINAL);
+                    break;
+                case SDLK_p:
+                    toggle_pausa();
                     break;
                 case SDLK_UP:
                     moverArriba = true;
@@ -208,14 +215,7 @@ void Controlador::dibujar() {
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     glLoadIdentity();
 
-    //Colocacion de camara
-    GLfloat angleRadians = mouseX * (3.14159f / 180.0f); 
-
-    GLfloat camX = (*jugador).getPosicion().x + 20.0f * sin(angleRadians);
-    GLfloat camZ = (*jugador).getPosicion().z + 20.0f * cos(angleRadians);
-
-    gluLookAt(camX, 30, camZ, (*jugador).getPosicion().x, 0, (*jugador).getPosicion().z, 0, 1, 0);
-    //Fin de colocacion de camara
+    ControladorCamara::colocarCamara();
 
     if (texturas_habilitadas) 
         glEnable(GL_TEXTURE_2D);
@@ -242,6 +242,7 @@ void Controlador::dibujar() {
     if (texturas_habilitadas) 
         glDisable(GL_TEXTURE_2D);
 
+    //Suelo
     glBegin(GL_QUADS);
     glColor3f(GLfloat(227.0 / 255.0), GLfloat(186.0 / 255.0), GLfloat(143.0 / 255.0));
     glVertex3f(0, 0, 0);

@@ -10,10 +10,7 @@
 #include <tuple>
 #include <vector>
 
-#include "SDL.h"
 #include "SDL_opengl.h"
-#include "FreeImage.h"
-#include <GL/glu.h>
 
 using namespace std;
 

@@ -18,6 +18,8 @@
 #include "bomberman.h"
 #include "personaje.h"
 
+#include "../lib/ControladorCamara.h"
+
 
 class Controlador {
 private:

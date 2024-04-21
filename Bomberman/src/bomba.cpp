@@ -5,23 +5,6 @@ bomba::bomba(posicion pos, tamanio tam, int tiempo, int largo) : objeto(pos, tam
 	this->largoBomba = largo;
 }
 
-int bomba::getTiempoBomba() {
-	return this->tiempoBomba;
-}
-
-void bomba::setTiempoBomba(int tiempo) {
-	this->tiempoBomba = tiempo;
-}
-
-int bomba::getLargoBomba() {
-	return this->largoBomba;
-}
-
-void bomba::setLargoBomba(int largo) {
-	this->largoBomba = largo;
-}
-
-
 void bomba::actualizar() { // actualiza el tiempo, y si es cero, explota
 
    tiempoBomba -= frameDelay;
@@ -41,9 +24,9 @@ void bomba::actualizar() { // actualiza el tiempo, y si es cero, explota
                 }
             }
             else {
-                if (fuegos[x][i] != nullptr) {
+                if (fuegos[x][i] != nullptr)
                     delete fuegos[x][i];
-                }
+
                 fuegos[x][i] = new fuego({ GLfloat(x * tile_size) , 0.5, GLfloat(i * tile_size)}, {GLfloat(tile_size), GLfloat(tile_size), GLfloat(tile_size)}, 2000);
             }
         }
@@ -59,9 +42,9 @@ void bomba::actualizar() { // actualiza el tiempo, y si es cero, explota
                 }
             }
             else {
-                if (fuegos[x][i] != nullptr) {
+                if (fuegos[x][i] != nullptr)
                     delete fuegos[x][i];
-                }
+
                 fuegos[x][i] = new fuego({ GLfloat(x * tile_size) , 0.5, GLfloat(i * tile_size) }, { GLfloat(tile_size), GLfloat(tile_size), GLfloat(tile_size) }, 2000);
             }
         }
@@ -77,9 +60,9 @@ void bomba::actualizar() { // actualiza el tiempo, y si es cero, explota
                 }
             }
             else {
-                if (fuegos[i][z] != nullptr) {
+                if (fuegos[i][z] != nullptr)
                     delete fuegos[i][z];
-                }
+
                 fuegos[i][z] = new fuego({ GLfloat(i * tile_size) , 0.5, GLfloat(z * tile_size) }, { GLfloat(tile_size), GLfloat(tile_size), GLfloat(tile_size) }, 2000);
             }
         }
@@ -95,9 +78,9 @@ void bomba::actualizar() { // actualiza el tiempo, y si es cero, explota
                 }
             }
             else {
-                if (fuegos[i][z] != nullptr) {
+                if (fuegos[i][z] != nullptr)
                     delete fuegos[i][z];
-                }
+
                 fuegos[i][z] = new fuego({ GLfloat(i * tile_size) , 0.5, GLfloat(z * tile_size) }, { GLfloat(tile_size), GLfloat(tile_size), GLfloat(tile_size) }, 2000);
             }
         }
@@ -152,4 +135,20 @@ void bomba::dibujar() {
     glVertex3f(tam.x, tam.y, 0);
     glEnd();
     glPopMatrix();
+}
+
+int bomba::getTiempoBomba() {
+    return this->tiempoBomba;
+}
+
+void bomba::setTiempoBomba(int tiempo) {
+    this->tiempoBomba = tiempo;
+}
+
+int bomba::getLargoBomba() {
+    return this->largoBomba;
+}
+
+void bomba::setLargoBomba(int largo) {
+    this->largoBomba = largo;
 }
