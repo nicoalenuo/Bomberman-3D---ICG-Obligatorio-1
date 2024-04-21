@@ -1,5 +1,4 @@
 #include "../lib/bomba.h"
-#include "../lib/controlador.h"
 
 bomba::bomba(posicion pos, tamanio tam, int tiempo, int largo) : objeto(pos, tam) {
 	this->tiempoBomba = tiempo;
@@ -25,22 +24,14 @@ void bomba::setLargoBomba(int largo) {
 
 void bomba::actualizar() { // actualiza el tiempo, y si es cero, explota
 
-    tiempoBomba -= frameDelay;
+   tiempoBomba -= frameDelay;
     if (this->tiempoBomba <= 0) {
-        Controlador* controlador = Controlador::getInstance();
-        objeto*** estructuras = controlador->getEstructuras();
-        objeto*** bombas = controlador->getBombas();
-        objeto*** fuegos = controlador->getFuegos();
-
-        int largoEstructuras = controlador->getLargoTablero();
-        int anchoEstructuras = controlador->getAnchoTablero();
-
-        int x = controlador->getPosicionXEnTablero(pos.x, tam.x);
-        int z = controlador->getPosicionZEnTablero(pos.z, tam.z);
+        int x = getPosicionXEnTablero(pos.x, tam.x);
+        int z = getPosicionZEnTablero(pos.z, tam.z);
 
         bool alcanza = false;
 
-        for (int i = z+1; !alcanza && i < min(z + this->largoBomba + 1, anchoEstructuras); i++) { // x fijo, z incrementa
+        for (int i = z+1; !alcanza && i < min(z + this->largoBomba + 1, anchoTablero); i++) { // x fijo, z incrementa
             if (estructuras[x][i] != nullptr) { // por ahora no toma en cuenta jugador
                 alcanza = true;
                 estructura* est = dynamic_cast<estructura*>(estructuras[x][i]);
@@ -76,7 +67,7 @@ void bomba::actualizar() { // actualiza el tiempo, y si es cero, explota
         }
 
         alcanza = false;
-        for (int i = x + 1; !alcanza && i < min(x + this->largoBomba + 1, largoEstructuras); i++) { // z fijo, x incrementa
+        for (int i = x + 1; !alcanza && i < min(x + this->largoBomba + 1, largoTablero); i++) { // z fijo, x incrementa
             if (estructuras[i][z] != nullptr) { // por ahora no toma en cuenta jugador
                 alcanza = true;
                 estructura* est = dynamic_cast<estructura*>(estructuras[i][z]);

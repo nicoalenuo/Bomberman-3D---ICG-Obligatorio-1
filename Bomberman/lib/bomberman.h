@@ -4,7 +4,6 @@
 #define BOMBERMAN_H
 
 #include "personaje.h"
-#include "../lib/ControladorObjetos.h"
 
 class bomberman : public personaje {
 private:
@@ -18,7 +17,7 @@ private:
 	vector<char>  player_commands;
 	vector<vector<float>> player_data;
 public:
-	bomberman(posicion pos, tamanio tam);
+	bomberman(posicion pos, tamanio tam, GLfloat velocidad);
 
 	int getVida();
 	void setVida(int vid);

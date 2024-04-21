@@ -4,18 +4,18 @@
 #define BONIFICADOR_H
 
 #include "objeto.h"
-#include <string>
 
-using namespace std;
+enum tipo_poder { //Colocar aca los tipos
 
+};
 
 class bonificador : public objeto {
 private:
-	string nombre; //tipo de poder
+	tipo_poder tipo; 
 public:
-	bonificador(posicion pos, tamanio tam);
-	virtual string getNombre();
-	virtual void setNombre(string nom);
+	bonificador(posicion pos, tamanio tam, tipo_poder tipo);
+	virtual tipo_poder getTipo();
+	virtual void setTipo(tipo_poder tipo);
 	void actualizar();
 	void dibujar();
 };

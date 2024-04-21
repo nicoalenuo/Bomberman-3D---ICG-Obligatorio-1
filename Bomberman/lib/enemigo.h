@@ -5,7 +5,6 @@
 
 #include "personaje.h"
 
-
 class enemigo : public personaje {
 private:
 

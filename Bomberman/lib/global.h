@@ -3,32 +3,32 @@
 #ifndef GLOBAL_H
 #define GLOBAL_H
 
-#include <list>
+#include "../constantes/constantes.h"
 
-#include "SDL.h"
-#include "SDL_opengl.h"
-#include <GL/glu.h>
+class objeto;
+class bomberman;
 
-#include <stdio.h>
-#include <iostream>
+extern bool moverArriba;
+extern bool moverAbajo;
+extern bool moverDerecha;
+extern bool moverIzquierda;
 
-using namespace std;
+extern int mouseX;
 
-class global { 
-private:
-	static global* instancia;
-	global();
-public:
+extern bool texturas_habilitadas;
 
-	bool moverArriba;
-	bool moverIzquierda;
-	bool moverDerecha;
-	bool moverAbajo;
 
-	int mouseX;
+extern int puntaje;
 
-	static global* getInstance();
-};
+extern objeto*** estructuras;
+extern objeto*** bombas;
+extern objeto*** enemigos;
+extern objeto*** fuegos;
 
+extern bomberman* jugador;
+
+extern int getPosicionXEnTablero(GLfloat coord_x, GLfloat ancho_x);
+
+extern int getPosicionZEnTablero(GLfloat coord_z, GLfloat ancho_z);
 
 #endif

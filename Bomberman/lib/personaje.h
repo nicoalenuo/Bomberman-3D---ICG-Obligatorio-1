@@ -3,12 +3,7 @@
 #ifndef PERSONAJE_H
 #define PERSONAJE_H
 
-#include <list>
 #include "objeto.h"
-
-using namespace std;
-
-class bomba;
 
 class personaje : public objeto { 
 protected:

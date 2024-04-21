@@ -5,6 +5,8 @@
 
 #include "global.h"
 #include "../constantes/constantes.h"
+#include "ControladorObjetos.h"
+#include "ControladorTexturas.h"
 
 struct posicion {
 	GLfloat x;
@@ -20,12 +22,10 @@ struct tamanio {
 
 class objeto {
 protected:
-	global* global;
 	posicion pos;
 	tamanio tam;
 public:
-	objeto(posicion pos, tamanio tam):
-		pos(pos), tam(tam), global((*global).getInstance()) {}
+	objeto(posicion pos, tamanio tam) : pos(pos), tam(tam) {}
 	virtual posicion getPosicion();
 	virtual tamanio getTamanio();
 	virtual void setPosicionX(GLfloat x);

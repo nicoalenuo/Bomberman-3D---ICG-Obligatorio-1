@@ -1,15 +1,15 @@
 #include "../lib/bonificador.h"
 
-bonificador::bonificador(posicion pos, tamanio tam) : objeto(pos, tam) {
-	this->nombre = "bonificador XD";
+bonificador::bonificador(posicion pos, tamanio tam, tipo_poder tipo) : objeto(pos, tam) {
+	this->tipo = tipo;
 }
 
-string bonificador::getNombre() {
-	return this->nombre;
+tipo_poder bonificador::getTipo() {
+	return tipo;
 }
 
-void bonificador::setNombre(string nom) {
-	this->nombre = nom;
+void bonificador::setTipo(tipo_poder tipo) {
+	this->tipo = tipo;
 }
 
 void bonificador::actualizar() {

@@ -1,20 +1,15 @@
 #include "../lib/fuego.h"
-#include "../lib/controlador.h"
 
 fuego::fuego(posicion pos, tamanio tam, int tiempo) : objeto(pos, tam) {
 	tiempoFuego = tiempo;
-
-	cout << pos.x << " " << pos.z << endl;
 }
 
 void fuego::actualizar() {
 	tiempoFuego -= frameDelay;
 
 	if (tiempoFuego <= 0) {
-		Controlador* controlador = Controlador::getInstance();
-		objeto*** fuegos = controlador->getFuegos();
-		int x = controlador->getPosicionXEnTablero(pos.x, tam.x);
-		int z = controlador->getPosicionZEnTablero(pos.z, tam.z);
+		int x = getPosicionXEnTablero(pos.x, tam.x);
+		int z = getPosicionZEnTablero(pos.z, tam.z);
 
 		fuegos[x][z] = nullptr;
 		delete this;

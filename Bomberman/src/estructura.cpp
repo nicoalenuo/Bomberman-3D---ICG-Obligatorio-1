@@ -2,7 +2,6 @@
 
 estructura::estructura(posicion pos, tamanio tam, bool dest) : objeto(pos, tam) {
 	this->destructible = dest;
-	this->powerUp = nullptr;
 }
 
 bool estructura::getDestructible() {
@@ -11,14 +10,6 @@ bool estructura::getDestructible() {
 
 void estructura::setDestructible(bool dest) {
 	this->destructible = dest;
-}
-
-bonificador* estructura::getPowerUp() {
-	return this->powerUp;
-}
-
-void estructura::setPowerUp(bonificador* power) {
-	this->powerUp = power;
 }
 
 void estructura::actualizar() {

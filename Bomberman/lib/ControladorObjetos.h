@@ -21,7 +21,6 @@ class ControladorObjetos{
 public:
     static tuple<vector<char>, vector<vector<float>>> load_obj(string file, int type);
     static void DrawMultiplePoints(GLenum primitive, vector<char> commands, vector<vector<float>> data, GLuint texture);
-
 };
 
 #endif

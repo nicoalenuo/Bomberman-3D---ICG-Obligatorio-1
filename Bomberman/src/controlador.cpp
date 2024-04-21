@@ -3,8 +3,6 @@
 Controlador* Controlador::instancia = nullptr; 
 
 Controlador::Controlador() {
-    global = global::getInstance();
-
     texturas_habilitadas = true;
     pausa = false;
     nivel = 1;
@@ -12,17 +10,17 @@ Controlador::Controlador() {
     tiempoJuego = 200; //segundos
     puntaje = 0;
 
-    jugador = new bomberman({ 0, 0, 0 }, { tile_size / 2, tile_size / 2, tile_size / 2 });
+    jugador = new bomberman({ 0, 0, 0 }, { tile_size / 2, tile_size / 2, tile_size / 2 }, GLfloat(0.1));
 
-    for (int i = 0; i < this->largoTablero; i++) {
+    for (int i = 0; i < largoTablero; i++) {
         estructuras[i] = new objeto * [anchoTablero];
         bombas[i] = new objeto * [anchoTablero];
         fuegos[i] = new objeto * [anchoTablero];
         enemigos[i] = new objeto * [anchoTablero];
     }
 
-    for (int i = 0; i < this->largoTablero; i++){
-        for (int j = 0; j < this->anchoTablero; j++) {
+    for (int i = 0; i < largoTablero; i++){
+        for (int j = 0; j < anchoTablero; j++) {
             estructuras[i][j] = nullptr;
             bombas[i][j] = nullptr;
             fuegos[i][j] = nullptr;
@@ -38,8 +36,8 @@ Controlador::Controlador() {
     // Generar n�mero aleatorio entre 0 y 1
     double random_num;
 
-    for (int i = 0; i < this->largoTablero; i++) {
-        for (int j = 0; j < this->anchoTablero; j++) {
+    for (int i = 0; i < largoTablero; i++) {
+        for (int j = 0; j < anchoTablero; j++) {
             if (((i % 2) == 1) && ((j % 2) == 1)) {
                 estructuras[i][j] = new estructura({ (GLfloat)i * tile_size, 0, (GLfloat)j * tile_size }, { tile_size, tile_size, tile_size }, false); //no destructible
             } else {
@@ -56,7 +54,6 @@ Controlador::Controlador() {
         delete estructuras[0][0];
         estructuras[0][0] = nullptr;
     }
-
     if (estructuras[0][1] != nullptr) {
         delete estructuras[0][1];
         estructuras[0][1] = nullptr;
@@ -104,7 +101,7 @@ Controlador* Controlador::getInstance() {
 	return instancia;
 }
 
-int posBombaXTablero, posBombaZTablero, mouseX;
+int posBombaXTablero, posBombaZTablero;
 void Controlador::manejarEventos() {
     while (SDL_PollEvent(&evento)) {
         switch (evento.type) {
@@ -118,8 +115,6 @@ void Controlador::manejarEventos() {
                     fin = true;
                     break;
                 case SDLK_b:
-                    mouseX = (*global).mouseX;
-
                     if (mouseX >= 45 && mouseX < 135){
                         posBombaXTablero = getPosicionXEnTablero(jugador->getPosicion().x - tile_size, 1);
                         posBombaZTablero = getPosicionXEnTablero(jugador->getPosicion().z, 1);
@@ -139,7 +134,7 @@ void Controlador::manejarEventos() {
 
                     if (bombas[posBombaXTablero][posBombaZTablero] == nullptr) {
                         objeto* bomba_obj = new bomba({ posBombaXTablero * tile_size + GLfloat(0.5), 0, posBombaZTablero * tile_size + GLfloat(0.5) },
-                            { 1, 1, 1 },
+                            { tile_size / 2, tile_size / 2, tile_size / 2},
                             2000,
                             2
                         );
@@ -148,39 +143,39 @@ void Controlador::manejarEventos() {
                     }
                     break;
                 case SDLK_UP:
-                    (*global).moverArriba = true;
+                    moverArriba = true;
                     break;
                 case SDLK_RIGHT:
-                    (*global).moverDerecha = true;
+                    moverDerecha = true;
                     break;
                 case SDLK_DOWN:
-                    (*global).moverAbajo = true;
+                    moverAbajo = true;
                     break;
                 case SDLK_LEFT:
-                    (*global).moverIzquierda = true;
+                    moverIzquierda = true;
                     break;
             }
             break;
         case SDL_KEYUP:
             switch (evento.key.keysym.sym) {
                 case SDLK_UP:
-                    (*global).moverArriba = false;
+                    moverArriba = false;
                     break;
                 case SDLK_RIGHT:
-                    (*global).moverDerecha = false;
+                    moverDerecha = false;
                     break;
                 case SDLK_DOWN:
-                    (*global).moverAbajo = false;
+                    moverAbajo = false;
                     break;
                 case SDLK_LEFT:
-                    (*global).moverIzquierda = false;
+                    moverIzquierda = false;
                     break;
             }
             break;
         case SDL_MOUSEMOTION:
-            (*global).mouseX = ((*global).mouseX + (evento.motion.x % 360) - 280) % 360; //No hardcodear el 280 (kevin machado)
-            if ((*global).mouseX < 0)
-                (*global).mouseX += 360;                       
+            mouseX = (mouseX + (evento.motion.x % 360) - 280) % 360; //No hardcodear el 280 (kevin machado)
+            if (mouseX < 0)
+                mouseX += 360;                       
 
             SDL_WarpMouseInWindow(window, WINDOW_WIDTH / 2, WINDOW_HEIGHT / 2);
             break;
@@ -191,8 +186,8 @@ void Controlador::manejarEventos() {
 void Controlador::actualizar() { 
     jugador->actualizar();
 
-    for (int i = 0; i < this->largoTablero; i++) {
-        for (int j = 0; j < this->anchoTablero; j++) {
+    for (int i = 0; i < largoTablero; i++) {
+        for (int j = 0; j < anchoTablero; j++) {
             if (estructuras[i][j] != nullptr)
                 estructuras[i][j]->actualizar();
 
@@ -214,7 +209,7 @@ void Controlador::dibujar() {
     glLoadIdentity();
 
     //Colocacion de camara
-    GLfloat angleRadians = (*global).mouseX * (3.14159f / 180.0f); 
+    GLfloat angleRadians = mouseX * (3.14159f / 180.0f); 
 
     GLfloat camX = (*jugador).getPosicion().x + 20.0f * sin(angleRadians);
     GLfloat camZ = (*jugador).getPosicion().z + 20.0f * cos(angleRadians);
@@ -227,8 +222,8 @@ void Controlador::dibujar() {
 
     jugador->dibujar();
 
-    for (int i = 0; i < this->largoTablero; i++) {
-        for (int j = 0; j < this->anchoTablero; j++) {
+    for (int i = 0; i < largoTablero; i++) {
+        for (int j = 0; j < anchoTablero; j++) {
             if (estructuras[i][j] != nullptr)
                 estructuras[i][j]->dibujar();
 
@@ -264,18 +259,6 @@ Controlador::~Controlador() {
     SDL_Quit();
 };
 
-SDL_Window* Controlador::getWindow() {
-    return this->window;
-}
-
-bool Controlador::getTexturasHabilitadas() {
-    return this->texturas_habilitadas;
-}
-
-void Controlador::setTexturasHabilitadas(bool text) {
-    this->texturas_habilitadas = text;
-}
-
 bool Controlador::getPausa() {
 	return this->pausa;
 }
@@ -306,73 +289,4 @@ bool Controlador::getFin() {
 
 void Controlador::setFin(bool fin) {
     this->fin = fin;
-}
-
-int Controlador::getLargoTablero() {
-    return this->largoTablero;
-}
-void Controlador::setLargoTablero(int largo) {
-    this->largoTablero = largo;
-}
-
-int Controlador::getAnchoTablero() {
-    return this->anchoTablero;
-}
-
-void Controlador::setAnchoTablero(int ancho) {
-    this->anchoTablero = ancho;
-}
-
-bomberman* Controlador::getBomberman() {
-    return this->jugador;
-}
-
-void Controlador::aumentarPuntaje(int punt) {
-    this->puntaje += punt;
-}
-
-objeto*** Controlador::getEstructuras() { return estructuras; }
-
-objeto*** Controlador::getEnemigos() { return enemigos; }
-
-objeto*** Controlador::getBombas() { return bombas; }
-
-objeto*** Controlador::getFuegos() { return fuegos; }
-
-bool Controlador::posicion_valida(posicion pos, tamanio tam) {
-    int largoTableroAux = largoTablero * tile_size;
-    int anchoTableroAux = anchoTablero * tile_size;
-
-    objeto* obj_1 = estructuras[int(pos.x) / int(tile_size)][int(pos.z) / int(tile_size)];
-    objeto* obj_2 = estructuras[int(pos.x) / int(tile_size)][int(pos.z + tam.z) / int(tile_size)];
-    objeto* obj_3 = estructuras[int(pos.x + tam.x) / int(tile_size)][int(pos.z) / int(tile_size)];
-    objeto* obj_4 = estructuras[int(pos.x + tam.x) / int(tile_size)][int(pos.z + tam.z) / int(tile_size)];
-
-    objeto* obj_5 = bombas[int(pos.x) / int(tile_size)][int(pos.z) / int(tile_size)];
-    objeto* obj_6 = bombas[int(pos.x) / int(tile_size)][int(pos.z + tam.z) / int(tile_size)];
-    objeto* obj_7 = bombas[int(pos.x + tam.x) / int(tile_size)][int(pos.z) / int(tile_size)];
-    objeto* obj_8 = bombas[int(pos.x + tam.x) / int(tile_size)][int(pos.z + tam.z) / int(tile_size)];
-
-    return
-        pos.x >= 0 &&
-        pos.x + tam.x <= largoTableroAux &&
-        pos.z >= 0 &&
-        pos.z + tam.z <= anchoTableroAux &&
-        (obj_1 == nullptr || pos.x < obj_1->getPosicion().x || pos.x > obj_1->getPosicion().x + obj_1->getTamanio().x || pos.z < obj_1->getPosicion().z || pos.z > obj_1->getPosicion().z + obj_1->getTamanio().z) &&
-        (obj_2 == nullptr || pos.x < obj_2->getPosicion().x || pos.x > obj_2->getPosicion().x + obj_2->getTamanio().x || pos.z + tam.z < obj_2->getPosicion().z || pos.z + tam.z > obj_2->getPosicion().z + obj_2->getTamanio().z) &&
-        (obj_3 == nullptr || pos.x + tam.x < obj_3->getPosicion().x || pos.x + tam.x > obj_3->getPosicion().x + obj_3->getTamanio().x || pos.z < obj_3->getPosicion().z || pos.z > obj_3->getPosicion().z + obj_3->getTamanio().z) &&
-        (obj_4 == nullptr || pos.x + tam.x < obj_4->getPosicion().x || pos.x + tam.x > obj_4->getPosicion().x + obj_4->getTamanio().x || pos.z + tam.z < obj_4->getPosicion().z || pos.z + tam.z > obj_4->getPosicion().z + obj_4->getTamanio().z) &&
-        (obj_5 == nullptr || pos.x < obj_5->getPosicion().x || pos.x > obj_5->getPosicion().x + obj_5->getTamanio().x || pos.z < obj_5->getPosicion().z || pos.z > obj_5->getPosicion().z + obj_5->getTamanio().z) &&
-        (obj_6 == nullptr || pos.x < obj_6->getPosicion().x || pos.x > obj_6->getPosicion().x + obj_6->getTamanio().x || pos.z + tam.z < obj_6->getPosicion().z || pos.z + tam.z > obj_6->getPosicion().z + obj_6->getTamanio().z) &&
-        (obj_7 == nullptr || pos.x + tam.x < obj_7->getPosicion().x || pos.x + tam.x > obj_7->getPosicion().x + obj_7->getTamanio().x || pos.z < obj_7->getPosicion().z || pos.z > obj_7->getPosicion().z + obj_7->getTamanio().z) &&
-        (obj_8 == nullptr || pos.x + tam.x < obj_8->getPosicion().x || pos.x + tam.x > obj_8->getPosicion().x + obj_8->getTamanio().x || pos.z + tam.z < obj_8->getPosicion().z || pos.z + tam.z > obj_8->getPosicion().z + obj_8->getTamanio().z);
-}
-
-//Devuelve la posicion en x dentro del tablero de un objeto
-int Controlador::getPosicionXEnTablero(GLfloat coord_x, GLfloat ancho_x) {
-    return int(coord_x + (ancho_x / 2)) / int(tile_size);
-}
-
-int Controlador::getPosicionZEnTablero(GLfloat coord_z, GLfloat ancho_z) {
-    return int(coord_z + (ancho_z / 2)) / int(tile_size);
 }

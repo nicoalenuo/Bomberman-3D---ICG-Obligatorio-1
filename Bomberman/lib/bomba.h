@@ -4,6 +4,7 @@
 #define BOMBA_H
 
 #include "objeto.h"
+#include "estructura.h"
 #include "fuego.h"
 
 class bomba : public objeto {
