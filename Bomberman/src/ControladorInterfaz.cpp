@@ -5,6 +5,28 @@ hud* ControladorInterfaz::puntaje = nullptr;
 hud* ControladorInterfaz::tiempo = nullptr;
 hud* ControladorInterfaz::gameOver = nullptr;
 
+
+void ControladorInterfaz::setPuntaje(int puntos) {
+	string message = "Score: " + to_string(puntos);
+	setMensajeEnComponente(message, interfaz, puntaje);
+}
+
+void ControladorInterfaz::setTiempo(int tiemp) {
+	string message = "Coins: " + to_string(tiemp);
+	setMensajeEnComponente(message, interfaz, tiempo);
+}
+
+void ControladorInterfaz::setFinJuego(bool finJuego) {
+	string message;
+	if (finJuego) {
+		message = "GAME OVER!";
+	}
+	else {
+		message = "  ";
+	}
+	setMensajeEnComponente(message, interfaz, gameOver);
+}
+
 void ControladorInterfaz::setMensajeEnComponente(string mensaje, TTF_Font* fuente, hud* componente) {
 	glColor3f(componente->colorMensaje.r, componente->colorMensaje.g, componente->colorMensaje.b);
 	componente->mensajeSurface = TTF_RenderText_Blended(fuente, mensaje.c_str(), {255, 255, 255});
@@ -39,7 +61,12 @@ void ControladorInterfaz::setMensajeEnComponente(string mensaje, TTF_Font* fuent
 }
 
 void ControladorInterfaz::cargarInterfaz() {
-	/*
+	if (TTF_Init() < 0) {
+		cerr << "[SDL TTF Error]: " << SDL_GetError() << endl;
+		SDL_Quit();
+		exit(1);
+	}
+
 	interfaz = TTF_OpenFont("texturas/OpenSans-Regular.ttf", 24);
 	if (interfaz == nullptr) {
 		cerr << "TTF_OpenFont error: " << SDL_GetError() << endl;
@@ -59,7 +86,7 @@ void ControladorInterfaz::cargarInterfaz() {
 
 	setPuntaje(0);
 	setTiempo(200);
-	setFinJuego(false);*/
+	setFinJuego(false);
 }
 
 
@@ -75,24 +102,4 @@ hud* ControladorInterfaz::getHud(int numero) {
 		return gameOver;
 		break;
 	}
-}
-
-void ControladorInterfaz::setPuntaje(int puntos) {
-	string message = "Score: " + to_string(puntos);
-	setMensajeEnComponente(message, interfaz, puntaje);
-}
-
-void ControladorInterfaz::setTiempo(int tiemp) {
-	string message = "Coins: " + to_string(tiemp);
-	setMensajeEnComponente(message, interfaz, tiempo);
-}
-
-void ControladorInterfaz::setFinJuego(bool finJuego) {
-	string message;
-	if (finJuego) {
-		message = "GAME OVER!";
-	} else {
-		message = "  ";
-	}
-	setMensajeEnComponente(message, interfaz, gameOver);
 }

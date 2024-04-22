@@ -10,9 +10,7 @@
 #include "SDL_ttf.h"
 #include <GL/glu.h>
 
-#include "global.h"
 #include "hud.h"
-#include "../constantes/constantes.h"
 
 using namespace std;
 
