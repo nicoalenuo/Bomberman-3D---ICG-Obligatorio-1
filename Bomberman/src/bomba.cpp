@@ -29,7 +29,7 @@ void bomba::actualizar() { // actualiza el tiempo, y si es cero, explota
                     for (int j = 0; j < 80; j++) {
                         particulas.push_back(
                             new particula(
-                                { x * tile_size + tile_size / 2, 3, i * tile_size + tile_size / 2 },
+                                { x * tile_size + tile_size / 2, tile_size / 2, i * tile_size + tile_size / 2 },
                                 { 0.07, 0.07, 0.07 },
                                 { 0, -25, 0 },
                                 { GLfloat(dis(gen)), 10, GLfloat(dis(gen)) }
@@ -62,7 +62,7 @@ void bomba::actualizar() { // actualiza el tiempo, y si es cero, explota
                     for (int j = 0; j < 80; j++) {
                         particulas.push_back(
                             new particula(
-                                { x * tile_size + tile_size / 2, 3, i * tile_size + tile_size / 2 },
+                                { x * tile_size + tile_size / 2, tile_size / 2, i * tile_size + tile_size / 2 },
                                 { 0.07, 0.07, 0.07 },
                                 { 0, -25, 0 },
                                 { GLfloat(dis(gen)), 10, GLfloat(dis(gen)) }
@@ -95,7 +95,7 @@ void bomba::actualizar() { // actualiza el tiempo, y si es cero, explota
                     for (int j = 0; j < 80; j++) {
                         particulas.push_back(
                             new particula(
-                                { i * tile_size + tile_size / 2, 3, z * tile_size + tile_size / 2 },
+                                { i * tile_size + tile_size / 2, tile_size / 2, z * tile_size + tile_size / 2 },
                                 { 0.07, 0.07, 0.07 },
                                 { 0, -25, 0 },
                                 { GLfloat(dis(gen)), 10, GLfloat(dis(gen)) }
@@ -128,7 +128,7 @@ void bomba::actualizar() { // actualiza el tiempo, y si es cero, explota
                     for (int j = 0; j < 80; j++) {
                         particulas.push_back(
                             new particula(
-                                { i * tile_size + tile_size / 2, 3, z * tile_size + tile_size / 2 },
+                                { i * tile_size + tile_size / 2, tile_size / 2, z * tile_size + tile_size / 2 },
                                 { 0.07, 0.07, 0.07 },
                                 { 0, -25, 0 },
                                 { GLfloat(dis(gen)), 10, GLfloat(dis(gen)) }

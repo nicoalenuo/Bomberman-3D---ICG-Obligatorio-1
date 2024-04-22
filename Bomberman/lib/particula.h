@@ -20,6 +20,7 @@ struct aceleracion {
 class particula : public objeto{
 private:
 	int tiempoParticula;
+	GLfloat pos_y_inicial;
 	velocidad vel;
 	aceleracion ac;
 

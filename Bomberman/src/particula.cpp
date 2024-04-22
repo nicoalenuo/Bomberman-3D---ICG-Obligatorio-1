@@ -2,6 +2,7 @@
 
 particula::particula(posicion pos, tamanio tam, aceleracion ac, velocidad vel) : objeto(pos, tam) {
     tiempoParticula = 0;
+    pos_y_inicial = pos.y;
     this->ac = ac;
     this->vel = vel;
 }
@@ -10,7 +11,9 @@ GLfloat tiempoSegundos;
 void particula::actualizar() {
     tiempoSegundos = GLfloat(tiempoParticula) / 1000.0f;
     pos.x = pos.x + vel.x;
-    pos.y = ac.y * tiempoSegundos * tiempoSegundos + vel.y * tiempoSegundos + 3.0f;
+    pos.y = ac.y * tiempoSegundos * tiempoSegundos + 
+        vel.y * tiempoSegundos + 
+        pos_y_inicial;
     pos.z = pos.z + vel.z;
     tiempoParticula += frameDelay;
 }
