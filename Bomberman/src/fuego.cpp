@@ -22,10 +22,10 @@ void fuego::dibujar() {
 
 	glBegin(GL_QUADS);
 	glColor3f(1.0, 0.0, 0.0);
-	glVertex3f(0, 0, 0);
-	glVertex3f(tam.x, 0, 0);
+	glVertex3f(-tam.x, 0, -tam.z);
+	glVertex3f(tam.x, 0, -tam.z);
 	glVertex3f(tam.x, 0, tam.z);
-	glVertex3f(0, 0, tam.z);
+	glVertex3f(-tam.x, 0, tam.z);
 	glEnd();
 
 	glPopMatrix();

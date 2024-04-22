@@ -28,16 +28,16 @@ protected:
 public:
 	objeto(posicion pos, tamanio tam) : pos(pos), tam(tam) {}
 
-	posicion getPosicion();
-	tamanio getTamanio();
+	posicion getPosicion() const { return pos; };
+	tamanio getTamanio() const { return tam; };
 
-	void setPosicionX(GLfloat x);
-	void setPosicionY(GLfloat y);
-	void setPosicionZ(GLfloat z);
+	void setPosicionX(GLfloat x) { pos.x = x; };
+	void setPosicionY(GLfloat y) { pos.y = y; };
+	void setPosicionZ(GLfloat z) { pos.z = z; };
 
-	void setTamanioX(GLfloat x);
-	void setTamanioY(GLfloat y);
-	void setTamanioZ(GLfloat z);
+	void setTamanioX(GLfloat x) { tam.x = x; };
+	void setTamanioY(GLfloat y) { tam.y = y; };
+	void setTamanioZ(GLfloat z) { tam.z = z; };
 
 	virtual void actualizar() = 0;
 	virtual void dibujar() = 0;

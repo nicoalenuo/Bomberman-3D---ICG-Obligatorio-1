@@ -6,6 +6,7 @@ bool moverDerecha = false;
 bool moverIzquierda = false;
 
 int mouseX = 0;
+int mouseY = 0;
 
 bool texturas_habilitadas = true;
 
@@ -15,6 +16,8 @@ objeto*** estructuras = new objeto * *[largoTablero];
 objeto*** bombas = new objeto * *[largoTablero];
 objeto*** enemigos = new objeto * *[largoTablero];
 objeto*** fuegos = new objeto * *[largoTablero];
+
+list<objeto*> particulas;
 
 bomberman* jugador;
 

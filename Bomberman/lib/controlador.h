@@ -40,17 +40,17 @@ public:
 	void actualizar();
 	void dibujar();
 
-	bool getPausa();
-	void setPausa(bool pau);
+	bool getPausa() const { return pausa; };
+	void setPausa(bool pau) { pausa = pau; };
 
-	bool getNivel();
-	void setNivel(int niv);
+	bool getNivel() const { return nivel; };
+	void setNivel(int niv) { nivel = niv;};
 
-	bool getFin();
-	void setFin(bool fin);
+	bool getFin() const { return fin; };
+	void setFin(bool f) { fin = f; };
 
-	void toggle_pausa(); 
-	void aumentarNivel();
+	void toggle_pausa() { pausa = !pausa; };
+	void aumentarNivel() { nivel++; };
 
 	~Controlador();
 };

@@ -1,6 +1,6 @@
 #include "../lib/ControladorObjetos.h"
 
-tuple<vector<char>, vector<vector<float>>> ControladorObjetos::load_obj(string file, int type) {
+tuple<vector<char>, vector<vector<float>>> ControladorObjetos::cargarObj(string file, int type) {
 	ifstream file_stream(file);
 	if (!file_stream) {
 		cerr << "Cannot open: " << file << endl;
@@ -37,7 +37,7 @@ tuple<vector<char>, vector<vector<float>>> ControladorObjetos::load_obj(string f
 				file_stream >> face1 >> face2 >> face3 >> face4;
 				faces = { face1, face2, face3, face4 };
 			}
-			else { // Conformed by triangles
+			else { // Triangulos
 				file_stream >> face1 >> face2 >> face3;
 				faces = { face1, face2, face3 };
 			}
@@ -84,11 +84,11 @@ tuple<vector<char>, vector<vector<float>>> ControladorObjetos::load_obj(string f
 }
 
 
-void ControladorObjetos::DrawMultiplePoints(GLenum primitive, vector<char> commands, vector<vector<float>> data, GLuint texture) {
-	glPushMatrix();
-
-	glBindTexture(GL_TEXTURE_2D, texture);
-	glColor3f(1.f, 1.f, 1.f);
+void ControladorObjetos::dibujar(GLenum primitive, vector<char> commands, vector<vector<float>> data, GLuint texture) {
+	if (texturas_habilitadas) {
+		glBindTexture(GL_TEXTURE_2D, texture);
+		glColor3f(1.f, 1.f, 1.f);
+	}
 
 	glBegin(primitive);
 	for (size_t i = 0; i < commands.size(); i++) {

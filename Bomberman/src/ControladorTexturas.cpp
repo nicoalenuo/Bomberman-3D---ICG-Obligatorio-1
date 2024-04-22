@@ -2,7 +2,7 @@
 
 GLuint ControladorTexturas::texturaEstructuraDestructible = 0;
 GLuint ControladorTexturas::texturaEstructuraNoDestructible = 0;
-GLuint ControladorTexturas::player = 0;
+GLuint ControladorTexturas::texturaPlayer = 0;
 
 void ControladorTexturas::cargarTexturas() {
     //CARGAR IMAGEN
@@ -24,7 +24,7 @@ void ControladorTexturas::cargarTexturas() {
     glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, w, h, 0, GL_BGR, GL_UNSIGNED_BYTE, datos);
     glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
 
-    ControladorTexturas::texturaEstructuraDestructible = textura;
+    texturaEstructuraDestructible = textura;
     //FIN TEXTURA
 
     //CARGAR IMAGEN
@@ -45,7 +45,7 @@ void ControladorTexturas::cargarTexturas() {
     glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, w, h, 0, GL_BGR, GL_UNSIGNED_BYTE, datos);
     glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
 
-    ControladorTexturas::texturaEstructuraNoDestructible = textura;
+    texturaEstructuraNoDestructible = textura;
     //FIN TEXTURA
 
     //CARGAR IMAGEN
@@ -66,20 +66,20 @@ void ControladorTexturas::cargarTexturas() {
     glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, w, h, 0, GL_BGR, GL_UNSIGNED_BYTE, datos);
     glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
 
-    ControladorTexturas::player = textura;
+    texturaPlayer = textura;
     //FIN TEXTURA
 }
 
 GLuint ControladorTexturas::getTextura(tipo_textura tipo) {
     switch (tipo) {
         case ESTRUCTURA_DESTRUCTIBLE:
-            return ControladorTexturas::texturaEstructuraDestructible;
+            return texturaEstructuraDestructible;
             break;
         case ESTRUCTURA_NO_DESTRUCTIBLE:
-            return ControladorTexturas::texturaEstructuraNoDestructible;
+            return texturaEstructuraNoDestructible;
             break;
         case PLAYER:
-            return ControladorTexturas::player;
+            return texturaPlayer;
             break;
         default:
             return 0;

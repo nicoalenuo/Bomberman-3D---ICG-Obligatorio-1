@@ -98,6 +98,7 @@
     <ClCompile Include="src\fuego.cpp" />
     <ClCompile Include="src\global.cpp" />
     <ClCompile Include="src\objeto.cpp" />
+    <ClCompile Include="src\particula.cpp" />
     <ClCompile Include="src\personaje.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -115,6 +116,7 @@
     <ClInclude Include="lib\global.h" />
     <ClInclude Include="lib\objeto.h" />
     <ClInclude Include="lib\objImporter.h" />
+    <ClInclude Include="lib\particula.h" />
     <ClInclude Include="lib\personaje.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

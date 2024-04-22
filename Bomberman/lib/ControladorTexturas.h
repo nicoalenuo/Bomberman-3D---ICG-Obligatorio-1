@@ -19,7 +19,7 @@ class ControladorTexturas{
 private:
 	static GLuint texturaEstructuraDestructible;
 	static GLuint texturaEstructuraNoDestructible;
-	static GLuint player;
+	static GLuint texturaPlayer;
 public:
 	static void cargarTexturas();
 	static GLuint getTextura(tipo_textura tipo);

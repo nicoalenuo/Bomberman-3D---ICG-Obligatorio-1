@@ -8,7 +8,11 @@ Controlador::Controlador() {
     tiempoJuego = 200; //segundos
     puntaje = 0;
 
-    jugador = new bomberman({ 0, 0, 0 }, { tile_size / 2, tile_size / 2, tile_size / 2 }, GLfloat(0.1));
+    jugador = new bomberman(
+        { tile_size / 2, tile_size / 2, tile_size / 2 },
+        { tile_size / 4, tile_size / 2, tile_size / 3 }, 
+        GLfloat(0.1)
+    );
 
     for (int i = 0; i < largoTablero; i++) {
         estructuras[i] = new objeto * [anchoTablero];
@@ -37,11 +41,19 @@ Controlador::Controlador() {
     for (int i = 0; i < largoTablero; i++) {
         for (int j = 0; j < anchoTablero; j++) {
             if (((i % 2) == 1) && ((j % 2) == 1)) {
-                estructuras[i][j] = new estructura({ (GLfloat)i * tile_size, 0, (GLfloat)j * tile_size }, { tile_size, tile_size, tile_size }, false); //no destructible
+                estructuras[i][j] = new estructura(
+                    { (GLfloat)i * tile_size + tile_size / 2, 0, (GLfloat)j * tile_size + tile_size / 2 },
+                    { tile_size / 2, tile_size, tile_size / 2 }, 
+                      false
+                ); //no destructible
             } else {
                 random_num = dis(gen);
                 if (random_num <= generadorTerreno) {
-                    estructuras[i][j] = new estructura({ (GLfloat)i * tile_size, 0, (GLfloat)j * tile_size }, { tile_size, tile_size, tile_size }, true); //destructible
+                    estructuras[i][j] = new estructura(
+                        { (GLfloat)i * tile_size + tile_size / 2, 0, (GLfloat)j * tile_size + tile_size / 2 },
+                        { tile_size / 2, tile_size, tile_size / 2 },
+                          true
+                    ); //destructible
                 }
             }
         }
@@ -61,10 +73,16 @@ Controlador::Controlador() {
         estructuras[1][0] = nullptr;
     }
     if (estructuras[2][0] == nullptr) {
-        estructuras[2][0] = new estructura({ 2 * tile_size, 0, 0 }, { tile_size, tile_size, tile_size }, true);
+        estructuras[2][0] = new estructura(
+            { 2 * tile_size + tile_size / 2, 0, tile_size / 2 }, 
+            { tile_size / 2, tile_size, tile_size / 2}, 
+              true);
     }
     if (estructuras[0][2] == nullptr) {
-        estructuras[0][2] = new estructura({ 0, 0, 2 * tile_size }, { tile_size, tile_size, tile_size }, true);
+        estructuras[0][2] = new estructura(
+            { tile_size / 2, 0, 2 * tile_size + tile_size / 2 }, 
+            { tile_size / 2, tile_size, tile_size / 2}, 
+              true);
     }
 
     if (SDL_Init(SDL_INIT_VIDEO) < 0) {
@@ -88,8 +106,7 @@ Controlador::Controlador() {
 
     SDL_ShowCursor(SDL_DISABLE); // Esta línea oculta el cursor del mouse
 
-    if (texturas_habilitadas)
-        ControladorTexturas::cargarTexturas();
+    ControladorTexturas::cargarTexturas();
 }
 
 Controlador* Controlador::getInstance() {
@@ -131,8 +148,9 @@ void Controlador::manejarEventos() {
                     }
 
                     if (bombas[posBombaXTablero][posBombaZTablero] == nullptr && estructuras[posBombaXTablero][posBombaZTablero] == nullptr) {
-                        objeto* bomba_obj = new bomba({ posBombaXTablero * tile_size + GLfloat(0.5), 0, posBombaZTablero * tile_size + GLfloat(0.5) },
-                            { tile_size / 2, tile_size / 2, tile_size / 2},
+                        objeto* bomba_obj = new bomba(
+                            { posBombaXTablero * tile_size + tile_size / 2, 0, posBombaZTablero * tile_size + tile_size / 2 },
+                            { tile_size / 4, tile_size / 2, tile_size / 4},
                             2000, //2 segundos
                             2
                         );
@@ -142,6 +160,7 @@ void Controlador::manejarEventos() {
                     break;
                 case SDLK_t:
                     ControladorCamara::cambiarTipoCamara(CAMARA_TERCERA_PERSONA);
+                    cout << "cambiao" << endl;
                     break;
                 case SDLK_o:
                     ControladorCamara::cambiarTipoCamara(CAMARA_ORIGINAL);
@@ -182,7 +201,13 @@ void Controlador::manejarEventos() {
         case SDL_MOUSEMOTION:
             mouseX = (mouseX + (evento.motion.x % 360) - 280) % 360; //No hardcodear el 280 (kevin machado)
             if (mouseX < 0)
-                mouseX += 360;                       
+                mouseX += 360;  
+
+            mouseY = (mouseY + (evento.motion.y % 360)) % 360;
+            if (mouseY < 0)
+                mouseY = 0;
+            else if (mouseY > 360)
+                mouseY = 360;
 
             SDL_WarpMouseInWindow(window, WINDOW_WIDTH / 2, WINDOW_HEIGHT / 2);
             break;
@@ -190,7 +215,7 @@ void Controlador::manejarEventos() {
     }
 }
 
-void Controlador::actualizar() { 
+void Controlador::actualizar() {
     jugador->actualizar();
 
     for (int i = 0; i < largoTablero; i++) {
@@ -209,6 +234,17 @@ void Controlador::actualizar() {
 
         }
     }
+
+    for (auto it = particulas.begin(); it != particulas.end(); ++it)
+        (*it)->actualizar();
+
+    for (list<objeto*>::iterator it = particulas.begin(); it != particulas.end();)
+        if ((*it)->getPosicion().y < 0) {
+            delete (*it);
+            it = particulas.erase(it);
+        }
+        else 
+            ++it;
 }
 
 void Controlador::dibujar() {
@@ -239,6 +275,9 @@ void Controlador::dibujar() {
         }
     }
 
+    for (auto it = particulas.begin(); it != particulas.end(); ++it)
+        (*it)->dibujar();
+
     if (texturas_habilitadas) 
         glDisable(GL_TEXTURE_2D);
 
@@ -259,35 +298,3 @@ Controlador::~Controlador() {
     SDL_DestroyWindow(window);
     SDL_Quit();
 };
-
-bool Controlador::getPausa() {
-	return this->pausa;
-}
-
-void Controlador::setPausa(bool pau) {
-	this->pausa = pau;
-}
-
-bool Controlador::getNivel() {
-	return this->nivel;
-}
-
-void Controlador::setNivel(int niv) {
-	this->nivel = niv;
-}
-
-void Controlador::toggle_pausa() {
-	this->pausa = !(this->pausa);
-}
-
-void Controlador::aumentarNivel() {
-	this->nivel++;
-}
-
-bool Controlador::getFin() {
-    return this->fin;
-}
-
-void Controlador::setFin(bool fin) {
-    this->fin = fin;
-}
