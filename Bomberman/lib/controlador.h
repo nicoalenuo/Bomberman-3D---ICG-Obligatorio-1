@@ -19,6 +19,7 @@
 #include "personaje.h"
 
 #include "../lib/ControladorCamara.h"
+#include "interfazJuego.h"
 
 
 class Controlador {
@@ -33,6 +34,8 @@ private:
 	
 	bool pausa, fin;
 	int nivel, tiempoJuego; //segundos
+
+	interfazJuego* interfazJuego;
 public:
 	static Controlador* getInstance();
 

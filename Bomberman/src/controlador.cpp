@@ -9,6 +9,7 @@ Controlador::Controlador() {
     puntaje = 0;
 
     jugador = new bomberman({ 0, 0, 0 }, { tile_size / 2, tile_size / 2, tile_size / 2 }, GLfloat(0.1));
+    this->interfazJuego = interfazJuego::getInstance();
 
     for (int i = 0; i < largoTablero; i++) {
         estructuras[i] = new objeto * [anchoTablero];
@@ -219,6 +220,7 @@ void Controlador::dibujar() {
 
     if (texturas_habilitadas) 
         glEnable(GL_TEXTURE_2D);
+    (*interfazJuego).dibujar();
 
     jugador->dibujar();
 
