@@ -7,7 +7,6 @@
 #include "SDL_opengl.h"
 #include "FreeImage.h"
 #include <GL/glu.h>
-
 #include <random>
 
 #include "personaje.h"
@@ -16,9 +15,10 @@
 #include "objeto.h"
 #include "enemigo.h"
 #include "bomberman.h"
-#include "personaje.h"
+#include "hud.h"
 
 #include "../lib/ControladorCamara.h"
+#include "../lib/ControladorInterfaz.h"
 
 
 class Controlador {

@@ -5,6 +5,7 @@ Controlador* Controlador::instancia = nullptr;
 Controlador::Controlador() {
     nivel = 1;
     fin = false;
+    pausa = false;
     tiempoJuego = 200; //segundos
     puntaje = 0;
 
@@ -88,6 +89,7 @@ Controlador::Controlador() {
 
     SDL_ShowCursor(SDL_DISABLE); // Esta línea oculta el cursor del mouse
 
+    ControladorInterfaz::cargarInterfaz();
     if (texturas_habilitadas)
         ControladorTexturas::cargarTexturas();
 }

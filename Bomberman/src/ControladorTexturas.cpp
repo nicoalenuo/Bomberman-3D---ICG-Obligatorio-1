@@ -28,8 +28,8 @@ void ControladorTexturas::cargarTexturas() {
     //FIN TEXTURA
 
     //CARGAR IMAGEN
-    fif = FreeImage_GetFIFFromFilename("texturas/estrcutura_no_destructible.png");
-    bitmap = FreeImage_Load(fif, "texturas/estrcutura_no_destructible.png"); //estoy reciviendo bitmap null
+    fif = FreeImage_GetFIFFromFilename("texturas/estructura_no_destructible.png");
+    bitmap = FreeImage_Load(fif, "texturas/estructura_no_destructible.png"); //estoy reciviendo bitmap null
     bitmap = FreeImage_ConvertTo24Bits(bitmap);
     w = FreeImage_GetWidth(bitmap);
     h = FreeImage_GetHeight(bitmap);
