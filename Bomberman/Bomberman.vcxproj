@@ -47,7 +47,7 @@
     <PublicIncludeDirectories>$(PublicIncludeDirectories)</PublicIncludeDirectories>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
-    <IncludePath>..\Freeimage;..\SDL2-2.0.12\include;$(IncludePath)</IncludePath>
+    <IncludePath>..\Freeimage;..\SDL2-2.0.12;\include;$(IncludePath)</IncludePath>
     <LibraryPath>..\Freeimage;..\SDL2-2.0.12\lib\x86;$(LibraryPath)</LibraryPath>
     <PublicIncludeDirectories>$(ProjectDir);$(ProjectDir)headers;$(PublicIncludeDirectories)</PublicIncludeDirectories>
   </PropertyGroup>
@@ -99,7 +99,9 @@
     <ClCompile Include="src\global.cpp" />
     <ClCompile Include="src\objeto.cpp" />
     <ClCompile Include="src\personaje.cpp" />
-	<ClCompile Include="src\interfazJuego.cpp" />
+    <ClCompile Include="src\interfazJuego.cpp" />
+    <ClCompile Include="src\ui_manager.cpp" />
+    <ClCompile Include="src\draw_manager.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="constantes\constantes.h" />
@@ -117,7 +119,10 @@
     <ClInclude Include="lib\objeto.h" />
     <ClInclude Include="lib\objImporter.h" />
     <ClInclude Include="lib\personaje.h" />
-	<ClInclude Include="lib\interfazJuego.h" />
+    <ClInclude Include="lib\interfazJuego.h" />
+    <ClInclude Include="lib\ui_manager.h" />
+    <ClInclude Include="lib\draw_manager.h" />
+    <ClInclude Include="lib\hud.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

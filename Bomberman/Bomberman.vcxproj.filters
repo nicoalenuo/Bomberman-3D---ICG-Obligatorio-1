@@ -59,6 +59,11 @@
     </ClCompile>
     <ClCompile Include="src\interfazJuego.cpp">
       <Filter>Source Files</Filter>
+    <ClCompile Include="src\ui_manager.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\draw_manager.cpp">
+	    <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -108,6 +113,15 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="lib\interfazJuego.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="lib\ui_manager.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="lib\draw_manager.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="lib\hud.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

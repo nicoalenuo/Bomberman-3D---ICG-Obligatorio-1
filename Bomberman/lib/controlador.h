@@ -17,6 +17,8 @@
 #include "enemigo.h"
 #include "bomberman.h"
 #include "personaje.h"
+#include "ControladorTexturas.h"
+#include "ui_manager.h"
 
 #include "../lib/ControladorCamara.h"
 #include "interfazJuego.h"
@@ -31,6 +33,8 @@ private:
 	SDL_Window* window;
 	SDL_GLContext context;
 	SDL_Event evento;
+
+	UI* ui;
 	
 	bool pausa, fin;
 	int nivel, tiempoJuego; //segundos

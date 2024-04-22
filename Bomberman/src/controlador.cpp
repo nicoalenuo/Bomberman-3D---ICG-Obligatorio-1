@@ -10,6 +10,10 @@ Controlador::Controlador() {
 
     jugador = new bomberman({ 0, 0, 0 }, { tile_size / 2, tile_size / 2, tile_size / 2 }, GLfloat(0.1));
     this->interfazJuego = interfazJuego::getInstance();
+    //this->interfazJuego = interfazJuego::getInstance();
+    this->ui = UI::getInstance();
+
+    this->pausa = false;
 
     for (int i = 0; i < largoTablero; i++) {
         estructuras[i] = new objeto * [anchoTablero];
@@ -162,6 +166,9 @@ void Controlador::manejarEventos() {
                 case SDLK_LEFT:
                     moverIzquierda = true;
                     break;
+                case SDLK_h:
+                    (*interfazJuego).swapVisible();
+                    break;
             }
             break;
         case SDL_KEYUP:
@@ -217,6 +224,8 @@ void Controlador::dibujar() {
     glLoadIdentity();
 
     ControladorCamara::colocarCamara();
+
+    ui->draw();
 
     if (texturas_habilitadas) 
         glEnable(GL_TEXTURE_2D);
