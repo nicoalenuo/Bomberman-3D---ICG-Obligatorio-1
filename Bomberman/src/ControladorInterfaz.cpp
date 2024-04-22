@@ -1,5 +1,10 @@
 #include "../lib/ControladorInterfaz.h"
 
+TTF_Font* ControladorInterfaz::interfaz = nullptr;
+hud* ControladorInterfaz::puntaje = nullptr;
+hud* ControladorInterfaz::tiempo = nullptr;
+hud* ControladorInterfaz::gameOver = nullptr;
+
 void ControladorInterfaz::setMensajeEnComponente(string mensaje, TTF_Font* fuente, hud* componente) {
 	glColor3f(componente->colorMensaje.r, componente->colorMensaje.g, componente->colorMensaje.b);
 	componente->mensajeSurface = TTF_RenderText_Blended(fuente, mensaje.c_str(), {255, 255, 255});
