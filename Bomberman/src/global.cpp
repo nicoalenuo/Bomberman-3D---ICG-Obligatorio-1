@@ -9,8 +9,6 @@ int mouseX = 0;
 
 bool texturas_habilitadas = true;
 
-int puntaje = 0;
-
 objeto*** estructuras = new objeto * *[largoTablero];
 objeto*** bombas = new objeto * *[largoTablero];
 objeto*** enemigos = new objeto * *[largoTablero];

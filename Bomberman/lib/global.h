@@ -17,9 +17,6 @@ extern int mouseX;
 
 extern bool texturas_habilitadas;
 
-
-extern int puntaje;
-
 extern objeto*** estructuras;
 extern objeto*** bombas;
 extern objeto*** enemigos;
@@ -30,5 +27,4 @@ extern bomberman* jugador;
 extern int getPosicionXEnTablero(GLfloat coord_x, GLfloat ancho_x);
 
 extern int getPosicionZEnTablero(GLfloat coord_z, GLfloat ancho_z);
-
 #endif

@@ -23,8 +23,11 @@ class ControladorInterfaz {
 
 		static void setMensajeEnComponente(string mensaje, TTF_Font* fuente, hud* componente);
 	public:
-		static void cargarInterfaz();
+		static void cargarInterfaz(int puntaje, int tiempoJuego, bool fin);
+		static void dibujarCompomenteHUD(hud* hud);
+		static void dibujarHUD();
 		static hud* getHud(int numero);
+		static void setHud(int indice, hud* hud);
 		static void setPuntaje(int puntos);
 		static void setTiempo(int tiem);
 		static void setFinJuego(bool finJuego);

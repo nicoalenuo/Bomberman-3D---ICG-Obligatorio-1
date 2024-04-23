@@ -20,7 +20,6 @@
 #include "../lib/ControladorCamara.h"
 #include "../lib/ControladorInterfaz.h"
 
-
 class Controlador {
 private:
 	Controlador();
@@ -31,8 +30,8 @@ private:
 	SDL_GLContext context;
 	SDL_Event evento;
 	
-	bool pausa, fin;
-	int nivel, tiempoJuego; //segundos
+	bool pausa, fin, finJuego;
+	int nivel, puntaje, tiempoJuego; //segundos
 public:
 	static Controlador* getInstance();
 
@@ -46,8 +45,19 @@ public:
 	bool getNivel();
 	void setNivel(int niv);
 
+	int getPuntaje();
+	void setPuntaje(int puntos);
+	void sumarPuntaje(int puntos);
+
 	bool getFin();
 	void setFin(bool fin);
+
+	bool getFinJuego();
+	void setFinJuego(bool fin);
+
+	int getTiempo();
+	void setTiempo(int tiem);
+	void disminuirTiempo(int segundos);
 
 	void toggle_pausa(); 
 	void aumentarNivel();

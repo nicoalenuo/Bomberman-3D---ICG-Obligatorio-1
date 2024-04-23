@@ -20,15 +20,5 @@ class hud {
 		SDL_Color colorMensaje;	
 };
 
-/*
-class color {
-	public:
-		float red;
-		float blue;
-		float green;
-		float alpha;
-};
-*/
-
 #endif
 
