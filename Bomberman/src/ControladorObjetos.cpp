@@ -17,7 +17,9 @@ tuple<vector<char>, vector<vector<float>>> ControladorObjetos::cargarObj(string 
 	float x, y, z;
 	unsigned int aux;
 
+
 	while (getline(file_stream, line)) {
+
 		file_stream >> command;
 
 		if (command == "v") {

@@ -31,49 +31,61 @@ bool posicion_valida(posicion pos, tamanio tam) {
 
 
 bomberman::bomberman(posicion pos, tamanio tam, GLfloat velocidad) : personaje(pos, tam, velocidad) {
-    this->vida = 1;
-    this->moverBomba = false;
-    this->largoBomba = 2;
-    this->tiempoBomba = 2000;
-    this->maxBomba = 1;
-    this->cantActual = 0;
+    vida = 1;
+    moverBomba = false;
+    largoBomba = 2;
+    tiempoBomba = 2000;
+    maxBomba = 1;
+    cantActual = 0;
+    rotacion_y_actual = 0;
+    rotacion_z_actual = 0;
+    balanceandoseDerecha = false;
 
     tie(player_commands, player_data) = ControladorObjetos::cargarObj("objs/Chicken02.obj", 1);
 }
 
+int rotacionY, rotacionZ;
 void bomberman::actualizar() {
     if (moverArriba) {
         if (mouseX >= 45 && mouseX < 135) {
+            rotacionY = 90;
             if (posicion_valida({ pos.x - velocidad, 0, pos.z }, { tam.x, 0, tam.z }))
                 pos.x -= velocidad;
         }
         else if (mouseX >= 135 && mouseX < 225) {
+            rotacionY = 180;
             if (posicion_valida({ pos.x, 0, pos.z + velocidad }, { tam.x, 0,tam.z }))
                 pos.z += velocidad;
         }
         else if (mouseX >= 225 && mouseX < 315) {
+            rotacionY = 270;
             if (posicion_valida({ pos.x + velocidad, 0, pos.z }, { tam.x, 0, tam.z }))
                 pos.x += velocidad;
         }
         else {
+            rotacionY = 0;
             if (posicion_valida({ pos.x, 0,pos.z - velocidad }, { tam.x, 0,tam.z }))
                 pos.z -= velocidad;
         }
     }
     if (moverAbajo) {
         if (mouseX >= 45 && mouseX < 135) {
+            rotacionY = 270;
             if (posicion_valida({ pos.x + velocidad, 0, pos.z }, { tam.x, 0, tam.z }))
                 pos.x += velocidad;
         }
         else if (mouseX >= 135 && mouseX < 225) {
+            rotacionY = 0;
             if (posicion_valida({ pos.x, 0, pos.z - velocidad }, { tam.x, 0, tam.z }))
                 pos.z -= velocidad;
         }
         else if (mouseX >= 225 && mouseX < 315) {
+            rotacionY = 90;
             if (posicion_valida({ pos.x - velocidad, 0, pos.z }, { tam.x, 0, tam.z }))
                 pos.x -= velocidad;
         }
         else {
+            rotacionY = 180;
             if (posicion_valida({ pos.x, 0, pos.z + velocidad }, { tam.x, 0, tam.z }))
                 pos.z += velocidad;
         }
@@ -81,18 +93,22 @@ void bomberman::actualizar() {
 
     if (moverDerecha) {
         if (mouseX >= 45 && mouseX < 135) {
+            rotacionY = 0;
             if (posicion_valida({ pos.x, 0, pos.z - velocidad }, { tam.x, 0, tam.z }))
                 pos.z -= velocidad;
         }
         else if (mouseX >= 135 && mouseX < 225) {
+            rotacionY = 90;
             if (posicion_valida({ pos.x - velocidad, 0, pos.z }, { tam.x, 0, tam.z }))
                 pos.x -= velocidad;
         }
         else if (mouseX >= 225 && mouseX < 315) {
+            rotacionY = 180;
             if (posicion_valida({ pos.x, 0, pos.z + velocidad }, { tam.x, 0, tam.z }))
                 pos.z += velocidad;
         }
         else {
+            rotacionY = 270;
             if (posicion_valida({ pos.x + velocidad, 0, pos.z }, { tam.x, 0, tam.z }))
                 pos.x += velocidad;
         }
@@ -100,89 +116,83 @@ void bomberman::actualizar() {
 
     if (moverIzquierda) {
         if (mouseX >= 45 && mouseX < 135) {
+            rotacionY = 180;
             if (posicion_valida({ pos.x, 0, pos.z + velocidad }, { tam.x, 0, tam.z }))
                 pos.z += velocidad;
         }
         else if (mouseX >= 135 && mouseX < 225) {
+            rotacionY = 270;
             if (posicion_valida({ pos.x + velocidad, 0, pos.z }, { tam.x, 0, tam.z }))
                 pos.x += velocidad;
         }
         else if (mouseX >= 225 && mouseX < 315) {
+            rotacionY = 0;
             if (posicion_valida({ pos.x, 0, pos.z - velocidad }, { tam.x, 0, tam.z }))
                 pos.z -= velocidad;
         }
         else {
+            rotacionY = 90;
             if (posicion_valida({ pos.x - velocidad, 0, pos.z }, { tam.x, 0, tam.z }))
                 pos.x -= velocidad;
         }
     }
+
+    if (rotacion_y_actual < rotacionY) {
+        if (abs(rotacion_y_actual - rotacionY) <= 180) {
+            rotacion_y_actual += 25;
+            if (rotacion_y_actual > rotacionY)
+                rotacion_y_actual = rotacionY;
+        }
+        else {
+            rotacion_y_actual -= 25;
+            rotacion_y_actual %= 360;
+            if (rotacion_y_actual < 0)
+                rotacion_y_actual += 360;
+
+            if (rotacion_y_actual < rotacionY)
+                rotacion_y_actual = rotacionY;
+        }
+    }
+    else if (rotacion_y_actual > rotacionY) {
+        if (abs(rotacion_y_actual - rotacionY) <= 180) {
+            rotacion_y_actual -= 25;
+            if (rotacion_y_actual < rotacionY)
+                rotacion_y_actual = rotacionY;
+
+        }
+        else {
+            rotacion_y_actual += 25;
+            rotacion_y_actual %= 360;
+
+            if (rotacion_y_actual < rotacionY)
+                rotacion_y_actual = rotacionY;
+        }
+
+    }
+
+    if (moverArriba || moverDerecha || moverIzquierda || moverAbajo) {
+        if (balanceandoseDerecha) {
+            rotacion_z_actual += 3;
+            if (rotacion_z_actual == 12) {
+                balanceandoseDerecha = false;
+            }
+        }
+        else {
+            rotacion_z_actual -= 3;
+            if (rotacion_z_actual == -12) {
+                balanceandoseDerecha = true;
+            }
+        }
+    }
+    else
+        rotacion_z_actual = 0;
 }
 
 void bomberman::dibujar() {
     glPushMatrix();
     glTranslatef(pos.x, pos.y, pos.z);
-    glRotatef(10, 0, 0, 1);
-    glRotatef(180, 0, 1, 0);
+    glRotatef(rotacion_y_actual, 0, 1, 0);
+    glRotatef(rotacion_z_actual, 0, 0, 1);
     ControladorObjetos::dibujar(GL_QUADS, player_commands, player_data, ControladorTexturas::getTextura(PLAYER));
     glPopMatrix();
-}
-
-int bomberman::getVida() {
-    return this->vida;
-}
-
-void bomberman::setVida(int vida) {
-    this->vida = vida;
-}
-
-int bomberman::getMaxBomba() {
-    return this->maxBomba;
-}
-
-void bomberman::setMaxBomba(int max) {
-    this->maxBomba = max;
-}
-
-int bomberman::getCantBomba() {
-    return this->cantActual;
-}
-
-void bomberman::setCantBomba(int cant) {
-    this->cantActual = cant;
-}
-
-void bomberman::aumentarCantBomba() {
-    this->cantActual += 1;
-}
-
-void bomberman::disminuirCantBomba() {
-    this->cantActual -= 1;
-}
-
-bool bomberman::getMoverBomba() {
-    return this->moverBomba;
-}
-
-void bomberman::setMoverBomba(bool mov) {
-    this->moverBomba = mov;
-}
-
-int bomberman::getTiempoBomba() {
-    return tiempoBomba;
-}
-
-void bomberman::setTiempoBomba(int tiempo) {
-    this->tiempoBomba = tiempo;
-}
-
-int bomberman::getLargoBomba() {
-    return this->largoBomba;
-}
-
-void bomberman::setLargoBomba(int largo) {
-    this->largoBomba = largo;
-}
-
-bool bomberman::bombaDisponible() {
-    return (this->maxBomba > this->cantActual);
 }

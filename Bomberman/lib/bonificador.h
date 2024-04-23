@@ -18,8 +18,8 @@ private:
 public:
 	bonificador(posicion pos, tamanio tam, tipo_poder tipo);
 
-	tipo_poder getTipo();
-	void setTipo(tipo_poder tipo);
+	tipo_poder getTipo() const { return tipo; };
+	void setTipo(tipo_poder tipo_p) { tipo = tipo_p; };
 
 	void actualizar();
 	void dibujar();

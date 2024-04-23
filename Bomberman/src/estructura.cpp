@@ -98,11 +98,3 @@ void estructura::dibujar() {
     glEnd();
     glPopMatrix();
 }
-
-bool estructura::getDestructible() {
-    return this->destructible;
-}
-
-void estructura::setDestructible(bool dest) {
-    this->destructible = dest;
-}

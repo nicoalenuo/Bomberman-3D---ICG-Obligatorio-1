@@ -6,8 +6,8 @@ particula::particula(posicion pos, tamanio tam, aceleracion ac, velocidad vel) :
     this->ac = ac;
     this->vel = vel;
 }
-GLfloat tiempoSegundos;
 
+GLfloat tiempoSegundos;
 void particula::actualizar() {
     tiempoSegundos = GLfloat(tiempoParticula) / 1000.0f;
     pos.x = pos.x + vel.x;

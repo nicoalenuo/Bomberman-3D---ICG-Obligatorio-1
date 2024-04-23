@@ -4,6 +4,8 @@
 #define OBJETO_H
 
 #include "global.h"
+#include "SDL.h"
+#include "SDL_opengl.h"
 #include "../constantes/constantes.h"
 
 #include "ControladorObjetos.h"

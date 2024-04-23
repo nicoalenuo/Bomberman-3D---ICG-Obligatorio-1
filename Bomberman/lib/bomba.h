@@ -9,6 +9,7 @@
 #include "estructura.h"
 #include "fuego.h"
 #include "particula.h"
+#include "ControladorCamara.h"
 
 class bomba : public objeto {
 private:
@@ -16,11 +17,11 @@ private:
 public:
 	bomba(posicion pos, tamanio tam, int tiempo, int largo);
 
-	int getTiempoBomba();
-	void setTiempoBomba(int tiempo);
+	int getTiempoBomba() const { return tiempoBomba; };
+	void setTiempoBomba(int tiempo) { tiempoBomba = tiempo; };
 
-	int getLargoBomba();
-	void setLargoBomba(int largo);
+	int getLargoBomba() const { return largoBomba; };
+	void setLargoBomba(int largo) {	largoBomba = largo; };
 
 	void actualizar();
 	void dibujar();

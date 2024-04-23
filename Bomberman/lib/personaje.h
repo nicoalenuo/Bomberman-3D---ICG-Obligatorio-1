@@ -11,8 +11,8 @@ protected:
 public:
 	personaje(posicion pos, tamanio tam, GLfloat velocidad);
 
-	GLfloat getVelocidad();
-	void setVelocidad(GLfloat vel);
+	GLfloat getVelocidad() const { return velocidad; };
+	void setVelocidad(GLfloat vel) { velocidad = vel; };
 
 	virtual void actualizar() = 0;
 	virtual void dibujar() = 0;

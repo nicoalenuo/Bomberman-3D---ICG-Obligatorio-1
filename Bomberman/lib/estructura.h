@@ -11,8 +11,8 @@ private:
 public:
 	estructura(posicion pos, tamanio tam, bool dest);
 
-	bool getDestructible();
-	void setDestructible(bool dest);
+	bool getDestructible() const { return destructible; };
+	void setDestructible(bool dest) { destructible = dest; };
 
 	void actualizar();
 	void dibujar();

@@ -5,7 +5,6 @@ bomba::bomba(posicion pos, tamanio tam, int tiempo, int largo) : objeto(pos, tam
 	this->largoBomba = largo;
 }
 
-
 random_device rd;
 mt19937 gen(rd());
 uniform_real_distribution<> dis(-0.3, 0.3);
@@ -155,6 +154,8 @@ void bomba::actualizar() { // actualiza el tiempo, y si es cero, explota
               3000 //Hago que dure un poquito mas//Hago que dure un poquito mas
         ); 
 
+        ControladorCamara::sacudirse(1000);
+
         bombas[x][z] = nullptr;
         delete this;
     } 
@@ -204,20 +205,4 @@ void bomba::dibujar() {
     glVertex3f(tam.x, tam.y, -tam.z);
     glEnd();
     glPopMatrix();
-}
-
-int bomba::getTiempoBomba() {
-    return this->tiempoBomba;
-}
-
-void bomba::setTiempoBomba(int tiempo) {
-    this->tiempoBomba = tiempo;
-}
-
-int bomba::getLargoBomba() {
-    return this->largoBomba;
-}
-
-void bomba::setLargoBomba(int largo) {
-    this->largoBomba = largo;
 }
