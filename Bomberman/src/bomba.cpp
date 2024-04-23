@@ -30,7 +30,7 @@ void bomba::actualizar() { // actualiza el tiempo, y si es cero, explota
                             new particula(
                                 { x * tile_size + tile_size / 2, tile_size / 2, i * tile_size + tile_size / 2 },
                                 { 0.07, 0.07, 0.07 },
-                                { 0, -4.9, 0 },
+                                { 0, -25, 0 },
                                 { GLfloat(dis(gen)), 10, GLfloat(dis(gen)) }
                             )
                         );
@@ -68,7 +68,7 @@ void bomba::actualizar() { // actualiza el tiempo, y si es cero, explota
                             new particula(
                                 { x * tile_size + tile_size / 2, tile_size / 2, i * tile_size + tile_size / 2 },
                                 { 0.07, 0.07, 0.07 },
-                                { 0, -4.9, 0 },
+                                { 0, -25, 0 },
                                 { GLfloat(dis(gen)), 10, GLfloat(dis(gen)) }
                             )
                         );
@@ -105,7 +105,7 @@ void bomba::actualizar() { // actualiza el tiempo, y si es cero, explota
                             new particula(
                                 { i * tile_size + tile_size / 2, tile_size / 2, z * tile_size + tile_size / 2 },
                                 { 0.07, 0.07, 0.07 },
-                                { 0, -4.9, 0 },
+                                { 0, -25, 0 },
                                 { GLfloat(dis(gen)), 10, GLfloat(dis(gen)) }
                             )
                         );
@@ -142,7 +142,7 @@ void bomba::actualizar() { // actualiza el tiempo, y si es cero, explota
                             new particula(
                                 { i * tile_size + tile_size / 2, tile_size / 2, z * tile_size + tile_size / 2 },
                                 { 0.07, 0.07, 0.07 },
-                                { 0, -4.9, 0 },
+                                { 0, -25, 0 },
                                 { GLfloat(dis(gen)), 10, GLfloat(dis(gen)) }
                             )
                         );

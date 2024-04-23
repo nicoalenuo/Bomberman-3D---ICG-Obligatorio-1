@@ -5,6 +5,8 @@ Controlador* Controlador::instancia = nullptr;
 Controlador::Controlador() {
     nivel = 1;
     fin = false;
+    finJuego = false;
+    pausa = false;
     tiempoJuego = 200; //segundos
     puntaje = 0;
 
@@ -110,6 +112,7 @@ Controlador::Controlador() {
     ControladorTexturas::cargarTexturas();
     ControladorObjetos::cargarObjetos();
     ControladorCamara::cambiarTipoCamara(CAMARA_ISOMETRICA);
+    ControladorInterfaz::cargarInterfaz(puntaje, tiempoJuego, fin);
 }
 
 Controlador* Controlador::getInstance() {
@@ -241,13 +244,18 @@ void Controlador::actualizar() {
     for (list<objeto*>::iterator it = particulas.begin(); it != particulas.end(); ++it)
         (*it)->actualizar();
 
-    for (list<objeto*>::iterator it = particulas.begin(); it != particulas.end();)
+    for (list<objeto*>::iterator it = particulas.begin(); it != particulas.end();){
         if ((*it)->getPosicion().y < 0) {
             delete (*it);
             it = particulas.erase(it);
         }
         else 
             ++it;
+    }
+    
+    ControladorInterfaz::setPuntaje(puntaje);
+    ControladorInterfaz::setTiempo(tiempoJuego);
+    ControladorInterfaz::setFinJuego(finJuego);
 }
 
 void Controlador::dibujar() {
@@ -290,12 +298,42 @@ void Controlador::dibujar() {
     glEnd();
 
     glDisable(GL_TEXTURE_2D);
+    
+    //HUD
+    
+    glMatrixMode(GL_PROJECTION); glPushMatrix(); glLoadIdentity();
+    glOrtho(0, WINDOW_WIDTH, WINDOW_HEIGHT, 0, -1.0, 1.0);
+
+    glMatrixMode(GL_MODELVIEW); glPushMatrix(); glLoadIdentity();
+
+    ControladorInterfaz::dibujarHUD();
+
+    glMatrixMode(GL_PROJECTION); glPopMatrix();
+    glMatrixMode(GL_MODELVIEW); glPopMatrix();
+
 
     SDL_GL_SwapWindow(window);
 }
 
 Controlador::~Controlador() {
+    //falta hacer delete de los arreglos y punteros
     SDL_GL_DeleteContext(context);
     SDL_DestroyWindow(window);
     SDL_Quit();
 };
+
+void Controlador::sumarPuntaje(int puntos) {
+    this->puntaje += puntos;
+    if (puntos > INT_MAX) {
+        puntos = INT_MAX;
+        this->fin = true;
+    }
+}
+
+void Controlador::disminuirTiempo(int segundos) {
+    this->tiempoJuego -= segundos;
+    if (this->tiempoJuego <= 0) {
+        tiempoJuego = 0;
+        this->finJuego = true;
+    }
+}

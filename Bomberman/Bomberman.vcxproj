@@ -41,15 +41,16 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-    <IncludePath>..\Freeimage;..\SDL2-2.0.12\include;$(IncludePath)</IncludePath>
-    <LibraryPath>..\Freeimage;..\SDL2-2.0.12\lib\x86;$(LibraryPath)</LibraryPath>
-    <ExecutablePath>$(VC_ExecutablePath_x86);$(WindowsSDK_ExecutablePath);$(VS_ExecutablePath);$(MSBuild_ExecutablePath);$(SystemRoot)\SysWow64;$(FxCopDir);$(PATH);</ExecutablePath>
+    <IncludePath>..\Freeimage;..\SDL2-2.0.12\include;..\SDL2_ttf-2.0.15\include;$(IncludePath)</IncludePath>
+    <LibraryPath>..\Freeimage;..\SDL2-2.0.12\lib\x86;..\SDL2_ttf-2.0.15\lib\x86;$(LibraryPath)</LibraryPath>
+    <ExecutablePath>$(VC_ExecutablePath_x86);$(WindowsSDK_ExecutablePath);$(VS_ExecutablePath);$(MSBuild_ExecutablePath);$(SystemRoot)\SysWow64;$(FxCopDir);$(PATH)</ExecutablePath>
     <PublicIncludeDirectories>$(PublicIncludeDirectories)</PublicIncludeDirectories>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
-    <IncludePath>..\Freeimage;..\SDL2-2.0.12\include;$(IncludePath)</IncludePath>
-    <LibraryPath>..\Freeimage;..\SDL2-2.0.12\lib\x86;$(LibraryPath)</LibraryPath>
+    <IncludePath>..\Freeimage;..\SDL2-2.0.12\include;..\SDL2_ttf-2.0.15\include;$(IncludePath)</IncludePath>
+    <LibraryPath>..\Freeimage;..\SDL2-2.0.12\lib\x86;..\SDL2_ttf-2.0.15\lib\x86;$(LibraryPath)</LibraryPath>
     <PublicIncludeDirectories>$(ProjectDir);$(ProjectDir)headers;$(PublicIncludeDirectories)</PublicIncludeDirectories>
+    <ExecutablePath>$(VC_ExecutablePath_x86);$(WindowsSDK_ExecutablePath);$(VS_ExecutablePath);$(MSBuild_ExecutablePath);$(SystemRoot)\SysWow64;$(FxCopDir);$(PATH);</ExecutablePath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -61,7 +62,7 @@
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>FreeImage.lib;opengl32.lib;glu32.lib;SDL2.lib;SDL2main.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>FreeImage.lib;opengl32.lib;glu32.lib;SDL2.lib;SDL2main.lib;SDL2_ttf.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <SubSystem>Console</SubSystem>
       <AdditionalLibraryDirectories>%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
@@ -79,7 +80,7 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
-      <AdditionalDependencies>FreeImage.lib;opengl32.lib;glu32.lib;SDL2.lib;SDL2main.lib;legacy_stdio_definitions.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>FreeImage.lib;opengl32.lib;glu32.lib;SDL2.lib;SDL2main.lib;SDL2_ttf.lib;legacy_stdio_definitions.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <SubSystem>Console</SubSystem>
       <AdditionalLibraryDirectories>$(ProjectDir);$(ProjectDir)headers;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
@@ -93,6 +94,7 @@
     <ClCompile Include="src\ControladorCamara.cpp" />
     <ClCompile Include="src\ControladorObjetos.cpp" />
     <ClCompile Include="src\ControladorTexturas.cpp" />
+    <ClCompile Include="src\ControladorInterfaz.cpp" />
     <ClCompile Include="src\enemigo.cpp" />
     <ClCompile Include="src\estructura.cpp" />
     <ClCompile Include="src\fuego.cpp" />
@@ -110,14 +112,18 @@
     <ClInclude Include="lib\ControladorCamara.h" />
     <ClInclude Include="lib\ControladorObjetos.h" />
     <ClInclude Include="lib\ControladorTexturas.h" />
+    <ClCompile Include="lib\ControladorInterfaz.h" />
     <ClInclude Include="lib\enemigo.h" />
     <ClInclude Include="lib\estructura.h" />
     <ClInclude Include="lib\fuego.h" />
     <ClInclude Include="lib\global.h" />
+    <ClInclude Include="lib\hud.h" />
     <ClInclude Include="lib\objeto.h" />
-    <ClInclude Include="lib\objImporter.h" />
     <ClInclude Include="lib\particula.h" />
     <ClInclude Include="lib\personaje.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <Font Include="texturas\OpenSans-Regular.ttf" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

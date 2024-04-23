@@ -57,6 +57,9 @@
     <ClCompile Include="src\ControladorCamara.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\ControladorInterfaz.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="lib\controlador.h">
@@ -89,9 +92,6 @@
     <ClInclude Include="lib\ControladorTexturas.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="lib\objImporter.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="constantes\constantes.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -102,6 +102,12 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="lib\ControladorCamara.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="lib\hud.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="lib\ControladorInterfaz.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

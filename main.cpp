@@ -5,6 +5,7 @@ int main(int argc, char* argv[]) {
 
     Uint32 frameStart;
     Uint32 frameTime;
+    Uint32 segundo = 0;
 
     do {
         frameStart = SDL_GetTicks();
@@ -15,10 +16,24 @@ int main(int argc, char* argv[]) {
         (*controlador).dibujar();
 
         frameTime = SDL_GetTicks() - frameStart;
-        if (frameTime < frameDelay) 
+        segundo += frameTime;
+        if (frameTime < frameDelay) {
             SDL_Delay(frameDelay - frameTime);
+            segundo += frameDelay;
+        }
+        
+        if (segundo > 1000) { // 1000ms == 1segundo
+            (*controlador).disminuirTiempo(segundo / 1000);
+            segundo = segundo % 1000;
+        }
 
-    } while (!(*controlador).getFin());
+    } while (!(*controlador).getFin() && !(*controlador).getFinJuego());
+
+    if ((*controlador).getFinJuego()) {
+        (*controlador).actualizar();
+        (*controlador).dibujar();
+        SDL_Delay(2000);
+    }
 
     delete controlador;
 

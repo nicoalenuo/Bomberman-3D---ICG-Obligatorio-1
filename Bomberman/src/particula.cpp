@@ -13,7 +13,7 @@ void particula::actualizar() {
     pos.x = pos.x + vel.x;
     pos.y = ac.y * tiempoSegundos * tiempoSegundos + 
         vel.y * tiempoSegundos + 
-        pos.y;
+        pos_y_inicial;
     pos.z = pos.z + vel.z;
     tiempoParticula += frameDelay;
 }
