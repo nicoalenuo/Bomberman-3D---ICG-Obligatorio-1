@@ -1,5 +1,5 @@
 #include "../lib/personaje.h"
 
-personaje::personaje(posicion pos, tamanio tam, GLfloat velocidad) : objeto(pos, tam) {
+personaje::personaje(vector_3 pos, vector_3 tam, GLfloat velocidad) : objeto(pos, tam) {
 	this->velocidad = velocidad;
 }

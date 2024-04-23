@@ -1,6 +1,6 @@
 #include "../lib/fuego.h"
 
-fuego::fuego(posicion pos, tamanio tam, int tiempo) : objeto(pos, tam) {
+fuego::fuego(vector_3 pos, vector_3 tam, int tiempo) : objeto(pos, tam) {
 	tiempoFuego = tiempo;
 }
 

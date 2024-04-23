@@ -13,13 +13,27 @@
 #include "SDL_opengl.h"
 
 #include "global.h"
+#include "ControladorTexturas.h"
 
 using namespace std;
 
+enum tipo_obj {
+    OBJ_PLAYER,
+    OBJ_BOMBA
+};
+
 class ControladorObjetos{
-public:
+private:
+    static vector<char>  bomba_commands;
+    static vector<vector<float>> bomba_data;
+
+    static vector<char>  player_commands;
+    static vector<vector<float>> player_data;
+
     static tuple<vector<char>, vector<vector<float>>> cargarObj(string file, int type);
-    static void dibujar(GLenum primitive, vector<char> commands, vector<vector<float>> data, GLuint texture);
+public:
+    static void cargarObjetos();
+    static void dibujar(tipo_obj obj);
 };
 
 #endif

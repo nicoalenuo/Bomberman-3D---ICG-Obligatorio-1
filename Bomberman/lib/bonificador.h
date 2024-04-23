@@ -16,7 +16,7 @@ class bonificador : public objeto {
 private:
 	tipo_poder tipo; 
 public:
-	bonificador(posicion pos, tamanio tam, tipo_poder tipo);
+	bonificador(vector_3 pos, vector_3 tam, tipo_poder tipo);
 
 	tipo_poder getTipo() const { return tipo; };
 	void setTipo(tipo_poder tipo_p) { tipo = tipo_p; };

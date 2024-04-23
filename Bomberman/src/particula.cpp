@@ -1,6 +1,6 @@
 #include "../lib/particula.h"
 
-particula::particula(posicion pos, tamanio tam, aceleracion ac, velocidad vel) : objeto(pos, tam) {
+particula::particula(vector_3 pos, vector_3 tam, vector_3 ac, vector_3 vel) : objeto(pos, tam) {
     tiempoParticula = 0;
     pos_y_inicial = pos.y;
     this->ac = ac;
@@ -13,7 +13,7 @@ void particula::actualizar() {
     pos.x = pos.x + vel.x;
     pos.y = ac.y * tiempoSegundos * tiempoSegundos + 
         vel.y * tiempoSegundos + 
-        pos_y_inicial;
+        pos.y;
     pos.z = pos.z + vel.z;
     tiempoParticula += frameDelay;
 }

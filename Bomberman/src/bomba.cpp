@@ -1,6 +1,6 @@
 #include "../lib/bomba.h"
 
-bomba::bomba(posicion pos, tamanio tam, int tiempo, int largo) : objeto(pos, tam) {
+bomba::bomba(vector_3 pos, vector_3 tam, int tiempo, int largo) : objeto(pos, tam) {
 	this->tiempoBomba = tiempo;
 	this->largoBomba = largo;
 }
@@ -10,7 +10,7 @@ mt19937 gen(rd());
 uniform_real_distribution<> dis(-0.3, 0.3);
 
 void bomba::actualizar() { // actualiza el tiempo, y si es cero, explota
-   tiempoBomba -= frameDelay;
+   tiempoBomba -= frameDelay * velocidad_juego;
     if (this->tiempoBomba <= 0) {
         int x = getPosicionXEnTablero(pos.x, tam.x);
         int z = getPosicionZEnTablero(pos.z, tam.z);
@@ -30,7 +30,7 @@ void bomba::actualizar() { // actualiza el tiempo, y si es cero, explota
                             new particula(
                                 { x * tile_size + tile_size / 2, tile_size / 2, i * tile_size + tile_size / 2 },
                                 { 0.07, 0.07, 0.07 },
-                                { 0, -25, 0 },
+                                { 0, -4.9, 0 },
                                 { GLfloat(dis(gen)), 10, GLfloat(dis(gen)) }
                             )
                         );
@@ -46,6 +46,11 @@ void bomba::actualizar() { // actualiza el tiempo, y si es cero, explota
                     { tile_size / 2, tile_size, tile_size / 2 },
                     2000
                 );
+            }
+
+            if (bombas[x][i] != nullptr) {
+                bomba* bomb = dynamic_cast<bomba*>(bombas[x][i]);
+                bomb->setTiempoBomba(0);
             }
         }
 
@@ -63,7 +68,7 @@ void bomba::actualizar() { // actualiza el tiempo, y si es cero, explota
                             new particula(
                                 { x * tile_size + tile_size / 2, tile_size / 2, i * tile_size + tile_size / 2 },
                                 { 0.07, 0.07, 0.07 },
-                                { 0, -25, 0 },
+                                { 0, -4.9, 0 },
                                 { GLfloat(dis(gen)), 10, GLfloat(dis(gen)) }
                             )
                         );
@@ -79,6 +84,10 @@ void bomba::actualizar() { // actualiza el tiempo, y si es cero, explota
                     { tile_size / 2, tile_size, tile_size / 2 },
                     2000
                 );
+            }
+            if (bombas[x][i] != nullptr) {
+                bomba* bomb = dynamic_cast<bomba*>(bombas[x][i]);
+                bomb->setTiempoBomba(0);
             }
         }
 
@@ -96,7 +105,7 @@ void bomba::actualizar() { // actualiza el tiempo, y si es cero, explota
                             new particula(
                                 { i * tile_size + tile_size / 2, tile_size / 2, z * tile_size + tile_size / 2 },
                                 { 0.07, 0.07, 0.07 },
-                                { 0, -25, 0 },
+                                { 0, -4.9, 0 },
                                 { GLfloat(dis(gen)), 10, GLfloat(dis(gen)) }
                             )
                         );
@@ -112,6 +121,10 @@ void bomba::actualizar() { // actualiza el tiempo, y si es cero, explota
                     { tile_size / 2, tile_size, tile_size / 2 },
                     2000
                 );
+            }
+            if (bombas[i][z] != nullptr) {
+                bomba* bomb = dynamic_cast<bomba*>(bombas[i][z]);
+                bomb->setTiempoBomba(0);
             }
         }
 
@@ -129,7 +142,7 @@ void bomba::actualizar() { // actualiza el tiempo, y si es cero, explota
                             new particula(
                                 { i * tile_size + tile_size / 2, tile_size / 2, z * tile_size + tile_size / 2 },
                                 { 0.07, 0.07, 0.07 },
-                                { 0, -25, 0 },
+                                { 0, -4.9, 0 },
                                 { GLfloat(dis(gen)), 10, GLfloat(dis(gen)) }
                             )
                         );
@@ -146,6 +159,10 @@ void bomba::actualizar() { // actualiza el tiempo, y si es cero, explota
                       2000
                 );
             }
+            if (bombas[i][z] != nullptr) {
+                bomba* bomb = dynamic_cast<bomba*>(bombas[i][z]);
+                bomb->setTiempoBomba(0);
+            }
         }
 
         fuegos[x][z] = new fuego(
@@ -154,7 +171,7 @@ void bomba::actualizar() { // actualiza el tiempo, y si es cero, explota
               3000 //Hago que dure un poquito mas//Hago que dure un poquito mas
         ); 
 
-        ControladorCamara::sacudirse(1000);
+        ControladorCamara::sacudir(1000);
 
         bombas[x][z] = nullptr;
         delete this;
@@ -163,46 +180,7 @@ void bomba::actualizar() { // actualiza el tiempo, y si es cero, explota
 
 void bomba::dibujar() {
     glPushMatrix();
-
     glTranslatef(pos.x, pos.y, pos.z);
-    glBegin(GL_QUADS);
-
-    glColor3f(1.0, 1.0, 1.0);
-
-    glVertex3f(-tam.x, 0, -tam.z);
-    glVertex3f(tam.x, 0, -tam.z);
-    glVertex3f(tam.x, 0, tam.z);
-    glVertex3f(-tam.x, 0, tam.z);
-
-    // Cara de arriba
-    glVertex3f(-tam.x, tam.y, -tam.z);
-    glVertex3f(tam.x, tam.y, -tam.z);
-    glVertex3f(tam.x, tam.y, tam.z);
-    glVertex3f(-tam.x, tam.y, tam.z);
-
-    // Cara de atras
-    glVertex3f(-tam.x, 0, -tam.z);
-    glVertex3f(tam.x, 0, -tam.z);
-    glVertex3f(tam.x, tam.y, -tam.z);
-    glVertex3f(-tam.x, tam.y, -tam.z);
-
-    // Cara de adelante
-    glVertex3f(-tam.x, 0, tam.z);
-    glVertex3f(tam.x, 0, tam.z);
-    glVertex3f(tam.x, tam.y, tam.z);
-    glVertex3f(-tam.x, tam.y, tam.z);
-
-    // Cara izquierda
-    glVertex3f(-tam.x, 0, -tam.z);
-    glVertex3f(-tam.x, 0, tam.z);
-    glVertex3f(-tam.x, tam.y, tam.z);
-    glVertex3f(-tam.x, tam.y, -tam.z);
-
-    // Cara derecha
-    glVertex3f(tam.x, 0, -tam.z);
-    glVertex3f(tam.x, 0, tam.z);
-    glVertex3f(tam.x, tam.y, tam.z);
-    glVertex3f(tam.x, tam.y, -tam.z);
-    glEnd();
+    ControladorObjetos::dibujar(OBJ_BOMBA);
     glPopMatrix();
 }

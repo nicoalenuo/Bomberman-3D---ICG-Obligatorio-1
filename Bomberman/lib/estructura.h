@@ -9,7 +9,7 @@ class estructura : public objeto {
 private:
 	bool destructible; 
 public:
-	estructura(posicion pos, tamanio tam, bool dest);
+	estructura(vector_3 pos, vector_3 tam, bool dest);
 
 	bool getDestructible() const { return destructible; };
 	void setDestructible(bool dest) { destructible = dest; };

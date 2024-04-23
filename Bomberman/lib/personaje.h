@@ -9,7 +9,7 @@ class personaje : public objeto {
 protected:
 	GLfloat velocidad;
 public:
-	personaje(posicion pos, tamanio tam, GLfloat velocidad);
+	personaje(vector_3 pos, vector_3 tam, GLfloat velocidad);
 
 	GLfloat getVelocidad() const { return velocidad; };
 	void setVelocidad(GLfloat vel) { velocidad = vel; };

@@ -19,6 +19,7 @@
 #include "personaje.h"
 
 #include "../lib/ControladorCamara.h"
+#include "../lib/ControladorObjetos.h"
 
 
 class Controlador {

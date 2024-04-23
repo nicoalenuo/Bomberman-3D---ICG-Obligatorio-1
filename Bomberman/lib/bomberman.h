@@ -9,11 +9,8 @@ class bomberman : public personaje {
 private:
 	int vida, maxBomba, cantActual, largoBomba, tiempoBomba, rotacion_y_actual, rotacion_z_actual;
 	bool moverBomba, balanceandoseDerecha;
-
-	vector<char>  player_commands;
-	vector<vector<float>> player_data;
 public:
-	bomberman(posicion pos, tamanio tam, GLfloat velocidad);
+	bomberman(vector_3 pos, vector_3 tam, GLfloat velocidad);
 
 	int getVida() const { return vida; };
 	void setVida(int vid) { vida = vid; };

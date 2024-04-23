@@ -15,7 +15,7 @@ class bomba : public objeto {
 private:
 	int tiempoBomba, largoBomba;
 public:
-	bomba(posicion pos, tamanio tam, int tiempo, int largo);
+	bomba(vector_3 pos, vector_3 tam, int tiempo, int largo);
 
 	int getTiempoBomba() const { return tiempoBomba; };
 	void setTiempoBomba(int tiempo) { tiempoBomba = tiempo; };

@@ -11,7 +11,7 @@ private:
 	int tiempoFuego;
 
 public:
-	fuego(posicion pos, tamanio tam, int tiempo);
+	fuego(vector_3 pos, vector_3 tam, int tiempo);
 
 	void actualizar();
 	void dibujar();

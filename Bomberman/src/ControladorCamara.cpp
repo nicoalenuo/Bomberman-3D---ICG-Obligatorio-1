@@ -7,7 +7,7 @@ void ControladorCamara::cambiarTipoCamara(tipo_camara camara) {
 	ControladorCamara::camara_actual = camara;
 }
 
-void ControladorCamara::sacudirse(int tiempo) {
+void ControladorCamara::sacudir(int tiempo) {
 	tiempoSacudirse = tiempo;
 }
 
@@ -18,6 +18,10 @@ uniform_real_distribution<> disSacudirse(-0.2, 0.2);
 
 GLfloat angleRadiansX, angleRadiansY, camX, camY, camZ;
 void ControladorCamara::colocarCamara() {
+
+	if (tiempoSacudirse > 0)
+		tiempoSacudirse -= frameDelay * velocidad_juego;
+
 	switch (camara_actual) {
 		case CAMARA_ISOMETRICA:
 		default:
@@ -25,9 +29,6 @@ void ControladorCamara::colocarCamara() {
 
 			camX = (*jugador).getPosicion().x + 20.0f * sin(angleRadiansX);
 			camZ = (*jugador).getPosicion().z + 20.0f * cos(angleRadiansX);
-
-			if (tiempoSacudirse > 0) 
-				tiempoSacudirse -= frameDelay;
 
 			gluLookAt(camX, 30, camZ, 
 				(*jugador).getPosicion().x + (tiempoSacudirse > 0 ? GLfloat(disSacudirse(genSacudirse)) : 0), 

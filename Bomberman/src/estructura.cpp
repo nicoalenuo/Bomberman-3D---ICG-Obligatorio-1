@@ -1,6 +1,6 @@
 #include "../lib/estructura.h"
 
-estructura::estructura(posicion pos, tamanio tam, bool dest) : objeto(pos, tam) {
+estructura::estructura(vector_3 pos, vector_3 tam, bool dest) : objeto(pos, tam) {
 	this->destructible = dest;
 }
 

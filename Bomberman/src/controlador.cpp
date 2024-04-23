@@ -106,7 +106,10 @@ Controlador::Controlador() {
 
     SDL_ShowCursor(SDL_DISABLE); // Esta línea oculta el cursor del mouse
 
+
     ControladorTexturas::cargarTexturas();
+    ControladorObjetos::cargarObjetos();
+    ControladorCamara::cambiarTipoCamara(CAMARA_ISOMETRICA);
 }
 
 Controlador* Controlador::getInstance() {
@@ -235,7 +238,7 @@ void Controlador::actualizar() {
         }
     }
 
-    for (auto it = particulas.begin(); it != particulas.end(); ++it)
+    for (list<objeto*>::iterator it = particulas.begin(); it != particulas.end(); ++it)
         (*it)->actualizar();
 
     for (list<objeto*>::iterator it = particulas.begin(); it != particulas.end();)
@@ -253,8 +256,7 @@ void Controlador::dibujar() {
 
     ControladorCamara::colocarCamara();
 
-    if (texturas_habilitadas) 
-        glEnable(GL_TEXTURE_2D);
+    glEnable(GL_TEXTURE_2D);
 
     jugador->dibujar();
 
@@ -278,9 +280,6 @@ void Controlador::dibujar() {
     for (auto it = particulas.begin(); it != particulas.end(); ++it)
         (*it)->dibujar();
 
-    if (texturas_habilitadas) 
-        glDisable(GL_TEXTURE_2D);
-
     //Suelo
     glBegin(GL_QUADS);
     glColor3f(GLfloat(227.0 / 255.0), GLfloat(186.0 / 255.0), GLfloat(143.0 / 255.0));
@@ -289,6 +288,8 @@ void Controlador::dibujar() {
     glVertex3f(largoTablero * tile_size, 0, anchoTablero * tile_size);
     glVertex3f(largoTablero * tile_size, 0, 0);
     glEnd();
+
+    glDisable(GL_TEXTURE_2D);
 
     SDL_GL_SwapWindow(window);
 }

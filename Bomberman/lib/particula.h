@@ -5,27 +5,15 @@
 
 #include "objeto.h"
 
-struct velocidad {
-	GLfloat x;
-	GLfloat y;
-	GLfloat z;
-};
-
-struct aceleracion {
-	GLfloat x;
-	GLfloat y;
-	GLfloat z;
-};
-
 class particula : public objeto{
 private:
 	int tiempoParticula;
 	GLfloat pos_y_inicial;
-	velocidad vel;
-	aceleracion ac;
+	vector_3 vel;
+	vector_3 ac;
 
 public:
-	particula(posicion pos, tamanio tam, aceleracion ac, velocidad vel);
+	particula(vector_3 pos, vector_3 tam, vector_3 ac, vector_3 vel);
 
 	void actualizar();
 	void dibujar();

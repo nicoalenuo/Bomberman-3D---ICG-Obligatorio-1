@@ -11,6 +11,8 @@ using namespace std;
 class objeto;
 class bomberman;
 
+extern int velocidad_juego;
+
 extern bool moverArriba;
 extern bool moverAbajo;
 extern bool moverDerecha;

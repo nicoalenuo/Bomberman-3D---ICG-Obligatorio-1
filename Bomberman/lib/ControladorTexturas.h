@@ -13,6 +13,7 @@ enum tipo_textura { //agregar aca en caso de agregar mas texturas, y luego en el
 	ESTRUCTURA_DESTRUCTIBLE,
 	ESTRUCTURA_NO_DESTRUCTIBLE,
 	PLAYER,
+	TEXTURA_BOMBA
 };
 
 class ControladorTexturas{
@@ -20,6 +21,7 @@ private:
 	static GLuint texturaEstructuraDestructible;
 	static GLuint texturaEstructuraNoDestructible;
 	static GLuint texturaPlayer;
+	static GLuint texturaBomba;
 public:
 	static void cargarTexturas();
 	static GLuint getTextura(tipo_textura tipo);

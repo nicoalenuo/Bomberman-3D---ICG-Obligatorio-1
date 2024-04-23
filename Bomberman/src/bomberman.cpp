@@ -1,6 +1,6 @@
 #include "../lib/bomberman.h"
 
-bool posicion_valida(posicion pos, tamanio tam) {
+bool posicion_valida(vector_3 pos, vector_3 tam) {
     int largoTableroAux = largoTablero * int(tile_size);
     int anchoTableroAux = anchoTablero * int(tile_size);
 
@@ -30,7 +30,7 @@ bool posicion_valida(posicion pos, tamanio tam) {
 }
 
 
-bomberman::bomberman(posicion pos, tamanio tam, GLfloat velocidad) : personaje(pos, tam, velocidad) {
+bomberman::bomberman(vector_3 pos, vector_3 tam, GLfloat velocidad) : personaje(pos, tam, velocidad) {
     vida = 1;
     moverBomba = false;
     largoBomba = 2;
@@ -40,8 +40,6 @@ bomberman::bomberman(posicion pos, tamanio tam, GLfloat velocidad) : personaje(p
     rotacion_y_actual = 0;
     rotacion_z_actual = 0;
     balanceandoseDerecha = false;
-
-    tie(player_commands, player_data) = ControladorObjetos::cargarObj("objs/Chicken02.obj", 1);
 }
 
 int rotacionY, rotacionZ;
@@ -49,91 +47,91 @@ void bomberman::actualizar() {
     if (moverArriba) {
         if (mouseX >= 45 && mouseX < 135) {
             rotacionY = 90;
-            if (posicion_valida({ pos.x - velocidad, 0, pos.z }, { tam.x, 0, tam.z }))
-                pos.x -= velocidad;
+            if (posicion_valida({ pos.x - velocidad * velocidad_juego, 0, pos.z }, { tam.x, 0, tam.z }))
+                pos.x -= velocidad * velocidad_juego;
         }
         else if (mouseX >= 135 && mouseX < 225) {
             rotacionY = 180;
-            if (posicion_valida({ pos.x, 0, pos.z + velocidad }, { tam.x, 0,tam.z }))
-                pos.z += velocidad;
+            if (posicion_valida({ pos.x, 0, pos.z + velocidad * velocidad_juego }, { tam.x, 0,tam.z }))
+                pos.z += velocidad * velocidad_juego;
         }
         else if (mouseX >= 225 && mouseX < 315) {
             rotacionY = 270;
-            if (posicion_valida({ pos.x + velocidad, 0, pos.z }, { tam.x, 0, tam.z }))
-                pos.x += velocidad;
+            if (posicion_valida({ pos.x + velocidad * velocidad_juego, 0, pos.z }, { tam.x, 0, tam.z }))
+                pos.x += velocidad * velocidad_juego;
         }
         else {
             rotacionY = 0;
-            if (posicion_valida({ pos.x, 0,pos.z - velocidad }, { tam.x, 0,tam.z }))
-                pos.z -= velocidad;
+            if (posicion_valida({ pos.x, 0,pos.z - velocidad * velocidad_juego }, { tam.x, 0,tam.z }))
+                pos.z -= velocidad * velocidad_juego;
         }
     }
     if (moverAbajo) {
         if (mouseX >= 45 && mouseX < 135) {
             rotacionY = 270;
-            if (posicion_valida({ pos.x + velocidad, 0, pos.z }, { tam.x, 0, tam.z }))
-                pos.x += velocidad;
+            if (posicion_valida({ pos.x + velocidad * velocidad_juego, 0, pos.z }, { tam.x, 0, tam.z }))
+                pos.x += velocidad * velocidad_juego;
         }
         else if (mouseX >= 135 && mouseX < 225) {
             rotacionY = 0;
-            if (posicion_valida({ pos.x, 0, pos.z - velocidad }, { tam.x, 0, tam.z }))
-                pos.z -= velocidad;
+            if (posicion_valida({ pos.x, 0, pos.z - velocidad * velocidad_juego }, { tam.x, 0, tam.z }))
+                pos.z -= velocidad * velocidad_juego;
         }
         else if (mouseX >= 225 && mouseX < 315) {
             rotacionY = 90;
-            if (posicion_valida({ pos.x - velocidad, 0, pos.z }, { tam.x, 0, tam.z }))
-                pos.x -= velocidad;
+            if (posicion_valida({ pos.x - velocidad * velocidad_juego, 0, pos.z }, { tam.x, 0, tam.z }))
+                pos.x -= velocidad * velocidad_juego;
         }
         else {
             rotacionY = 180;
-            if (posicion_valida({ pos.x, 0, pos.z + velocidad }, { tam.x, 0, tam.z }))
-                pos.z += velocidad;
+            if (posicion_valida({ pos.x, 0, pos.z + velocidad * velocidad_juego }, { tam.x, 0, tam.z }))
+                pos.z += velocidad * velocidad_juego;
         }
     }
 
     if (moverDerecha) {
         if (mouseX >= 45 && mouseX < 135) {
             rotacionY = 0;
-            if (posicion_valida({ pos.x, 0, pos.z - velocidad }, { tam.x, 0, tam.z }))
-                pos.z -= velocidad;
+            if (posicion_valida({ pos.x, 0, pos.z - velocidad * velocidad_juego }, { tam.x, 0, tam.z }))
+                pos.z -= velocidad * velocidad_juego;
         }
         else if (mouseX >= 135 && mouseX < 225) {
             rotacionY = 90;
-            if (posicion_valida({ pos.x - velocidad, 0, pos.z }, { tam.x, 0, tam.z }))
-                pos.x -= velocidad;
+            if (posicion_valida({ pos.x - velocidad * velocidad_juego, 0, pos.z }, { tam.x, 0, tam.z }))
+                pos.x -= velocidad * velocidad_juego;
         }
         else if (mouseX >= 225 && mouseX < 315) {
             rotacionY = 180;
-            if (posicion_valida({ pos.x, 0, pos.z + velocidad }, { tam.x, 0, tam.z }))
-                pos.z += velocidad;
+            if (posicion_valida({ pos.x, 0, pos.z + velocidad * velocidad_juego }, { tam.x, 0, tam.z }))
+                pos.z += velocidad * velocidad_juego;
         }
         else {
             rotacionY = 270;
-            if (posicion_valida({ pos.x + velocidad, 0, pos.z }, { tam.x, 0, tam.z }))
-                pos.x += velocidad;
+            if (posicion_valida({ pos.x + velocidad * velocidad_juego, 0, pos.z }, { tam.x, 0, tam.z }))
+                pos.x += velocidad * velocidad_juego;
         }
     }
 
     if (moverIzquierda) {
         if (mouseX >= 45 && mouseX < 135) {
             rotacionY = 180;
-            if (posicion_valida({ pos.x, 0, pos.z + velocidad }, { tam.x, 0, tam.z }))
-                pos.z += velocidad;
+            if (posicion_valida({ pos.x, 0, pos.z + velocidad * velocidad_juego }, { tam.x, 0, tam.z }))
+                pos.z += velocidad * velocidad_juego;
         }
         else if (mouseX >= 135 && mouseX < 225) {
             rotacionY = 270;
-            if (posicion_valida({ pos.x + velocidad, 0, pos.z }, { tam.x, 0, tam.z }))
-                pos.x += velocidad;
+            if (posicion_valida({ pos.x + velocidad * velocidad_juego, 0, pos.z }, { tam.x, 0, tam.z }))
+                pos.x += velocidad * velocidad_juego;
         }
         else if (mouseX >= 225 && mouseX < 315) {
             rotacionY = 0;
-            if (posicion_valida({ pos.x, 0, pos.z - velocidad }, { tam.x, 0, tam.z }))
-                pos.z -= velocidad;
+            if (posicion_valida({ pos.x, 0, pos.z - velocidad * velocidad_juego }, { tam.x, 0, tam.z }))
+                pos.z -= velocidad * velocidad_juego;
         }
         else {
             rotacionY = 90;
-            if (posicion_valida({ pos.x - velocidad, 0, pos.z }, { tam.x, 0, tam.z }))
-                pos.x -= velocidad;
+            if (posicion_valida({ pos.x - velocidad * velocidad_juego, 0, pos.z }, { tam.x, 0, tam.z }))
+                pos.x -= velocidad * velocidad_juego;
         }
     }
 
@@ -172,13 +170,13 @@ void bomberman::actualizar() {
 
     if (moverArriba || moverDerecha || moverIzquierda || moverAbajo) {
         if (balanceandoseDerecha) {
-            rotacion_z_actual += 3;
+            rotacion_z_actual += 3 * velocidad_juego;
             if (rotacion_z_actual == 12) {
                 balanceandoseDerecha = false;
             }
         }
         else {
-            rotacion_z_actual -= 3;
+            rotacion_z_actual -= 3 * velocidad_juego;
             if (rotacion_z_actual == -12) {
                 balanceandoseDerecha = true;
             }
@@ -193,6 +191,6 @@ void bomberman::dibujar() {
     glTranslatef(pos.x, pos.y, pos.z);
     glRotatef(rotacion_y_actual, 0, 1, 0);
     glRotatef(rotacion_z_actual, 0, 0, 1);
-    ControladorObjetos::dibujar(GL_QUADS, player_commands, player_data, ControladorTexturas::getTextura(PLAYER));
+    ControladorObjetos::dibujar(OBJ_PLAYER);
     glPopMatrix();
 }

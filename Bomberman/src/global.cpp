@@ -1,5 +1,7 @@
 ﻿#include "../lib/global.h"
 
+int velocidad_juego = 1;
+
 bool moverArriba = false;
 bool moverAbajo = false;
 bool moverDerecha = false;

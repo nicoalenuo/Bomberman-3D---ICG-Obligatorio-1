@@ -6,18 +6,13 @@
 #include "global.h"
 #include "SDL.h"
 #include "SDL_opengl.h"
+
 #include "../constantes/constantes.h"
 
 #include "ControladorObjetos.h"
 #include "ControladorTexturas.h"
 
-struct posicion {
-	GLfloat x;
-	GLfloat y;
-	GLfloat z;
-};
-
-struct tamanio {
+struct vector_3 {
 	GLfloat x;
 	GLfloat y;
 	GLfloat z;
@@ -25,13 +20,13 @@ struct tamanio {
 
 class objeto {
 protected:
-	posicion pos;
-	tamanio tam;
+	vector_3 pos;
+	vector_3 tam;
 public:
-	objeto(posicion pos, tamanio tam) : pos(pos), tam(tam) {}
+	objeto(vector_3 pos, vector_3 tam) : pos(pos), tam(tam) {}
 
-	posicion getPosicion() const { return pos; };
-	tamanio getTamanio() const { return tam; };
+	vector_3 getPosicion() const { return pos; };
+	vector_3 getTamanio() const { return tam; };
 
 	void setPosicionX(GLfloat x) { pos.x = x; };
 	void setPosicionY(GLfloat y) { pos.y = y; };

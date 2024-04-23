@@ -9,7 +9,7 @@ class enemigo : public personaje {
 private:
 
 public:
-	enemigo(posicion pos, tamanio tam);
+	enemigo(vector_3 pos, vector_3 tam);
 
 	void actualizar();
 	void dibujar();

@@ -25,7 +25,7 @@ private:
 public:
 	static void cambiarTipoCamara(tipo_camara camara);
 	static void colocarCamara();
-	static void sacudirse(int tiempo);
+	static void sacudir(int tiempo);
 };
 
 #endif
