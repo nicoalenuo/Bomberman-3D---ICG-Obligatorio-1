@@ -8,6 +8,8 @@ Controlador::Controlador() {
     tiempoJuego = 200; //segundos
     puntaje = 0;
 
+    ca = ControladorAudio::getInstance();
+
     jugador = new bomberman({ 0, 0, 0 }, { tile_size / 2, tile_size / 2, tile_size / 2 }, GLfloat(0.1));
 
     for (int i = 0; i < largoTablero; i++) {
@@ -90,6 +92,10 @@ Controlador::Controlador() {
 
     if (texturas_habilitadas)
         ControladorTexturas::cargarTexturas();
+
+    if (audio_habilitado)
+        ca->cargarAudios();
+
 }
 
 Controlador* Controlador::getInstance() {
@@ -160,6 +166,9 @@ void Controlador::manejarEventos() {
                     break;
                 case SDLK_LEFT:
                     moverIzquierda = true;
+                    break;
+                case SDLK_u:
+                    ca->cargarAudios();
                     break;
             }
             break;

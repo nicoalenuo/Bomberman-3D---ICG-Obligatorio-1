@@ -7,6 +7,7 @@
 #include "SDL_opengl.h"
 #include "FreeImage.h"
 #include <GL/glu.h>
+#include "al.h"
 
 #include <random>
 
@@ -19,6 +20,7 @@
 #include "personaje.h"
 
 #include "../lib/ControladorCamara.h"
+#include "../lib/ControladorAudio.h"
 
 
 class Controlador {
@@ -30,6 +32,8 @@ private:
 	SDL_Window* window;
 	SDL_GLContext context;
 	SDL_Event evento;
+
+	ControladorAudio* ca;
 	
 	bool pausa, fin;
 	int nivel, tiempoJuego; //segundos

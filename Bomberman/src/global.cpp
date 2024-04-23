@@ -8,6 +8,7 @@ bool moverIzquierda = false;
 int mouseX = 0;
 
 bool texturas_habilitadas = true;
+bool audio_habilitado = true;
 
 int puntaje = 0;
 
