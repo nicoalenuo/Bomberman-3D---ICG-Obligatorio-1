@@ -166,7 +166,16 @@ void Controlador::manejarEventos() {
                     moverIzquierda = true;
                     break;
                 case SDLK_u:
-                    cout << "sonido" << endl;
+                    ControladorAudio::playAudio(sonido::pasos);
+                    break;
+                case SDLK_j:
+                    ControladorAudio::playAudio(sonido::bonificacion);
+                    break;
+                case SDLK_k:
+                    ControladorAudio::playAudio(sonido::explosion);
+                    break;
+                case SDLK_l :
+                    ControladorAudio::playAudio(sonido::muerte);
                     break;
             }
             break;

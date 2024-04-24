@@ -4,6 +4,11 @@ ALCdevice* ControladorAudio::openALDevice = nullptr;
 ALCcontext* ControladorAudio::openALContext = nullptr;
 ALCboolean ControladorAudio::contextMadeCurrent = false;
 
+ALuint ControladorAudio::bufferMuerte;
+ALuint ControladorAudio::bufferExplosion;
+ALuint ControladorAudio::bufferBonificacion;
+ALuint ControladorAudio::bufferPasos;
+
 void ControladorAudio::initOpenAl() {
 	openALDevice = alcOpenDevice(nullptr); //obtengo el dispositivo
 	if (!openALDevice) {
@@ -28,11 +33,40 @@ void ControladorAudio::cargarAudios() {
 	
 	initOpenAl();
 
-	ALuint buffer = bufferAudio::agregarSonido("audio/haggle1.wav");
+	bufferMuerte = bufferAudio::agregarSonido("audio/muerte.wav");
+	bufferExplosion = bufferAudio::agregarSonido("audio/explosion.wav");
+	bufferBonificacion = bufferAudio::agregarSonido("audio/bonificacion.wav");
+	bufferPasos = bufferAudio::agregarSonido("audio/pasos.wav");
 
 	recursoAudio::initRecurso();
-	recursoAudio::Play(buffer);
+}
+void aux() {
+	Sleep(2000);
+	cout << "Despues" << endl;
+}
 
+void ControladorAudio::playAudio(sonido s) {
+	switch (s){
+		case sonido::muerte:
+			recursoAudio::Play(bufferMuerte);
+			break;
+		case sonido::explosion:
+			recursoAudio::Play(bufferExplosion);
+			break;
+		case sonido::bonificacion:
+			recursoAudio::Play(bufferBonificacion);
+			break;
+		case sonido::pasos:
+			//cout << "Antes" << endl;
+			//thread th(aux);
+			
+			//th.detach();
+			/*if (th.joinable()) {
+				th.join();
+			}*/
+			recursoAudio::Play(bufferPasos);
+			break;
+	}
 }
 
 //Se deberia controlar las excepciones

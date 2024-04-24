@@ -3,7 +3,7 @@
 ALuint recursoAudio::p_Source;
 float recursoAudio::p_Pitch = 1.f;
 float recursoAudio::p_Gain = 1.f;
-float recursoAudio::p_Position[3] = { 0,0,0 };
+float recursoAudio::p_Position[3] = { 10,0,0 };
 float recursoAudio::p_Velocity[3] = { 0,0,0 };
 bool recursoAudio::p_LoopSound = false;
 ALuint recursoAudio::p_Buffer = 0;
@@ -28,7 +28,7 @@ void recursoAudio::Play(const ALuint buffer_to_play) {
 	alSourcePlay(p_Source);
 
 	ALint state = AL_PLAYING;
-	while (state == AL_PLAYING && alGetError() == AL_NO_ERROR){
+	/*while (state == AL_PLAYING && alGetError() == AL_NO_ERROR) {
 		alGetSourcei(p_Source, AL_SOURCE_STATE, &state);
-	}
+	}*/
 }

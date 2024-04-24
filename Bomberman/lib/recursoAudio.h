@@ -4,6 +4,9 @@
 #define RECURSOAUDIO_H
 
 #include "al.h"
+#include <iostream>
+
+using namespace std;
 
 class recursoAudio{
 private:
