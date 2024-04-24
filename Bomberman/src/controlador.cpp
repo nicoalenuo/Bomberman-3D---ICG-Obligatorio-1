@@ -5,8 +5,8 @@ Controlador* Controlador::instancia = nullptr;
 Controlador::Controlador() {
     
     jugador = new bomberman(
-        { tile_size / 2, tile_size / 2, tile_size / 2 },
-        { tile_size / 4, tile_size / 2, tile_size / 3 }, 
+        { tile_size / 2, 0, tile_size / 2 },
+        { tile_size / 4, tile_size / 2, tile_size / 4 }, 
         GLfloat(0.1)
     );
 
@@ -123,35 +123,6 @@ void Controlador::manejarEventos() {
             case SDL_QUIT:
                 fin = true;
                 break;
-            case SDL_MOUSEBUTTONDOWN:
-                if (mouseX >= 45 && mouseX < 135) {
-                    posBombaXTablero = getPosicionXEnTablero(jugador->getPosicion().x - tile_size, 1);
-                    posBombaZTablero = getPosicionXEnTablero(jugador->getPosicion().z, 1);
-                }
-                else if (mouseX >= 135 && mouseX < 225) {
-                    posBombaXTablero = getPosicionXEnTablero(jugador->getPosicion().x, 1);
-                    posBombaZTablero = getPosicionXEnTablero(jugador->getPosicion().z + tile_size, 1);
-                }
-                else if (mouseX >= 225 && mouseX < 315) {
-                    posBombaXTablero = getPosicionXEnTablero(jugador->getPosicion().x + tile_size, 1);
-                    posBombaZTablero = getPosicionXEnTablero(jugador->getPosicion().z, 1);
-                }
-                else {
-                    posBombaXTablero = getPosicionXEnTablero(jugador->getPosicion().x, 1);
-                    posBombaZTablero = getPosicionXEnTablero(jugador->getPosicion().z - tile_size, 1);
-                }
-
-                if (bombas[posBombaXTablero][posBombaZTablero] == nullptr && estructuras[posBombaXTablero][posBombaZTablero] == nullptr) {
-                    objeto* bomba_obj = new bomba(
-                        { posBombaXTablero * tile_size + tile_size / 2, 0, posBombaZTablero * tile_size + tile_size / 2 },
-                        { tile_size / 4, tile_size / 2, tile_size / 4 },
-                        2000, //2 segundos
-                        2
-                    );
-
-                    bombas[posBombaXTablero][posBombaZTablero] = bomba_obj;
-                }
-                break;
         case SDL_KEYDOWN:
             switch (evento.key.keysym.sym) {
                 case SDLK_ESCAPE:
@@ -189,7 +160,6 @@ void Controlador::manejarEventos() {
                     break;
                 case SDLK_t:
                     ControladorCamara::cambiarTipoCamara(CAMARA_TERCERA_PERSONA);
-                    cout << "cambiao" << endl; //XD?
                     break;
                 case SDLK_o:
                     ControladorCamara::cambiarTipoCamara(CAMARA_ORIGINAL);
@@ -254,7 +224,7 @@ void Controlador::manejarEventos() {
             }
             break;
         case SDL_MOUSEMOTION:
-            mouseX = (mouseX + (evento.motion.x % 360) - 280) % 360; //No hardcodear el 280 (kevin machado)
+            mouseX = (mouseX + (-evento.motion.x  % 360) + 280) % 360; //No hardcodear el 280 (kevin machado)
             if (mouseX < 0)
                 mouseX += 360;  
 
@@ -265,6 +235,40 @@ void Controlador::manejarEventos() {
                 mouseY = 360;
 
             SDL_WarpMouseInWindow(window, WINDOW_WIDTH / 2, WINDOW_HEIGHT / 2);
+            break;
+        
+        case SDL_MOUSEBUTTONDOWN:
+            switch (evento.button.button) {
+                case SDL_BUTTON_LEFT:
+                    if (mouseX >= 45 && mouseX < 135) {
+                        posBombaXTablero = getPosicionXEnTablero(jugador->getPosicion().x - tile_size, 1);
+                        posBombaZTablero = getPosicionXEnTablero(jugador->getPosicion().z, 1);
+                    }
+                    else if (mouseX >= 135 && mouseX < 225) {
+                        posBombaXTablero = getPosicionXEnTablero(jugador->getPosicion().x, 1);
+                        posBombaZTablero = getPosicionXEnTablero(jugador->getPosicion().z + tile_size, 1);
+                    }
+                    else if (mouseX >= 225 && mouseX < 315) {
+                        posBombaXTablero = getPosicionXEnTablero(jugador->getPosicion().x + tile_size, 1);
+                        posBombaZTablero = getPosicionXEnTablero(jugador->getPosicion().z, 1);
+                    }
+                    else {
+                        posBombaXTablero = getPosicionXEnTablero(jugador->getPosicion().x, 1);
+                        posBombaZTablero = getPosicionXEnTablero(jugador->getPosicion().z - tile_size, 1);
+                    }
+
+                    if (bombas[posBombaXTablero][posBombaZTablero] == nullptr && estructuras[posBombaXTablero][posBombaZTablero] == nullptr) {
+                        objeto* bomba_obj = new bomba(
+                            { posBombaXTablero * tile_size + tile_size / 2, 0, posBombaZTablero * tile_size + tile_size / 2 },
+                            { tile_size / 4, tile_size / 2, tile_size / 4 },
+                            2000, //2 segundos
+                            2
+                        );
+
+                        bombas[posBombaXTablero][posBombaZTablero] = bomba_obj;
+                    }
+                break;
+            }
             break;
         }
     }

@@ -50,8 +50,8 @@ void ControladorTexturas::cargarTexturas() {
     //FIN TEXTURA
 
     //CARGAR IMAGEN
-    fif = FreeImage_GetFIFFromFilename("texturas/Chicken02Col.jpg");
-    bitmap = FreeImage_Load(fif, "texturas/Chicken02Col.jpg"); //estoy reciviendo bitmap null
+    fif = FreeImage_GetFIFFromFilename("texturas/player.png");
+    bitmap = FreeImage_Load(fif, "texturas/player.png"); 
     bitmap = FreeImage_ConvertTo24Bits(bitmap);
     w = FreeImage_GetWidth(bitmap);
     h = FreeImage_GetHeight(bitmap);
@@ -90,6 +90,7 @@ void ControladorTexturas::cargarTexturas() {
 
     texturaBomba = textura;
     //FIN TEXTURA
+
 }
 
 GLuint ControladorTexturas::getTextura(tipo_textura tipo) {

@@ -170,14 +170,14 @@ void bomberman::actualizar() {
 
     if (moverArriba || moverDerecha || moverIzquierda || moverAbajo) {
         if (balanceandoseDerecha) {
-            rotacion_z_actual += 3 * velocidad_juego;
-            if (rotacion_z_actual == 12) {
+            rotacion_z_actual += 2 * velocidad_juego;
+            if (rotacion_z_actual == 8) {
                 balanceandoseDerecha = false;
             }
         }
         else {
-            rotacion_z_actual -= 3 * velocidad_juego;
-            if (rotacion_z_actual == -12) {
+            rotacion_z_actual -= 2 * velocidad_juego;
+            if (rotacion_z_actual == -8) {
                 balanceandoseDerecha = true;
             }
         }
@@ -189,8 +189,8 @@ void bomberman::actualizar() {
 void bomberman::dibujar() {
     glPushMatrix();
     glTranslatef(pos.x, pos.y, pos.z);
-    glRotatef(rotacion_y_actual, 0, 1, 0);
-    glRotatef(rotacion_z_actual, 0, 0, 1);
+    glRotatef(GLfloat(rotacion_y_actual), 0, 1, 0);
+    glRotatef(GLfloat(rotacion_z_actual), 0, 0, 1);
     ControladorObjetos::dibujar(OBJ_PLAYER);
     glPopMatrix();
 }

@@ -21,7 +21,7 @@ void fuego::dibujar() {
 	glTranslatef(pos.x, pos.y, pos.z);
 
 	glBegin(GL_QUADS);
-	glColor3f(1.0, 0.0, 0.0);
+	glColor3f(1.0f, 0.0f, 0.0f);
 	glVertex3f(-tam.x, 0, -tam.z);
 	glVertex3f(tam.x, 0, -tam.z);
 	glVertex3f(tam.x, 0, tam.z);

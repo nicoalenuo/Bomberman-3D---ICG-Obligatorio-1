@@ -5,10 +5,6 @@ bomba::bomba(vector_3 pos, vector_3 tam, int tiempo, int largo) : objeto(pos, ta
 	this->largoBomba = largo;
 }
 
-random_device rd;
-mt19937 gen(rd());
-uniform_real_distribution<> dis(-0.3, 0.3);
-
 void bomba::actualizar() { // actualiza el tiempo, y si es cero, explota
    tiempoBomba -= frameDelay * velocidad_juego;
     if (this->tiempoBomba <= 0) {
@@ -21,20 +17,9 @@ void bomba::actualizar() { // actualiza el tiempo, y si es cero, explota
             if (estructuras[x][i] != nullptr) { // por ahora no toma en cuenta jugador
                 alcanza = true;
                 estructura* est = dynamic_cast<estructura*>(estructuras[x][i]);
-                if (est->getDestructible()) { //Pasarle un mensaje a la estructura para que comience la animacion de destruccion, 
-                    delete estructuras[x][i];
+                if (est->getDestructible()) {
+                    delete est;
                     estructuras[x][i] = nullptr;
-
-                    for (int j = 0; j < 80; j++) {
-                        particulas.push_back(
-                            new particula(
-                                { x * tile_size + tile_size / 2, tile_size / 2, i * tile_size + tile_size / 2 },
-                                { 0.07, 0.07, 0.07 },
-                                { 0, -25, 0 },
-                                { GLfloat(dis(gen)), 10, GLfloat(dis(gen)) }
-                            )
-                        );
-                    }
                 }
             }
             else {
@@ -56,23 +41,12 @@ void bomba::actualizar() { // actualiza el tiempo, y si es cero, explota
 
         alcanza = false;
         for (int i = z - 1; !alcanza && i >= max(z - this->largoBomba, 0); i--) { // x fijo, z decrementa
-            if (estructuras[x][i] != nullptr) { // por ahora no toma en cuenta jugador
+            if (estructuras[x][i] != nullptr) { 
                 alcanza = true;
                 estructura* est = dynamic_cast<estructura*>(estructuras[x][i]);
                 if (est->getDestructible()) {
-                    delete estructuras[x][i];
+                    delete est;
                     estructuras[x][i] = nullptr;
-
-                    for (int j = 0; j < 80; j++) {
-                        particulas.push_back(
-                            new particula(
-                                { x * tile_size + tile_size / 2, tile_size / 2, i * tile_size + tile_size / 2 },
-                                { 0.07, 0.07, 0.07 },
-                                { 0, -25, 0 },
-                                { GLfloat(dis(gen)), 10, GLfloat(dis(gen)) }
-                            )
-                        );
-                    }
                 }
             }
             else {
@@ -93,23 +67,12 @@ void bomba::actualizar() { // actualiza el tiempo, y si es cero, explota
 
         alcanza = false;
         for (int i = x + 1; !alcanza && i < min(x + this->largoBomba + 1, largoTablero); i++) { // z fijo, x incrementa
-            if (estructuras[i][z] != nullptr) { // por ahora no toma en cuenta jugador
+            if (estructuras[i][z] != nullptr) {
                 alcanza = true;
                 estructura* est = dynamic_cast<estructura*>(estructuras[i][z]);
                 if (est->getDestructible()) {
-                    delete estructuras[i][z];
+                    delete est;
                     estructuras[i][z] = nullptr;
-
-                    for (int j = 0; j < 80; j++) {
-                        particulas.push_back(
-                            new particula(
-                                { i * tile_size + tile_size / 2, tile_size / 2, z * tile_size + tile_size / 2 },
-                                { 0.07, 0.07, 0.07 },
-                                { 0, -25, 0 },
-                                { GLfloat(dis(gen)), 10, GLfloat(dis(gen)) }
-                            )
-                        );
-                    }
                 }
             }
             else {
@@ -130,23 +93,12 @@ void bomba::actualizar() { // actualiza el tiempo, y si es cero, explota
 
         alcanza = false;
         for (int i = x - 1; !alcanza && i >= max(x - this->largoBomba, 0); i--) { // z fijo, x decrementa
-            if (estructuras[i][z] != nullptr) { // por ahora no toma en cuenta jugador
+            if (estructuras[i][z] != nullptr) {
                 alcanza = true;
                 estructura* est = dynamic_cast<estructura*>(estructuras[i][z]);
                 if (est->getDestructible()) {
-                    delete estructuras[i][z];
+                    delete est;
                     estructuras[i][z] = nullptr;
-
-                    for (int j = 0; j < 80; j++) {
-                        particulas.push_back(
-                            new particula(
-                                { i * tile_size + tile_size / 2, tile_size / 2, z * tile_size + tile_size / 2 },
-                                { 0.07, 0.07, 0.07 },
-                                { 0, -25, 0 },
-                                { GLfloat(dis(gen)), 10, GLfloat(dis(gen)) }
-                            )
-                        );
-                    }
                 }
             }
             else {

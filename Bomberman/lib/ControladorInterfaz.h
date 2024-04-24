@@ -11,6 +11,7 @@
 #include <GL/glu.h>
 
 #include "hud.h"
+#include "../constantes/constantes.h"
 
 using namespace std;
 
