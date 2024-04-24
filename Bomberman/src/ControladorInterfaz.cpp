@@ -26,6 +26,12 @@ void ControladorInterfaz::setFinJuego(bool finJuego) {
 	setMensajeEnComponente(mensaje, interfaz, gameOver);
 }
 
+void ControladorInterfaz::actualizarInterfaz(int puntos, int tiemp, bool finJuego){
+	setPuntaje(puntos);
+	setTiempo(tiemp);
+	setFinJuego(finJuego);
+}
+
 void ControladorInterfaz::setMensajeEnComponente(string mensaje, TTF_Font* fuente, hud* componente) {
 	glColor3f(componente->colorMensaje.r, componente->colorMensaje.g, componente->colorMensaje.b);
 	componente->mensajeSurface = TTF_RenderText_Blended(fuente, mensaje.c_str(), { 255, 255, 255 });
@@ -76,6 +82,7 @@ void ControladorInterfaz::cargarInterfaz(int puntaje, int tiempo, bool fin) {
 	ControladorInterfaz::puntaje = new hud();
 	ControladorInterfaz::tiempo = new hud();
 	ControladorInterfaz::gameOver = new hud();
+
 	ControladorInterfaz::puntaje->colorMensaje = { 255, 255, 255 };
 	ControladorInterfaz::tiempo->colorMensaje = { 255, 255, 255 };
 	ControladorInterfaz::gameOver->colorMensaje = { 255, 255, 255 };
@@ -160,16 +167,35 @@ void ControladorInterfaz::dibujarHUD() {
 	dibujarCompomenteHUD(puntaje);
 	dibujarCompomenteHUD(gameOver);
 
-	/*
 	// El Resto
+	// Draw the rest of the overlay
+	/*
 	glBegin(GL_QUADS); {
 		glColor3f(0.f, 0.f, 0.f);
-		glVertex3f(0.f, WINDOW_HEIGHT - height, 0.f);
-		glVertex3f(WINDOW_WIDTH, WINDOW_HEIGHT - height, 0.f);
+		glVertex3f(0.f, height + 6.f, 0.f);
+		glVertex3f(WINDOW_WIDTH, height + 6.f, 0.f);
 		glVertex3f(WINDOW_WIDTH, 0.f, 0.f);
 		glVertex3f(0.f, 0.f, 0.f);
 	} glEnd();
 	*/
+
+	// BOTTOM
+
+	// dibujar los poderes
+	glEnable(GL_TEXTURE_2D);
+	//glBindTexture(GL_TEXTURE_2D, ...);
+	glBegin(GL_QUADS); {
+		glColor3f(1.f,1.f,1.f);
+		//glTexCoord2d(0.f, 1.f); 
+		glVertex3f(0.f, WINDOW_HEIGHT - 62.f, 1.f);
+		//glTexCoord2d(1.f, 1.f);
+		glVertex3f(WINDOW_WIDTH, WINDOW_HEIGHT - 62.f, 1.f);
+		//glTexCoord2d(1.f, 0.f);
+		glVertex3f(WINDOW_WIDTH, WINDOW_HEIGHT, 1.f);
+		//glTexCoord2d(0.f, 0.f);
+		glVertex3f(0.f, WINDOW_HEIGHT, 1.f);
+	} glEnd();
+	glDisable(GL_TEXTURE_2D);
 	glPopMatrix();
 }
 

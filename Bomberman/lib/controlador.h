@@ -31,8 +31,6 @@ private:
 	SDL_GLContext context;
 	SDL_Event evento;
 	
-	bool pausa, fin, finJuego;
-	int nivel, puntaje, tiempoJuego; //segundos
 public:
 	static Controlador* getInstance();
 
@@ -40,29 +38,7 @@ public:
 	void actualizar();
 	void dibujar();
 
-	bool getPausa() const { return pausa; };
-	void setPausa(bool pau) { pausa = pau; };
-
-	bool getNivel() const { return nivel; };
-	void setNivel(int niv) { nivel = niv;};
-
-	bool getFin() const { return fin; };
-	void setFin(bool f) { fin = f; };
-
-	void toggle_pausa() { pausa = !pausa; };
-	void aumentarNivel() { nivel++; };
-
-	int getPuntaje() const { return puntaje; };
-	void setPuntaje(int puntos) { puntaje = puntos; };
-	void sumarPuntaje(int puntos);
-
-	bool getFinJuego() const { return finJuego; };
-	void setFinJuego(bool fin) { finJuego = fin; };
-
-	int getTiempo() const { return tiempoJuego; };
-	void setTiempo(int tiempo) { tiempoJuego = tiempo; };
-
-	void disminuirTiempo(int segundos);
+	void toggle_pantallaCompleta(SDL_Window* Window);
 
 	~Controlador();
 };

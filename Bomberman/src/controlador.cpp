@@ -3,13 +3,7 @@
 Controlador* Controlador::instancia = nullptr; 
 
 Controlador::Controlador() {
-    nivel = 1;
-    fin = false;
-    finJuego = false;
-    pausa = false;
-    tiempoJuego = 200; //segundos
-    puntaje = 0;
-
+    
     jugador = new bomberman(
         { tile_size / 2, tile_size / 2, tile_size / 2 },
         { tile_size / 4, tile_size / 2, tile_size / 3 }, 
@@ -107,7 +101,7 @@ Controlador::Controlador() {
     glMatrixMode(GL_MODELVIEW);
 
     SDL_ShowCursor(SDL_DISABLE); // Esta línea oculta el cursor del mouse
-
+    SDL_WarpMouseInWindow(window, WINDOW_WIDTH / 2, WINDOW_HEIGHT / 2); //Coloca el mouse en el centro de la pantalla
 
     ControladorTexturas::cargarTexturas();
     ControladorObjetos::cargarObjetos();
@@ -128,6 +122,35 @@ void Controlador::manejarEventos() {
         switch (evento.type) {
             case SDL_QUIT:
                 fin = true;
+                break;
+            case SDL_MOUSEBUTTONDOWN:
+                if (mouseX >= 45 && mouseX < 135) {
+                    posBombaXTablero = getPosicionXEnTablero(jugador->getPosicion().x - tile_size, 1);
+                    posBombaZTablero = getPosicionXEnTablero(jugador->getPosicion().z, 1);
+                }
+                else if (mouseX >= 135 && mouseX < 225) {
+                    posBombaXTablero = getPosicionXEnTablero(jugador->getPosicion().x, 1);
+                    posBombaZTablero = getPosicionXEnTablero(jugador->getPosicion().z + tile_size, 1);
+                }
+                else if (mouseX >= 225 && mouseX < 315) {
+                    posBombaXTablero = getPosicionXEnTablero(jugador->getPosicion().x + tile_size, 1);
+                    posBombaZTablero = getPosicionXEnTablero(jugador->getPosicion().z, 1);
+                }
+                else {
+                    posBombaXTablero = getPosicionXEnTablero(jugador->getPosicion().x, 1);
+                    posBombaZTablero = getPosicionXEnTablero(jugador->getPosicion().z - tile_size, 1);
+                }
+
+                if (bombas[posBombaXTablero][posBombaZTablero] == nullptr && estructuras[posBombaXTablero][posBombaZTablero] == nullptr) {
+                    objeto* bomba_obj = new bomba(
+                        { posBombaXTablero * tile_size + tile_size / 2, 0, posBombaZTablero * tile_size + tile_size / 2 },
+                        { tile_size / 4, tile_size / 2, tile_size / 4 },
+                        2000, //2 segundos
+                        2
+                    );
+
+                    bombas[posBombaXTablero][posBombaZTablero] = bomba_obj;
+                }
                 break;
         case SDL_KEYDOWN:
             switch (evento.key.keysym.sym) {
@@ -166,7 +189,7 @@ void Controlador::manejarEventos() {
                     break;
                 case SDLK_t:
                     ControladorCamara::cambiarTipoCamara(CAMARA_TERCERA_PERSONA);
-                    cout << "cambiao" << endl;
+                    cout << "cambiao" << endl; //XD?
                     break;
                 case SDLK_o:
                     ControladorCamara::cambiarTipoCamara(CAMARA_ORIGINAL);
@@ -202,6 +225,32 @@ void Controlador::manejarEventos() {
                 case SDLK_LEFT:
                     moverIzquierda = false;
                     break;
+                case SDLK_F1:
+                    wireframe = !wireframe;
+                    if (wireframe)
+                        glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+                    else
+                        glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+                    break;
+                case SDLK_F2:
+                    toggle_texturas();
+                    break;
+                case SDLK_F3:
+                    toggle_tipoLuz();
+                    if (tipoLuz)
+                        glShadeModel(GL_SMOOTH);
+                    else
+                        glShadeModel(GL_FLAT);
+                    break;
+                case SDLK_F4:
+                    //cambiar el color de luz (global)
+                    break;
+                case SDLK_F5:
+                    //acelerar o disminuir velocidad de juego (global)
+                    break;
+                case SDLK_F11:
+                    toggle_pantallaCompleta(window);
+                    break;
             }
             break;
         case SDL_MOUSEMOTION:
@@ -219,6 +268,12 @@ void Controlador::manejarEventos() {
             break;
         }
     }
+}
+
+void Controlador::toggle_pantallaCompleta(SDL_Window* window) {
+    Uint32 FullscreenFlag = SDL_WINDOW_FULLSCREEN;
+    pantallaCompleta = SDL_GetWindowFlags(window) & FullscreenFlag;
+    SDL_SetWindowFullscreen(window, pantallaCompleta ? 0 : FullscreenFlag);
 }
 
 void Controlador::actualizar() {
@@ -253,9 +308,7 @@ void Controlador::actualizar() {
             ++it;
     }
     
-    ControladorInterfaz::setPuntaje(puntaje);
-    ControladorInterfaz::setTiempo(tiempoJuego);
-    ControladorInterfaz::setFinJuego(finJuego);
+    ControladorInterfaz::actualizarInterfaz(puntaje, tiempoJuego, finJuego);
 }
 
 void Controlador::dibujar() {
@@ -321,19 +374,3 @@ Controlador::~Controlador() {
     SDL_DestroyWindow(window);
     SDL_Quit();
 };
-
-void Controlador::sumarPuntaje(int puntos) {
-    this->puntaje += puntos;
-    if (puntos > INT_MAX) {
-        puntos = INT_MAX;
-        this->fin = true;
-    }
-}
-
-void Controlador::disminuirTiempo(int segundos) {
-    this->tiempoJuego -= segundos;
-    if (this->tiempoJuego <= 0) {
-        tiempoJuego = 0;
-        this->finJuego = true;
-    }
-}

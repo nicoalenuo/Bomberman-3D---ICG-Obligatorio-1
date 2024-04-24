@@ -11,7 +11,7 @@ int main(int argc, char* argv[]) {
         frameStart = SDL_GetTicks();
 
         (*controlador).manejarEventos();
-        if (!(*controlador).getPausa()) 
+        if (!pausa) 
             (*controlador).actualizar();
         (*controlador).dibujar();
 
@@ -23,13 +23,13 @@ int main(int argc, char* argv[]) {
         }
         
         if (segundo > 1000) { // 1000ms == 1segundo
-            (*controlador).disminuirTiempo(segundo / 1000);
+            disminuirTiempo(segundo / 1000);
             segundo = segundo % 1000;
         }
 
-    } while (!(*controlador).getFin() && !(*controlador).getFinJuego());
+    } while (!fin && !finJuego);
 
-    if ((*controlador).getFinJuego()) {
+    if (finJuego) {
         (*controlador).actualizar();
         (*controlador).dibujar();
         SDL_Delay(2000);

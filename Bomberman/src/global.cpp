@@ -10,7 +10,14 @@ bool moverIzquierda = false;
 int mouseX = 0;
 int mouseY = 0;
 
+int* largoPantalla = new int(WINDOW_WIDTH);
+int* altoPantalla = new int(WINDOW_HEIGHT);
+
+bool pausa = false;
+bool wireframe = false;
 bool texturas_habilitadas = true;
+bool tipoLuz = false; //false = facetado, true = interpolado
+bool pantallaCompleta = false;
 
 objeto*** estructuras = new objeto * *[largoTablero];
 objeto*** bombas = new objeto * *[largoTablero];
@@ -21,10 +28,61 @@ list<objeto*> particulas;
 
 bomberman* jugador;
 
+bool fin = false;
+bool finJuego = false;
+
+int nivel = 1;
+int puntaje = 0;
+int tiempoJuego = 200; //segundos
+
 int getPosicionXEnTablero(GLfloat coord_x, GLfloat ancho_x) {
 	return int(coord_x + (ancho_x / 2)) / int(tile_size);
 }
 
 int getPosicionZEnTablero(GLfloat coord_z, GLfloat ancho_z) {
 	return int(coord_z + (ancho_z / 2)) / int(tile_size);
+}
+
+void toggle_pausa() {
+    pausa = !pausa;
+}
+
+void toggle_wireframe() {
+    wireframe = !wireframe;
+}
+
+void toggle_texturas() {
+    texturas_habilitadas = !texturas_habilitadas;
+}
+
+void toggle_tipoLuz() {
+    tipoLuz = !tipoLuz;
+}
+
+void toggle_pantallaCompleta() {
+    pantallaCompleta = !pantallaCompleta;
+}
+
+void aumentarNivel() {
+    nivel++;
+    if (nivel >= INT_MAX) {
+        nivel = INT_MAX;
+        finJuego = true;
+    }
+}
+
+void sumarPuntaje(int puntos){
+    puntaje += puntos;
+    if (puntos > INT_MAX) {
+        puntos = INT_MAX;
+        finJuego = true;
+    }
+}
+
+void disminuirTiempo(int segundos){
+    tiempoJuego -= segundos;
+    if (tiempoJuego <= 0) {
+        tiempoJuego = 0;
+        finJuego = true;
+    }
 }
