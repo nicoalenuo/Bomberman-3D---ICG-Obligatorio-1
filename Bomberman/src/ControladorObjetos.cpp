@@ -6,7 +6,7 @@ vector<char> ControladorObjetos::player_commands;
 vector<vector<float>> ControladorObjetos::player_data;
 
 void ControladorObjetos::cargarObjetos() {
-	tie(player_commands, player_data) = ControladorObjetos::cargarObj("objs/Chicken02.obj", 1);
+	tie(player_commands, player_data) = ControladorObjetos::cargarObj("objs/player.obj", 0);
 	tie(bomba_commands, bomba_data) = ControladorObjetos::cargarObj("objs/bomba.obj", 0);
 }
 
@@ -102,7 +102,7 @@ GLuint texture;
 void ControladorObjetos::dibujar(tipo_obj obj) {
 	switch (obj) {
 		case (OBJ_PLAYER):
-			primitive = GL_QUADS;
+			primitive = GL_TRIANGLES;
 			commands = player_commands;
 			data_obj = player_data;
 			texture = ControladorTexturas::getTextura(PLAYER);

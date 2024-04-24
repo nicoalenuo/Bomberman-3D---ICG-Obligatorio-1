@@ -3,12 +3,9 @@
 #ifndef BOMBA_H
 #define BOMBA_H
 
-#include <random>
-
 #include "objeto.h"
 #include "estructura.h"
 #include "fuego.h"
-#include "particula.h"
 #include "ControladorCamara.h"
 
 class bomba : public objeto {
