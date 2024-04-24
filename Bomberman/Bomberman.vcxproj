@@ -101,6 +101,8 @@
     <ClCompile Include="src\objeto.cpp" />
     <ClCompile Include="src\personaje.cpp" />
     <ClCompile Include="src\cargadorAudio.cpp" />
+	<ClCompile Include="src\bufferAudio.cpp" />
+	<ClCompile Include="src\recursoAudio.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="constantes\constantes.h" />
@@ -120,6 +122,8 @@
     <ClInclude Include="lib\objImporter.h" />
     <ClInclude Include="lib\personaje.h" />
     <ClInclude Include="lib\cargadorAudio.h" />
+	<ClInclude Include="lib\bufferAudio.h" />
+	<ClInclude Include="lib\recursoAudio.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

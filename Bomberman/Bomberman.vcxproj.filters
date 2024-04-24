@@ -63,6 +63,12 @@
     <ClCompile Include="src\cargadorAudio.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+	<ClCompile Include="src\bufferAudio.cpp">
+		<Filter>Source Files</Filter>
+	</ClCompile>
+	<ClCompile Include="src\recursoAudio.cpp">
+		<Filter>Source Files</Filter>
+	</ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="lib\controlador.h">
@@ -116,5 +122,11 @@
     <ClInclude Include="lib\cargadorAudio.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+	<ClInclude Include="lib\bufferAudio.h">
+		<Filter>Header Files</Filter>
+	</ClInclude>
+	<ClInclude Include="lib\recursoAudio.h">
+		<Filter>Header Files</Filter>
+	</ClInclude>
   </ItemGroup>
 </Project>

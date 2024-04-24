@@ -8,26 +8,24 @@
 #include <iostream>
 #include "vector"
 
-#include "cargadorAudio.h"
+#include "bufferAudio.h"
+#include "recursoAudio.h"
 
 using namespace std;
 
 class ControladorAudio{
 private:
-	ControladorAudio();
 
-	static ControladorAudio* instancia;
+	static ALCdevice* openALDevice;
+	static ALCcontext* openALContext;
+	static ALCboolean contextMadeCurrent;
 
-	ALCdevice* openALDevice;
-	ALCcontext* openALContext;
-	ALCboolean contextMadeCurrent;
-
+	static void initOpenAl();
 public:
-	static ControladorAudio* getInstance();
 
-	void cargarAudios();
+	static void cargarAudios();
+	static void limpiarAudios();
 
-	~ControladorAudio();
 };
 
 #endif

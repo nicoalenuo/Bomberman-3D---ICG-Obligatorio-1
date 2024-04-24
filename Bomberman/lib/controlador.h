@@ -32,8 +32,6 @@ private:
 	SDL_Window* window;
 	SDL_GLContext context;
 	SDL_Event evento;
-
-	ControladorAudio* ca;
 	
 	bool pausa, fin;
 	int nivel, tiempoJuego; //segundos
