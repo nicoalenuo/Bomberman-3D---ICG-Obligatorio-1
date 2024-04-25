@@ -151,7 +151,15 @@ void ControladorInterfaz::dibujarCompomenteHUD(hud* hud) {
 }
 
 void ControladorInterfaz::dibujarHUD() {
-	glPushMatrix();
+
+	glMatrixMode(GL_PROJECTION);
+	glPushMatrix(); 
+	glLoadIdentity();
+	glOrtho(0, WINDOW_WIDTH, WINDOW_HEIGHT, 0, -1.0, 1.0);
+
+	glMatrixMode(GL_MODELVIEW); 
+	glPushMatrix(); 
+	glLoadIdentity();
 
 	// TOP
 	int height = max(puntaje->height, tiempo->height);
@@ -169,6 +177,13 @@ void ControladorInterfaz::dibujarHUD() {
 		glVertex3f(0.f, 0.f, 0.f);
 	} glEnd();
 	*/
+	glPopMatrix();
+
+
+
+	glMatrixMode(GL_PROJECTION); 
+	glPopMatrix();
+	glMatrixMode(GL_MODELVIEW);
 	glPopMatrix();
 }
 

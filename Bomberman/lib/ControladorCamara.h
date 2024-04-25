@@ -13,6 +13,7 @@
 #include "../constantes/constantes.h"
 
 enum tipo_camara {
+	CAMARA_PRIMERA_PERSONA,
 	CAMARA_TERCERA_PERSONA,
 	CAMARA_ISOMETRICA,
 	CAMARA_ORIGINAL
@@ -23,7 +24,7 @@ private:
 	static tipo_camara camara_actual;
 	static int tiempoSacudirse;
 public:
-	static void cambiarTipoCamara(tipo_camara camara);
+	static void cambiarTipoCamara();
 	static void colocarCamara();
 	static void sacudir(int tiempo);
 };

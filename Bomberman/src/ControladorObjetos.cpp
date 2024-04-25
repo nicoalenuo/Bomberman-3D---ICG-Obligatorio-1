@@ -116,6 +116,7 @@ void ControladorObjetos::dibujar(tipo_obj obj) {
 	}
 
 	if (texturas_habilitadas) {
+		glEnable(GL_TEXTURE_2D);
 		glBindTexture(GL_TEXTURE_2D, texture);
 		glColor3f(1.f, 1.f, 1.f);
 	}
@@ -146,4 +147,7 @@ void ControladorObjetos::dibujar(tipo_obj obj) {
 		}
 	}
 	glEnd();
+
+	if (texturas_habilitadas)
+		glDisable(GL_TEXTURE_2D);
 }

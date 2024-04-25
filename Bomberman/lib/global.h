@@ -9,6 +9,7 @@
 using namespace std;
 
 class objeto;
+class particula;
 class bomberman;
 
 extern int velocidad_juego;
@@ -27,11 +28,12 @@ extern objeto*** estructuras;
 extern objeto*** bombas;
 extern objeto*** enemigos;
 extern objeto*** fuegos;
-extern list<objeto*> particulas;
+extern objeto*** bonificadores;
+extern list<particula*> particulas;
 
 extern bomberman* jugador;
 
-extern int getPosicionXEnTablero(GLfloat coord_x, GLfloat ancho_x);
+extern int getPosicionXEnTablero(GLfloat coord_x);
 
-extern int getPosicionZEnTablero(GLfloat coord_z, GLfloat ancho_z);
+extern int getPosicionZEnTablero(GLfloat coord_z);
 #endif

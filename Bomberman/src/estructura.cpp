@@ -16,7 +16,8 @@ estructura::~estructura() {
                 { pos.x, pos.y + (tile_size / 2), pos.z },
                 { GLfloat(0.07), GLfloat(0.07), GLfloat(0.07) },
                 { 0, -25, 0 },
-                { GLfloat(dis(gen)), 10, GLfloat(dis(gen)) }
+                { GLfloat(dis(gen)), 10, GLfloat(dis(gen)) },
+                ControladorTexturas::getTextura(ESTRUCTURA_DESTRUCTIBLE)
             )
         );
     }
@@ -29,11 +30,13 @@ void estructura::dibujar() {
     glPushMatrix();
     glTranslatef(pos.x, pos.y, pos.z);
 
-    if (texturas_habilitadas)
+    if (texturas_habilitadas) {
+        glEnable(GL_TEXTURE_2D);
         glBindTexture(GL_TEXTURE_2D, ControladorTexturas::getTextura(destructible ? ESTRUCTURA_DESTRUCTIBLE : ESTRUCTURA_NO_DESTRUCTIBLE));
+        glColor3f(1.0f, 1.0f, 1.0f);
+    }
 
     glBegin(GL_QUADS);
-    glColor3f(1.0, 1.0, 1.0);
 
     //Cara de abajo
     glTexCoord2f(0, 0);
@@ -100,7 +103,7 @@ void estructura::dibujar() {
     glTexCoord2f(1, 0);
     glVertex3f(-tam.x, tam.y, -tam.z);
 
-    // Cara derecha (x = 1)
+    // Cara derecha 
     glTexCoord2f(0, 0);
     glVertex3f(tam.x, 0, -tam.z);
 
@@ -114,5 +117,9 @@ void estructura::dibujar() {
     glVertex3f(tam.x, tam.y, -tam.z);
 
     glEnd();
+
+
+    if (texturas_habilitadas)
+        glDisable(GL_TEXTURE_2D);
     glPopMatrix();
 }

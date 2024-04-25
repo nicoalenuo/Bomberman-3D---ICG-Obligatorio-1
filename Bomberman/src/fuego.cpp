@@ -8,8 +8,8 @@ void fuego::actualizar() {
 	tiempoFuego -= frameDelay;
 
 	if (tiempoFuego <= 0) {
-		int x = getPosicionXEnTablero(pos.x, tam.x);
-		int z = getPosicionZEnTablero(pos.z, tam.z);
+		int x = getPosicionXEnTablero(pos.x);
+		int z = getPosicionZEnTablero(pos.z);
 
 		fuegos[x][z] = nullptr;
 		delete this;

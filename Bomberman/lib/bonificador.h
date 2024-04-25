@@ -3,6 +3,8 @@
 #ifndef BONIFICADOR_H
 #define BONIFICADOR_H
 
+#include <random>
+
 #include "objeto.h"
 
 enum tipo_poder { //Colocar aca los tipos
@@ -10,11 +12,13 @@ enum tipo_poder { //Colocar aca los tipos
 	INMORTALIDAD, //nose, tirar ideas aca
 	AUMENTAR_VELOCIDAD,
 	BOMBAS_ATRAVIESAN_ESTRUCTURAS,
+	BONIFICADOR_RANDOM,
 };
 
 class bonificador : public objeto {
 private:
 	tipo_poder tipo; 
+	bool subiendo;
 public:
 	bonificador(vector_3 pos, vector_3 tam, tipo_poder tipo);
 

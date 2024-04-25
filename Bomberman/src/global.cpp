@@ -16,15 +16,16 @@ objeto*** estructuras = new objeto * *[largoTablero];
 objeto*** bombas = new objeto * *[largoTablero];
 objeto*** enemigos = new objeto * *[largoTablero];
 objeto*** fuegos = new objeto * *[largoTablero];
+objeto*** bonificadores = new objeto * *[largoTablero];
 
-list<objeto*> particulas;
+list<particula*> particulas;
 
 bomberman* jugador;
 
-int getPosicionXEnTablero(GLfloat coord_x, GLfloat ancho_x) {
-	return int(coord_x + (ancho_x / 2)) / int(tile_size);
+int getPosicionXEnTablero(GLfloat coord_x) {
+	return int(floor(coord_x  / tile_size));
 }
 
-int getPosicionZEnTablero(GLfloat coord_z, GLfloat ancho_z) {
-	return int(coord_z + (ancho_z / 2)) / int(tile_size);
+int getPosicionZEnTablero(GLfloat coord_z) {
+	return int(floor(coord_z  / tile_size));
 }

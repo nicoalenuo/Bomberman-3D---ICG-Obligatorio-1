@@ -8,8 +8,8 @@ bomba::bomba(vector_3 pos, vector_3 tam, int tiempo, int largo) : objeto(pos, ta
 void bomba::actualizar() { // actualiza el tiempo, y si es cero, explota
    tiempoBomba -= frameDelay * velocidad_juego;
     if (this->tiempoBomba <= 0) {
-        int x = getPosicionXEnTablero(pos.x, tam.x);
-        int z = getPosicionZEnTablero(pos.z, tam.z);
+        int x = getPosicionXEnTablero(pos.x);
+        int z = getPosicionZEnTablero(pos.z);
 
         bool alcanza = false;
 
@@ -37,6 +37,10 @@ void bomba::actualizar() { // actualiza el tiempo, y si es cero, explota
                 bomba* bomb = dynamic_cast<bomba*>(bombas[x][i]);
                 bomb->setTiempoBomba(0);
             }
+            if (bonificadores[x][i] != nullptr) {
+                delete bonificadores[x][i];
+                bonificadores[x][i] = nullptr;
+            }
         }
 
         alcanza = false;
@@ -62,6 +66,10 @@ void bomba::actualizar() { // actualiza el tiempo, y si es cero, explota
             if (bombas[x][i] != nullptr) {
                 bomba* bomb = dynamic_cast<bomba*>(bombas[x][i]);
                 bomb->setTiempoBomba(0);
+            }
+            if (bonificadores[x][i] != nullptr) {
+                delete bonificadores[x][i];
+                bonificadores[x][i] = nullptr;
             }
         }
 
@@ -89,6 +97,10 @@ void bomba::actualizar() { // actualiza el tiempo, y si es cero, explota
                 bomba* bomb = dynamic_cast<bomba*>(bombas[i][z]);
                 bomb->setTiempoBomba(0);
             }
+            if (bonificadores[i][z] != nullptr) {
+                delete bonificadores[x][i];
+                bonificadores[i][z] = nullptr;
+            }
         }
 
         alcanza = false;
@@ -114,6 +126,10 @@ void bomba::actualizar() { // actualiza el tiempo, y si es cero, explota
             if (bombas[i][z] != nullptr) {
                 bomba* bomb = dynamic_cast<bomba*>(bombas[i][z]);
                 bomb->setTiempoBomba(0);
+            }
+            if (bonificadores[i][z] != nullptr) {
+                delete bonificadores[x][i];
+                bonificadores[i][z] = nullptr;
             }
         }
 
