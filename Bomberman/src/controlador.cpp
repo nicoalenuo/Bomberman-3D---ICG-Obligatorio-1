@@ -162,6 +162,8 @@ void Controlador::manejarEventos() {
                         );
 
                         bombas[posBombaXTablero][posBombaZTablero] = bomba_obj;
+
+                        ControladorAudio::playAudio(sonido::explosion);
                     }
                     break;
                 case SDLK_t:
@@ -261,6 +263,8 @@ void Controlador::manejarEventos() {
                         );
 
                         bombas[posBombaXTablero][posBombaZTablero] = bomba_obj;
+
+                        ControladorAudio::playAudio(sonido::explosion);
                     }
                 break;
             }

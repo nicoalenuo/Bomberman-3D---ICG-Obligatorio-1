@@ -181,6 +181,13 @@ void bomberman::actualizar() {
                 balanceandoseDerecha = true;
             }
         }
+        if (pasos == 20) {
+            pasos = 0;
+            ControladorAudio::playAudio(sonido::pasos);
+        }
+        else {
+            pasos++;
+        }
     }
     else
         rotacion_z_actual = 0;

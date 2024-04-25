@@ -1,4 +1,4 @@
-#include "../lib/ControladorInterfaz.h"
+#include "../lib/controlador.h"
 
 TTF_Font* ControladorInterfaz::interfaz = nullptr;
 hud* ControladorInterfaz::puntaje = nullptr;

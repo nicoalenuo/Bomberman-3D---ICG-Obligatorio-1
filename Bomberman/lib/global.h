@@ -24,6 +24,8 @@ extern int mouseY;
 extern bool texturas_habilitadas;
 extern bool mute;
 
+extern unsigned int pasos;
+
 extern int puntaje;
 
 extern objeto*** estructuras;

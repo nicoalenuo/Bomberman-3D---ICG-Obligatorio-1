@@ -12,7 +12,9 @@ int mouseY = 0;
 
 bool texturas_habilitadas = true;
 bool audio_habilitado = true;
-bool mute = false;
+bool mute = true; //cambiar a true para que inicie con sonido
+
+unsigned int pasos;
 
 objeto*** estructuras = new objeto * *[largoTablero];
 objeto*** bombas = new objeto * *[largoTablero];
