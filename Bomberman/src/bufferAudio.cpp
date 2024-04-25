@@ -32,14 +32,15 @@ ALuint bufferAudio::agregarSonido(const char* filename) {
 
 	alBufferData(buffer, format, soundData, size, sampleRate);
 
+	bufferSonidos.push_back(buffer);
+
 	return buffer;
 }
 
 void bufferAudio::limpiarBuffer() {
-	/*for (int i = 0; i < bufferSonidos.size(); i++) {
+	for (int i = 0; i < bufferSonidos.size(); i++) {
 		alDeleteBuffers(1, &bufferSonidos[i]);
-	}*/
-	//alDeleteBuffers(bufferSonidos.size(), bufferSonidos.data());
+	}
 	bufferSonidos.clear();
 }
 

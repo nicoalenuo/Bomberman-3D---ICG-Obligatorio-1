@@ -28,6 +28,11 @@ private:
 	static ALuint bufferExplosion;
 	static ALuint bufferBonificacion;
 	static ALuint bufferPasos;
+	
+	static recursoAudio* raMuerte;
+	static recursoAudio* raExplosion;
+	static recursoAudio* raBonificacion;
+	static recursoAudio* raPasos;
 
 	static void initOpenAl();
 public:

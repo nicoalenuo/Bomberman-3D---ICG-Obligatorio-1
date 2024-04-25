@@ -9,6 +9,11 @@ ALuint ControladorAudio::bufferExplosion;
 ALuint ControladorAudio::bufferBonificacion;
 ALuint ControladorAudio::bufferPasos;
 
+recursoAudio* ControladorAudio::raMuerte;
+recursoAudio* ControladorAudio::raExplosion;
+recursoAudio* ControladorAudio::raBonificacion;
+recursoAudio* ControladorAudio::raPasos;
+
 void ControladorAudio::initOpenAl() {
 	openALDevice = alcOpenDevice(nullptr); //obtengo el dispositivo
 	if (!openALDevice) {
@@ -38,39 +43,36 @@ void ControladorAudio::cargarAudios() {
 	bufferBonificacion = bufferAudio::agregarSonido("audio/bonificacion.wav");
 	bufferPasos = bufferAudio::agregarSonido("audio/pasos.wav");
 
-	recursoAudio::initRecurso();
-}
-void aux() {
-	Sleep(2000);
-	cout << "Despues" << endl;
+	raMuerte = new recursoAudio(bufferMuerte);
+	raExplosion = new recursoAudio(bufferExplosion);
+	raBonificacion = new recursoAudio(bufferBonificacion);
+	raPasos = new recursoAudio(bufferPasos);
 }
 
 void ControladorAudio::playAudio(sonido s) {
 	switch (s){
 		case sonido::muerte:
-			recursoAudio::Play(bufferMuerte);
+			raMuerte->Play();
 			break;
 		case sonido::explosion:
-			recursoAudio::Play(bufferExplosion);
+			raExplosion->Play();
 			break;
 		case sonido::bonificacion:
-			recursoAudio::Play(bufferBonificacion);
+			raBonificacion->Play();
 			break;
 		case sonido::pasos:
-			//cout << "Antes" << endl;
-			//thread th(aux);
-			
-			//th.detach();
-			/*if (th.joinable()) {
-				th.join();
-			}*/
-			recursoAudio::Play(bufferPasos);
+			raPasos->Play();
 			break;
 	}
 }
 
 //Se deberia controlar las excepciones
 void ControladorAudio::limpiarAudios() {
+	delete raMuerte;
+	delete raExplosion;
+	delete raBonificacion;
+	delete raPasos;
+
 	bufferAudio::limpiarBuffer();
 	alcMakeContextCurrent(nullptr);
 	alcDestroyContext(openALContext);

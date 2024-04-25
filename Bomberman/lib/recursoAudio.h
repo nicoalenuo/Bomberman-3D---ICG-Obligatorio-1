@@ -10,16 +10,24 @@ using namespace std;
 
 class recursoAudio{
 private:
-	static ALuint p_Source;
-	static float p_Pitch;
-	static float p_Gain;
-	static float p_Position[3];
-	static float p_Velocity[3];
-	static bool p_LoopSound;
-	static ALuint p_Buffer;
+	ALuint recurso;
+	float tono;
+	float ganancia;
+	float posicion[3];
+	float velocidad[3];
+	bool bucle;
+	ALuint buffer;
 public:
-	static void initRecurso();
-	static void Play(const ALuint buffer_to_play);
+	recursoAudio(ALuint buffer);
+
+	void setTono(float tono);
+	void setGanancia(float ganancia);
+	void setPosicion(float x, float y, float z);
+	//void setVelocidad(float x, float y, float z);
+
+	void Play();
+
+	~recursoAudio();
 
 };
 

@@ -1,34 +1,58 @@
 #include "../lib/recursoAudio.h"
 
-ALuint recursoAudio::p_Source;
-float recursoAudio::p_Pitch = 1.f;
-float recursoAudio::p_Gain = 1.f;
-float recursoAudio::p_Position[3] = { 10,0,0 };
-float recursoAudio::p_Velocity[3] = { 0,0,0 };
-bool recursoAudio::p_LoopSound = false;
-ALuint recursoAudio::p_Buffer = 0;
+recursoAudio::recursoAudio(ALuint buffer){
+	this->tono = 1.f;
+	this->ganancia = 1.f;
+	this->posicion[0] = 0.f;
+	this->posicion[1] = 0.f;
+	this->posicion[2] = 0.f;
+	this->velocidad[0] = 0.f;
+	this->velocidad[1] = 0.f;
+	this->velocidad[2] = 0.f;
+	this->bucle = false;
+	this->buffer = buffer;
 
-void recursoAudio::initRecurso(){
-	alGenSources(1, &p_Source);
-	alSourcef(p_Source, AL_PITCH, p_Pitch);
-	alSourcef(p_Source, AL_GAIN, p_Gain);
-	alSource3f(p_Source, AL_POSITION, p_Position[0], p_Position[1], p_Position[2]);
-	alSource3f(p_Source, AL_VELOCITY, p_Velocity[0], p_Velocity[1], p_Velocity[2]);
-	alSourcei(p_Source, AL_LOOPING, p_LoopSound);
-	alSourcei(p_Source, AL_BUFFER, p_Buffer);
+	alGenSources(1, &this->recurso);
+	alSourcef(this->recurso, AL_PITCH, this->tono);
+	alSourcef(this->recurso, AL_GAIN, this->ganancia);
+	alSource3f(this->recurso, AL_POSITION, this->posicion[0], this->posicion[1], this->posicion[2]);
+	alSource3f(this->recurso, AL_VELOCITY, this->velocidad[0], this->velocidad[1], this->velocidad[2]);
+	alSourcei(this->recurso, AL_LOOPING, this->bucle);
+	alSourcei(this->recurso, AL_BUFFER, this->buffer);
 }
 
-void recursoAudio::Play(const ALuint buffer_to_play) {
-	if (buffer_to_play != p_Buffer)
+void recursoAudio::setTono(float tono) {
+	this->tono = tono;
+	alSourcef(this->recurso, AL_PITCH, tono);
+}
+
+void recursoAudio::setGanancia(float ganancia) {
+	this->ganancia = ganancia;
+	alSourcef(this->recurso, AL_GAIN, ganancia);
+}
+
+void recursoAudio::setPosicion(float x, float y, float z) {
+	this->posicion[0] = x;
+	this->posicion[1] = y;
+	this->posicion[2] = z;
+	alSource3f(this->recurso, AL_POSITION, x, y, z);
+}
+
+void recursoAudio::Play() {
+	/*if (buffer_to_play != p_Buffer)
 	{
 		p_Buffer = buffer_to_play;
 		alSourcei(p_Source, AL_BUFFER, (ALint)p_Buffer);
-	}
+	}*/
 
-	alSourcePlay(p_Source);
+	alSourcePlay(this->recurso);
 
-	ALint state = AL_PLAYING;
+	//ALint state = AL_PLAYING;
 	/*while (state == AL_PLAYING && alGetError() == AL_NO_ERROR) {
 		alGetSourcei(p_Source, AL_SOURCE_STATE, &state);
 	}*/
+}
+
+recursoAudio::~recursoAudio() {
+	alDeleteSources(1, &this->recurso);
 }
