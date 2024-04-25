@@ -50,20 +50,40 @@ void ControladorAudio::cargarAudios() {
 }
 
 void ControladorAudio::playAudio(sonido s) {
-	switch (s){
-		case sonido::muerte:
-			raMuerte->Play();
-			break;
-		case sonido::explosion:
-			raExplosion->Play();
-			break;
-		case sonido::bonificacion:
-			raBonificacion->Play();
-			break;
-		case sonido::pasos:
-			raPasos->Play();
-			break;
+	if (!mute) {
+		switch (s) {
+			case sonido::muerte:
+				raMuerte->play();
+				break;
+			case sonido::explosion:
+				raExplosion->play();
+				break;
+			case sonido::bonificacion:
+				raBonificacion->play();
+				break;
+			case sonido::pasos:
+				raPasos->play();
+				break;
+		}
 	}
+}
+
+void ControladorAudio::pausarAudio() {
+
+}
+
+void ControladorAudio::reanudarAudio() {
+
+}
+
+void ControladorAudio::detenerAudio() {
+	if (!mute) {
+		raMuerte->detener();
+		raExplosion->detener();
+		raBonificacion->detener();
+		raPasos->detener();
+	}
+	mute = !mute;
 }
 
 //Se deberia controlar las excepciones

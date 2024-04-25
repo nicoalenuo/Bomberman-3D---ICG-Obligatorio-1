@@ -21,24 +21,24 @@ recursoAudio::recursoAudio(ALuint buffer){
 	alSourcei(this->recurso, AL_BUFFER, this->buffer);
 }
 
-void recursoAudio::setTono(float tono) {
+void recursoAudio::setTono(float& tono) {
 	this->tono = tono;
 	alSourcef(this->recurso, AL_PITCH, tono);
 }
 
-void recursoAudio::setGanancia(float ganancia) {
+void recursoAudio::setGanancia(float& ganancia) {
 	this->ganancia = ganancia;
 	alSourcef(this->recurso, AL_GAIN, ganancia);
 }
 
-void recursoAudio::setPosicion(float x, float y, float z) {
+void recursoAudio::setPosicion(float& x, float& y, float& z) {
 	this->posicion[0] = x;
 	this->posicion[1] = y;
 	this->posicion[2] = z;
 	alSource3f(this->recurso, AL_POSITION, x, y, z);
 }
 
-void recursoAudio::Play() {
+void recursoAudio::play() {
 	/*if (buffer_to_play != p_Buffer)
 	{
 		p_Buffer = buffer_to_play;
@@ -51,6 +51,18 @@ void recursoAudio::Play() {
 	/*while (state == AL_PLAYING && alGetError() == AL_NO_ERROR) {
 		alGetSourcei(p_Source, AL_SOURCE_STATE, &state);
 	}*/
+}
+
+void recursoAudio::detener() {
+	alSourceStop(this->recurso);
+}
+
+void recursoAudio::pausar() {
+	alSourcePause(this->recurso);
+}
+
+void recursoAudio::reanudar() {
+	alSourcePlay(this->recurso);
 }
 
 recursoAudio::~recursoAudio() {

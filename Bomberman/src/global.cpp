@@ -9,6 +9,7 @@ int mouseX = 0;
 
 bool texturas_habilitadas = true;
 bool audio_habilitado = true;
+bool mute = false;
 
 int puntaje = 0;
 

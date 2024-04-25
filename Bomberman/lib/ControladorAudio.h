@@ -12,6 +12,7 @@
 
 #include "bufferAudio.h"
 #include "recursoAudio.h"
+#include "global.h"
 
 using namespace std;
 
@@ -40,6 +41,9 @@ public:
 	static void cargarAudios();
 
 	static void playAudio(sonido s);
+	static void pausarAudio();
+	static void reanudarAudio();
+	static void detenerAudio();
 
 	static void limpiarAudios();
 

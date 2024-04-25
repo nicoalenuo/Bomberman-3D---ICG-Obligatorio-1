@@ -20,12 +20,15 @@ private:
 public:
 	recursoAudio(ALuint buffer);
 
-	void setTono(float tono);
-	void setGanancia(float ganancia);
-	void setPosicion(float x, float y, float z);
+	void setTono(float& tono);
+	void setGanancia(float& ganancia);
+	void setPosicion(float& x, float& y, float& z);
 	//void setVelocidad(float x, float y, float z);
 
-	void Play();
+	void play();
+	void detener();
+	void pausar();
+	void reanudar();
 
 	~recursoAudio();
 

@@ -177,6 +177,9 @@ void Controlador::manejarEventos() {
                 case SDLK_l :
                     ControladorAudio::playAudio(sonido::muerte);
                     break;
+                case SDLK_m://mute
+                    ControladorAudio::detenerAudio();
+                    break;
             }
             break;
         case SDL_KEYUP:

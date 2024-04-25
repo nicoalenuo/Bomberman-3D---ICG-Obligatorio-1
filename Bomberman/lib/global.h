@@ -17,7 +17,7 @@ extern int mouseX;
 
 extern bool texturas_habilitadas;
 extern bool audio_habilitado;
-
+extern bool mute;
 
 extern int puntaje;
 
