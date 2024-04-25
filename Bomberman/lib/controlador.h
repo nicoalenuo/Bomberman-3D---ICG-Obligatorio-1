@@ -7,6 +7,8 @@
 #include "SDL_opengl.h"
 #include "FreeImage.h"
 #include <GL/glu.h>
+#include "al.h"
+
 #include <random>
 
 #include "personaje.h"
@@ -20,6 +22,7 @@
 #include "../lib/ControladorCamara.h"
 #include "../lib/ControladorObjetos.h"
 #include "../lib/ControladorInterfaz.h"
+#include "../lib/ControladorAudio.h"
 
 class Controlador {
 private:

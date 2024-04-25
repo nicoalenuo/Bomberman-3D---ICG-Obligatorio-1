@@ -11,6 +11,8 @@ int mouseX = 0;
 int mouseY = 0;
 
 bool texturas_habilitadas = true;
+bool audio_habilitado = true;
+bool mute = false;
 
 objeto*** estructuras = new objeto * *[largoTablero];
 objeto*** bombas = new objeto * *[largoTablero];
