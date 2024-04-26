@@ -1,18 +1,18 @@
 #include "../lib/ControladorInterfaz.h"
 
 TTF_Font* ControladorInterfaz::interfaz = nullptr;
-hud* ControladorInterfaz::puntaje = nullptr;
-hud* ControladorInterfaz::tiempo = nullptr;
-hud* ControladorInterfaz::gameOver = nullptr;
+hud* ControladorInterfaz::hudPuntaje = nullptr;
+hud* ControladorInterfaz::hudTiempo = nullptr;
+hud* ControladorInterfaz::hudGameOver = nullptr;
 
 void ControladorInterfaz::setPuntaje(int puntos) {
 	string mensaje = "Puntaje: " + to_string(puntos);
-	setMensajeEnComponente(mensaje, interfaz, puntaje);
+	setMensajeEnComponente(mensaje, interfaz, hudPuntaje);
 }
 
 void ControladorInterfaz::setTiempo(int tiemp) {
 	string mensaje = "Tiempo: " + to_string(tiemp);
-	setMensajeEnComponente(mensaje, interfaz, tiempo);
+	setMensajeEnComponente(mensaje, interfaz, hudTiempo);
 }
 
 void ControladorInterfaz::setFinJuego(bool finJuego) {
@@ -22,12 +22,12 @@ void ControladorInterfaz::setFinJuego(bool finJuego) {
 	} else {
 		mensaje = " ";
 	}
-	setMensajeEnComponente(mensaje, interfaz, gameOver);
+	setMensajeEnComponente(mensaje, interfaz, hudGameOver);
 }
 
-void ControladorInterfaz::actualizarInterfaz(int puntos, int tiemp, bool finJuego){
-	setPuntaje(puntos);
-	setTiempo(tiemp);
+void ControladorInterfaz::actualizarInterfaz(){
+	setPuntaje(puntaje);
+	setTiempo(tiempoJuego);
 	setFinJuego(finJuego);
 }
 
@@ -64,7 +64,7 @@ void ControladorInterfaz::setMensajeEnComponente(string mensaje, TTF_Font* fuent
 	glDisable(GL_TEXTURE_2D);
 }
 
-void ControladorInterfaz::cargarInterfaz(int puntaje, int tiempo, bool fin) {
+void ControladorInterfaz::cargarInterfaz() {
 
 	if (TTF_Init() < 0) {
 		cerr << "[SDL TTF Error]: " << SDL_GetError() << endl;
@@ -78,20 +78,20 @@ void ControladorInterfaz::cargarInterfaz(int puntaje, int tiempo, bool fin) {
 		return;
 	}
 
-	ControladorInterfaz::puntaje = new hud();
-	ControladorInterfaz::tiempo = new hud();
-	ControladorInterfaz::gameOver = new hud();
+	ControladorInterfaz::hudPuntaje = new hud();
+	ControladorInterfaz::hudTiempo = new hud();
+	ControladorInterfaz::hudGameOver = new hud();
 
-	ControladorInterfaz::puntaje->colorMensaje = { 255, 255, 255 };
-	ControladorInterfaz::tiempo->colorMensaje = { 255, 255, 255 };
-	ControladorInterfaz::gameOver->colorMensaje = { 255, 255, 255 };
+	ControladorInterfaz::hudPuntaje->colorMensaje = { 255, 255, 255 };
+	ControladorInterfaz::hudTiempo->colorMensaje = { 255, 255, 255 };
+	ControladorInterfaz::hudGameOver->colorMensaje = { 255, 255, 255 };
 
-	ControladorInterfaz::puntaje->posicion = position::top_right;
-	ControladorInterfaz::tiempo->posicion = position::top_left;
-	ControladorInterfaz::gameOver->posicion = position::top_center;
+	ControladorInterfaz::hudPuntaje->posicion = position::top_right;
+	ControladorInterfaz::hudTiempo->posicion = position::top_left;
+	ControladorInterfaz::hudGameOver->posicion = position::top_center;
 
 	setPuntaje(puntaje);
-	setTiempo(tiempo);
+	setTiempo(tiempoJuego);
 	setFinJuego(fin);
 }
 
@@ -99,13 +99,13 @@ void ControladorInterfaz::cargarInterfaz(int puntaje, int tiempo, bool fin) {
 hud* ControladorInterfaz::getHud(int numero) {
 	switch (numero) {
 	case 0:
-		return puntaje;
+		return hudPuntaje;
 		break;
 	case 1:
-		return tiempo;
+		return hudTiempo;
 		break;
 	default:
-		return gameOver;
+		return hudGameOver;
 		break;
 	}
 }
@@ -113,13 +113,13 @@ hud* ControladorInterfaz::getHud(int numero) {
 void ControladorInterfaz::setHud(int indice, hud* hud){
 	switch (indice) {
 	case 0:
-		puntaje = hud;
+		hudPuntaje = hud;
 		break;
 	case 1:
-		tiempo = hud;
+		hudTiempo = hud;
 		break;
 	default:
-		gameOver = hud;
+		hudGameOver = hud;
 		break;
 	}
 }
@@ -166,10 +166,10 @@ void ControladorInterfaz::dibujarHUD() {
 	glPushMatrix();
 
 	// TOP
-	int height = max(puntaje->height, tiempo->height);
-	dibujarCompomenteHUD(tiempo);
-	dibujarCompomenteHUD(puntaje);
-	dibujarCompomenteHUD(gameOver);
+	int height = max(hudPuntaje->height, hudTiempo->height);
+	dibujarCompomenteHUD(hudTiempo);
+	dibujarCompomenteHUD(hudPuntaje);
+	dibujarCompomenteHUD(hudGameOver);
 
 	// El Resto
 	// Draw the rest of the overlay

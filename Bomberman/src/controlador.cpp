@@ -106,8 +106,7 @@ Controlador::Controlador() {
     ControladorTexturas::cargarTexturas();
     ControladorObjetos::cargarObjetos();
     ControladorCamara::cambiarTipoCamara(CAMARA_ISOMETRICA);
-    ControladorLuz::colocarLuces();
-    ControladorInterfaz::cargarInterfaz(puntaje, tiempoJuego, fin);
+    ControladorInterfaz::cargarInterfaz();
 }
 
 Controlador* Controlador::getInstance() {
@@ -188,7 +187,7 @@ void Controlador::manejarEventos() {
                     break;
                 case SDLK_F4:
                     //cambiar el color de luz (ambiente)
-                    //ControladorLuz::cambiarColorLuzAmbiente();
+                    ControladorLuz::cambiarColorLuzAmbiente();
                     //Recordar hacer sombras
                     //No esta cambiando nada
                     break;
@@ -317,7 +316,7 @@ void Controlador::actualizar() {
             ++it;
     }
     
-    ControladorInterfaz::actualizarInterfaz(puntaje, tiempoJuego, finJuego);
+    ControladorInterfaz::actualizarInterfaz();
 }
 
 void Controlador::dibujar() {
@@ -325,6 +324,8 @@ void Controlador::dibujar() {
     glLoadIdentity();
 
     ControladorCamara::colocarCamara();
+
+    ControladorLuz::colocarLuces();
 
     jugador->dibujar();
 
@@ -358,9 +359,9 @@ void Controlador::dibujar() {
     glVertex3f(largoTablero * tile_size, 0, 0);
     glEnd();
     
-    //HUD
     glDisable(GL_LIGHTING);
 
+    //HUD
     ControladorInterfaz::dibujarHUD();
 
     SDL_GL_SwapWindow(window);

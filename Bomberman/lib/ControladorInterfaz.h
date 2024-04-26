@@ -10,7 +10,8 @@
 #include "SDL_ttf.h"
 #include <GL/glu.h>
 
-#include "hud.h"
+#include "../lib/hud.h"
+#include "../lib/global.h"
 #include "../constantes/constantes.h"
 
 using namespace std;
@@ -18,14 +19,14 @@ using namespace std;
 class ControladorInterfaz {
 	private:
 		static TTF_Font* interfaz;
-		static hud* puntaje;
-		static hud* tiempo;
-		static hud* gameOver;
+		static hud* hudPuntaje;
+		static hud* hudTiempo;
+		static hud* hudGameOver;
 
 		static void setMensajeEnComponente(string mensaje, TTF_Font* fuente, hud* componente);
 	public:
-		static void cargarInterfaz(int puntaje, int tiempoJuego, bool fin);
-		static void actualizarInterfaz(int puntos, int tiemp, bool finJuego);
+		static void cargarInterfaz();
+		static void actualizarInterfaz();
 		static void dibujarCompomenteHUD(hud* hud);
 		static void dibujarHUD();
 		static hud* getHud(int numero);

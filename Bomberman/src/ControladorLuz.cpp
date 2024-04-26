@@ -7,9 +7,9 @@ GLfloat ControladorLuz::light_position[4] = { 0, 0, 0, 1 };
 GLfloat ControladorLuz::light_color[4] = { 1, 1, 1, 1 };
 GLfloat ControladorLuz::material_ambient_diffuse_color[4] = { 1, 1, 1, 1 };
 GLfloat ControladorLuz::material_specular_color[4] = { 0, 0, 0, 1 };
-float ControladorLuz::light_offset_x = 0.2f;
-float ControladorLuz::light_offset_y = 3.f;
-float ControladorLuz::light_offset_z = -0.8f;
+GLfloat ControladorLuz::light_offset_x = 0.f;
+GLfloat ControladorLuz::light_offset_y = 20.f;
+GLfloat ControladorLuz::light_offset_z = 0.f;
 
 void ControladorLuz::colocarLuces() {
 	if (texturas_habilitadas) {

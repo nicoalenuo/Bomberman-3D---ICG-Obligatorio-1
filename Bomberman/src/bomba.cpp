@@ -76,7 +76,6 @@ void bomba::actualizar() { // actualiza el tiempo, y si es cero, explota
 
             if (!inmortal &&  xJugador == x && zJugador == i) {
                 finJuego = true;
-                cout << finJuego << endl;
             }
         }
 
