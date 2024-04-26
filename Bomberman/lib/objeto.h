@@ -11,6 +11,7 @@
 
 #include "ControladorObjetos.h"
 #include "ControladorTexturas.h"
+#include "ControladorAudio.h"
 
 struct vector_3 {
 	GLfloat x;

@@ -23,6 +23,11 @@ extern int mouseX;
 extern int mouseY;
 
 extern bool texturas_habilitadas;
+extern bool mute;
+
+extern unsigned int pasos;
+
+extern int puntaje;
 
 extern objeto*** estructuras;
 extern objeto*** bombas;

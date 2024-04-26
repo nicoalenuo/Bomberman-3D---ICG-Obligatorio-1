@@ -130,10 +130,10 @@ Controlador::Controlador() {
 
     SDL_ShowCursor(SDL_DISABLE); // Esta línea oculta el cursor del mouse
 
-
     ControladorTexturas::cargarTexturas();
     ControladorObjetos::cargarObjetos();
     ControladorInterfaz::cargarInterfaz(puntaje, tiempoJuego, fin);
+    ControladorAudio::cargarAudios();
 }
 
 Controlador* Controlador::getInstance() {
@@ -187,6 +187,8 @@ void Controlador::manejarEventos() {
                             2
                         );
                         bombas[posBombaXTablero][posBombaZTablero] = bomba_obj;
+
+                        ControladorAudio::playAudio(sonido::explosion);
                     }
                     break;
                 case SDLK_v:
@@ -206,6 +208,21 @@ void Controlador::manejarEventos() {
                     break;
                 case SDLK_LEFT:
                     moverIzquierda = true;
+                    break;
+                case SDLK_u:
+                    ControladorAudio::playAudio(sonido::pasos);
+                    break;
+                case SDLK_j:
+                    ControladorAudio::playAudio(sonido::bonificacion);
+                    break;
+                case SDLK_k:
+                    ControladorAudio::playAudio(sonido::explosion);
+                    break;
+                case SDLK_l :
+                    ControladorAudio::playAudio(sonido::muerte);
+                    break;
+                case SDLK_m://mute
+                    ControladorAudio::detenerAudio();
                     break;
             }
             break;
@@ -273,6 +290,8 @@ void Controlador::manejarEventos() {
                             2
                         );
                         bombas[posBombaXTablero][posBombaZTablero] = bomba_obj;
+
+                        ControladorAudio::playAudio(sonido::explosion);
                     }
                 break;
             }
@@ -393,6 +412,7 @@ Controlador::~Controlador() {
         ++it;
     }
 
+    ControladorAudio::limpiarAudios();
     SDL_GL_DeleteContext(context);
     SDL_DestroyWindow(window);
     SDL_Quit();

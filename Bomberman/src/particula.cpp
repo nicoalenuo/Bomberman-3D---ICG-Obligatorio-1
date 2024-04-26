@@ -13,7 +13,7 @@ particula::particula(vector_3 pos, vector_3 tam, vector_3 ac, vector_3 vel, GLui
 GLfloat tiempoSegundos;
 void particula::actualizar() {
     if (pos.y > 0.2f) {
-        tiempoSegundos = GLfloat(tiempoParticula) / 1000.0f;
+        tiempoSegundos = tiempoParticula / 1000.0f;
         pos.x = pos.x + vel.x;
         pos.y = max(ac.y * tiempoSegundos * tiempoSegundos +
             vel.y * tiempoSegundos +

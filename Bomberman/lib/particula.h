@@ -9,7 +9,7 @@ class particula : public objeto{
 private:
 	bool eliminar;
 	int tiempoEliminacion; //una vez alcancen la posicion 0, esperaran un poco antes de eliminarse
-	int tiempoParticula;
+	GLfloat tiempoParticula;
 	GLfloat pos_y_inicial;
 	vector_3 vel;
 	vector_3 ac;

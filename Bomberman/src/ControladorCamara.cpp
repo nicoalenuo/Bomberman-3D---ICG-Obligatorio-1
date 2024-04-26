@@ -22,7 +22,6 @@ void ControladorCamara::sacudir(int tiempo) {
 	tiempoSacudirse = tiempo;
 }
 
-
 random_device rdSacudirse;
 mt19937 genSacudirse(rdSacudirse());
 uniform_real_distribution<> disSacudirseIsometrica(-0.2, 0.2);
