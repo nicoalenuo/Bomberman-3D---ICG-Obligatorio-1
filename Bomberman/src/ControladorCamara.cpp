@@ -18,6 +18,25 @@ void ControladorCamara::cambiarTipoCamara() {
 	}
 }
 
+bool ControladorCamara::camaraMiraHacia(tipo_direccion direccion) {
+	switch (direccion) {
+		case EJE_X:
+			return mouseX >= 225 && mouseX < 315;
+			break;
+		case EJE_Z:
+			return mouseX >= 135 && mouseX < 225;
+			break;
+		case EJE_MENOS_X:
+			return mouseX >= 45 && mouseX < 135;
+			break;
+		case EJE_MENOS_Z:
+			return mouseX >= 315 && mouseX < 45;
+			break;
+		default:
+			return false;
+	}
+}
+
 void ControladorCamara::sacudir(int tiempo) {
 	tiempoSacudirse = tiempo;
 }

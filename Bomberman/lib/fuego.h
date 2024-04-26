@@ -4,6 +4,7 @@
 #define FUEGO_H
 
 #include "objeto.h"
+#include "bomba.h"
 
 class fuego : public objeto{
 private:

@@ -16,6 +16,7 @@ const float radians = PI / 180.0f;
 
 const int WINDOW_WIDTH = 1280;
 const int WINDOW_HEIGHT = 720;
+const float WINDOW_RATIO = WINDOW_WIDTH / WINDOW_HEIGHT;
 
 const int largoTablero = 29;
 const int anchoTablero = 11;

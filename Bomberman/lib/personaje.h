@@ -14,6 +14,9 @@ public:
 	GLfloat getVelocidad() const { return velocidad; };
 	void setVelocidad(GLfloat vel) { velocidad = vel; };
 
+	bool posicion_valida(vector_3 pos, vector_3 tam);
+	bool contactoConFuego();
+
 	virtual void actualizar() = 0;
 	virtual void dibujar() = 0;
 };

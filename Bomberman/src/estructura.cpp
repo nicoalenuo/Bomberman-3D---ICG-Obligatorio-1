@@ -28,6 +28,7 @@ void estructura::actualizar() {
 
 void estructura::dibujar() {
     glPushMatrix();
+    glEnable(GL_TEXTURE_2D);
     glTranslatef(pos.x, pos.y, pos.z);
 
     if (texturas_habilitadas) {
@@ -118,8 +119,8 @@ void estructura::dibujar() {
 
     glEnd();
 
-
     if (texturas_habilitadas)
         glDisable(GL_TEXTURE_2D);
+    
     glPopMatrix();
 }

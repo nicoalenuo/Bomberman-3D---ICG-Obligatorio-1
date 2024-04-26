@@ -14,7 +14,7 @@ void bomba::actualizar() { // actualiza el tiempo, y si es cero, explota
         bool alcanza = false;
 
         for (int i = z+1; !alcanza && i < min(z + this->largoBomba + 1, anchoTablero); i++) { // x fijo, z incrementa
-            if (estructuras[x][i] != nullptr) { // por ahora no toma en cuenta jugador
+            if (estructuras[x][i] != nullptr) {
                 alcanza = true;
                 estructura* est = dynamic_cast<estructura*>(estructuras[x][i]);
                 if (est->getDestructible()) {
@@ -29,17 +29,8 @@ void bomba::actualizar() { // actualiza el tiempo, y si es cero, explota
                 fuegos[x][i] = new fuego(
                     { GLfloat(x * tile_size) + tile_size / 2 , 0.5, GLfloat(i * tile_size) + tile_size / 2 },
                     { tile_size / 2, tile_size, tile_size / 2 },
-                    2000
+                    1500
                 );
-            }
-
-            if (bombas[x][i] != nullptr) {
-                bomba* bomb = dynamic_cast<bomba*>(bombas[x][i]);
-                bomb->setTiempoBomba(0);
-            }
-            if (bonificadores[x][i] != nullptr) {
-                delete bonificadores[x][i];
-                bonificadores[x][i] = nullptr;
             }
         }
 
@@ -60,16 +51,8 @@ void bomba::actualizar() { // actualiza el tiempo, y si es cero, explota
                 fuegos[x][i] = new fuego(
                     { GLfloat(x * tile_size) + tile_size / 2 , 0.5, GLfloat(i * tile_size) + tile_size / 2 },
                     { tile_size / 2, tile_size, tile_size / 2 },
-                    2000
+                    1500
                 );
-            }
-            if (bombas[x][i] != nullptr) {
-                bomba* bomb = dynamic_cast<bomba*>(bombas[x][i]);
-                bomb->setTiempoBomba(0);
-            }
-            if (bonificadores[x][i] != nullptr) {
-                delete bonificadores[x][i];
-                bonificadores[x][i] = nullptr;
             }
         }
 
@@ -90,16 +73,8 @@ void bomba::actualizar() { // actualiza el tiempo, y si es cero, explota
                 fuegos[i][z] = new fuego(
                     { GLfloat(i * tile_size) + tile_size / 2 , 0.5, GLfloat(z * tile_size) + tile_size / 2 },
                     { tile_size / 2, tile_size, tile_size / 2 },
-                    2000
+                    1500
                 );
-            }
-            if (bombas[i][z] != nullptr) {
-                bomba* bomb = dynamic_cast<bomba*>(bombas[i][z]);
-                bomb->setTiempoBomba(0);
-            }
-            if (bonificadores[i][z] != nullptr) {
-                delete bonificadores[x][i];
-                bonificadores[i][z] = nullptr;
             }
         }
 
@@ -112,32 +87,25 @@ void bomba::actualizar() { // actualiza el tiempo, y si es cero, explota
                     delete est;
                     estructuras[i][z] = nullptr;
                 }
-            }
-            else {
+            } else {
                 if (fuegos[i][z] != nullptr)
                     delete fuegos[i][z];
 
                 fuegos[i][z] = new fuego(
                     { GLfloat(i * tile_size) + tile_size / 2 , 0.5, GLfloat(z * tile_size) + tile_size / 2 },
                     { tile_size / 2, tile_size, tile_size / 2 }, 
-                      2000
+                    1500
                 );
-            }
-            if (bombas[i][z] != nullptr) {
-                bomba* bomb = dynamic_cast<bomba*>(bombas[i][z]);
-                bomb->setTiempoBomba(0);
-            }
-            if (bonificadores[i][z] != nullptr) {
-                delete bonificadores[x][i];
-                bonificadores[i][z] = nullptr;
             }
         }
 
         fuegos[x][z] = new fuego(
             { GLfloat(x * tile_size) + tile_size / 2 , 0.5, GLfloat(z * tile_size) + tile_size / 2 },
             { tile_size / 2, tile_size, tile_size / 2 },
-              3000 //Hago que dure un poquito mas//Hago que dure un poquito mas
+              1500
         ); 
+
+        jugador->disminuirCantBomba();
 
         ControladorCamara::sacudir(1000);
 

@@ -5,8 +5,8 @@
 
 #include "SDL_opengl.h"
 
-#include "global.h"
-#include "bomberman.h"
+#include "../lib/global.h"
+#include "../lib/bomberman.h"
 
 #include <random>
 
@@ -19,6 +19,13 @@ enum tipo_camara {
 	CAMARA_ORIGINAL
 };
 
+enum tipo_direccion {
+	EJE_X,
+	EJE_Z,
+	EJE_MENOS_X,
+	EJE_MENOS_Z
+};
+
 class ControladorCamara{
 private:
 	static tipo_camara camara_actual;
@@ -27,6 +34,7 @@ public:
 	static void cambiarTipoCamara();
 	static void colocarCamara();
 	static void sacudir(int tiempo);
+	static bool camaraMiraHacia(tipo_direccion direccion);
 };
 
 #endif

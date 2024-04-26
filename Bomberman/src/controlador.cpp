@@ -3,16 +3,9 @@
 Controlador* Controlador::instancia = nullptr; 
 
 Controlador::Controlador() {
-    nivel = 1;
-    fin = false;
-    finJuego = false;
-    pausa = false;
-    tiempoJuego = 200; //segundos
-    puntaje = 0;
-
     jugador = new bomberman(
         { tile_size / 2, 0, tile_size / 2 },
-        { tile_size / 4, tile_size / 2, tile_size / 4 }, 
+        { tile_size / 6, tile_size / 2, tile_size / 6 }, 
         GLfloat(0.1)
     );
 
@@ -114,25 +107,27 @@ Controlador::Controlador() {
         exit(1);
     }
 
-    this->window = SDL_CreateWindow("Bomberman 3D",
+    window = SDL_CreateWindow("Bomberman 3D",
         SDL_WINDOWPOS_CENTERED,
         SDL_WINDOWPOS_CENTERED,
-        WINDOW_WIDTH, WINDOW_HEIGHT, SDL_WINDOW_OPENGL | SDL_WINDOW_SHOWN);
-    this->context = SDL_GL_CreateContext(window);
+        WINDOW_WIDTH, WINDOW_HEIGHT, 
+        SDL_WINDOW_OPENGL | SDL_WINDOW_SHOWN
+    );
+    context = SDL_GL_CreateContext(window);
 
     glMatrixMode(GL_PROJECTION);
 
-    glClearColor(0.52f, 0.80f, 0.92f, 1.0f);
+    glClearColor(0.52f, 0.80f, 0.92f, 1.0f); //Celeste
 
     gluPerspective(45, GLfloat(WINDOW_WIDTH) / GLfloat(WINDOW_HEIGHT), 1, 200);
     glEnable(GL_DEPTH_TEST);
     glMatrixMode(GL_MODELVIEW);
 
-    SDL_ShowCursor(SDL_DISABLE); // Esta línea oculta el cursor del mouse
+    SDL_SetRelativeMouseMode(SDL_TRUE);
 
     ControladorTexturas::cargarTexturas();
     ControladorObjetos::cargarObjetos();
-    ControladorInterfaz::cargarInterfaz(puntaje, tiempoJuego, fin);
+    ControladorInterfaz::cargarInterfaz();
     ControladorAudio::cargarAudios();
 }
 
@@ -143,89 +138,93 @@ Controlador* Controlador::getInstance() {
 	return instancia;
 }
 
-int posBombaXTablero, posBombaZTablero, mouseYNuevo;
+int posBombaXTablero, posBombaZTablero;
+inline void colocarBomba() { //para evitar repetir codigo
+    if (ControladorCamara::camaraMiraHacia(EJE_MENOS_X)) {
+        posBombaXTablero = getPosicionXEnTablero(jugador->getPosicion().x - tile_size);
+        posBombaZTablero = getPosicionXEnTablero(jugador->getPosicion().z);
+    }
+    else if (ControladorCamara::camaraMiraHacia(EJE_Z)) {
+        posBombaXTablero = getPosicionXEnTablero(jugador->getPosicion().x);
+        posBombaZTablero = getPosicionXEnTablero(jugador->getPosicion().z + tile_size);
+    }
+    else if (ControladorCamara::camaraMiraHacia(EJE_X)) {
+        posBombaXTablero = getPosicionXEnTablero(jugador->getPosicion().x + tile_size);
+        posBombaZTablero = getPosicionXEnTablero(jugador->getPosicion().z);
+    }
+    else {
+        posBombaXTablero = getPosicionXEnTablero(jugador->getPosicion().x);
+        posBombaZTablero = getPosicionXEnTablero(jugador->getPosicion().z - tile_size);
+    }
+
+    if (posBombaXTablero >= 0 && posBombaXTablero < largoTablero &&
+        posBombaZTablero >= 0 && posBombaZTablero < anchoTablero &&
+        bombas[posBombaXTablero][posBombaZTablero] == nullptr &&
+        estructuras[posBombaXTablero][posBombaZTablero] == nullptr) {
+
+        objeto* bomba_obj = new bomba(
+            { posBombaXTablero * tile_size + tile_size / 2, 0, posBombaZTablero * tile_size + tile_size / 2 },
+            { tile_size / 4, tile_size / 2, tile_size / 4 },
+            2000, //2 segundos
+            2
+        );
+        bombas[posBombaXTablero][posBombaZTablero] = bomba_obj;
+
+        ControladorAudio::playAudio(sonido::explosion);
+    }
+}
+
 void Controlador::manejarEventos() {
-    while (SDL_PollEvent(&evento)) {
-        switch (evento.type) {
+    if (!finJuego) {
+        while (SDL_PollEvent(&evento)) {
+            switch (evento.type) {
             case SDL_QUIT:
                 fin = true;
                 break;
-        case SDL_KEYDOWN:
-            switch (evento.key.keysym.sym) {
-                case SDLK_ESCAPE:
-                case SDLK_q:
-                    fin = true;
-                    break;
-                case SDLK_b:
-                    if (mouseX >= 45 && mouseX < 135) {
-                        posBombaXTablero = getPosicionXEnTablero(jugador->getPosicion().x - tile_size);
-                        posBombaZTablero = getPosicionXEnTablero(jugador->getPosicion().z);
-                    }
-                    else if (mouseX >= 135 && mouseX < 225) {
-                        posBombaXTablero = getPosicionXEnTablero(jugador->getPosicion().x);
-                        posBombaZTablero = getPosicionXEnTablero(jugador->getPosicion().z + tile_size);
-                    }
-                    else if (mouseX >= 225 && mouseX < 315) {
-                        posBombaXTablero = getPosicionXEnTablero(jugador->getPosicion().x + tile_size);
-                        posBombaZTablero = getPosicionXEnTablero(jugador->getPosicion().z);
-                    }
-                    else {
-                        posBombaXTablero = getPosicionXEnTablero(jugador->getPosicion().x);
-                        posBombaZTablero = getPosicionXEnTablero(jugador->getPosicion().z - tile_size);
-                    }
-
-
-                    if (posBombaXTablero >= 0 && posBombaXTablero < largoTablero &&
-                        posBombaZTablero >= 0 && posBombaZTablero < anchoTablero &&
-                        bombas[posBombaXTablero][posBombaZTablero] == nullptr &&
-                        estructuras[posBombaXTablero][posBombaZTablero] == nullptr) {
-
-                        objeto* bomba_obj = new bomba(
-                            { posBombaXTablero * tile_size + tile_size / 2, 0, posBombaZTablero * tile_size + tile_size / 2 },
-                            { tile_size / 4, tile_size / 2, tile_size / 4 },
-                            2000, //2 segundos
-                            2
-                        );
-                        bombas[posBombaXTablero][posBombaZTablero] = bomba_obj;
-
+            case SDL_KEYDOWN:
+                switch (evento.key.keysym.sym) {
+                    case SDLK_ESCAPE:
+                    case SDLK_q:
+                        fin = true;
+                        break;
+                    case SDLK_b:
+                        colocarBomba();
+                        break;
+                    case SDLK_v:
+                         ControladorCamara::cambiarTipoCamara();
+                    case SDLK_p:
+                        toggle_pausa();
+                        break;
+                    case SDLK_UP:
+                        moverArriba = true;
+                        break;
+                    case SDLK_RIGHT:
+                        moverDerecha = true;
+                        break;
+                    case SDLK_DOWN:
+                        moverAbajo = true;
+                        break;
+                    case SDLK_LEFT:
+                        moverIzquierda = true;
+                        break;
+                    case SDLK_u:
+                        ControladorAudio::playAudio(sonido::pasos);
+                        break;
+                    case SDLK_j:
+                        ControladorAudio::playAudio(sonido::bonificacion);
+                        break;
+                    case SDLK_k:
                         ControladorAudio::playAudio(sonido::explosion);
-                    }
-                    break;
-                case SDLK_v:
-                        ControladorCamara::cambiarTipoCamara();
-                    break;
-                case SDLK_p:
-                    toggle_pausa();
-                    break;
-                case SDLK_UP:
-                    moverArriba = true;
-                    break;
-                case SDLK_RIGHT:
-                    moverDerecha = true;
-                    break;
-                case SDLK_DOWN:
-                    moverAbajo = true;
-                    break;
-                case SDLK_LEFT:
-                    moverIzquierda = true;
-                    break;
-                case SDLK_u:
-                    ControladorAudio::playAudio(sonido::pasos);
-                    break;
-                case SDLK_j:
-                    ControladorAudio::playAudio(sonido::bonificacion);
-                    break;
-                case SDLK_k:
-                    ControladorAudio::playAudio(sonido::explosion);
-                    break;
-                case SDLK_l :
-                    ControladorAudio::playAudio(sonido::muerte);
-                    break;
-                case SDLK_m://mute
-                    ControladorAudio::detenerAudio();
-                    break;
-            }
-            break;
+                        break;
+                    case SDLK_l :
+                        ControladorAudio::playAudio(sonido::muerte);
+                        break;
+                    case SDLK_m://mute
+                        ControladorAudio::detenerAudio();
+                        break;
+                    
+                }
+                break;
         case SDL_KEYUP:
             switch (evento.key.keysym.sym) {
                 case SDLK_UP:
@@ -240,62 +239,74 @@ void Controlador::manejarEventos() {
                 case SDLK_LEFT:
                     moverIzquierda = false;
                     break;
+                case SDLK_F1:
+                    wireframe = !wireframe;
+                    if (wireframe)
+                        glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+                    else
+                        glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+                    break;
+                case SDLK_F2:
+                    toggle_texturas();
+                    break;
+                case SDLK_F3:
+                    toggle_tipoLuz();
+                    if (tipoLuz)
+                        glShadeModel(GL_SMOOTH);
+                    else
+                        glShadeModel(GL_FLAT);
+                    break;
+                case SDLK_F4:
+                    //cambiar el color de luz (ambiente)
+                    ControladorLuz::cambiarColorLuzAmbiente();
+                    //Recordar hacer sombras
+                    //No esta cambiando nada
+                    break;
+                case SDLK_F5:
+                    //cambiar el color de luz (bonificador)
+                    //ControladorLuz::cambiarColorLuzBonificador();
+                    //Recordar hacer sombras
+                    //No esta cambiando nada
+                    break;
+                case SDLK_F6:
+                    //acelerar o disminuir velocidad de juego (global)
+                    break;
+                case SDLK_F7:
+                    toggle_inmortal();
+                    break;
+                case SDLK_F11:
+                    Uint32 FullscreenFlag = SDL_WINDOW_FULLSCREEN;
+                    pantallaCompleta = SDL_GetWindowFlags(window) & FullscreenFlag;
+                    SDL_SetWindowFullscreen(window, pantallaCompleta ? 0 : FullscreenFlag);
+                    break;
             }
             break;
         case SDL_MOUSEMOTION:
-
-            mouseX = (mouseX - (evento.motion.x - (WINDOW_WIDTH / 2))) % 360;
+            mouseX = (mouseX - evento.motion.xrel) % 360;
             if (mouseX < 0)
                 mouseX += 360;
 
-            mouseY= mouseY + (evento.motion.y - (WINDOW_HEIGHT/2));
+            mouseY = mouseY - evento.motion.yrel;
             if (mouseY < 1)
                 mouseY = 1;
             else if (mouseY > 90)
                 mouseY = 90;
-
-            SDL_WarpMouseInWindow(window, WINDOW_WIDTH / 2, WINDOW_HEIGHT / 2);
-            break;
-        
+        break;
         case SDL_MOUSEBUTTONDOWN:
             switch (evento.button.button) {
                 case SDL_BUTTON_LEFT:
-                    if (mouseX >= 45 && mouseX < 135) {
-                        posBombaXTablero = getPosicionXEnTablero(jugador->getPosicion().x - tile_size);
-                        posBombaZTablero = getPosicionXEnTablero(jugador->getPosicion().z);
-                    }
-                    else if (mouseX >= 135 && mouseX < 225) {
-                        posBombaXTablero = getPosicionXEnTablero(jugador->getPosicion().x);
-                        posBombaZTablero = getPosicionXEnTablero(jugador->getPosicion().z + tile_size);
-                    }
-                    else if (mouseX >= 225 && mouseX < 315) {
-                        posBombaXTablero = getPosicionXEnTablero(jugador->getPosicion().x + tile_size);
-                        posBombaZTablero = getPosicionXEnTablero(jugador->getPosicion().z);
-                    }
-                    else {
-                        posBombaXTablero = getPosicionXEnTablero(jugador->getPosicion().x);
-                        posBombaZTablero = getPosicionXEnTablero(jugador->getPosicion().z - tile_size);
-                    }
-
-                    
-                    if (posBombaXTablero >= 0 && posBombaXTablero < largoTablero &&
-                        posBombaZTablero >= 0 && posBombaZTablero < anchoTablero &&
-                        bombas[posBombaXTablero][posBombaZTablero] == nullptr && 
-                        estructuras[posBombaXTablero][posBombaZTablero] == nullptr) {
-
-                        objeto* bomba_obj = new bomba(
-                            { posBombaXTablero * tile_size + tile_size / 2, 0, posBombaZTablero * tile_size + tile_size / 2 },
-                            { tile_size / 4, tile_size / 2, tile_size / 4 },
-                            2000, //2 segundos
-                            2
-                        );
-                        bombas[posBombaXTablero][posBombaZTablero] = bomba_obj;
-
-                        ControladorAudio::playAudio(sonido::explosion);
-                    }
+                    colocarBomba();
                 break;
             }
             break;
+            } //la indentacion es mi pasion
+        }
+    } else {
+        moverArriba = false; moverAbajo = false; moverDerecha = false; moverIzquierda = false;
+        while (SDL_PollEvent(&evento)) {
+            if (evento.type == SDL_KEYDOWN && evento.key.keysym.sym == SDLK_ESCAPE ) {
+                fin = true;
+            }
         }
     }
 }
@@ -308,7 +319,7 @@ void Controlador::actualizar() {
             if (estructuras[i][j] != nullptr)
                 estructuras[i][j]->actualizar();
 
-            if (bombas[i][j] != nullptr)
+            if (bombas[i][j] != nullptr) 
                 bombas[i][j]->actualizar();
 
             if (fuegos[i][j] != nullptr)
@@ -335,9 +346,7 @@ void Controlador::actualizar() {
             ++it;
     }
     
-    ControladorInterfaz::setPuntaje(puntaje);
-    ControladorInterfaz::setTiempo(tiempoJuego);
-    ControladorInterfaz::setFinJuego(finJuego);
+    ControladorInterfaz::actualizarInterfaz();
 }
 
 void Controlador::dibujar() {
@@ -345,6 +354,7 @@ void Controlador::dibujar() {
     glLoadIdentity();
 
     ControladorCamara::colocarCamara();
+    ControladorLuz::colocarLuces();
 
     jugador->dibujar();
 
@@ -379,13 +389,15 @@ void Controlador::dibujar() {
     glVertex3f(largoTablero * tile_size, 0, 0);
     glEnd();
     
+    glDisable(GL_LIGHTING);
+
+    //HUD
     ControladorInterfaz::dibujarHUD();
 
     SDL_GL_SwapWindow(window);
 }
 
 Controlador::~Controlador() {
-    
     for (int i = 0; i < largoTablero; i++) {
         for (int j = 0; j < anchoTablero; j++) {
             if (estructuras[i][j] != nullptr)
@@ -409,27 +421,11 @@ Controlador::~Controlador() {
     for (list<particula*>::iterator it = particulas.begin(); it != particulas.end();) {
         delete (*it);
         it = particulas.erase(it);
-        ++it;
     }
 
     ControladorAudio::limpiarAudios();
+
     SDL_GL_DeleteContext(context);
     SDL_DestroyWindow(window);
     SDL_Quit();
 };
-
-void Controlador::sumarPuntaje(int puntos) {
-    this->puntaje += puntos;
-    if (puntos > INT_MAX) {
-        puntos = INT_MAX;
-        this->fin = true;
-    }
-}
-
-void Controlador::disminuirTiempo(int segundos) {
-    this->tiempoJuego -= segundos;
-    if (this->tiempoJuego <= 0) {
-        tiempoJuego = 0;
-        this->finJuego = true;
-    }
-}

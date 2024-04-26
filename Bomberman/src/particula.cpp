@@ -33,14 +33,14 @@ void particula::actualizar() {
 }
 
 void particula::dibujar() {
+    glPushMatrix();
+
     if (texturas_habilitadas) {
         glEnable(GL_TEXTURE_2D);
         glBindTexture(GL_TEXTURE_2D, textura);
         glColor3f(1.0f, 1.0f, 1.0f);
     }
 
-
-    glPushMatrix();
     glTranslatef(pos.x, pos.y, pos.z);
 
     glBegin(GL_QUADS);
@@ -124,10 +124,9 @@ void particula::dibujar() {
     glVertex3f(tam.x, tam.y, -tam.z);
 
     glEnd();
-    glPopMatrix();
-
-    glDisable(GL_BLEND);
 
     if (texturas_habilitadas) 
         glDisable(GL_TEXTURE_2D);
+
+    glPopMatrix();
 }

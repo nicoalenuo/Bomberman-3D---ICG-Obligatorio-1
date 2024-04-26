@@ -4,13 +4,20 @@ fuego::fuego(vector_3 pos, vector_3 tam, int tiempo) : objeto(pos, tam) {
 	tiempoFuego = tiempo;
 }
 
+int x, z;
 void fuego::actualizar() {
 	tiempoFuego -= frameDelay;
+	x = getPosicionXEnTablero(pos.x);
+	z = getPosicionZEnTablero(pos.z);
 
+	if (bombas[x][z] != nullptr) 
+		dynamic_cast<bomba*>(bombas[x][z])->setTiempoBomba(0);
+
+	if (bonificadores[x][z] != nullptr) {
+		bonificadores[x][z] = nullptr;
+		delete bonificadores[x][z];
+	}
 	if (tiempoFuego <= 0) {
-		int x = getPosicionXEnTablero(pos.x);
-		int z = getPosicionZEnTablero(pos.z);
-
 		fuegos[x][z] = nullptr;
 		delete this;
 	}

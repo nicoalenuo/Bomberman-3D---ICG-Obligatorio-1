@@ -1,28 +1,26 @@
-#include "../lib/controlador.h"
+#include "../lib/ControladorInterfaz.h"
 
 TTF_Font* ControladorInterfaz::interfaz = nullptr;
-hud* ControladorInterfaz::puntaje = nullptr;
-hud* ControladorInterfaz::tiempo = nullptr;
-hud* ControladorInterfaz::gameOver = nullptr;
+hud* ControladorInterfaz::hudPuntaje = nullptr;
+hud* ControladorInterfaz::hudTiempo = nullptr;
+hud* ControladorInterfaz::hudGameOver = nullptr;
 
 void ControladorInterfaz::setPuntaje(int puntos) {
-	string mensaje = "Puntaje: " + to_string(puntos);
-	setMensajeEnComponente(mensaje, interfaz, puntaje);
+	setMensajeEnComponente("Puntaje: " + to_string(puntaje), interfaz, hudPuntaje);
 }
 
 void ControladorInterfaz::setTiempo(int tiemp) {
-	string mensaje = "Tiempo: " + to_string(tiemp);
-	setMensajeEnComponente(mensaje, interfaz, tiempo);
+	setMensajeEnComponente("Tiempo: " + to_string(tiemp), interfaz, hudTiempo);
 }
 
 void ControladorInterfaz::setFinJuego(bool finJuego) {
-	string mensaje;
-	if (finJuego) {
-		mensaje = "GAME OVER!";
-	} else {
-		mensaje = " ";
-	}
-	setMensajeEnComponente(mensaje, interfaz, gameOver);
+	setMensajeEnComponente(finJuego ? "GAME OVER!" : " ", interfaz, hudGameOver);
+}
+
+void ControladorInterfaz::actualizarInterfaz(){
+	setPuntaje(puntaje);
+	setTiempo(tiempoJuego);
+	setFinJuego(finJuego);
 }
 
 void ControladorInterfaz::setMensajeEnComponente(string mensaje, TTF_Font* fuente, hud* componente) {
@@ -58,33 +56,34 @@ void ControladorInterfaz::setMensajeEnComponente(string mensaje, TTF_Font* fuent
 	glDisable(GL_TEXTURE_2D);
 }
 
-void ControladorInterfaz::cargarInterfaz(int puntaje, int tiempo, bool fin) {
+void ControladorInterfaz::cargarInterfaz() {
 
 	if (TTF_Init() < 0) {
-		cerr << "[SDL TTF Error]: " << SDL_GetError() << endl;
+		cerr << "Error al inicializar TTF: " << SDL_GetError() << endl;
 		SDL_Quit();
 		exit(1);
 	}
 
 	interfaz = TTF_OpenFont("texturas/OpenSans-Regular.ttf", 24);
 	if (interfaz == nullptr) {
-		cerr << "TTF_OpenFont error: " << SDL_GetError() << endl;
+		cerr << "Error en TTF_OpenFont: " << SDL_GetError() << endl;
 		return;
 	}
 
-	ControladorInterfaz::puntaje = new hud();
-	ControladorInterfaz::tiempo = new hud();
-	ControladorInterfaz::gameOver = new hud();
-	ControladorInterfaz::puntaje->colorMensaje = { 255, 255, 255 };
-	ControladorInterfaz::tiempo->colorMensaje = { 255, 255, 255 };
-	ControladorInterfaz::gameOver->colorMensaje = { 255, 255, 255 };
+	ControladorInterfaz::hudPuntaje = new hud();
+	ControladorInterfaz::hudTiempo = new hud();
+	ControladorInterfaz::hudGameOver = new hud();
 
-	ControladorInterfaz::puntaje->posicion = position::top_right;
-	ControladorInterfaz::tiempo->posicion = position::top_left;
-	ControladorInterfaz::gameOver->posicion = position::top_center;
+	ControladorInterfaz::hudPuntaje->colorMensaje = { 255, 255, 255 };
+	ControladorInterfaz::hudTiempo->colorMensaje = { 255, 255, 255 };
+	ControladorInterfaz::hudGameOver->colorMensaje = { 255, 255, 255 };
+
+	ControladorInterfaz::hudPuntaje->posicion = position::top_right;
+	ControladorInterfaz::hudTiempo->posicion = position::top_left;
+	ControladorInterfaz::hudGameOver->posicion = position::top_center;
 
 	setPuntaje(puntaje);
-	setTiempo(tiempo);
+	setTiempo(tiempoJuego);
 	setFinJuego(fin);
 }
 
@@ -92,13 +91,13 @@ void ControladorInterfaz::cargarInterfaz(int puntaje, int tiempo, bool fin) {
 hud* ControladorInterfaz::getHud(int numero) {
 	switch (numero) {
 	case 0:
-		return puntaje;
+		return hudPuntaje;
 		break;
 	case 1:
-		return tiempo;
+		return hudTiempo;
 		break;
 	default:
-		return gameOver;
+		return hudGameOver;
 		break;
 	}
 }
@@ -106,13 +105,13 @@ hud* ControladorInterfaz::getHud(int numero) {
 void ControladorInterfaz::setHud(int indice, hud* hud){
 	switch (indice) {
 	case 0:
-		puntaje = hud;
+		hudPuntaje = hud;
 		break;
 	case 1:
-		tiempo = hud;
+		hudTiempo = hud;
 		break;
 	default:
-		gameOver = hud;
+		hudGameOver = hud;
 		break;
 	}
 }
@@ -151,39 +150,51 @@ void ControladorInterfaz::dibujarCompomenteHUD(hud* hud) {
 }
 
 void ControladorInterfaz::dibujarHUD() {
-
-	glMatrixMode(GL_PROJECTION);
-	glPushMatrix(); 
-	glLoadIdentity();
+	glMatrixMode(GL_PROJECTION); glPushMatrix(); glLoadIdentity();
 	glOrtho(0, WINDOW_WIDTH, WINDOW_HEIGHT, 0, -1.0, 1.0);
 
-	glMatrixMode(GL_MODELVIEW); 
-	glPushMatrix(); 
-	glLoadIdentity();
+	glMatrixMode(GL_MODELVIEW); glPushMatrix(); glLoadIdentity();
+
+	glPushMatrix();
 
 	// TOP
-	int height = max(puntaje->height, tiempo->height);
-	dibujarCompomenteHUD(tiempo);
-	dibujarCompomenteHUD(puntaje);
-	dibujarCompomenteHUD(gameOver);
+	int height = max(hudPuntaje->height, hudTiempo->height);
+	dibujarCompomenteHUD(hudTiempo);
+	dibujarCompomenteHUD(hudPuntaje);
+	dibujarCompomenteHUD(hudGameOver);
 
-	/*
 	// El Resto
+	// Draw the rest of the overlay
+	/*
 	glBegin(GL_QUADS); {
 		glColor3f(0.f, 0.f, 0.f);
-		glVertex3f(0.f, WINDOW_HEIGHT - height, 0.f);
-		glVertex3f(WINDOW_WIDTH, WINDOW_HEIGHT - height, 0.f);
+		glVertex3f(0.f, height + 6.f, 0.f);
+		glVertex3f(WINDOW_WIDTH, height + 6.f, 0.f);
 		glVertex3f(WINDOW_WIDTH, 0.f, 0.f);
 		glVertex3f(0.f, 0.f, 0.f);
 	} glEnd();
 	*/
+
+	// BOTTOM
+
+	// dibujar los poderes
+	glEnable(GL_TEXTURE_2D);
+	//glBindTexture(GL_TEXTURE_2D, ...);
+	glBegin(GL_QUADS); {
+		glColor3f(1.f,1.f,1.f);
+		//glTexCoord2d(0.f, 1.f); 
+		glVertex3f(0.f, WINDOW_HEIGHT - 62.f, 1.f);
+		//glTexCoord2d(1.f, 1.f);
+		glVertex3f(WINDOW_WIDTH, WINDOW_HEIGHT - 62.f, 1.f);
+		//glTexCoord2d(1.f, 0.f);
+		glVertex3f(WINDOW_WIDTH, WINDOW_HEIGHT, 1.f);
+		//glTexCoord2d(0.f, 0.f);
+		glVertex3f(0.f, WINDOW_HEIGHT, 1.f);
+	} glEnd();
+	glDisable(GL_TEXTURE_2D);
 	glPopMatrix();
 
-
-
-	glMatrixMode(GL_PROJECTION); 
-	glPopMatrix();
-	glMatrixMode(GL_MODELVIEW);
-	glPopMatrix();
+	glMatrixMode(GL_PROJECTION); glPopMatrix();
+	glMatrixMode(GL_MODELVIEW); glPopMatrix();
 }
 
