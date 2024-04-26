@@ -92,6 +92,7 @@
     <ClCompile Include="src\bonificador.cpp" />
     <ClCompile Include="src\controlador.cpp" />
     <ClCompile Include="src\ControladorCamara.cpp" />
+    <ClCompile Include="src\ControladorLuz.cpp" />
     <ClCompile Include="src\ControladorObjetos.cpp" />
     <ClCompile Include="src\ControladorTexturas.cpp" />
     <ClCompile Include="src\ControladorInterfaz.cpp" />
@@ -114,6 +115,7 @@
     <ClInclude Include="lib\bonificador.h" />
     <ClInclude Include="lib\controlador.h" />
     <ClInclude Include="lib\ControladorCamara.h" />
+    <ClInclude Include="lib\ControladorLuz.h" />
     <ClInclude Include="lib\ControladorObjetos.h" />
     <ClInclude Include="lib\ControladorTexturas.h" />
     <ClCompile Include="lib\ControladorInterfaz.h" />

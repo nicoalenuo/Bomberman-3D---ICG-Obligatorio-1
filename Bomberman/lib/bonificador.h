@@ -8,7 +8,7 @@
 enum tipo_poder { //Colocar aca los tipos
 	AUMENTAR_ALCANCE_BOMBAS,
 	INMORTALIDAD, //nose, tirar ideas aca
-	AUMENTAR_VELOCIDAD,
+	AUMENTAR_VELOCIDAD, //
 	BOMBAS_ATRAVIESAN_ESTRUCTURAS,
 };
 

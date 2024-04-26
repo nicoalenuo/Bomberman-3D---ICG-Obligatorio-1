@@ -20,7 +20,7 @@ void particula::actualizar() {
 
 void particula::dibujar() {
     glPushMatrix();
-
+    glEnable(GL_TEXTURE_2D);
     glTranslatef(pos.x, pos.y, pos.z);
     glBegin(GL_QUADS);
 
@@ -60,6 +60,7 @@ void particula::dibujar() {
     glVertex3f(tam.x, 0, tam.z);
     glVertex3f(tam.x, tam.y, tam.z);
     glVertex3f(tam.x, tam.y, -tam.z);
+    glDisable(GL_TEXTURE_2D);
     glEnd();
     glPopMatrix();
 }

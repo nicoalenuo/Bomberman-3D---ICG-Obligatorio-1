@@ -3,13 +3,7 @@
 Controlador* Controlador::instancia = nullptr; 
 
 Controlador::Controlador() {
-    nivel = 1;
-    fin = false;
-    finJuego = false;
-    pausa = false;
-    tiempoJuego = 200; //segundos
-    puntaje = 0;
-
+    
     jugador = new bomberman(
         { tile_size / 2, 0, tile_size / 2 },
         { tile_size / 4, tile_size / 2, tile_size / 4 }, 
@@ -107,11 +101,12 @@ Controlador::Controlador() {
     glMatrixMode(GL_MODELVIEW);
 
     SDL_ShowCursor(SDL_DISABLE); // Esta línea oculta el cursor del mouse
+    SDL_WarpMouseInWindow(window, WINDOW_WIDTH / 2, WINDOW_HEIGHT / 2); //Coloca el mouse en el centro de la pantalla
 
     ControladorTexturas::cargarTexturas();
     ControladorObjetos::cargarObjetos();
     ControladorCamara::cambiarTipoCamara(CAMARA_ISOMETRICA);
-    ControladorInterfaz::cargarInterfaz(puntaje, tiempoJuego, fin);
+    ControladorInterfaz::cargarInterfaz();
     ControladorAudio::cargarAudios();
 }
 
@@ -123,48 +118,19 @@ Controlador* Controlador::getInstance() {
 }
 
 int posBombaXTablero, posBombaZTablero;
+//si ocurre el fin del juego, no se debería de poder mover ni poner bomba, pero está costando implementar eso, no es tan facil como parece
 void Controlador::manejarEventos() {
-    while (SDL_PollEvent(&evento)) {
-        switch (evento.type) {
+    if (!finJuego) {
+        while (SDL_PollEvent(&evento)) {
+            switch (evento.type) {
             case SDL_QUIT:
                 fin = true;
                 break;
-        case SDL_KEYDOWN:
-            switch (evento.key.keysym.sym) {
+            case SDL_KEYDOWN:
+                switch (evento.key.keysym.sym) {
                 case SDLK_ESCAPE:
                 case SDLK_q:
                     fin = true;
-                    break;
-                case SDLK_b:
-                    if (mouseX >= 45 && mouseX < 135){
-                        posBombaXTablero = getPosicionXEnTablero(jugador->getPosicion().x - tile_size, 1);
-                        posBombaZTablero = getPosicionXEnTablero(jugador->getPosicion().z, 1);
-                    }
-                    else if (mouseX >= 135 && mouseX < 225) {
-                        posBombaXTablero = getPosicionXEnTablero(jugador->getPosicion().x, 1);
-                        posBombaZTablero = getPosicionXEnTablero(jugador->getPosicion().z + tile_size, 1);
-                    }
-                    else if (mouseX >= 225 && mouseX < 315) {
-                        posBombaXTablero = getPosicionXEnTablero(jugador->getPosicion().x + tile_size, 1);
-                        posBombaZTablero = getPosicionXEnTablero(jugador->getPosicion().z, 1);
-                    }
-                    else {
-                        posBombaXTablero = getPosicionXEnTablero(jugador->getPosicion().x, 1);
-                        posBombaZTablero = getPosicionXEnTablero(jugador->getPosicion().z - tile_size, 1);
-                    }
-
-                    if (bombas[posBombaXTablero][posBombaZTablero] == nullptr && estructuras[posBombaXTablero][posBombaZTablero] == nullptr) {
-                        objeto* bomba_obj = new bomba(
-                            { posBombaXTablero * tile_size + tile_size / 2, 0, posBombaZTablero * tile_size + tile_size / 2 },
-                            { tile_size / 4, tile_size / 2, tile_size / 4},
-                            2000, //2 segundos
-                            2
-                        );
-
-                        bombas[posBombaXTablero][posBombaZTablero] = bomba_obj;
-
-                        ControladorAudio::playAudio(sonido::explosion);
-                    }
                     break;
                 case SDLK_t:
                     ControladorCamara::cambiarTipoCamara(CAMARA_TERCERA_PERSONA);
@@ -218,24 +184,62 @@ void Controlador::manejarEventos() {
                 case SDLK_LEFT:
                     moverIzquierda = false;
                     break;
-            }
-            break;
-        case SDL_MOUSEMOTION:
-            mouseX = (mouseX + (-evento.motion.x  % 360) + 280) % 360; //No hardcodear el 280 (kevin machado)
-            if (mouseX < 0)
-                mouseX += 360;  
+                case SDLK_F1:
+                    wireframe = !wireframe;
+                    if (wireframe)
+                        glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+                    else
+                        glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+                    break;
+                case SDLK_F2:
+                    toggle_texturas();
+                    break;
+                case SDLK_F3:
+                    toggle_tipoLuz();
+                    if (tipoLuz)
+                        glShadeModel(GL_SMOOTH);
+                    else
+                        glShadeModel(GL_FLAT);
+                    break;
+                case SDLK_F4:
+                    //cambiar el color de luz (ambiente)
+                    ControladorLuz::cambiarColorLuzAmbiente();
+                    //Recordar hacer sombras
+                    //No esta cambiando nada
+                    break;
+                case SDLK_F5:
+                    //cambiar el color de luz (bonificador)
+                    //ControladorLuz::cambiarColorLuzBonificador();
+                    //Recordar hacer sombras
+                    //No esta cambiando nada
+                    break;
+                case SDLK_F6:
+                    //acelerar o disminuir velocidad de juego (global)
+                    break;
+                case SDLK_F7:
+                    toggle_inmortal();
+                    break;
+                case SDLK_F11:
+                    toggle_pantallaCompleta(window);
+                    break;
+                }
+                break;
+            case SDL_MOUSEMOTION:
+                mouseX = (mouseX + (-evento.motion.x % 360) + 280) % 360; //No hardcodear el 280 (kevin machado)
+                if (mouseX < 0)
+                    mouseX += 360;
 
-            mouseY = (mouseY + (evento.motion.y % 360)) % 360;
-            if (mouseY < 0)
-                mouseY = 0;
-            else if (mouseY > 360)
-                mouseY = 360;
+                mouseY = (mouseY + (evento.motion.y % 360)) % 360;
+                if (mouseY < 0)
+                    mouseY = 0;
+                else if (mouseY > 360)
+                    mouseY = 360;
 
-            SDL_WarpMouseInWindow(window, WINDOW_WIDTH / 2, WINDOW_HEIGHT / 2);
-            break;
-        
-        case SDL_MOUSEBUTTONDOWN:
-            switch (evento.button.button) {
+                SDL_WarpMouseInWindow(window, WINDOW_WIDTH / 2, WINDOW_HEIGHT / 2);
+                break;
+
+            case SDL_MOUSEBUTTONDOWN:
+                switch (evento.button.button) {
                 case SDL_BUTTON_LEFT:
                     if (mouseX >= 45 && mouseX < 135) {
                         posBombaXTablero = getPosicionXEnTablero(jugador->getPosicion().x - tile_size, 1);
@@ -254,34 +258,59 @@ void Controlador::manejarEventos() {
                         posBombaZTablero = getPosicionXEnTablero(jugador->getPosicion().z - tile_size, 1);
                     }
 
-                    if (bombas[posBombaXTablero][posBombaZTablero] == nullptr && estructuras[posBombaXTablero][posBombaZTablero] == nullptr) {
+                    if (bombas[posBombaXTablero][posBombaZTablero] == nullptr && estructuras[posBombaXTablero][posBombaZTablero] == nullptr && jugador->getCantBomba() < jugador->getMaxBomba()) {
                         objeto* bomba_obj = new bomba(
                             { posBombaXTablero * tile_size + tile_size / 2, 0, posBombaZTablero * tile_size + tile_size / 2 },
                             { tile_size / 4, tile_size / 2, tile_size / 4 },
                             2000, //2 segundos
-                            2
+                            2,
+                            jugador
                         );
-
+                        jugador->aumentarCantBomba();
                         bombas[posBombaXTablero][posBombaZTablero] = bomba_obj;
 
                         ControladorAudio::playAudio(sonido::explosion);
                     }
+                    break;
+                }
                 break;
             }
-            break;
+        }
+        //aca va Check lighting motion
+
+    } else {
+        moverArriba = false; moverAbajo = false; moverDerecha = false; moverIzquierda = false;
+        while (SDL_PollEvent(&evento)) {
+            if (evento.type == SDL_KEYDOWN && evento.key.keysym.sym == SDLK_ESCAPE ) {
+                fin = true;
+            }
         }
     }
+}
+
+void Controlador::toggle_pantallaCompleta(SDL_Window* window) {
+    Uint32 FullscreenFlag = SDL_WINDOW_FULLSCREEN;
+    pantallaCompleta = SDL_GetWindowFlags(window) & FullscreenFlag;
+    SDL_SetWindowFullscreen(window, pantallaCompleta ? 0 : FullscreenFlag);
 }
 
 void Controlador::actualizar() {
     jugador->actualizar();
 
+    /*
+        Que ocurre si la bomba_1 (i,j) revienta y alcanza a la bomba_2 (i',j') donde i'>i o j'>j?
+        bomba_1 setea el tiempo de bomba_2 a 0, pero no lo actualiza al instante, tiene que esperar al proximo frame
+        para que se actualice bomba_2, siendo que debería de actualizarse en el mismo frame. Alfinal solo es un frame de diferencia
+
+        Para arreglar esto en caso de querer hacerlo, se debe modificar la función actualizar en bomba.cpp,
+        basta con crear una lista de bombas explotadas, y llamar actualizar para cada una.
+    */
     for (int i = 0; i < largoTablero; i++) {
         for (int j = 0; j < anchoTablero; j++) {
             if (estructuras[i][j] != nullptr)
                 estructuras[i][j]->actualizar();
 
-            if (bombas[i][j] != nullptr)
+            if (bombas[i][j] != nullptr) 
                 bombas[i][j]->actualizar();
 
             if (fuegos[i][j] != nullptr)
@@ -305,9 +334,7 @@ void Controlador::actualizar() {
             ++it;
     }
     
-    ControladorInterfaz::setPuntaje(puntaje);
-    ControladorInterfaz::setTiempo(tiempoJuego);
-    ControladorInterfaz::setFinJuego(finJuego);
+    ControladorInterfaz::actualizarInterfaz();
 }
 
 void Controlador::dibujar() {
@@ -316,7 +343,7 @@ void Controlador::dibujar() {
 
     ControladorCamara::colocarCamara();
 
-    glEnable(GL_TEXTURE_2D);
+    ControladorLuz::colocarLuces();
 
     jugador->dibujar();
 
@@ -341,6 +368,7 @@ void Controlador::dibujar() {
         (*it)->dibujar();
 
     //Suelo
+    glDisable(GL_TEXTURE_2D);
     glBegin(GL_QUADS);
     glColor3f(GLfloat(227.0 / 255.0), GLfloat(186.0 / 255.0), GLfloat(143.0 / 255.0));
     glVertex3f(0, 0, 0);
@@ -348,21 +376,11 @@ void Controlador::dibujar() {
     glVertex3f(largoTablero * tile_size, 0, anchoTablero * tile_size);
     glVertex3f(largoTablero * tile_size, 0, 0);
     glEnd();
-
-    glDisable(GL_TEXTURE_2D);
     
+    glDisable(GL_LIGHTING);
+
     //HUD
-    
-    glMatrixMode(GL_PROJECTION); glPushMatrix(); glLoadIdentity();
-    glOrtho(0, WINDOW_WIDTH, WINDOW_HEIGHT, 0, -1.0, 1.0);
-
-    glMatrixMode(GL_MODELVIEW); glPushMatrix(); glLoadIdentity();
-
     ControladorInterfaz::dibujarHUD();
-
-    glMatrixMode(GL_PROJECTION); glPopMatrix();
-    glMatrixMode(GL_MODELVIEW); glPopMatrix();
-
 
     SDL_GL_SwapWindow(window);
 }
@@ -374,19 +392,3 @@ Controlador::~Controlador() {
     SDL_DestroyWindow(window);
     SDL_Quit();
 };
-
-void Controlador::sumarPuntaje(int puntos) {
-    this->puntaje += puntos;
-    if (puntos > INT_MAX) {
-        puntos = INT_MAX;
-        this->fin = true;
-    }
-}
-
-void Controlador::disminuirTiempo(int segundos) {
-    this->tiempoJuego -= segundos;
-    if (this->tiempoJuego <= 0) {
-        tiempoJuego = 0;
-        this->finJuego = true;
-    }
-}
