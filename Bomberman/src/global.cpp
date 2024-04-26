@@ -10,8 +10,7 @@ bool moverIzquierda = false;
 int mouseX = 0;
 int mouseY = 0;
 
-int* largoPantalla = new int(WINDOW_WIDTH);
-int* altoPantalla = new int(WINDOW_HEIGHT);
+int cantLuces = 1; //la ambiente
 
 bool pausa = false;
 bool wireframe = false;
@@ -30,6 +29,7 @@ bomberman* jugador;
 
 bool fin = false;
 bool finJuego = false;
+bool inmortal = false;
 
 int nivel = 1;
 int puntaje = 0;
@@ -61,6 +61,10 @@ void toggle_tipoLuz() {
 
 void toggle_pantallaCompleta() {
     pantallaCompleta = !pantallaCompleta;
+}
+
+void toggle_inmortal() {
+    inmortal = !inmortal;
 }
 
 void aumentarNivel() {

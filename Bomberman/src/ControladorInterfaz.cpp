@@ -1,4 +1,4 @@
-#include "../lib/controlador.h"
+#include "../lib/ControladorInterfaz.h"
 
 TTF_Font* ControladorInterfaz::interfaz = nullptr;
 hud* ControladorInterfaz::puntaje = nullptr;
@@ -158,6 +158,11 @@ void ControladorInterfaz::dibujarCompomenteHUD(hud* hud) {
 }
 
 void ControladorInterfaz::dibujarHUD() {
+	glMatrixMode(GL_PROJECTION); glPushMatrix(); glLoadIdentity();
+	glOrtho(0, WINDOW_WIDTH, WINDOW_HEIGHT, 0, -1.0, 1.0);
+
+	glMatrixMode(GL_MODELVIEW); glPushMatrix(); glLoadIdentity();
+
 	glPushMatrix();
 
 	// TOP
@@ -196,5 +201,8 @@ void ControladorInterfaz::dibujarHUD() {
 	} glEnd();
 	glDisable(GL_TEXTURE_2D);
 	glPopMatrix();
+
+	glMatrixMode(GL_PROJECTION); glPopMatrix();
+	glMatrixMode(GL_MODELVIEW); glPopMatrix();
 }
 

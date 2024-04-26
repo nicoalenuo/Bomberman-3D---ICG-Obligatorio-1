@@ -13,9 +13,6 @@ class bomberman;
 
 extern int velocidad_juego;
 
-extern int* largoPantalla;
-extern int* altoPantalla;
-
 extern bool moverArriba;
 extern bool moverAbajo;
 extern bool moverDerecha;
@@ -24,11 +21,14 @@ extern bool moverIzquierda;
 extern int mouseX;
 extern int mouseY;
 
+extern int cantLuces;
+
 extern bool pausa;
 extern bool wireframe;
 extern bool pantallaCompleta;
 extern bool texturas_habilitadas;
 extern bool tipoLuz;
+extern bool inmortal;
 
 extern objeto*** estructuras;
 extern objeto*** bombas;
@@ -52,6 +52,7 @@ extern void toggle_pausa();
 extern void toggle_wireframe();
 extern void toggle_texturas();
 extern void toggle_tipoLuz();
+extern void toggle_inmortal();
 
 extern void aumentarNivel();
 extern void sumarPuntaje(int puntos);

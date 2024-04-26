@@ -20,6 +20,7 @@
 #include "../lib/ControladorCamara.h"
 #include "../lib/ControladorObjetos.h"
 #include "../lib/ControladorInterfaz.h"
+#include "../lib/ControladorLuz.h"
 
 class Controlador {
 private:
