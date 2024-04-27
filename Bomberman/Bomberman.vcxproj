@@ -118,7 +118,7 @@
     <ClInclude Include="lib\ControladorLuz.h" />
     <ClInclude Include="lib\ControladorObjetos.h" />
     <ClInclude Include="lib\ControladorTexturas.h" />
-    <ClCompile Include="lib\ControladorInterfaz.h" />
+    <ClInclude Include="lib\ControladorInterfaz.h" />
     <ClInclude Include="lib\ControladorAudio.h" />
     <ClInclude Include="lib\enemigo.h" />
     <ClInclude Include="lib\estructura.h" />

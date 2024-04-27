@@ -122,9 +122,9 @@
     <ClInclude Include="lib\ControladorCamara.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClCompile Include="lib\ControladorInterfaz.h">
+    <ClInclude Include="lib\ControladorInterfaz.h">
       <Filter>Header Files</Filter>
-    </ClCompile>
+    </ClInclude>
     <ClInclude Include="lib\hud.h">
       <Filter>Header Files</Filter>
     </ClInclude>
