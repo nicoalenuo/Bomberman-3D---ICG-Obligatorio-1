@@ -58,14 +58,6 @@ void bomberman::actualizar() {
                 pos.z += velocidad * velocidad_juego;
         }
     }
-    if (pasos == 20) {
-        pasos = 0;
-        ControladorAudio::playAudio(sonido::pasos);
-    }
-    else {
-        pasos++;
-    }
-
     if (moverDerecha) {
         if (mouseX >= 45 && mouseX < 135) {
             rotacionY = 0;
@@ -112,6 +104,8 @@ void bomberman::actualizar() {
         }
     }
 
+    //Rotacion para que mire al lado correcto
+
     if (rotacion_y_actual < rotacionY) {
         if (abs(rotacion_y_actual - rotacionY) <= 180) {
             rotacion_y_actual += 25;
@@ -145,22 +139,34 @@ void bomberman::actualizar() {
 
     }
 
-    if (moverArriba || moverDerecha || moverIzquierda || moverAbajo) {
+    //Balanceo de izquierda a derecha
+    
+    if (moverArriba || moverDerecha || moverIzquierda || moverAbajo){
         if (balanceandoseDerecha) {
             rotacion_z_actual += 2 * velocidad_juego;
-            if (rotacion_z_actual == 8) {
+            if (rotacion_z_actual > 8) {
                 balanceandoseDerecha = false;
             }
         }
         else {
             rotacion_z_actual -= 2 * velocidad_juego;
-            if (rotacion_z_actual == -8) {
+            if (rotacion_z_actual < -8) {
                 balanceandoseDerecha = true;
             }
         }
     }
     else {
         rotacion_z_actual = 0;
+    }
+
+    //Sonido de pisadas
+
+    if (pasos == 20) {
+        pasos = 0;
+        ControladorAudio::playAudio(sonido::pasos);
+    }
+    else {
+        pasos++;
     }
 
     if (contactoConFuego())
@@ -171,7 +177,7 @@ void bomberman::dibujar() {
     glPushMatrix();
     glTranslatef(pos.x, pos.y, pos.z);
     glRotatef(GLfloat(rotacion_y_actual), 0, 1, 0);
-    glRotatef(GLfloat(rotacion_z_actual), 0, 0, 1);
+    glRotatef(GLfloat(rotacion_z_actual), 0, 0, 1); 
     ControladorObjetos::dibujar(OBJ_PLAYER);
     glPopMatrix();
 }

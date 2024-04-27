@@ -19,11 +19,11 @@
 #include "bonificador.h"
 #include "hud.h"
 
-#include "../lib/ControladorCamara.h"
-#include "../lib/ControladorObjetos.h"
-#include "../lib/ControladorInterfaz.h"
-#include "../lib/ControladorAudio.h"
-#include "../lib/ControladorLuz.h"
+#include "ControladorCamara.h"
+#include "ControladorObjetos.h"
+#include "ControladorInterfaz.h"
+#include "ControladorAudio.h"
+#include "ControladorLuz.h"
 
 class Controlador {
 private:
@@ -41,8 +41,6 @@ public:
 	void manejarEventos();
 	void actualizar();
 	void dibujar();
-
-	void toggle_pantallaCompleta(SDL_Window* Window);
 
 	~Controlador();
 };

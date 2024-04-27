@@ -4,7 +4,7 @@
 #define CONTROLADORLUZ_H
 
 #include "SDL_opengl.h"
-#include "../lib/global.h"
+#include "global.h"
 #include "../constantes/constantes.h"
 
 class ControladorLuz {

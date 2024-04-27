@@ -1,4 +1,4 @@
-#include "../lib/ControladorInterfaz.h"
+#include "../lib/controlador.h"
 
 TTF_Font* ControladorInterfaz::interfaz = nullptr;
 hud* ControladorInterfaz::hudPuntaje = nullptr;
@@ -15,12 +15,6 @@ void ControladorInterfaz::setTiempo(int tiemp) {
 
 void ControladorInterfaz::setFinJuego(bool finJuego) {
 	setMensajeEnComponente(finJuego ? "GAME OVER!" : " ", interfaz, hudGameOver);
-}
-
-void ControladorInterfaz::actualizarInterfaz(){
-	setPuntaje(puntaje);
-	setTiempo(tiempoJuego);
-	setFinJuego(finJuego);
 }
 
 void ControladorInterfaz::setMensajeEnComponente(string mensaje, TTF_Font* fuente, hud* componente) {
@@ -150,6 +144,10 @@ void ControladorInterfaz::dibujarCompomenteHUD(hud* hud) {
 }
 
 void ControladorInterfaz::dibujarHUD() {
+	setPuntaje(puntaje);
+	setTiempo(tiempoJuego);
+	setFinJuego(finJuego);
+
 	glMatrixMode(GL_PROJECTION); glPushMatrix(); glLoadIdentity();
 	glOrtho(0, WINDOW_WIDTH, WINDOW_HEIGHT, 0, -1.0, 1.0);
 

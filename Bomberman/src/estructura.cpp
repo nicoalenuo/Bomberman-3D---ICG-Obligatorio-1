@@ -4,11 +4,9 @@ estructura::estructura(vector_3 pos, vector_3 tam, bool dest) : objeto(pos, tam)
 	this->destructible = dest;
 }
 
-
 random_device rd;
 mt19937 gen(rd());
 uniform_real_distribution<> dis(-0.3, 0.3);
-
 estructura::~estructura() {
     for (int j = 0; j < 150; j++) {
         particulas.push_back(
@@ -17,7 +15,8 @@ estructura::~estructura() {
                 { GLfloat(0.07), GLfloat(0.07), GLfloat(0.07) },
                 { 0, -25, 0 },
                 { GLfloat(dis(gen)), 10, GLfloat(dis(gen)) },
-                ControladorTexturas::getTextura(ESTRUCTURA_DESTRUCTIBLE)
+                ControladorTexturas::getTextura(ESTRUCTURA_DESTRUCTIBLE),
+                PARTICULA_ESTRUCTURA_DESTRUCTIBLE
             )
         );
     }
@@ -28,7 +27,6 @@ void estructura::actualizar() {
 
 void estructura::dibujar() {
     glPushMatrix();
-    glEnable(GL_TEXTURE_2D);
     glTranslatef(pos.x, pos.y, pos.z);
 
     if (texturas_habilitadas) {

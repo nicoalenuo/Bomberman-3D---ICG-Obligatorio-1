@@ -5,8 +5,8 @@
 
 #include "SDL_opengl.h"
 
-#include "../lib/global.h"
-#include "../lib/bomberman.h"
+#include "global.h"
+#include "bomberman.h"
 
 #include <random>
 

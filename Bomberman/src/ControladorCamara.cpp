@@ -45,7 +45,6 @@ random_device rdSacudirse;
 mt19937 genSacudirse(rdSacudirse());
 uniform_real_distribution<> disSacudirseIsometrica(-0.2, 0.2);
 uniform_real_distribution<> disSacudirsePrimeraPersona(-0.03, 0.03);
-
 GLfloat angleRadiansX, angleRadiansY, camX, camY, camZ;
 void ControladorCamara::colocarCamara() {
 

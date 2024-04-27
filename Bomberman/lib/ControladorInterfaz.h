@@ -5,13 +5,9 @@
 
 #include <string>
 #include <iostream>
-#include "SDL.h"
-#include "SDL_opengl.h"
-#include "SDL_ttf.h"
-#include <GL/glu.h>
 
-#include "../lib/hud.h"
-#include "../lib/global.h"
+#include "hud.h"
+#include "global.h"
 
 using namespace std;
 
@@ -25,7 +21,6 @@ class ControladorInterfaz {
 		static void setMensajeEnComponente(string mensaje, TTF_Font* fuente, hud* componente);
 	public:
 		static void cargarInterfaz();
-		static void actualizarInterfaz();
 		static void dibujarCompomenteHUD(hud* hud);
 		static void dibujarHUD();
 		static hud* getHud(int numero);

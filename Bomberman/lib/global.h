@@ -47,10 +47,6 @@ extern bomberman* jugador;
 
 extern int getIndiceTablero(GLfloat coord);
 
-extern int getPosicionXEnTablero(GLfloat coord_x);
-
-extern int getPosicionZEnTablero(GLfloat coord_z);
-
 extern bool fin;
 extern bool finJuego;
 extern int nivel;

@@ -66,17 +66,14 @@
     <ClCompile Include="src\cargadorAudio.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-	<ClCompile Include="src\bufferAudio.cpp">
-		<Filter>Source Files</Filter>
-	</ClCompile>
-	<ClCompile Include="src\recursoAudio.cpp">
-		<Filter>Source Files</Filter>
-	</ClCompile>
-    <ClCompile Include="src\particula.cpp">
+    <ClCompile Include="src\bufferAudio.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="lib\ControladorInterfaz.h">
-      <Filter>Header Files</Filter>
+    <ClCompile Include="src\recursoAudio.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\particula.cpp">
+      <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\ControladorLuz.cpp">
       <Filter>Source Files</Filter>
@@ -125,6 +122,9 @@
     <ClInclude Include="lib\ControladorCamara.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClCompile Include="lib\ControladorInterfaz.h">
+      <Filter>Header Files</Filter>
+    </ClCompile>
     <ClInclude Include="lib\hud.h">
       <Filter>Header Files</Filter>
     </ClInclude>

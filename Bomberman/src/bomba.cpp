@@ -8,8 +8,8 @@ bomba::bomba(vector_3 pos, vector_3 tam, int tiempo, int largo) : objeto(pos, ta
 void bomba::actualizar() { // actualiza el tiempo, y si es cero, explota
    tiempoBomba -= frameDelay * velocidad_juego;
     if (this->tiempoBomba <= 0) {
-        int x = getPosicionXEnTablero(pos.x);
-        int z = getPosicionZEnTablero(pos.z);
+        int x = getIndiceTablero(pos.x);
+        int z = getIndiceTablero(pos.z);
 
         bool alcanza = false;
 
@@ -27,7 +27,7 @@ void bomba::actualizar() { // actualiza el tiempo, y si es cero, explota
                     delete fuegos[x][i];
 
                 fuegos[x][i] = new fuego(
-                    { GLfloat(x * tile_size) + tile_size / 2 , 0.5, GLfloat(i * tile_size) + tile_size / 2 },
+                    { GLfloat(x * tile_size) + tile_size / 2 , 0.0f, GLfloat(i * tile_size) + tile_size / 2 },
                     { tile_size / 2, tile_size, tile_size / 2 },
                     1500
                 );
@@ -49,7 +49,7 @@ void bomba::actualizar() { // actualiza el tiempo, y si es cero, explota
                     delete fuegos[x][i];
 
                 fuegos[x][i] = new fuego(
-                    { GLfloat(x * tile_size) + tile_size / 2 , 0.5, GLfloat(i * tile_size) + tile_size / 2 },
+                    { GLfloat(x * tile_size) + tile_size / 2 , 0.0f, GLfloat(i * tile_size) + tile_size / 2 },
                     { tile_size / 2, tile_size, tile_size / 2 },
                     1500
                 );
@@ -71,7 +71,7 @@ void bomba::actualizar() { // actualiza el tiempo, y si es cero, explota
                     delete fuegos[i][z];
 
                 fuegos[i][z] = new fuego(
-                    { GLfloat(i * tile_size) + tile_size / 2 , 0.5, GLfloat(z * tile_size) + tile_size / 2 },
+                    { GLfloat(i * tile_size) + tile_size / 2 , 0.0f, GLfloat(z * tile_size) + tile_size / 2 },
                     { tile_size / 2, tile_size, tile_size / 2 },
                     1500
                 );
@@ -92,7 +92,7 @@ void bomba::actualizar() { // actualiza el tiempo, y si es cero, explota
                     delete fuegos[i][z];
 
                 fuegos[i][z] = new fuego(
-                    { GLfloat(i * tile_size) + tile_size / 2 , 0.5, GLfloat(z * tile_size) + tile_size / 2 },
+                    { GLfloat(i * tile_size) + tile_size / 2 , 0.0f, GLfloat(z * tile_size) + tile_size / 2 },
                     { tile_size / 2, tile_size, tile_size / 2 }, 
                     1500
                 );
@@ -100,7 +100,7 @@ void bomba::actualizar() { // actualiza el tiempo, y si es cero, explota
         }
 
         fuegos[x][z] = new fuego(
-            { GLfloat(x * tile_size) + tile_size / 2 , 0.5, GLfloat(z * tile_size) + tile_size / 2 },
+            { GLfloat(x * tile_size) + tile_size / 2 , 0.0f, GLfloat(z * tile_size) + tile_size / 2 },
             { tile_size / 2, tile_size, tile_size / 2 },
               1500
         ); 

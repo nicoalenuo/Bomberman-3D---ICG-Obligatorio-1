@@ -32,14 +32,6 @@ list<particula*> particulas;
 
 bomberman* jugador;
 
-int getPosicionXEnTablero(GLfloat coord_x) {
-	return int(floor(coord_x  / tile_size));
-}
-
-int getPosicionZEnTablero(GLfloat coord_z) {
-	return int(floor(coord_z  / tile_size));
-}
-
 int getIndiceTablero(GLfloat coord) {
     return int(floor(coord / tile_size));
 }

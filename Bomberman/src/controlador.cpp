@@ -141,20 +141,20 @@ Controlador* Controlador::getInstance() {
 int posBombaXTablero, posBombaZTablero;
 inline void colocarBomba() { //para evitar repetir codigo
     if (ControladorCamara::camaraMiraHacia(EJE_MENOS_X)) {
-        posBombaXTablero = getPosicionXEnTablero(jugador->getPosicion().x - tile_size);
-        posBombaZTablero = getPosicionXEnTablero(jugador->getPosicion().z);
+        posBombaXTablero = getIndiceTablero(jugador->getPosicion().x - tile_size);
+        posBombaZTablero = getIndiceTablero(jugador->getPosicion().z);
     }
     else if (ControladorCamara::camaraMiraHacia(EJE_Z)) {
-        posBombaXTablero = getPosicionXEnTablero(jugador->getPosicion().x);
-        posBombaZTablero = getPosicionXEnTablero(jugador->getPosicion().z + tile_size);
+        posBombaXTablero = getIndiceTablero(jugador->getPosicion().x);
+        posBombaZTablero = getIndiceTablero(jugador->getPosicion().z + tile_size);
     }
     else if (ControladorCamara::camaraMiraHacia(EJE_X)) {
-        posBombaXTablero = getPosicionXEnTablero(jugador->getPosicion().x + tile_size);
-        posBombaZTablero = getPosicionXEnTablero(jugador->getPosicion().z);
+        posBombaXTablero = getIndiceTablero(jugador->getPosicion().x + tile_size);
+        posBombaZTablero = getIndiceTablero(jugador->getPosicion().z);
     }
     else {
-        posBombaXTablero = getPosicionXEnTablero(jugador->getPosicion().x);
-        posBombaZTablero = getPosicionXEnTablero(jugador->getPosicion().z - tile_size);
+        posBombaXTablero = getIndiceTablero(jugador->getPosicion().x);
+        posBombaZTablero = getIndiceTablero(jugador->getPosicion().z - tile_size);
     }
 
     if (posBombaXTablero >= 0 && posBombaXTablero < largoTablero &&
@@ -192,6 +192,7 @@ void Controlador::manejarEventos() {
                         break;
                     case SDLK_v:
                          ControladorCamara::cambiarTipoCamara();
+                         break;
                     case SDLK_p:
                         toggle_pausa();
                         break;
@@ -334,19 +335,16 @@ void Controlador::actualizar() {
         }
     }
 
-    for (list<particula*>::iterator it = particulas.begin(); it != particulas.end(); ++it)
+    for (list<particula*>::iterator it = particulas.begin(); it != particulas.end(); /*se actualiza dentro del bucle */ ) {
         (*it)->actualizar();
-
-    for (list<particula*>::iterator it = particulas.begin(); it != particulas.end();){
         if ((*it)->getEliminar()) {
             delete (*it);
             it = particulas.erase(it);
         }
-        else 
+        else {
             ++it;
+        }
     }
-    
-    ControladorInterfaz::actualizarInterfaz();
 }
 
 void Controlador::dibujar() {
@@ -354,7 +352,7 @@ void Controlador::dibujar() {
     glLoadIdentity();
 
     ControladorCamara::colocarCamara();
-    ControladorLuz::colocarLuces();
+    //ControladorLuz::colocarLuces();
 
     jugador->dibujar();
 
