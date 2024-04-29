@@ -78,13 +78,13 @@ void aumentarNivel() {
     }
 }
 
-void sumarPuntaje(int puntos){
+void sumarPuntaje(int puntos) {
     puntaje += puntos;
     if (puntos > INT_MAX) {
         puntos = INT_MAX;
         finJuego = true;
     }
-
+}
 
 void disminuirTiempo(int segundos){
     tiempoJuego -= segundos;

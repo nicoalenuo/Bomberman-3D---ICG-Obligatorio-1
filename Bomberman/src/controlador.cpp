@@ -121,19 +121,20 @@ void generarTablero() {
         { 2.5 * tile_size , 0, tile_size / 2 },
         { tile_size / 2, tile_size, tile_size / 2 }
     );
-}
 
-if (bonificadores[0][0] != nullptr) {
-    delete bonificadores[0][0];
-    bonificadores[0][0] = nullptr;
-}
-if (bonificadores[0][1] != nullptr) {
-    delete bonificadores[0][1];
-    bonificadores[0][1] = nullptr;
-}
-if (bonificadores[1][0] != nullptr) {
-    delete bonificadores[1][0];
-    bonificadores[1][0] = nullptr;
+    if (bonificadores[0][0] != nullptr) {
+        delete bonificadores[0][0];
+        bonificadores[0][0] = nullptr;
+    }
+    if (bonificadores[0][1] != nullptr) {
+        delete bonificadores[0][1];
+        bonificadores[0][1] = nullptr;
+    }
+    if (bonificadores[1][0] != nullptr) {
+        delete bonificadores[1][0];
+        bonificadores[1][0] = nullptr;
+    }
+
 }
 
 Controlador::Controlador() {
@@ -355,7 +356,8 @@ void Controlador::actualizar() {
         cout << "Fin juego" << endl;
         ControladorAudio::playAudio(sonido::bonificacion);
         generarTablero();
-    } else {
+    }
+    else {
         jugador->actualizar();
 
         puerta->actualizar();
@@ -374,20 +376,21 @@ void Controlador::actualizar() {
                 if (enemigos[i][j] != nullptr)
                     enemigos[i][j]->actualizar();
 
-            if (bonificadores[i][j] != nullptr)
-                bonificadores[i][j]->actualizar();
+                if (bonificadores[i][j] != nullptr)
+                    bonificadores[i][j]->actualizar();
 
+            }
         }
-    }
 
-    for (list<particula*>::iterator it = particulas.begin(); it != particulas.end(); /*se actualiza dentro del bucle */ ) {
-        (*it)->actualizar();
-        if ((*it)->getEliminar()) {
-            delete (*it);
-            it = particulas.erase(it);
-        }
-        else {
-            ++it;
+        for (list<particula*>::iterator it = particulas.begin(); it != particulas.end(); /*se actualiza dentro del bucle */) {
+            (*it)->actualizar();
+            if ((*it)->getEliminar()) {
+                delete (*it);
+                it = particulas.erase(it);
+            }
+            else {
+                ++it;
+            }
         }
     }
 }

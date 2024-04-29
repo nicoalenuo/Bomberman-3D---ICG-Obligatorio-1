@@ -29,8 +29,8 @@ bool door::intersecta(bomberman* b) {
 }
 
 void door::actualizar() {
-    int x = getPosicionXEnTablero(pos.x, tam.x);
-    int z = getPosicionZEnTablero(pos.z, tam.z);
+    int x = getIndiceTablero(pos.x);
+    int z = getIndiceTablero(pos.z);
 
     if (estructuras[x][z] == nullptr) {
         visible = true;
@@ -42,8 +42,10 @@ void door::dibujar() {
         glPushMatrix();
         glTranslatef(pos.x, pos.y, pos.z);
 
-        if (texturas_habilitadas)
+        if (texturas_habilitadas) {
+            glEnable(GL_TEXTURE_2D);
             glBindTexture(GL_TEXTURE_2D, ControladorTexturas::getTextura(TEXTURA_PUERTA));
+        }
 
         glBegin(GL_QUADS);
         glColor3f(1.0, 1.0, 1.0);
