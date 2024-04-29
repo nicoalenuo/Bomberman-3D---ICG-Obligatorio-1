@@ -265,81 +265,81 @@ void Controlador::manejarEventos() {
                     
                 }
                 break;
-        case SDL_KEYUP:
-            switch (evento.key.keysym.sym) {
-                case SDLK_UP:
-                    moverArriba = false;
-                    break;
-                case SDLK_RIGHT:
-                    moverDerecha = false;
-                    break;
-                case SDLK_DOWN:
-                    moverAbajo = false;
-                    break;
-                case SDLK_LEFT:
-                    moverIzquierda = false;
-                    break;
-                case SDLK_F1:
-                    wireframe = !wireframe;
-                    if (wireframe)
-                        glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-                    else
-                        glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
-                    break;
-                case SDLK_F2:
-                    toggle_texturas();
-                    break;
-                case SDLK_F3:
-                    toggle_tipoLuz();
-                    if (tipoLuz)
-                        glShadeModel(GL_SMOOTH);
-                    else
-                        glShadeModel(GL_FLAT);
-                    break;
-                case SDLK_F4:
-                    //cambiar el color de luz (ambiente)
-                    ControladorLuz::cambiarColorLuzAmbiente();
-                    //Recordar hacer sombras
-                    //No esta cambiando nada
-                    break;
-                case SDLK_F5:
-                    //cambiar el color de luz (bonificador)
-                    //ControladorLuz::cambiarColorLuzBonificador();
-                    //Recordar hacer sombras
-                    //No esta cambiando nada
-                    break;
-                case SDLK_F6:
-                    //acelerar o disminuir velocidad de juego (global)
-                    break;
-                case SDLK_F7:
-                    toggle_inmortal();
-                    break;
-                case SDLK_F11:
-                    Uint32 FullscreenFlag = SDL_WINDOW_FULLSCREEN;
-                    pantallaCompleta = SDL_GetWindowFlags(window) & FullscreenFlag;
-                    SDL_SetWindowFullscreen(window, pantallaCompleta ? 0 : FullscreenFlag);
-                    break;
-            }
+            case SDL_KEYUP:
+                switch (evento.key.keysym.sym) {
+                    case SDLK_UP:
+                        moverArriba = false;
+                        break;
+                    case SDLK_RIGHT:
+                        moverDerecha = false;
+                        break;
+                    case SDLK_DOWN:
+                        moverAbajo = false;
+                        break;
+                    case SDLK_LEFT:
+                        moverIzquierda = false;
+                        break;
+                    case SDLK_F1:
+                        wireframe = !wireframe;
+                        if (wireframe)
+                            glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+                        else
+                            glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+                        break;
+                    case SDLK_F2:
+                        toggle_texturas();
+                        break;
+                    case SDLK_F3:
+                        toggle_tipoLuz();
+                        if (tipoLuz)
+                            glShadeModel(GL_SMOOTH);
+                        else
+                            glShadeModel(GL_FLAT);
+                        break;
+                    case SDLK_F4:
+                        //cambiar el color de luz (ambiente)
+                        ControladorLuz::cambiarColorLuzAmbiente();
+                        //Recordar hacer sombras
+                        //No esta cambiando nada
+                        break;
+                    case SDLK_F5:
+                        //cambiar el color de luz (bonificador)
+                        //ControladorLuz::cambiarColorLuzBonificador();
+                        //Recordar hacer sombras
+                        //No esta cambiando nada
+                        break;
+                    case SDLK_F6:
+                        //acelerar o disminuir velocidad de juego (global)
+                        break;
+                    case SDLK_F7:
+                        toggle_inmortal();
+                        break;
+                    case SDLK_F11:
+                        Uint32 FullscreenFlag = SDL_WINDOW_FULLSCREEN;
+                        pantallaCompleta = SDL_GetWindowFlags(window) & FullscreenFlag;
+                        SDL_SetWindowFullscreen(window, pantallaCompleta ? 0 : FullscreenFlag);
+                        break;
+                }
             break;
-        case SDL_MOUSEMOTION:
-            mouseX = (mouseX - evento.motion.xrel) % 360;
-            if (mouseX < 0)
-                mouseX += 360;
+            case SDL_MOUSEMOTION:
+                mouseX = (mouseX - evento.motion.xrel) % 360;
+                if (mouseX < 0)
+                    mouseX += 360;
 
-            mouseY = mouseY - evento.motion.yrel;
-            if (mouseY < 1)
-                mouseY = 1;
-            else if (mouseY > 90)
-                mouseY = 90;
-        break;
-        case SDL_MOUSEBUTTONDOWN:
-            switch (evento.button.button) {
-                case SDL_BUTTON_LEFT:
-                    colocarBomba();
-                break;
-            }
+                mouseY = mouseY - evento.motion.yrel;
+                if (mouseY < 1)
+                    mouseY = 1;
+                else if (mouseY > 90)
+                    mouseY = 90;
             break;
-            } //la indentacion es mi pasion
+            case SDL_MOUSEBUTTONDOWN:
+                switch (evento.button.button) {
+                    case SDL_BUTTON_LEFT:
+                        colocarBomba();
+                    break;
+                }
+            break;
+            }
         }
     } else {
         moverArriba = false; moverAbajo = false; moverDerecha = false; moverIzquierda = false;
@@ -351,6 +351,7 @@ void Controlador::manejarEventos() {
     }
 }
 
+list<particula*>::iterator it;
 void Controlador::actualizar() {
     if (puerta->getAbierta() && puerta->intersecta(jugador)) {
         cout << "Fin juego" << endl;
@@ -425,7 +426,7 @@ void Controlador::dibujar() {
         }
     }
 
-    for (auto it = particulas.begin(); it != particulas.end(); ++it)
+    for (it = particulas.begin(); it != particulas.end(); ++it)
         (*it)->dibujar();
 
     //Suelo

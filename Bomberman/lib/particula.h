@@ -22,9 +22,9 @@ private:
 	tipo_particula tipo;
 	GLuint textura; //si no tiene, es igual a 0
 	GLfloat tiempoParticula;
-	bool eliminar; //el controlador eliminara en cada frame los frames con esta bandera en true
+	bool eliminar; //el controlador eliminara en cada frame las particulas con esta bandera en true
 
-	//Caso particula de structura destructible
+	//Caso particula de estructura destructible
 	int tiempoEliminacion; //una vez alcancen la posicion 0, esperaran un poco antes de eliminarse
 	
 	//caso particula de fuego

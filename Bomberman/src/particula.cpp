@@ -13,11 +13,12 @@ particula::particula(vector_3 pos, vector_3 tam, vector_3 ac, vector_3 vel, GLui
     this->textura = textura;
     this->tipo = tipo;
 
+
     if (tipo == PARTICULA_FUEGO) {
         double random = disColorFuego(genColorFuego);
         if (random < 0.85) {//rojo
-            color[0] = 0.8f;
-            color[1] = 0.0f;
+            color[0] = 0.9f;
+            color[1] = 0.1f;
             color[2] = 0.0f;
         }
         else { //amarillo
@@ -51,7 +52,7 @@ void particula::actualizar() {
         }
         break;
     case PARTICULA_FUEGO:
-        if (pos.y < 2 * tile_size) {
+        if ((pos.y < 2 * tile_size && color[1] == 0.1f) || (pos.y < 1)) {
             tiempoSegundos = tiempoParticula / 1000.0f;
 
             pos.x = pos.x + velocidad.x;
