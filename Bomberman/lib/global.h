@@ -11,6 +11,7 @@ using namespace std;
 class objeto;
 class particula;
 class bomberman;
+class door;
 
 extern int velocidad_juego;
 
@@ -45,6 +46,7 @@ extern list<particula*> particulas;
 
 extern bomberman* jugador;
 
+extern door* puerta;
 extern int getIndiceTablero(GLfloat coord);
 
 extern bool fin;

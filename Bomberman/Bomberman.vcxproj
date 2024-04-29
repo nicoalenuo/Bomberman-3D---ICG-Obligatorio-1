@@ -105,8 +105,9 @@
     <ClCompile Include="src\particula.cpp" />
     <ClCompile Include="src\personaje.cpp" />
     <ClCompile Include="src\cargadorAudio.cpp" />
-    <ClCompile Include="src\bufferAudio.cpp" />
-    <ClCompile Include="src\recursoAudio.cpp" />
+	<ClCompile Include="src\bufferAudio.cpp" />
+	<ClCompile Include="src\recursoAudio.cpp" />
+	<ClCompile Include="src\door.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="constantes\constantes.h" />
@@ -129,8 +130,9 @@
     <ClInclude Include="lib\particula.h" />
     <ClInclude Include="lib\personaje.h" />
     <ClInclude Include="lib\cargadorAudio.h" />
-    <ClInclude Include="lib\bufferAudio.h" />
-    <ClInclude Include="lib\recursoAudio.h" />
+	<ClInclude Include="lib\bufferAudio.h" />
+	<ClInclude Include="lib\recursoAudio.h" />
+	<ClInclude Include="lib\door.h" />
   </ItemGroup>
   <ItemGroup>
     <Font Include="texturas\OpenSans-Regular.ttf" />

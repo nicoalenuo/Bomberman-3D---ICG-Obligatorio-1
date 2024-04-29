@@ -32,6 +32,8 @@ list<particula*> particulas;
 
 bomberman* jugador;
 
+door* puerta;
+
 int getIndiceTablero(GLfloat coord) {
     return int(floor(coord / tile_size));
 }
@@ -82,7 +84,7 @@ void sumarPuntaje(int puntos){
         puntos = INT_MAX;
         finJuego = true;
     }
-}
+
 
 void disminuirTiempo(int segundos){
     tiempoJuego -= segundos;
