@@ -39,5 +39,9 @@ bool personaje::contactoConFuego() {
     objeto* obj_3 = fuegos[getIndiceTablero(pos.x + tam.x)][getIndiceTablero(pos.z - tam.z)];
     objeto* obj_4 = fuegos[getIndiceTablero(pos.x + tam.x)][getIndiceTablero(pos.z + tam.z)];
 
-    return (obj_1 != nullptr || obj_2 != nullptr || obj_3 != nullptr || obj_4 != nullptr);
+    return 
+        obj_1 != nullptr || 
+        obj_2 != nullptr || 
+        obj_3 != nullptr || 
+        obj_4 != nullptr;
 }

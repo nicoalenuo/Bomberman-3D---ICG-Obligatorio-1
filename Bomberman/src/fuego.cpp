@@ -18,19 +18,17 @@ void fuego::actualizar() {
 		dynamic_cast<bomba*>(bombas[x][z])->setTiempoBomba(0);
 
 	if (bonificadores[x][z] != nullptr) {
-		bonificadores[x][z] = nullptr;
 		delete bonificadores[x][z];
+		bonificadores[x][z] = nullptr;
 	}
 
 	for (int j = 0; j < 40; j++) {
 		particulas.push_back(
-			new particula(
+			new particula_fuego(
 				{ GLfloat(pos.x + disParticulaFuego(genParticulaFuego)), 0.0f, GLfloat(pos.z + disParticulaFuego(genParticulaFuego)) },
 				{ GLfloat(0.04), GLfloat(0.1), GLfloat(0.04) },
 				{ 0.0f, GLfloat(10.0f + disParticulaFuego(genParticulaFuego)), 0.0f },
-				{ GLfloat(disParticulaFuegoVelocidad(genParticulaFuego)), 0, GLfloat(disParticulaFuegoVelocidad(genParticulaFuego)) },
-				0, //sin textura
-				PARTICULA_FUEGO
+				{ GLfloat(disParticulaFuegoVelocidad(genParticulaFuego)), 0, GLfloat(disParticulaFuegoVelocidad(genParticulaFuego)) }
 			)
 		);
 	}

@@ -35,9 +35,13 @@ private:
 	SDL_Window* window;
 	SDL_GLContext context;
 	SDL_Event evento;
+
+	SDL_DisplayMode pantalla;
 	
 public:
 	static Controlador* getInstance();
+
+	void dibujarBordeTablero();
 
 	void manejarEventos();
 	void actualizar();

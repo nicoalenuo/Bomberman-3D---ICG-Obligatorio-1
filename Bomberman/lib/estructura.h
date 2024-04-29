@@ -6,7 +6,8 @@
 #include <random>
 
 #include "objeto.h"
-#include "particula.h"
+#include "particula_estructura.h"
+#include "global.h"
 
 class estructura : public objeto {
 private:

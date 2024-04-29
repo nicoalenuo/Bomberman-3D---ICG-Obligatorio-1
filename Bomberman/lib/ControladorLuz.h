@@ -5,7 +5,11 @@
 
 #include "SDL_opengl.h"
 #include "global.h"
+#include "bomberman.h"
 #include "../constantes/constantes.h"
+
+enum TIPO_LUZ_AMBIENTE { MANIANA, TARDE, NOCHE, SIN_LUZ_AMBIENTE };
+enum TIPO_LUZ_BONIFICADOR {AMARILLO, CELESTE ,VIOLETA, SIN_LUZ_BONIFICADOR };
 
 class ControladorLuz {
 	private:
@@ -16,8 +20,8 @@ class ControladorLuz {
 		static GLfloat light_offset_x;
 		static GLfloat light_offset_y;
 		static GLfloat light_offset_z;
-		static int colorLuzAmbiente;
-		static int colorLuzBonificador;
+		static TIPO_LUZ_AMBIENTE colorLuzAmbiente;
+		static TIPO_LUZ_BONIFICADOR colorLuzBonificador;
 	public:
 		static void colocarLuces();
 		static void cambiarColorLuzAmbiente();

@@ -8,17 +8,23 @@ random_device rd;
 mt19937 gen(rd());
 uniform_real_distribution<> dis(-0.3, 0.3);
 estructura::~estructura() {
-    for (int j = 0; j < 150; j++) {
-        particulas.push_back(
-            new particula(
-                { pos.x, pos.y + (tile_size / 2), pos.z },
-                { GLfloat(0.07), GLfloat(0.07), GLfloat(0.07) },
-                { 0, -25, 0 },
-                { GLfloat(dis(gen)), 10, GLfloat(dis(gen)) },
-                ControladorTexturas::getTextura(ESTRUCTURA_DESTRUCTIBLE),
-                PARTICULA_ESTRUCTURA_DESTRUCTIBLE
-            )
-        );
+    int posX = getIndiceTablero(pos.x);
+    int posZ = getIndiceTablero(pos.z);
+    if (destructible) {
+        estructuras[posX][posZ] = nullptr;
+
+        for (int j = 0; j < 150; j++) {
+            particulas.push_back(
+                new particula_estructura(
+                    { pos.x, pos.y + (tile_size / 2), pos.z },
+                    { GLfloat(0.07), GLfloat(0.07), GLfloat(0.07) },
+                    { 0, -25, 0 },
+                    { GLfloat(dis(gen)), 10, GLfloat(dis(gen)) },
+                    ControladorTexturas::getTextura(ESTRUCTURA_DESTRUCTIBLE)
+                )
+            );
+        }
+
     }
 }
 

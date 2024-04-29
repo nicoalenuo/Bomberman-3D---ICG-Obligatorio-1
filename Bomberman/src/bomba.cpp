@@ -18,8 +18,8 @@ void bomba::actualizar() { // actualiza el tiempo, y si es cero, explota
                 alcanza = true;
                 estructura* est = dynamic_cast<estructura*>(estructuras[x][i]);
                 if (est->getDestructible()) {
-                    delete est;
                     estructuras[x][i] = nullptr;
+                    delete est;
                 }
             }
             else {
@@ -40,8 +40,8 @@ void bomba::actualizar() { // actualiza el tiempo, y si es cero, explota
                 alcanza = true;
                 estructura* est = dynamic_cast<estructura*>(estructuras[x][i]);
                 if (est->getDestructible()) {
-                    delete est;
                     estructuras[x][i] = nullptr;
+                    delete est;
                 }
             }
             else {
@@ -62,8 +62,9 @@ void bomba::actualizar() { // actualiza el tiempo, y si es cero, explota
                 alcanza = true;
                 estructura* est = dynamic_cast<estructura*>(estructuras[i][z]);
                 if (est->getDestructible()) {
-                    delete est;
+
                     estructuras[i][z] = nullptr;
+                    delete est;
                 }
             }
             else {
@@ -84,8 +85,8 @@ void bomba::actualizar() { // actualiza el tiempo, y si es cero, explota
                 alcanza = true;
                 estructura* est = dynamic_cast<estructura*>(estructuras[i][z]);
                 if (est->getDestructible()) {
-                    delete est;
                     estructuras[i][z] = nullptr;
+                    delete est;
                 }
             } else {
                 if (fuegos[i][z] != nullptr)

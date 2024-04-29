@@ -4,6 +4,8 @@ TTF_Font* ControladorInterfaz::interfaz = nullptr;
 hud* ControladorInterfaz::hudPuntaje = nullptr;
 hud* ControladorInterfaz::hudTiempo = nullptr;
 hud* ControladorInterfaz::hudGameOver = nullptr;
+hud* ControladorInterfaz::hudCantBombas = nullptr;
+list<hudPoder> ControladorInterfaz::poderes = list<hudPoder>();
 
 void ControladorInterfaz::setPuntaje(int puntos) {
 	setMensajeEnComponente("Puntaje: " + to_string(puntaje), interfaz, hudPuntaje);
@@ -15,6 +17,28 @@ void ControladorInterfaz::setTiempo(int tiemp) {
 
 void ControladorInterfaz::setFinJuego(bool finJuego) {
 	setMensajeEnComponente(finJuego ? "GAME OVER!" : " ", interfaz, hudGameOver);
+}
+
+void ControladorInterfaz::setCantBombas(int cant) {
+	setMensajeEnComponente(to_string(cant), interfaz, hudCantBombas);
+}
+
+void ControladorInterfaz::setPoderes(list<poder> powerUp){
+	hudPoder hudPower{};
+	bool encontrado;
+	string mensaje = " ";
+	for (auto i = poderes.begin(); i != poderes.end(); ++i) {
+		hudPower = (*i);
+		encontrado = false;
+		for (auto it = powerUp.begin(); !encontrado && it != powerUp.end(); ++it) {
+			if (static_cast<int>((*it).powerUp) == static_cast<int>(hudPower.poder)) {
+				encontrado = true;
+				mensaje = to_string((*it).cantidad);
+				setMensajeEnComponente(mensaje, interfaz, hudPower.hud);
+				poderes.push_back(hudPower);
+			}
+		}
+	}
 }
 
 void ControladorInterfaz::setMensajeEnComponente(string mensaje, TTF_Font* fuente, hud* componente) {
@@ -51,13 +75,6 @@ void ControladorInterfaz::setMensajeEnComponente(string mensaje, TTF_Font* fuent
 }
 
 void ControladorInterfaz::cargarInterfaz() {
-
-	if (TTF_Init() < 0) {
-		cerr << "Error al inicializar TTF: " << SDL_GetError() << endl;
-		SDL_Quit();
-		exit(1);
-	}
-
 	interfaz = TTF_OpenFont("texturas/OpenSans-Regular.ttf", 24);
 	if (interfaz == nullptr) {
 		cerr << "Error en TTF_OpenFont: " << SDL_GetError() << endl;
@@ -67,18 +84,33 @@ void ControladorInterfaz::cargarInterfaz() {
 	ControladorInterfaz::hudPuntaje = new hud();
 	ControladorInterfaz::hudTiempo = new hud();
 	ControladorInterfaz::hudGameOver = new hud();
+	ControladorInterfaz::hudCantBombas = new hud();
+
+	for (int i = 0; i < static_cast<int>(tipo_poder::BONIFICADOR_RANDOM); i++) {
+		hudPoder hudPoder{};
+		hudPoder.hud = new hud();
+		hudPoder.hud->colorMensaje = { 255, 255, 255 };
+		hudPoder.hud->posicion = position::bottom_right;
+		hudPoder.poder = static_cast<tipo_poder>(i);
+		poderes.push_back(hudPoder);
+	}
 
 	ControladorInterfaz::hudPuntaje->colorMensaje = { 255, 255, 255 };
 	ControladorInterfaz::hudTiempo->colorMensaje = { 255, 255, 255 };
 	ControladorInterfaz::hudGameOver->colorMensaje = { 255, 255, 255 };
+	ControladorInterfaz::hudCantBombas->colorMensaje = { 255, 255, 255 };
+
 
 	ControladorInterfaz::hudPuntaje->posicion = position::top_right;
 	ControladorInterfaz::hudTiempo->posicion = position::top_left;
 	ControladorInterfaz::hudGameOver->posicion = position::top_center;
+	ControladorInterfaz::hudCantBombas->posicion = position::bottom_left;
 
 	setPuntaje(puntaje);
 	setTiempo(tiempoJuego);
 	setFinJuego(fin);
+	setCantBombas(jugador->getMaxBomba());
+	//setPoderes(jugador->getPoderes()); //FALTA: Problema en setPoderes, algo pasa que no carga
 }
 
 
@@ -90,8 +122,11 @@ hud* ControladorInterfaz::getHud(int numero) {
 	case 1:
 		return hudTiempo;
 		break;
-	default:
+	case 2:
 		return hudGameOver;
+		break;
+	case 3:
+		return hudCantBombas;
 		break;
 	}
 }
@@ -104,52 +139,133 @@ void ControladorInterfaz::setHud(int indice, hud* hud){
 	case 1:
 		hudTiempo = hud;
 		break;
-	default:
+	case 2:
 		hudGameOver = hud;
+		break;
+	case 3:
+		hudCantBombas = hud;
 		break;
 	}
 }
 
-void ControladorInterfaz::dibujarCompomenteHUD(hud* hud) {
-	glEnable(GL_TEXTURE_2D);
-	glBindTexture(GL_TEXTURE_2D, hud->idTextura);
-	glColor3f(hud->colorMensaje.r, hud->colorMensaje.g, hud->colorMensaje.b);
+hud* ControladorInterfaz::getHudPoderes(int indice) {
+	int aux = 0;
+	hudPoder hudPoder{};
+	for (auto it = poderes.begin(); aux <= indice && it != poderes.end(); ++it) {
+		hudPoder = (*it);
+		aux++;
+	}
+	//asumimos que it no puede llegar al final?
+	return hudPoder.hud;
+}
+
+void ControladorInterfaz::setHudPoderes(int indice, hud* hud) {
+	int aux = 0;
+	hudPoder hudPoder{};
+	for (auto it = poderes.begin(); aux <= indice && it != poderes.end(); ++it) {
+		hudPoder = (*it);
+		aux++;
+	}
+	delete hudPoder.hud;
+	hudPoder.hud = hud;
+}
+
+void ControladorInterfaz::dibujarComponenteHUDPoderes() {
+	hud* hud{};
+	GLfloat desplazamiento = 10.f;
+	int cant = 1;
+	for (auto it = poderes.begin(); it != poderes.end(); ++it) {
+		hud = it->hud;
+		glEnable(GL_TEXTURE_2D);
+		glBindTexture(GL_TEXTURE_2D, it->hud->idTextura);
+		glColor3f(hud->colorMensaje.r, hud->colorMensaje.g, hud->colorMensaje.b);
+		
+		glBegin(GL_QUADS); {
+			glTexCoord2d(0.f, 1.f); glVertex3f(largoPantalla - 30.f - hud->mensajeSurface->w, altoPantalla - 3.f - hud->mensajeSurface->h, 0.f);
+			glTexCoord2d(1.f, 1.f); glVertex3f(largoPantalla - 30.f, altoPantalla - 3.f - hud->mensajeSurface->h, 0.f);
+			glTexCoord2d(1.f, 0.f); glVertex3f(largoPantalla - 30.f, altoPantalla -  3.f, 0.f);
+			glTexCoord2d(0.f, 0.f); glVertex3f(largoPantalla - 30.f - hud->mensajeSurface->w, altoPantalla - 3.f, 0.f);
+		} glEnd();
+		//dibujarTextura(GLUint text) //logo correspondiente a cada poder
+		//realmente no es una función, va acá de una
+		glDisable(GL_TEXTURE_2D);
+		cant++;
+	}
+}
+
+void ControladorInterfaz::dibujarComponenteHUD(hud* hud) {
 	switch (hud->posicion) {
 		case position::top_left:
+			glEnable(GL_TEXTURE_2D);
+			glBindTexture(GL_TEXTURE_2D, hud->idTextura);
+			glColor3f(hud->colorMensaje.r, hud->colorMensaje.g, hud->colorMensaje.b);
 			glBegin(GL_QUADS); {
 				glTexCoord2d(0.f, 1.f); glVertex3f(30.f, 3.f + hud->mensajeSurface->h, 0.f);
 				glTexCoord2d(1.f, 1.f); glVertex3f(30.f + hud->mensajeSurface->w, 3.f + hud->mensajeSurface->h, 0.f);
 				glTexCoord2d(1.f, 0.f); glVertex3f(30.f + hud->mensajeSurface->w, 3.f, 0.f);
 				glTexCoord2d(0.f, 0.f); glVertex3f(30.f, 3.f, 0.f);
 			} glEnd();
-		break;
+			glDisable(GL_TEXTURE_2D);
+			break;
 		case position::top_right:
+			glEnable(GL_TEXTURE_2D);
+			glBindTexture(GL_TEXTURE_2D, hud->idTextura);
+			glColor3f(hud->colorMensaje.r, hud->colorMensaje.g, hud->colorMensaje.b);
 			glBegin(GL_QUADS); {
-				glTexCoord2d(0.f, 1.f); glVertex3f(WINDOW_WIDTH - 30.f - hud->mensajeSurface->w, 3.f + hud->mensajeSurface->h, 0.f);
-				glTexCoord2d(1.f, 1.f); glVertex3f(WINDOW_WIDTH - 30.f, 3.f + hud->mensajeSurface->h, 0.f);
-				glTexCoord2d(1.f, 0.f); glVertex3f(WINDOW_WIDTH - 30.f, 3.f, 0.f);
-				glTexCoord2d(0.f, 0.f); glVertex3f(WINDOW_WIDTH - 30.f - hud->mensajeSurface->w, 3.f, 0.f);
+				glTexCoord2d(0.f, 1.f); glVertex3f(largoPantalla - 30.f - hud->mensajeSurface->w, 3.f + hud->mensajeSurface->h, 0.f);
+				glTexCoord2d(1.f, 1.f); glVertex3f(largoPantalla - 30.f, 3.f + hud->mensajeSurface->h, 0.f);
+				glTexCoord2d(1.f, 0.f); glVertex3f(largoPantalla - 30.f, 3.f, 0.f);
+				glTexCoord2d(0.f, 0.f); glVertex3f(largoPantalla - 30.f - hud->mensajeSurface->w, 3.f, 0.f);
 			} glEnd();
-		break;
+			glDisable(GL_TEXTURE_2D);
+			break;
 		case position::top_center:
+			glEnable(GL_TEXTURE_2D);
+			glBindTexture(GL_TEXTURE_2D, hud->idTextura);
+			glColor3f(hud->colorMensaje.r, hud->colorMensaje.g, hud->colorMensaje.b);
 			glBegin(GL_QUADS); {
-				glTexCoord2d(0.f, 1.f); glVertex3f(WINDOW_WIDTH / 2.f - hud->mensajeSurface->w / 2.f, 3.f + hud->mensajeSurface->h, 0.f);
-				glTexCoord2d(1.f, 1.f); glVertex3f(WINDOW_WIDTH / 2.f + hud->mensajeSurface->w / 2.f, 3.f + hud->mensajeSurface->h, 0.f);
-				glTexCoord2d(1.f, 0.f); glVertex3f(WINDOW_WIDTH / 2.f + hud->mensajeSurface->w / 2.f, 3.f, 0.f);
-				glTexCoord2d(0.f, 0.f); glVertex3f(WINDOW_WIDTH / 2.f - hud->mensajeSurface->w / 2.f, 3.f, 0.f);
+				glTexCoord2d(0.f, 1.f); glVertex3f(largoPantalla / 2.f - hud->mensajeSurface->w / 2.f, 3.f + hud->mensajeSurface->h, 0.f);
+				glTexCoord2d(1.f, 1.f); glVertex3f(largoPantalla / 2.f + hud->mensajeSurface->w / 2.f, 3.f + hud->mensajeSurface->h, 0.f);
+				glTexCoord2d(1.f, 0.f); glVertex3f(largoPantalla / 2.f + hud->mensajeSurface->w / 2.f, 3.f, 0.f);
+				glTexCoord2d(0.f, 0.f); glVertex3f(largoPantalla / 2.f - hud->mensajeSurface->w / 2.f, 3.f, 0.f);
 			} glEnd();
-		break;
+			glDisable(GL_TEXTURE_2D);
+			break;
+		case position::bottom_left: //cant de bombas disponibles
+			glEnable(GL_TEXTURE_2D);
+			glBindTexture(GL_TEXTURE_2D, hud->idTextura);
+			glColor3f(hud->colorMensaje.r, hud->colorMensaje.g, hud->colorMensaje.b);
+			glBegin(GL_QUADS); {
+				glTexCoord2d(0.f, 0.f); glVertex3f(30.f, altoPantalla - 3.f - hud->mensajeSurface->h, 0.f);
+				glTexCoord2d(0.f, 1.f); glVertex3f(30.f, altoPantalla - 3.f, 0.f);
+				glTexCoord2d(1.f, 1.f); glVertex3f(30.f + hud->mensajeSurface->w, altoPantalla - 3.f, 0.f); 
+				glTexCoord2d(1.f, 0.f); glVertex3f(30.f + hud->mensajeSurface->w, altoPantalla - 3.f - hud->mensajeSurface->h, 0.f);
+			} glEnd();
+			glDisable(GL_TEXTURE_2D);
+
+			//dibujar el ícono de aumentar cantidad de bombas (al inicio es 1)
+			glEnable(GL_TEXTURE_2D);
+			glBindTexture(GL_TEXTURE_2D, ControladorTexturas::getTextura(TEXTURA_AUMENTAR_CANTIDAD_BOMBA));
+			glColor3f(1.0f, 1.0f, 1.0f);
+			glBegin(GL_QUADS); {
+				glTexCoord2d(0.f, 0.f); glVertex3f(30.f + hud->mensajeSurface->w, altoPantalla - 3.f, 0.f);
+				glTexCoord2d(0.f, 1.f); glVertex3f(30.f + hud->mensajeSurface->w, altoPantalla - 3.f - hud->mensajeSurface->h, 0.f);
+				glTexCoord2d(1.f, 1.f); glVertex3f(30.f + hud->mensajeSurface->w + hud->mensajeSurface->h, altoPantalla - 3.f - hud->mensajeSurface->h, 0.f);
+				glTexCoord2d(1.f, 0.f); glVertex3f(30.f + hud->mensajeSurface->w + hud->mensajeSurface->h, altoPantalla - 3.f, 0.f);
+			}glEnd();
+			glDisable(GL_TEXTURE_2D);
+			break;
 	}
-	glDisable(GL_TEXTURE_2D);
 }
 
 void ControladorInterfaz::dibujarHUD() {
 	setPuntaje(puntaje);
 	setTiempo(tiempoJuego);
 	setFinJuego(finJuego);
+	setCantBombas(jugador->getMaxBomba() - jugador->getCantBomba());
 
 	glMatrixMode(GL_PROJECTION); glPushMatrix(); glLoadIdentity();
-	glOrtho(0, WINDOW_WIDTH, WINDOW_HEIGHT, 0, -1.0, 1.0);
+	glOrtho(0, largoPantalla, altoPantalla, 0, -1.0, 1.0);
 
 	glMatrixMode(GL_MODELVIEW); glPushMatrix(); glLoadIdentity();
 
@@ -157,39 +273,18 @@ void ControladorInterfaz::dibujarHUD() {
 
 	// TOP
 	int height = max(hudPuntaje->height, hudTiempo->height);
-	dibujarCompomenteHUD(hudTiempo);
-	dibujarCompomenteHUD(hudPuntaje);
-	dibujarCompomenteHUD(hudGameOver);
-
-	// El Resto
-	// Draw the rest of the overlay
-	/*
-	glBegin(GL_QUADS); {
-		glColor3f(0.f, 0.f, 0.f);
-		glVertex3f(0.f, height + 6.f, 0.f);
-		glVertex3f(WINDOW_WIDTH, height + 6.f, 0.f);
-		glVertex3f(WINDOW_WIDTH, 0.f, 0.f);
-		glVertex3f(0.f, 0.f, 0.f);
-	} glEnd();
-	*/
+	dibujarComponenteHUD(hudTiempo);
+	dibujarComponenteHUD(hudPuntaje);
+	if (finJuego) {
+		dibujarComponenteHUD(hudGameOver);
+	}
 
 	// BOTTOM
 
-	// dibujar los poderes
-	glEnable(GL_TEXTURE_2D);
-	//glBindTexture(GL_TEXTURE_2D, ...);
-	glBegin(GL_QUADS); {
-		glColor3f(1.f,1.f,1.f);
-		//glTexCoord2d(0.f, 1.f); 
-		glVertex3f(0.f, WINDOW_HEIGHT - 62.f, 1.f);
-		//glTexCoord2d(1.f, 1.f);
-		glVertex3f(WINDOW_WIDTH, WINDOW_HEIGHT - 62.f, 1.f);
-		//glTexCoord2d(1.f, 0.f);
-		glVertex3f(WINDOW_WIDTH, WINDOW_HEIGHT, 1.f);
-		//glTexCoord2d(0.f, 0.f);
-		glVertex3f(0.f, WINDOW_HEIGHT, 1.f);
-	} glEnd();
-	glDisable(GL_TEXTURE_2D);
+	dibujarComponenteHUD(hudCantBombas); //BOTTOM LEFT
+
+	//dibujarComponenteHUDPoderes(); //BOTTOM RIGHT
+
 	glPopMatrix();
 
 	glMatrixMode(GL_PROJECTION); glPopMatrix();

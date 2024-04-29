@@ -59,13 +59,17 @@ void generarTablero() {
                         { tile_size / 2, tile_size, tile_size / 2 },
                         true
                     ); //destructible
-                }
-                else if (random_num <= generadorBonificador + generadorTerreno) {
-                    bonificadores[i][j] = new bonificador(
-                        { (GLfloat)i * tile_size + tile_size / 2, tile_size / 2, (GLfloat)j * tile_size + tile_size / 2 },
-                        { 0.1f, 0.7f, 0.1f },
-                        BONIFICADOR_RANDOM
-                    );
+
+                    random_num = dis(gen);
+                    if (random_num <= generadorBonificador) {
+                        cout << "bonificador en: " << i << " " << j << endl;
+                        bonificadores[i][j] = new bonificador(
+                            { (GLfloat)i * tile_size + tile_size / 2, 4* tile_size / 2, (GLfloat)j * tile_size + tile_size / 2 },
+                            { 0.1f, 0.7f, 0.1f },
+                            BONIFICADOR_RANDOM
+                        );
+                    }
+
                 }
             }
         }
@@ -118,8 +122,8 @@ void generarTablero() {
     posicionesValidas.clear();*/
     //Fin Estructura posicionar bomba
     puerta = new door(
-        { 2.5 * tile_size , 0, tile_size / 2 },
-        { tile_size / 2, tile_size, tile_size / 2 }
+        { GLfloat(2.5 * tile_size), 0, GLfloat(tile_size / 2) },
+        { GLfloat(tile_size / 2), tile_size, GLfloat(tile_size / 2) }
     );
 
     if (bonificadores[0][0] != nullptr) {
@@ -138,7 +142,6 @@ void generarTablero() {
 }
 
 Controlador::Controlador() {
-
     generarTablero();
 
     if (SDL_Init(SDL_INIT_VIDEO) < 0) {
@@ -146,23 +149,37 @@ Controlador::Controlador() {
         exit(1);
     }
 
-    window = SDL_CreateWindow("Bomberman 3D",
+    window = SDL_CreateWindow(
+        "Bomberman 3D",
         SDL_WINDOWPOS_CENTERED,
         SDL_WINDOWPOS_CENTERED,
         WINDOW_WIDTH, WINDOW_HEIGHT, 
         SDL_WINDOW_OPENGL | SDL_WINDOW_SHOWN
     );
+
     context = SDL_GL_CreateContext(window);
+    if (context == NULL) {
+        cerr << "[GL Context Error]: " << SDL_GetError() << endl;
+        SDL_Quit();
+        exit(1);
+    }
+
+	if (TTF_Init() < 0) {
+		cerr << "[SDL TTF Error]: " << SDL_GetError() << endl;
+		SDL_Quit();
+		exit(1);
+	}
 
     glMatrixMode(GL_PROJECTION);
 
     glClearColor(0.52f, 0.80f, 0.92f, 1.0f); //Celeste
 
-    gluPerspective(45, GLfloat(WINDOW_WIDTH) / GLfloat(WINDOW_HEIGHT), 1, 200);
+    gluPerspective(45, WINDOW_RATIO, 1, 200);
     glEnable(GL_DEPTH_TEST);
     glMatrixMode(GL_MODELVIEW);
 
     SDL_SetRelativeMouseMode(SDL_TRUE);
+    SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
 
     ControladorTexturas::cargarTexturas();
     ControladorObjetos::cargarObjetos();
@@ -179,37 +196,63 @@ Controlador* Controlador::getInstance() {
 
 int posBombaXTablero, posBombaZTablero;
 inline void colocarBomba() { //para evitar repetir codigo
-    if (ControladorCamara::camaraMiraHacia(EJE_MENOS_X)) {
-        posBombaXTablero = getIndiceTablero(jugador->getPosicion().x - tile_size);
-        posBombaZTablero = getIndiceTablero(jugador->getPosicion().z);
-    }
-    else if (ControladorCamara::camaraMiraHacia(EJE_Z)) {
-        posBombaXTablero = getIndiceTablero(jugador->getPosicion().x);
-        posBombaZTablero = getIndiceTablero(jugador->getPosicion().z + tile_size);
-    }
-    else if (ControladorCamara::camaraMiraHacia(EJE_X)) {
-        posBombaXTablero = getIndiceTablero(jugador->getPosicion().x + tile_size);
-        posBombaZTablero = getIndiceTablero(jugador->getPosicion().z);
-    }
-    else {
-        posBombaXTablero = getIndiceTablero(jugador->getPosicion().x);
-        posBombaZTablero = getIndiceTablero(jugador->getPosicion().z - tile_size);
-    }
+    if (jugador->getMaxBomba() > jugador->getCantBomba()) {
+        if (ControladorCamara::camaraMiraHacia(EJE_MENOS_X)) {
+            posBombaXTablero = getIndiceTablero(jugador->getPosicion().x - tile_size);
+            posBombaZTablero = getIndiceTablero(jugador->getPosicion().z);
+        }
+        else if (ControladorCamara::camaraMiraHacia(EJE_Z)) {
+            posBombaXTablero = getIndiceTablero(jugador->getPosicion().x);
+            posBombaZTablero = getIndiceTablero(jugador->getPosicion().z + tile_size);
+        }
+        else if (ControladorCamara::camaraMiraHacia(EJE_X)) {
+            posBombaXTablero = getIndiceTablero(jugador->getPosicion().x + tile_size);
+            posBombaZTablero = getIndiceTablero(jugador->getPosicion().z);
+        }
+        else {
+            posBombaXTablero = getIndiceTablero(jugador->getPosicion().x);
+            posBombaZTablero = getIndiceTablero(jugador->getPosicion().z - tile_size);
+        }
 
-    if (posBombaXTablero >= 0 && posBombaXTablero < largoTablero &&
-        posBombaZTablero >= 0 && posBombaZTablero < anchoTablero &&
-        bombas[posBombaXTablero][posBombaZTablero] == nullptr &&
-        estructuras[posBombaXTablero][posBombaZTablero] == nullptr) {
+        if (posBombaXTablero >= 0 && posBombaXTablero < largoTablero &&
+            posBombaZTablero >= 0 && posBombaZTablero < anchoTablero &&
+            bombas[posBombaXTablero][posBombaZTablero] == nullptr &&
+            estructuras[posBombaXTablero][posBombaZTablero] == nullptr)
+        {
+            jugador->aumentarCantBomba();
 
-        objeto* bomba_obj = new bomba(
-            { posBombaXTablero * tile_size + tile_size / 2, 0, posBombaZTablero * tile_size + tile_size / 2 },
-            { tile_size / 4, tile_size / 2, tile_size / 4 },
-            2000, //2 segundos
-            2
-        );
-        bombas[posBombaXTablero][posBombaZTablero] = bomba_obj;
+            objeto* bomba_obj = new bomba(
+                { posBombaXTablero * tile_size + tile_size / 2, 0, posBombaZTablero * tile_size + tile_size / 2 },
+                { tile_size / 4, tile_size / 2, tile_size / 4 },
+                2000, //2 segundos
+                2
+            );
+            bombas[posBombaXTablero][posBombaZTablero] = bomba_obj;
 
-        ControladorAudio::playAudio(sonido::explosion);
+            if (bonificadores[posBombaXTablero][posBombaZTablero] != nullptr) {
+                delete bonificadores[posBombaXTablero][posBombaZTablero];
+                bonificadores[posBombaXTablero][posBombaZTablero] = nullptr;
+            }
+
+            ControladorAudio::playAudio(sonido::explosion); // hay que separar el sonido de la bomba en dos, ya que cuando una bomba explota la otra, no suena a tiempo
+        }
+    }
+}
+
+void Controlador::dibujarBordeTablero() {
+    for (int i = -1; i <= largoTablero; i++) { // x toma valor -1 y largoTablero en los bordes
+        for(int j = -1 ; j<=anchoTablero; j++){ // z toma valor -1 y anchoTablero en los bordes
+            for (int k = -1; k < 1; k++) { // para y toma valor -1 y 0
+                if (i<0 || i>=largoTablero || j<0 || j>=anchoTablero) {
+                    estructura* est = new estructura(
+                        { (GLfloat)i * tile_size + tile_size / 2,(GLfloat)k * tile_size, (GLfloat)j * tile_size + tile_size / 2 },
+                        { tile_size / 2, tile_size, tile_size / 2 },
+                        false
+                    );
+                    est->dibujar();
+                }
+            }
+        }
     }
 }
 
@@ -314,10 +357,15 @@ void Controlador::manejarEventos() {
                     case SDLK_F7:
                         toggle_inmortal();
                         break;
+                    case SDLK_F8:
+                        pausarTiempo();
+                        break;
                     case SDLK_F11:
-                        Uint32 FullscreenFlag = SDL_WINDOW_FULLSCREEN;
-                        pantallaCompleta = SDL_GetWindowFlags(window) & FullscreenFlag;
-                        SDL_SetWindowFullscreen(window, pantallaCompleta ? 0 : FullscreenFlag);
+                        SDL_SetWindowFullscreen(window,
+                            SDL_GetWindowFlags(window) & SDL_WINDOW_FULLSCREEN ? 
+                                0 : 
+                                SDL_WINDOW_FULLSCREEN
+                        );
                         break;
                 }
             break;
@@ -360,7 +408,6 @@ void Controlador::actualizar() {
     }
     else {
         jugador->actualizar();
-
         puerta->actualizar();
 
         for (int i = 0; i < largoTablero; i++) {
@@ -379,7 +426,6 @@ void Controlador::actualizar() {
 
                 if (bonificadores[i][j] != nullptr)
                     bonificadores[i][j]->actualizar();
-
             }
         }
 
@@ -404,7 +450,6 @@ void Controlador::dibujar() {
     //ControladorLuz::colocarLuces();
 
     jugador->dibujar();
-
     puerta->dibujar();
 
     for (int i = 0; i < largoTablero; i++) {
@@ -437,6 +482,8 @@ void Controlador::dibujar() {
     glVertex3f(largoTablero * tile_size, 0, anchoTablero * tile_size);
     glVertex3f(largoTablero * tile_size, 0, 0);
     glEnd();
+
+    dibujarBordeTablero();
     
     glDisable(GL_LIGHTING);
 
@@ -461,7 +508,7 @@ Controlador::~Controlador() {
             if (enemigos[i][j] != nullptr)
                 delete enemigos[i][j];
 
-            if (bonificadores[i][j] != nullptr)
+            if (bonificadores[i][j] != nullptr) 
                 delete bonificadores[i][j];
 
         }

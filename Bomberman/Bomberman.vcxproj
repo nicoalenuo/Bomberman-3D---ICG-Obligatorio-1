@@ -94,6 +94,7 @@
     <ClCompile Include="src\ControladorCamara.cpp" />
     <ClCompile Include="src\ControladorLuz.cpp" />
     <ClCompile Include="src\ControladorObjetos.cpp" />
+    <ClCompile Include="src\ControladorPoderes.cpp" />
     <ClCompile Include="src\ControladorTexturas.cpp" />
     <ClCompile Include="src\ControladorInterfaz.cpp" />
     <ClCompile Include="src\ControladorAudio.cpp" />
@@ -103,11 +104,13 @@
     <ClCompile Include="src\global.cpp" />
     <ClCompile Include="src\objeto.cpp" />
     <ClCompile Include="src\particula.cpp" />
+    <ClCompile Include="src\particula_estructura.cpp" />
+    <ClCompile Include="src\particula_fuego.cpp" />
     <ClCompile Include="src\personaje.cpp" />
     <ClCompile Include="src\cargadorAudio.cpp" />
-	<ClCompile Include="src\bufferAudio.cpp" />
-	<ClCompile Include="src\recursoAudio.cpp" />
-	<ClCompile Include="src\door.cpp" />
+    <ClCompile Include="src\bufferAudio.cpp" />
+    <ClCompile Include="src\recursoAudio.cpp" />
+    <ClCompile Include="src\door.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="constantes\constantes.h" />
@@ -118,6 +121,7 @@
     <ClInclude Include="lib\ControladorCamara.h" />
     <ClInclude Include="lib\ControladorLuz.h" />
     <ClInclude Include="lib\ControladorObjetos.h" />
+    <ClInclude Include="lib\ControladorPoderes.h" />
     <ClInclude Include="lib\ControladorTexturas.h" />
     <ClInclude Include="lib\ControladorInterfaz.h" />
     <ClInclude Include="lib\ControladorAudio.h" />
@@ -128,14 +132,28 @@
     <ClInclude Include="lib\hud.h" />
     <ClInclude Include="lib\objeto.h" />
     <ClInclude Include="lib\particula.h" />
+    <ClInclude Include="lib\particula_estructura.h" />
+    <ClInclude Include="lib\particula_fuego.h" />
     <ClInclude Include="lib\personaje.h" />
     <ClInclude Include="lib\cargadorAudio.h" />
-	<ClInclude Include="lib\bufferAudio.h" />
-	<ClInclude Include="lib\recursoAudio.h" />
-	<ClInclude Include="lib\door.h" />
+    <ClInclude Include="lib\bufferAudio.h" />
+    <ClInclude Include="lib\recursoAudio.h" />
+    <ClInclude Include="lib\door.h" />
   </ItemGroup>
   <ItemGroup>
     <Font Include="texturas\OpenSans-Regular.ttf" />
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="texturas\aumentar_alcance_bombas.png" />
+    <Image Include="texturas\aumentar_cantidad_bombas.png" />
+    <Image Include="texturas\aumentar_velocidad.png" />
+    <Image Include="texturas\bomba.png" />
+    <Image Include="texturas\bombas_atraviesan_estructuras.png" />
+    <Image Include="texturas\chayang.jpeg" />
+    <Image Include="texturas\estructura_destructible.jpg" />
+    <Image Include="texturas\estructura_no_destructible.png" />
+    <Image Include="texturas\inmortalidad.png" />
+    <Image Include="texturas\player.png" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

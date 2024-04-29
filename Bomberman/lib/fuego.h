@@ -5,6 +5,7 @@
 
 #include "objeto.h"
 #include "bomba.h"
+#include "particula_fuego.h"
 
 class fuego : public objeto{
 private:
