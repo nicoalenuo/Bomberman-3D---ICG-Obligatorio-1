@@ -10,6 +10,7 @@ using namespace std;
 
 class objeto;
 class bomberman;
+class door;
 
 extern int velocidad_juego;
 
@@ -35,6 +36,8 @@ extern objeto*** fuegos;
 extern list<objeto*> particulas;
 
 extern bomberman* jugador;
+
+extern door* puerta;
 
 extern int getPosicionXEnTablero(GLfloat coord_x, GLfloat ancho_x);
 

@@ -2,19 +2,18 @@
 
 Controlador* Controlador::instancia = nullptr; 
 
-Controlador::Controlador() {
-    nivel = 1;
-    fin = false;
-    finJuego = false;
-    pausa = false;
-    tiempoJuego = 200; //segundos
-    puntaje = 0;
-
-    jugador = new bomberman(
-        { tile_size / 2, 0, tile_size / 2 },
-        { tile_size / 4, tile_size / 2, tile_size / 4 }, 
-        GLfloat(0.1)
-    );
+void generarTablero() {
+    if (jugador == nullptr) {
+        jugador = new bomberman(
+            { tile_size / 2, 0, tile_size / 2 },
+            { tile_size / 4, tile_size / 2, tile_size / 4 },
+            GLfloat(0.1)
+        );
+    } else {
+        jugador->setPosicionX(tile_size / 2);
+        //jugador->setPosicionY(0);
+        jugador->setPosicionZ(tile_size / 2);
+    }
 
     for (int i = 0; i < largoTablero; i++) {
         estructuras[i] = new objeto * [anchoTablero];
@@ -23,7 +22,7 @@ Controlador::Controlador() {
         enemigos[i] = new objeto * [anchoTablero];
     }
 
-    for (int i = 0; i < largoTablero; i++){
+    for (int i = 0; i < largoTablero; i++) {
         for (int j = 0; j < anchoTablero; j++) {
             estructuras[i][j] = nullptr;
             bombas[i][j] = nullptr;
@@ -45,16 +44,17 @@ Controlador::Controlador() {
             if (((i % 2) == 1) && ((j % 2) == 1)) {
                 estructuras[i][j] = new estructura(
                     { (GLfloat)i * tile_size + tile_size / 2, 0, (GLfloat)j * tile_size + tile_size / 2 },
-                    { tile_size / 2, tile_size, tile_size / 2 }, 
-                      false
+                    { tile_size / 2, tile_size, tile_size / 2 },
+                    false
                 ); //no destructible
-            } else {
+            }
+            else {
                 random_num = dis(gen);
                 if (random_num <= generadorTerreno) {
                     estructuras[i][j] = new estructura(
                         { (GLfloat)i * tile_size + tile_size / 2, 0, (GLfloat)j * tile_size + tile_size / 2 },
                         { tile_size / 2, tile_size, tile_size / 2 },
-                          true
+                        true
                     ); //destructible
                 }
             }
@@ -76,16 +76,52 @@ Controlador::Controlador() {
     }
     if (estructuras[2][0] == nullptr) {
         estructuras[2][0] = new estructura(
-            { 2 * tile_size + tile_size / 2, 0, tile_size / 2 }, 
-            { tile_size / 2, tile_size, tile_size / 2}, 
-              true);
+            { 2 * tile_size + tile_size / 2, 0, tile_size / 2 },
+            { tile_size / 2, tile_size, tile_size / 2 },
+            true);
     }
     if (estructuras[0][2] == nullptr) {
         estructuras[0][2] = new estructura(
-            { tile_size / 2, 0, 2 * tile_size + tile_size / 2 }, 
-            { tile_size / 2, tile_size, tile_size / 2}, 
-              true);
+            { tile_size / 2, 0, 2 * tile_size + tile_size / 2 },
+            { tile_size / 2, tile_size, tile_size / 2 },
+            true);
     }
+
+    //Estructura posicionar bomba
+    /*vector<objeto*> posicionesValidas;
+    for (int i = 2; i < largoTablero; i++, i++) {
+        for (int j = 2; j < anchoTablero; j++, j++) {
+            if (estructuras[i][j] != nullptr) {
+                posicionesValidas.push_back(estructuras[i][j]);
+            }
+        }
+    }
+
+    uniform_int_distribution<int> dis2(1, posicionesValidas.size());
+    int posicionPuerta = dis2(gen);
+
+    puerta = new door(
+        { posicionesValidas[posicionPuerta]->getPosicion().x , 0, posicionesValidas[posicionPuerta]->getPosicion().z },
+        { tile_size / 2, tile_size, tile_size / 2 }
+    );
+
+    posicionesValidas.clear();*/
+    //Fin Estructura posicionar bomba
+    puerta = new door(
+        { 2.5 * tile_size , 0, tile_size / 2 },
+        { tile_size / 2, tile_size, tile_size / 2 }
+    );
+}
+
+Controlador::Controlador() {
+    nivel = 1;
+    fin = false;
+    finJuego = false;
+    pausa = false;
+    tiempoJuego = 200; //segundos
+    puntaje = 0;
+
+    generarTablero();
 
     if (SDL_Init(SDL_INIT_VIDEO) < 0) {
         cerr << "No se pudo iniciar SDL: " << SDL_GetError() << endl;
@@ -274,40 +310,48 @@ void Controlador::manejarEventos() {
 }
 
 void Controlador::actualizar() {
-    jugador->actualizar();
+    if (puerta->getAbierta() && puerta->intersecta(jugador)) {
+        cout << "Fin juego" << endl;
+        ControladorAudio::playAudio(sonido::bonificacion);
+        generarTablero();
+    } else {
+        jugador->actualizar();
 
-    for (int i = 0; i < largoTablero; i++) {
-        for (int j = 0; j < anchoTablero; j++) {
-            if (estructuras[i][j] != nullptr)
-                estructuras[i][j]->actualizar();
+        puerta->actualizar();
 
-            if (bombas[i][j] != nullptr)
-                bombas[i][j]->actualizar();
+        for (int i = 0; i < largoTablero; i++) {
+            for (int j = 0; j < anchoTablero; j++) {
+                if (estructuras[i][j] != nullptr)
+                    estructuras[i][j]->actualizar();
 
-            if (fuegos[i][j] != nullptr)
-                fuegos[i][j]->actualizar();
+                if (bombas[i][j] != nullptr)
+                    bombas[i][j]->actualizar();
 
-            if (enemigos[i][j] != nullptr)
-                enemigos[i][j]->actualizar();
+                if (fuegos[i][j] != nullptr)
+                    fuegos[i][j]->actualizar();
 
+                if (enemigos[i][j] != nullptr)
+                    enemigos[i][j]->actualizar();
+
+            }
         }
-    }
 
-    for (list<objeto*>::iterator it = particulas.begin(); it != particulas.end(); ++it)
-        (*it)->actualizar();
+        for (list<objeto*>::iterator it = particulas.begin(); it != particulas.end(); ++it)
+            (*it)->actualizar();
 
-    for (list<objeto*>::iterator it = particulas.begin(); it != particulas.end();){
-        if ((*it)->getPosicion().y < 0) {
-            delete (*it);
-            it = particulas.erase(it);
+        for (list<objeto*>::iterator it = particulas.begin(); it != particulas.end();) {
+            if ((*it)->getPosicion().y < 0) {
+                delete (*it);
+                it = particulas.erase(it);
+            }
+            else
+                ++it;
         }
-        else 
-            ++it;
+
+        ControladorInterfaz::setPuntaje(puntaje);
+        ControladorInterfaz::setTiempo(tiempoJuego);
+        ControladorInterfaz::setFinJuego(finJuego);
     }
-    
-    ControladorInterfaz::setPuntaje(puntaje);
-    ControladorInterfaz::setTiempo(tiempoJuego);
-    ControladorInterfaz::setFinJuego(finJuego);
 }
 
 void Controlador::dibujar() {
@@ -319,6 +363,8 @@ void Controlador::dibujar() {
     glEnable(GL_TEXTURE_2D);
 
     jugador->dibujar();
+
+    puerta->dibujar();
 
     for (int i = 0; i < largoTablero; i++) {
         for (int j = 0; j < anchoTablero; j++) {

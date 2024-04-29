@@ -25,6 +25,8 @@ list<objeto*> particulas;
 
 bomberman* jugador;
 
+door* puerta;
+
 int getPosicionXEnTablero(GLfloat coord_x, GLfloat ancho_x) {
 	return int(coord_x + (ancho_x / 2)) / int(tile_size);
 }

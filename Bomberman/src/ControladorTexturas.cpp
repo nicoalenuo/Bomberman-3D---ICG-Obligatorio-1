@@ -4,6 +4,7 @@ GLuint ControladorTexturas::texturaEstructuraDestructible = 0;
 GLuint ControladorTexturas::texturaEstructuraNoDestructible = 0;
 GLuint ControladorTexturas::texturaPlayer = 0;
 GLuint ControladorTexturas::texturaBomba = 0;
+GLuint ControladorTexturas::texturaPuerta = 0;
 
 void ControladorTexturas::cargarTexturas() {
     //CARGAR IMAGEN
@@ -91,6 +92,27 @@ void ControladorTexturas::cargarTexturas() {
     texturaBomba = textura;
     //FIN TEXTURA
 
+    //CARGAR IMAGEN
+    fif = FreeImage_GetFIFFromFilename("texturas/puerta.png");
+    bitmap = FreeImage_Load(fif, "texturas/puerta.png"); //estoy reciviendo bitmap null
+    bitmap = FreeImage_ConvertTo24Bits(bitmap);
+    w = FreeImage_GetWidth(bitmap);
+    h = FreeImage_GetHeight(bitmap);
+    datos = FreeImage_GetBits(bitmap);
+    //FIN CARGAR IMAGEN
+
+    glGenTextures(1, &textura);
+    glBindTexture(GL_TEXTURE_2D, textura);
+    glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+    glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+    glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+    glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, w, h, 0, GL_BGR, GL_UNSIGNED_BYTE, datos);
+    glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
+
+    texturaPuerta = textura;
+    //FIN TEXTURA
+
 }
 
 GLuint ControladorTexturas::getTextura(tipo_textura tipo) {
@@ -106,6 +128,9 @@ GLuint ControladorTexturas::getTextura(tipo_textura tipo) {
             break;
         case TEXTURA_BOMBA:
             return texturaBomba;
+            break;
+        case TEXTURA_PUERTA:
+            return texturaPuerta;
             break;
         default:
             return 0;

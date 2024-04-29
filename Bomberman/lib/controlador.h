@@ -17,6 +17,7 @@
 #include "objeto.h"
 #include "enemigo.h"
 #include "bomberman.h"
+#include "door.h"
 #include "hud.h"
 
 #include "../lib/ControladorCamara.h"
