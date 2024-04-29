@@ -1,4 +1,5 @@
 #include "../lib/estructura.h"
+#include "../lib/bonificador.h"
 
 estructura::estructura(vector_3 pos, vector_3 tam, bool dest) : objeto(pos, tam) {
 	this->destructible = dest;
@@ -7,18 +8,33 @@ estructura::estructura(vector_3 pos, vector_3 tam, bool dest) : objeto(pos, tam)
 random_device rd;
 mt19937 gen(rd());
 uniform_real_distribution<> dis(-0.3, 0.3);
+
 estructura::~estructura() {
-    for (int j = 0; j < 150; j++) {
-        particulas.push_back(
-            new particula(
-                { pos.x, pos.y + (tile_size / 2), pos.z },
-                { GLfloat(0.07), GLfloat(0.07), GLfloat(0.07) },
-                { 0, -25, 0 },
-                { GLfloat(dis(gen)), 10, GLfloat(dis(gen)) },
-                ControladorTexturas::getTextura(ESTRUCTURA_DESTRUCTIBLE),
-                PARTICULA_ESTRUCTURA_DESTRUCTIBLE
-            )
-        );
+    int posX = getIndiceTablero(this->getPosicion().x);
+    int posZ = getIndiceTablero(this->getPosicion().z);
+    if ((posX == -1 || posX == largoTablero) && (posZ == -1 || posZ == anchoTablero)) { //los bordes del tablero tambien se destruyen al final de la ejecución
+        estructuras[posX][posZ] = nullptr;
+        bonificador* bon = dynamic_cast<bonificador*>(bonificadores[posX][posZ]);
+        if (bon != nullptr && cantLuces <= 7) {
+            cantLuces++;
+            bonificadorEnTablero.push_back(bon);
+            bon->dibujar();
+        }
+        else if (bon != nullptr) { //cantLuces >= 8
+            bon->eliminarBonificador(contieneBonificador(bon, bonificadorEnTablero));
+        }
+        for (int j = 0; j < 150; j++) {
+            particulas.push_back(
+                new particula(
+                    { pos.x, pos.y + (tile_size / 2), pos.z },
+                    { GLfloat(0.07), GLfloat(0.07), GLfloat(0.07) },
+                    { 0, -25, 0 },
+                    { GLfloat(dis(gen)), 10, GLfloat(dis(gen)) },
+                    ControladorTexturas::getTextura(ESTRUCTURA_DESTRUCTIBLE),
+                    PARTICULA_ESTRUCTURA_DESTRUCTIBLE
+                )
+            );
+        }
     }
 }
 

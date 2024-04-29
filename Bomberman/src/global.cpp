@@ -13,10 +13,11 @@ int mouseY = 0;
 int cantLuces = 1; //la ambiente
 
 bool pausa = false;
+bool pararTiempo = false;
 bool wireframe = false;
 bool texturas_habilitadas = true;
 bool audio_habilitado = true;
-bool mute = true; //cambiar a true para que inicie con sonido
+bool mute = false; //cambiar a false para que inicie con sonido
 
 unsigned int pasos;
 bool tipoLuz = false; //false = facetado, true = interpolado
@@ -29,8 +30,12 @@ objeto*** fuegos = new objeto * *[largoTablero];
 objeto*** bonificadores = new objeto * *[largoTablero];
 
 list<particula*> particulas;
+list<bonificador*> bonificadorEnTablero; //es la lista de los bonificadores que se dibujan, los que no, no pertenecen a esta lista
 
 bomberman* jugador;
+
+int largoPantalla = WINDOW_WIDTH;
+int altoPantalla = WINDOW_HEIGHT;
 
 int getIndiceTablero(GLfloat coord) {
     return int(floor(coord / tile_size));
@@ -46,6 +51,7 @@ int tiempoJuego = 200; //segundos
 
 void toggle_pausa() {
     pausa = !pausa;
+    pararTiempo = !pararTiempo;
 }
 
 void toggle_wireframe() {
@@ -90,4 +96,17 @@ void disminuirTiempo(int segundos){
         tiempoJuego = 0;
         finJuego = true;
     }
+}
+
+void pausarTiempo() {
+    pararTiempo = !pararTiempo;
+}
+
+bool contieneBonificador(bonificador* bon, list<bonificador*> lista) {
+    for (bonificador* elemento : lista) {
+        if (elemento == bon) {
+            return true;
+        }
+    }
+    return false;
 }

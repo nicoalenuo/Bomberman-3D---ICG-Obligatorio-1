@@ -1,12 +1,17 @@
 #include "../lib/ControladorLuz.h"
 #include "../lib/bomberman.h"
 
-int ControladorLuz::colorLuzAmbiente = 0;
-int ControladorLuz::colorLuzBonificador = 0;
+// DEJEN COMENTADO ESTO PQ ME OLVIDO LOS ENUMS Y NO QUIERO IR AL .h
+// enum TIPO_LUZ_AMBIENTE { MANIANA, TARDE, NOCHE, SIN_LUZ };
+// enum TIPO_LUZ_BONIFICADOR { AMARILLO, CELESTE, VIOLETA, SIN_LUZ };
+
+
+TIPO_LUZ_AMBIENTE ControladorLuz::colorLuzAmbiente = MANIANA;
+TIPO_LUZ_BONIFICADOR ControladorLuz::colorLuzBonificador = AMARILLO;
 GLfloat ControladorLuz::light_position[4] = { 0, 0, 0, 1 };
 GLfloat ControladorLuz::light_color[4] = { 1, 1, 1, 1 };
 GLfloat ControladorLuz::material_ambient_diffuse_color[4] = { 1, 1, 1, 1 };
-GLfloat ControladorLuz::material_specular_color[4] = { 0, 0, 0, 1 };
+GLfloat ControladorLuz::material_specular_color[4] = { 0, 1, 0, 1 };
 GLfloat ControladorLuz::light_offset_x = 0.f;
 GLfloat ControladorLuz::light_offset_y = 50.f;
 GLfloat ControladorLuz::light_offset_z = 0.f;
@@ -24,8 +29,10 @@ void ControladorLuz::colocarLuces() {
 }
 
 void ControladorLuz::cambiarColorLuzAmbiente() {
-	colorLuzAmbiente = (colorLuzAmbiente + 1) % 3;
-	switch (colorLuzAmbiente) {
+	int luzActual = static_cast<int>(colorLuzAmbiente);
+	luzActual = (luzActual + 1) % 4;
+	colorLuzAmbiente = TIPO_LUZ_AMBIENTE(luzActual);
+	switch (luzActual) {
 		case 0:
 			light_color[0] = 0.8f; light_color[1] = 0.8f; light_color[2] = 0.2f;
 			break;
@@ -35,12 +42,17 @@ void ControladorLuz::cambiarColorLuzAmbiente() {
 		case 2:
 			light_color[0] = 0.f; light_color[1] = 0.2f; light_color[2] = 0.5f;
 			break;
+		case 3:
+			light_color[0] = 1.f; light_color[1] = 1.f; light_color[2] = 1.f;
+			break;
 	}
 }
 
 void ControladorLuz::cambiarColorLuzBonificador() {
-	colorLuzBonificador = (colorLuzBonificador + 1) % 3;
-	switch (colorLuzBonificador) {
+	int luzActual = static_cast<int>(colorLuzBonificador);
+	luzActual = (luzActual + 1) % 4;
+	colorLuzBonificador = TIPO_LUZ_BONIFICADOR (luzActual);
+	switch (luzActual) {
 	case 0:
 		light_color[0] = 1.f; light_color[1] = 1.f; light_color[2] = 0.f;
 		break;
@@ -49,6 +61,9 @@ void ControladorLuz::cambiarColorLuzBonificador() {
 		break;
 	case 2:
 		light_color[0] = 0.f; light_color[1] = 1.f; light_color[2] = 1.f;
+		break;
+	case 3:
+		light_color[0] = 1.f; light_color[1] = 1.f; light_color[2] = 1.f;
 		break;
 	}
 }

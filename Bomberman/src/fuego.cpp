@@ -1,4 +1,5 @@
 #include "../lib/fuego.h"
+#include "../lib/bonificador.h"
 
 fuego::fuego(vector_3 pos, vector_3 tam, int tiempo) : objeto(pos, tam) {
 	tiempoFuego = tiempo;
@@ -18,8 +19,8 @@ void fuego::actualizar() {
 		dynamic_cast<bomba*>(bombas[x][z])->setTiempoBomba(0);
 
 	if (bonificadores[x][z] != nullptr) {
-		bonificadores[x][z] = nullptr;
-		delete bonificadores[x][z];
+		bonificador* bon = dynamic_cast<bonificador*>(bonificadores[x][z]);
+		bon->eliminarBonificador(contieneBonificador(bon, bonificadorEnTablero));
 	}
 
 	for (int j = 0; j < 30; j++) {

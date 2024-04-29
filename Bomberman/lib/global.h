@@ -11,6 +11,7 @@ using namespace std;
 class objeto;
 class particula;
 class bomberman;
+class bonificador;
 
 extern int velocidad_juego;
 
@@ -25,6 +26,7 @@ extern int mouseY;
 extern int cantLuces;
 
 extern bool pausa;
+extern bool pararTiempo;
 extern bool wireframe;
 extern bool pantallaCompleta;
 extern bool texturas_habilitadas;
@@ -42,6 +44,7 @@ extern objeto*** enemigos;
 extern objeto*** fuegos;
 extern objeto*** bonificadores;
 extern list<particula*> particulas;
+extern list<bonificador*> bonificadorEnTablero;
 
 extern bomberman* jugador;
 
@@ -53,7 +56,7 @@ extern int nivel;
 extern int puntaje; 
 extern int tiempoJuego; //segundos
 
-extern void toggle_pausa();
+extern void toggle_pausa(); //muestra la interfaz de settings ademas de pausar
 extern void toggle_wireframe();
 extern void toggle_texturas();
 extern void toggle_tipoLuz();
@@ -62,4 +65,10 @@ extern void toggle_inmortal();
 extern void aumentarNivel();
 extern void sumarPuntaje(int puntos);
 extern void disminuirTiempo(int segundos);
+extern void pausarTiempo();
+
+extern bool contieneBonificador(bonificador* bon, list<bonificador*> lista);
+
+extern int largoPantalla;
+extern int altoPantalla;
 #endif

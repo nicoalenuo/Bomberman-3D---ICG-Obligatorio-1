@@ -4,24 +4,26 @@ random_device rdBonificador;
 mt19937 genBonificador(rdBonificador());
 uniform_real_distribution<> disBonificador(0.0, 1.0); 
 bonificador::bonificador(vector_3 pos, vector_3 tam, tipo_poder tipo_p) : objeto(pos, tam) {
+    //tremenda función me acabo de hacer, y que paseo que te acabo de meter ;)
     if (tipo == BONIFICADOR_RANDOM) {
+        double intervalo = 1.0 / ((static_cast<int>(tipo_poder::BONIFICADOR_RANDOM)) - 1);
+        int aux = 0;
         double random_num = disBonificador(genBonificador);
-        if (random_num < 0.25f)
-            tipo = AUMENTAR_ALCANCE_BOMBAS;
-        else if (random_num < 0.5f)
-            tipo = INMORTALIDAD;
-        else if (random_num < 0.75f)
-            tipo = AUMENTAR_VELOCIDAD;
-        else
-            tipo = BOMBAS_ATRAVIESAN_ESTRUCTURAS;
+        while (random_num > intervalo) {
+            random_num -= intervalo;
+            aux++;
+        }
+        tipo = static_cast<tipo_poder>(aux);
     }
     else {
         tipo = tipo_p;
     }
     subiendo = true;
+    angulo = 0;
 }
 
-void bonificador::actualizar() {
+void bonificador::actualizar() { //falta rotarlo
+    glLoadIdentity();
     if (subiendo) {
         pos.y += 0.03f;
         if (pos.y > tile_size)
@@ -35,48 +37,64 @@ void bonificador::actualizar() {
 }
 
 void bonificador::dibujar() {
-    glPushMatrix();
-    glTranslatef(pos.x, pos.y, pos.z);
+    int posX = getIndiceTablero(this->getPosicion().x);
+    int posZ = getIndiceTablero(this->getPosicion().z);
+    if (estructuras[posX][posZ] == nullptr) { //se asume que si no es nullptr, es una estructura destructible por como se crea
+        glPushMatrix();
 
-    glBegin(GL_QUADS);
-    glColor3f(1.0f, 1.0f, 0.0f);
+        glTranslatef(pos.x, pos.y, pos.z);
 
-    //Cara de abajo
-    glVertex3f(-tam.x, 0, -tam.z);
-    glVertex3f(tam.x, 0, -tam.z);
-    glVertex3f(tam.x, 0, tam.z);
-    glVertex3f(-tam.x, 0, tam.z);
+        glBegin(GL_QUADS);
+        glColor3f(1.0f, 1.0f, 0.0f);
 
-    // Cara de arriba
-    glVertex3f(-tam.x, tam.y, -tam.z);
-    glVertex3f(tam.x, tam.y, -tam.z);
-    glVertex3f(tam.x, tam.y, tam.z);
-    glVertex3f(-tam.x, tam.y, tam.z);
+        //Cara de abajo
+        glVertex3f(-tam.x, 0, -tam.z);
+        glVertex3f(tam.x, 0, -tam.z);
+        glVertex3f(tam.x, 0, tam.z);
+        glVertex3f(-tam.x, 0, tam.z);
 
-    // Cara de atras
-    glVertex3f(-tam.x, 0, -tam.z);
-    glVertex3f(tam.x, 0, -tam.z);
-    glVertex3f(tam.x, tam.y, -tam.z);
-    glVertex3f(-tam.x, tam.y, -tam.z);
+        // Cara de arriba
+        glVertex3f(-tam.x, tam.y, -tam.z);
+        glVertex3f(tam.x, tam.y, -tam.z);
+        glVertex3f(tam.x, tam.y, tam.z);
+        glVertex3f(-tam.x, tam.y, tam.z);
 
-    // Cara de adelante
-    glVertex3f(-tam.x, 0, tam.z);
-    glVertex3f(tam.x, 0, tam.z);
-    glVertex3f(tam.x, tam.y, tam.z);
-    glVertex3f(-tam.x, tam.y, tam.z);
+        // Cara de atras
+        glVertex3f(-tam.x, 0, -tam.z);
+        glVertex3f(tam.x, 0, -tam.z);
+        glVertex3f(tam.x, tam.y, -tam.z);
+        glVertex3f(-tam.x, tam.y, -tam.z);
 
-    // Cara izquierda
-    glVertex3f(-tam.x, 0, -tam.z);
-    glVertex3f(-tam.x, 0, tam.z);
-    glVertex3f(-tam.x, tam.y, tam.z);
-    glVertex3f(-tam.x, tam.y, -tam.z);
+        // Cara de adelante
+        glVertex3f(-tam.x, 0, tam.z);
+        glVertex3f(tam.x, 0, tam.z);
+        glVertex3f(tam.x, tam.y, tam.z);
+        glVertex3f(-tam.x, tam.y, tam.z);
 
-    // Cara derecha 
-    glVertex3f(tam.x, 0, -tam.z);
-    glVertex3f(tam.x, 0, tam.z);
-    glVertex3f(tam.x, tam.y, tam.z);
-    glVertex3f(tam.x, tam.y, -tam.z);
+        // Cara izquierda
+        glVertex3f(-tam.x, 0, -tam.z);
+        glVertex3f(-tam.x, 0, tam.z);
+        glVertex3f(-tam.x, tam.y, tam.z);
+        glVertex3f(-tam.x, tam.y, -tam.z);
 
-    glEnd();
-    glPopMatrix();
+        // Cara derecha 
+        glVertex3f(tam.x, 0, -tam.z);
+        glVertex3f(tam.x, 0, tam.z);
+        glVertex3f(tam.x, tam.y, tam.z);
+        glVertex3f(tam.x, tam.y, -tam.z);
+
+        glEnd();
+        glPopMatrix();
+    }
+}
+
+void bonificador::eliminarBonificador(bool reducir) {
+    int posX = getIndiceTablero(this->getPosicion().x);
+    int posZ = getIndiceTablero(this->getPosicion().z);
+    bonificadores[posX][posZ] = nullptr;
+    if (reducir) {
+        cantLuces--;
+        bonificadorEnTablero.remove(this);
+    }
+    delete this;
 }

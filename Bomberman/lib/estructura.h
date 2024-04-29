@@ -7,6 +7,7 @@
 
 #include "objeto.h"
 #include "particula.h"
+#include "global.h"
 
 class estructura : public objeto {
 private:

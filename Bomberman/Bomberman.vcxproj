@@ -118,7 +118,7 @@
     <ClInclude Include="lib\ControladorLuz.h" />
     <ClInclude Include="lib\ControladorObjetos.h" />
     <ClInclude Include="lib\ControladorTexturas.h" />
-    <ClCompile Include="lib\ControladorInterfaz.h" />
+    <ClInclude Include="lib\ControladorInterfaz.h" />
     <ClInclude Include="lib\ControladorAudio.h" />
     <ClInclude Include="lib\enemigo.h" />
     <ClInclude Include="lib\estructura.h" />
@@ -134,6 +134,18 @@
   </ItemGroup>
   <ItemGroup>
     <Font Include="texturas\OpenSans-Regular.ttf" />
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="texturas\aumentar_alcance_bombas.png" />
+    <Image Include="texturas\aumentar_cantidad_bombas.png" />
+    <Image Include="texturas\aumentar_velocidad.png" />
+    <Image Include="texturas\bomba.png" />
+    <Image Include="texturas\bombas_atraviesan_estructuras.png" />
+    <Image Include="texturas\chayang.jpeg" />
+    <Image Include="texturas\estructura_destructible.jpg" />
+    <Image Include="texturas\estructura_no_destructible.png" />
+    <Image Include="texturas\inmortalidad.png" />
+    <Image Include="texturas\player.png" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
