@@ -95,23 +95,24 @@ tuple<vector<char>, vector<vector<float>>> ControladorObjetos::cargarObj(string 
 	return { commands, data };
 }
 
-GLenum primitive;
 vector<char> commands;
 vector<vector<float>> data_obj;
 GLuint texture;
 void ControladorObjetos::dibujar(tipo_obj obj) {
 	switch (obj) {
 		case (OBJ_PLAYER):
-			primitive = GL_TRIANGLES;
 			commands = player_commands;
 			data_obj = player_data;
-			texture = ControladorTexturas::getTextura(PLAYER);
+			if (texturas_habilitadas) {
+				texture = ControladorTexturas::getTextura(PLAYER);
+			}
 			break;
 		case (OBJ_BOMBA):
-			primitive = GL_TRIANGLES;
 			commands = bomba_commands;
 			data_obj = bomba_data;
-			texture = ControladorTexturas::getTextura(TEXTURA_BOMBA);
+			if (texturas_habilitadas) {
+				texture = ControladorTexturas::getTextura(TEXTURA_BOMBA);
+			}
 			break;
 	}
 
@@ -120,7 +121,8 @@ void ControladorObjetos::dibujar(tipo_obj obj) {
 		glBindTexture(GL_TEXTURE_2D, texture);
 	}
 
-	glBegin(primitive);
+	glBegin(GL_TRIANGLES);
+
 	for (size_t i = 0; i < commands.size(); i++) {
 		switch (commands[i]) {
 			case('V'): {
@@ -136,17 +138,36 @@ void ControladorObjetos::dibujar(tipo_obj obj) {
 				break;
 			}
 			case('C'): {
-				glColor3f(data_obj[i][0], data_obj[i][1], data_obj[i][2]);
+				if (texturas_habilitadas) {
+					glColor3f(data_obj[i][0], data_obj[i][1], data_obj[i][2]);
+				} else {
+					if (obj == OBJ_PLAYER) {
+						glColor3f(1.f, 1.f, 1.f);
+					} else {
+						glColor3f(0.f, 0.f, 0.f);
+					}
+				}
 				break;
 			}
 			case('A'): {
-				glColor4f(data_obj[i][0], data_obj[i][1], data_obj[i][2], data_obj[i][3]);
+				if (texturas_habilitadas) {
+					glColor4f(data_obj[i][0], data_obj[i][1], data_obj[i][2], data_obj[i][3]);
+				}
+				else {
+					if (obj == OBJ_PLAYER) {
+						glColor4f(1.f, 1.f, 1.f, 1.f);
+					}
+					else {
+						glColor4f(0.f, 0.f, 0.f, 1.f);
+					}
+				}
 				break;
 			}
 		}
 	}
 	glEnd();
 
-	if (texturas_habilitadas)
+	if (texturas_habilitadas) {
 		glDisable(GL_TEXTURE_2D);
+	}
 }

@@ -35,10 +35,15 @@ void estructura::dibujar() {
     glPushMatrix();
     glTranslatef(pos.x, pos.y, pos.z);
 
+    if (destructible) {
+        glColor3f(144.f / 255.f, 12.f / 255.f, 63.f / 255.f);
+    } else {
+        glColor3f(175.f / 255.f, 175.f / 255.f, 175.f / 255.f);
+    }
+
     if (texturas_habilitadas) {
         glEnable(GL_TEXTURE_2D);
         glBindTexture(GL_TEXTURE_2D, ControladorTexturas::getTextura(destructible ? ESTRUCTURA_DESTRUCTIBLE : ESTRUCTURA_NO_DESTRUCTIBLE));
-        glColor3f(1.0f, 1.0f, 1.0f);
     }
 
     glBegin(GL_QUADS);

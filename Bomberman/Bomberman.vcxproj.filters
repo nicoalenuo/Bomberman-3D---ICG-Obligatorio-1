@@ -66,12 +66,12 @@
     <ClCompile Include="src\cargadorAudio.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-	<ClCompile Include="src\bufferAudio.cpp">
-		<Filter>Source Files</Filter>
-	</ClCompile>
-	<ClCompile Include="src\recursoAudio.cpp">
-		<Filter>Source Files</Filter>
-	</ClCompile>
+    <ClCompile Include="src\bufferAudio.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\recursoAudio.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
     <ClCompile Include="src\particula.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -79,8 +79,17 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\door.cpp">
-		<Filter>Source Files</Filter>
-	</ClCompile>
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ControladorPoderes.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\particula_estructura.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\particula_fuego.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="lib\controlador.h">
@@ -143,17 +152,61 @@
     <ClInclude Include="lib\cargadorAudio.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-	<ClInclude Include="lib\bufferAudio.h">
-		<Filter>Header Files</Filter>
-	</ClInclude>
-	<ClInclude Include="lib\recursoAudio.h">
-		<Filter>Header Files</Filter>
-	</ClInclude>
-	<ClInclude Include="lib\door.h">
-		<Filter>Header Files</Filter>
-	</ClInclude>
+    <ClInclude Include="lib\bufferAudio.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="lib\recursoAudio.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="lib\door.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="lib\ControladorPoderes.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="lib\particula_estructura.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="lib\particula_fuego.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Font Include="texturas\OpenSans-Regular.ttf" />
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="texturas\aumentar_alcance_bombas.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="texturas\aumentar_cantidad_bombas.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="texturas\aumentar_velocidad.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="texturas\bomba.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="texturas\bombas_atraviesan_estructuras.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="texturas\chayang.jpeg">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="texturas\estructura_destructible.jpg">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="texturas\estructura_no_destructible.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="texturas\inmortalidad.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="texturas\player.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="texturas\puerta.png">
+      <Filter>Resource Files</Filter>
+    </Image>
   </ItemGroup>
 </Project>

@@ -46,7 +46,7 @@ void door::dibujar() {
             glEnable(GL_TEXTURE_2D);
             glBindTexture(GL_TEXTURE_2D, ControladorTexturas::getTextura(TEXTURA_PUERTA));
         }
-        glColor3f(1.0, 1.0, 1.0);
+        glColor3f(1.0, 0.f, 1.0);
 
         glBegin(GL_QUADS);
 

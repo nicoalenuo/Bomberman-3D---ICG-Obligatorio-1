@@ -48,8 +48,9 @@ void bonificador::dibujar() {
 
         glTranslatef(pos.x, pos.y, pos.z);
 
-        glBegin(GL_QUADS);
         glColor3f(1.0f, 1.0f, 0.0f);
+
+        glBegin(GL_QUADS);
 
         //Cara de abajo
         glVertex3f(-tam.x, 0, -tam.z);

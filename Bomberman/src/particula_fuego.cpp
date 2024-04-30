@@ -31,6 +31,7 @@ void particula_fuego::actualizar() {
 
 void particula_fuego::dibujar() {
     glPushMatrix();
+
     switch (color) {
     case FUEGO_ROJO:
         glColor3f(0.9f, 0.2f, 0.0f);
@@ -81,9 +82,6 @@ void particula_fuego::dibujar() {
     glVertex3f(tam.x, tam.y, -tam.z);
 
     glEnd();
-
-    if (texturas_habilitadas)
-        glDisable(GL_TEXTURE_2D);
 
     glPopMatrix();
 }

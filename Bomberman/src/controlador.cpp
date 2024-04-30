@@ -234,7 +234,7 @@ inline void colocarBomba() { //para evitar repetir codigo
                 bonificadores[posBombaXTablero][posBombaZTablero] = nullptr;
             }
 
-            ControladorAudio::playAudio(sonido::explosion); // hay que separar el sonido de la bomba en dos, ya que cuando una bomba explota la otra, no suena a tiempo
+            ControladorAudio::playAudio(sonido::explosion); // hay que separar el sonido de la bomba en dos (quemando mecha, explosion), ya que cuando una bomba explota la otra, sigue quemando mecha
         }
     }
 }
@@ -447,7 +447,7 @@ void Controlador::dibujar() {
     glLoadIdentity();
 
     ControladorCamara::colocarCamara();
-    //ControladorLuz::colocarLuces();
+    ControladorLuz::colocarLuces();
 
     jugador->dibujar();
     puerta->dibujar();
@@ -460,9 +460,6 @@ void Controlador::dibujar() {
             if (bombas[i][j] != nullptr)
                 bombas[i][j]->dibujar();
 
-            if (fuegos[i][j] != nullptr)
-                fuegos[i][j]->dibujar();
-
             if (enemigos[i][j] != nullptr)
                 enemigos[i][j]->dibujar();
 
@@ -471,10 +468,16 @@ void Controlador::dibujar() {
         }
     }
 
-    for (it = particulas.begin(); it != particulas.end(); ++it)
+    /*
+    cuando se dibuja una bomba, no se que pasa pero no se hace quita la textura a los bonificadores y a las particulasaunque tenga disable
+    (si se le quita, pq se dibujan las texturas de las estructuras en mayor posición)
+    */
+
+    for (it = particulas.begin(); it != particulas.end(); ++it) //esto es mas raro aun, las particulas de la estructura se dibuja, pero las del fuego no?
         (*it)->dibujar();
 
     //Suelo
+    
     glColor3f(0.75f, 0.63f, 0.50f);
     glBegin(GL_QUADS);
     glVertex3f(0, 0, 0);

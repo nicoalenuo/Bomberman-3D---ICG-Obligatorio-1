@@ -100,6 +100,12 @@ void ControladorTexturas::cargarTexturas() {
     //CARGAR IMAGEN
     fif = FreeImage_GetFIFFromFilename("texturas/puerta.png");
     bitmap = FreeImage_Load(fif, "texturas/puerta.png"); 
+    bitmap = FreeImage_ConvertTo24Bits(bitmap);
+    w = FreeImage_GetWidth(bitmap);
+    h = FreeImage_GetHeight(bitmap);
+    datos = FreeImage_GetBits(bitmap);
+    //FIN CARGAR IMAGEN
+
     glGenTextures(1, &textura);
     glBindTexture(GL_TEXTURE_2D, textura);
     glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
@@ -120,6 +126,15 @@ void ControladorTexturas::cargarTexturas() {
     h = FreeImage_GetHeight(bitmap);
     datos = FreeImage_GetBits(bitmap);
     //FIN CARGAR IMAGEN
+
+    glGenTextures(1, &textura);
+    glBindTexture(GL_TEXTURE_2D, textura);
+    glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+    glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+    glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+    glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, w, h, 0, GL_BGR, GL_UNSIGNED_BYTE, datos);
+    glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
 
     texturaAUMENTAR_ALCANCE_BOMBA = textura;
     //FIN TEXTURA

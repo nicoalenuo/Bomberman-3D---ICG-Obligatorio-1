@@ -36,7 +36,7 @@ void particula_estructura::dibujar() {
         glEnable(GL_TEXTURE_2D);
         glBindTexture(GL_TEXTURE_2D, textura);
     }
-    glColor3f(1.0f, 1.0f, 1.0f);
+    glColor3f(144.f / 255.f, 12.f / 255.f, 63.f / 255.f);
 
     glTranslatef(pos.x, pos.y, pos.z);
 
