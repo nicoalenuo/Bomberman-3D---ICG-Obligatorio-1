@@ -12,7 +12,6 @@ class objeto;
 class particula;
 class bomberman;
 class door;
-class bonificador;
 
 extern int velocidad_juego;
 
@@ -45,6 +44,7 @@ extern objeto*** enemigos;
 extern objeto*** fuegos;
 extern objeto*** bonificadores;
 
+extern list<objeto*> borde;
 extern list<particula*> particulas;
 
 extern bomberman* jugador;
@@ -68,8 +68,6 @@ extern void aumentarNivel();
 extern void sumarPuntaje(int puntos);
 extern void disminuirTiempo(int segundos);
 extern void pausarTiempo();
-
-extern bool contieneBonificador(bonificador* bon, list<bonificador*> lista);
 
 extern int largoPantalla;
 extern int altoPantalla;

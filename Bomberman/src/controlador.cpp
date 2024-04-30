@@ -139,6 +139,23 @@ void generarTablero() {
         bonificadores[1][0] = nullptr;
     }
 
+
+    for (int i = -1; i <= largoTablero; i++) { // x toma valor -1 y largoTablero en los bordes
+        for (int j = -1; j <= anchoTablero; j++) { // z toma valor -1 y anchoTablero en los bordes
+            for (int k = -1; k < 1; k++) { // para y toma valor -1 y 0
+                if (i == -1 || i == largoTablero || j == -1 || j == anchoTablero) {
+                    objeto* est = new estructura(
+                        { (GLfloat)i * tile_size + tile_size / 2,(GLfloat)k * tile_size, (GLfloat)j * tile_size + tile_size / 2 },
+                        { tile_size / 2, tile_size, tile_size / 2 },
+                        false
+                    );
+                    borde.push_back(est);
+                }
+            }
+        }
+    }
+
+
 }
 
 Controlador::Controlador() {
@@ -158,6 +175,7 @@ Controlador::Controlador() {
     );
 
     context = SDL_GL_CreateContext(window);
+
     if (context == NULL) {
         cerr << "[GL Context Error]: " << SDL_GetError() << endl;
         SDL_Quit();
@@ -185,6 +203,7 @@ Controlador::Controlador() {
     ControladorObjetos::cargarObjetos();
     ControladorInterfaz::cargarInterfaz();
     ControladorAudio::cargarAudios();
+    ControladorPoderes::cargarPoderes();
 }
 
 Controlador* Controlador::getInstance() {
@@ -239,23 +258,6 @@ inline void colocarBomba() { //para evitar repetir codigo
     }
 }
 
-void Controlador::dibujarBordeTablero() {
-    for (int i = -1; i <= largoTablero; i++) { // x toma valor -1 y largoTablero en los bordes
-        for(int j = -1 ; j<=anchoTablero; j++){ // z toma valor -1 y anchoTablero en los bordes
-            for (int k = -1; k < 1; k++) { // para y toma valor -1 y 0
-                if (i<0 || i>=largoTablero || j<0 || j>=anchoTablero) {
-                    estructura* est = new estructura(
-                        { (GLfloat)i * tile_size + tile_size / 2,(GLfloat)k * tile_size, (GLfloat)j * tile_size + tile_size / 2 },
-                        { tile_size / 2, tile_size, tile_size / 2 },
-                        false
-                    );
-                    est->dibujar();
-                }
-            }
-        }
-    }
-}
-
 void Controlador::manejarEventos() {
     if (!finJuego) {
         while (SDL_PollEvent(&evento)) {
@@ -305,7 +307,6 @@ void Controlador::manejarEventos() {
                     case SDLK_m://mute
                         ControladorAudio::detenerAudio();
                         break;
-                    
                 }
                 break;
             case SDL_KEYUP:
@@ -400,6 +401,7 @@ void Controlador::manejarEventos() {
 }
 
 list<particula*>::iterator it;
+list<objeto*>::iterator itBorde;
 void Controlador::actualizar() {
     if (puerta->getAbierta() && puerta->intersecta(jugador)) {
         cout << "Fin juego" << endl;
@@ -407,6 +409,8 @@ void Controlador::actualizar() {
         generarTablero();
     }
     else {
+        ControladorPoderes::actualizarTemporizadores();
+
         jugador->actualizar();
         puerta->actualizar();
 
@@ -474,6 +478,10 @@ void Controlador::dibujar() {
     for (it = particulas.begin(); it != particulas.end(); ++it)
         (*it)->dibujar();
 
+
+    for (itBorde = borde.begin(); itBorde != borde.end(); ++itBorde)
+        (*itBorde)->dibujar();
+
     //Suelo
     glColor3f(0.75f, 0.63f, 0.50f);
     glBegin(GL_QUADS);
@@ -482,12 +490,9 @@ void Controlador::dibujar() {
     glVertex3f(largoTablero * tile_size, 0, anchoTablero * tile_size);
     glVertex3f(largoTablero * tile_size, 0, 0);
     glEnd();
-
-    dibujarBordeTablero();
     
     glDisable(GL_LIGHTING);
 
-    //HUD
     ControladorInterfaz::dibujarHUD();
 
     SDL_GL_SwapWindow(window);

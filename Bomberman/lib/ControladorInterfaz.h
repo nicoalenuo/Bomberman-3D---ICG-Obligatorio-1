@@ -8,15 +8,15 @@
 
 #include "hud.h"
 #include "global.h"
-#include "bonificador.h"
+#include "ControladorPoderes.h"
 #include "bomberman.h"
 
 using namespace std;
 
 class hudPoder {
-	public:
-		hud* hud;
-		tipo_poder poder;
+public:
+	hud* hud;
+	tipo_poder poder;
 };
 
 class ControladorInterfaz {
@@ -42,7 +42,7 @@ class ControladorInterfaz {
 		static void setTiempo(int tiem);
 		static void setFinJuego(bool finJuego);
 		static void setCantBombas(int cant);
-		static void setPoderes(list<poder> powerUp);
+		//static void setPoderes(list<poder> powerUp);
 };
 
 #endif

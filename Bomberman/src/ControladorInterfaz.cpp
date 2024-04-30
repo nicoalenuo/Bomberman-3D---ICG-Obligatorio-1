@@ -23,6 +23,7 @@ void ControladorInterfaz::setCantBombas(int cant) {
 	setMensajeEnComponente(to_string(cant), interfaz, hudCantBombas);
 }
 
+/*
 void ControladorInterfaz::setPoderes(list<poder> powerUp){
 	hudPoder hudPower{};
 	bool encontrado;
@@ -39,7 +40,7 @@ void ControladorInterfaz::setPoderes(list<poder> powerUp){
 			}
 		}
 	}
-}
+}*/
 
 void ControladorInterfaz::setMensajeEnComponente(string mensaje, TTF_Font* fuente, hud* componente) {
 	glColor3f(componente->colorMensaje.r, componente->colorMensaje.g, componente->colorMensaje.b);

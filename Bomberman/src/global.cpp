@@ -29,8 +29,8 @@ objeto*** enemigos = new objeto * *[largoTablero];
 objeto*** fuegos = new objeto * *[largoTablero];
 objeto*** bonificadores = new objeto * *[largoTablero];
 
+list<objeto*> borde;
 list<particula*> particulas;
-list<bonificador*> bonificadorEnTablero; //es la lista de los bonificadores que se dibujan, los que no, no pertenecen a esta lista
 
 bomberman* jugador;
 
@@ -101,13 +101,4 @@ void disminuirTiempo(int segundos){
 
 void pausarTiempo() {
     pararTiempo = !pararTiempo;
-}
-
-bool contieneBonificador(bonificador* bon, list<bonificador*> lista) {
-    for (bonificador* elemento : lista) {
-        if (elemento == bon) {
-            return true;
-        }
-    }
-    return false;
 }

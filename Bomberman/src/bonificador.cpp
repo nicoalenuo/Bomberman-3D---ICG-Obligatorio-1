@@ -22,10 +22,15 @@ bonificador::bonificador(vector_3 pos, vector_3 tam, tipo_poder tipo_p) : objeto
 
     subiendo = true;
     visible = false;
-    angulo = 0;
+    rotacion_y = 0;
 }
 
-void bonificador::actualizar() { //falta rotarlo
+
+random_device rdParticulaBonificador;
+mt19937 genParticulaBonificador(rdParticulaBonificador());
+uniform_real_distribution<> disParticulaBonificador(-tile_size / 2, tile_size / 2);
+uniform_real_distribution<> disParticulaBonificadorVelocidad(-0.01, 0.01);
+void bonificador::actualizar() { 
     glLoadIdentity();
     if (subiendo) {
         pos.y += 0.03f;
@@ -38,8 +43,35 @@ void bonificador::actualizar() { //falta rotarlo
             subiendo = true;
     }
 
-    if (estructuras[getIndiceTablero(pos.x)][getIndiceTablero(pos.z)] == nullptr) 
+    rotacion_y += 4;
+    rotacion_y %= 360;
+
+
+    if (!visible && estructuras[getIndiceTablero(pos.x)][getIndiceTablero(pos.z)] == nullptr) 
         visible = true;
+
+    if (visible) {
+        particulas.push_back(
+            new particula_bonificador(
+                { GLfloat(pos.x + disParticulaBonificador(genParticulaBonificador)), 0.0f, GLfloat(pos.z + disParticulaBonificador(genParticulaBonificador)) },
+                { GLfloat(0.025), GLfloat(0.025), GLfloat(0.025) },
+                { 0.0f, 1.0f, 0.0f },
+                { GLfloat(disParticulaBonificadorVelocidad(genParticulaBonificador)), 0, GLfloat(disParticulaBonificadorVelocidad(genParticulaBonificador)) }
+            )
+        );
+    }
+
+    if (visible &&
+        jugador->getPosicion().x + jugador->getTamanio().x > pos.x + tam.x && 
+        jugador->getPosicion().x - jugador->getTamanio().x < pos.x - tam.x &&
+        jugador->getPosicion().z + jugador->getTamanio().z > pos.z + tam.z &&
+        jugador->getPosicion().z - jugador->getTamanio().x < pos.z - tam.z) {
+            int x = getIndiceTablero(pos.x);
+            int z = getIndiceTablero(pos.z);
+            bonificadores[x][z] = nullptr;
+            ControladorPoderes::activarPoder(tipo, 30000); //30 segundos
+            delete this;
+    }
 }
 
 void bonificador::dibujar() {
@@ -47,9 +79,10 @@ void bonificador::dibujar() {
         glPushMatrix();
 
         glTranslatef(pos.x, pos.y, pos.z);
+        glRotatef(rotacion_y, 0, 1, 0);
 
-        glBegin(GL_QUADS);
         glColor3f(1.0f, 1.0f, 0.0f);
+        glBegin(GL_QUADS);
 
         //Cara de abajo
         glVertex3f(-tam.x, 0, -tam.z);

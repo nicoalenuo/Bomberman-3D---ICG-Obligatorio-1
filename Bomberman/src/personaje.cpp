@@ -4,7 +4,7 @@ personaje::personaje(vector_3 pos, vector_3 tam, GLfloat velocidad) : objeto(pos
 	this->velocidad = velocidad;
 }
 
-bool personaje::posicion_valida(vector_3 pos, vector_3 tam) {
+bool personaje::posicion_valida(vector_3 pos, vector_3 tam) { //para colision con estructuras y/o bombas
     int largoTableroAux = largoTablero * int(tile_size);
     int anchoTableroAux = anchoTablero * int(tile_size);
 

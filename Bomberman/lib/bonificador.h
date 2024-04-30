@@ -7,21 +7,14 @@
 
 #include "objeto.h"
 #include "global.h"
-
-enum tipo_poder { //agregar aca en caso de agregar mas bonificadores, y luego agregar casos al switch ControladorInterfaz
-	AUMENTAR_ALCANCE_BOMBAS,
-	INMORTALIDAD, // segundos de inmortalidad
-	AUMENTAR_VELOCIDAD, //
-	BOMBAS_ATRAVIESAN_ESTRUCTURAS,
-	AUMENTAR_CANTIDAD_BOMBAS,
-	BONIFICADOR_RANDOM, //NO ELIMINAR ESTE
-};
+#include "bomberman.h"
+#include "particula_bonificador.h"
 
 class bonificador : public objeto {
 private:
 	tipo_poder tipo; 
 	bool subiendo, visible;
-	float angulo;
+	int rotacion_y;
 public:
 	bonificador(vector_3 pos, vector_3 tam, tipo_poder tipo);
 

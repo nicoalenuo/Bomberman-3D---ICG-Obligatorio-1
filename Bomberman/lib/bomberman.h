@@ -6,19 +6,10 @@
 #include "personaje.h"
 #include "bonificador.h"
 
-class poder {
-	public:
-		float cantidad; //pueden ser segundos
-		tipo_poder powerUp;
-		poder(float cant, tipo_poder power);
-		void setCantidad(float cant);
-};
-
 class bomberman : public personaje {
 private:
 	int vida, maxBomba, cantActual, largoBomba, tiempoBomba, rotacion_y_actual, rotacion_z_actual;
 	bool moverBomba, balanceandoseDerecha;
-	list<poder> poderes = list<poder>();
 public:
 	bomberman(vector_3 pos, vector_3 tam, GLfloat velocidad);
 
@@ -42,9 +33,6 @@ public:
 
 	int getLargoBomba() const { return largoBomba; };
 	void setLargoBomba(int largo) { largoBomba = largo; };
-
-	list<poder> getPoderes() const { return poderes; };
-	void agregarPoder(poder powerUp);
 
 	bool bombaDisponible() const { return maxBomba > cantActual; };
 
