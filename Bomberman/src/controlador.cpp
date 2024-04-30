@@ -1,6 +1,30 @@
 #include "../lib/controlador.h"
 
-Controlador* Controlador::instancia = nullptr; 
+Controlador* Controlador::instancia = nullptr;
+
+void eliminarEstructuras(vector_3 pos, bool isOrientacionX, int num) {
+    int x = getIndiceTablero(pos.x);
+    int z = getIndiceTablero(pos.z);
+
+    int i = -num;
+    int f = num;
+
+    if (isOrientacionX) {
+        for (i; i <= f; i++) {
+            if (estructuras[x+i][z] != nullptr) {
+                delete estructuras[x+i][z];
+                estructuras[x+i][z] = nullptr;
+            }
+        }
+    } else {
+        for (i; i <= f; i++) {
+            if (estructuras[x][z + i] != nullptr) {
+                delete estructuras[x][z + i];
+                estructuras[x][z + i] = nullptr;
+            }
+        }
+    }
+}
 
 void generarTablero() {
     if (jugador == nullptr) {
@@ -20,7 +44,7 @@ void generarTablero() {
         estructuras[i] = new objeto * [anchoTablero];
         bombas[i] = new objeto * [anchoTablero];
         fuegos[i] = new objeto * [anchoTablero];
-        enemigos[i] = new objeto * [anchoTablero];
+        //enemigos[i] = new objeto * [anchoTablero];
         bonificadores[i] = new objeto * [anchoTablero];
     }
 
@@ -29,7 +53,7 @@ void generarTablero() {
             estructuras[i][j] = nullptr;
             bombas[i][j] = nullptr;
             fuegos[i][j] = nullptr;
-            enemigos[i][j] = nullptr;
+            //enemigos[i][j] = nullptr;
             bonificadores[i][j] = nullptr;
         }
     }
@@ -123,7 +147,7 @@ void generarTablero() {
     //Fin Estructura posicionar bomba
     puerta = new door(
         { GLfloat(2.5 * tile_size), 0, GLfloat(tile_size / 2) },
-        { GLfloat(tile_size / 2), tile_size, GLfloat(tile_size / 2) }
+        { GLfloat(tile_size / 2), tile_size, GLfloat(tile_size / 2)}
     );
 
     if (bonificadores[0][0] != nullptr) {
@@ -138,6 +162,16 @@ void generarTablero() {
         delete bonificadores[1][0];
         bonificadores[1][0] = nullptr;
     }
+
+    //Enemigos
+    enemigo* enem = new enemigo(
+        { GLfloat(4.5 * tile_size), 0, GLfloat(4.5 * tile_size) },
+        { GLfloat(tile_size / 4), tile_size, GLfloat(tile_size / 4) }
+    );
+
+    eliminarEstructuras(enem->getPosicion(),enem->getOrientacionX(), 1);
+
+    enemigos.push_back(enem);
 
 }
 
@@ -400,13 +434,13 @@ void Controlador::manejarEventos() {
 }
 
 list<particula*>::iterator it;
+list<enemigo*>::iterator itE;
+
 void Controlador::actualizar() {
-    if (puerta->getAbierta() && puerta->intersecta(jugador)) {
-        cout << "Fin juego" << endl;
+    if (puertaAbierta && puerta->intersecta(jugador)) {
         ControladorAudio::playAudio(sonido::bonificacion);
         generarTablero();
-    }
-    else {
+    } else {
         jugador->actualizar();
         puerta->actualizar();
 
@@ -421,8 +455,8 @@ void Controlador::actualizar() {
                 if (fuegos[i][j] != nullptr)
                     fuegos[i][j]->actualizar();
 
-                if (enemigos[i][j] != nullptr)
-                    enemigos[i][j]->actualizar();
+                /*if (enemigos[i][j] != nullptr)
+                    enemigos[i][j]->actualizar();*/
 
                 if (bonificadores[i][j] != nullptr)
                     bonificadores[i][j]->actualizar();
@@ -439,6 +473,22 @@ void Controlador::actualizar() {
                 ++it;
             }
         }
+
+        for (itE = enemigos.begin(); itE != enemigos.end();){
+            if((*itE)->intersecta(jugador))
+                finJuego = true;
+            (*itE)->actualizar();
+            if ((*itE)->getEliminar()) {
+                delete (*itE);
+                itE = enemigos.erase(itE);
+            }
+            else {
+                itE++;
+            }
+        }
+
+        if (!puertaAbierta && enemigos.empty())
+            puertaAbierta = true;
     }
 }
 
@@ -463,8 +513,8 @@ void Controlador::dibujar() {
             if (fuegos[i][j] != nullptr)
                 fuegos[i][j]->dibujar();
 
-            if (enemigos[i][j] != nullptr)
-                enemigos[i][j]->dibujar();
+            /*if (enemigos[i][j] != nullptr)
+                enemigos[i][j]->dibujar();*/
 
             if (bonificadores[i][j] != nullptr)
                 bonificadores[i][j]->dibujar();
@@ -473,6 +523,9 @@ void Controlador::dibujar() {
 
     for (it = particulas.begin(); it != particulas.end(); ++it)
         (*it)->dibujar();
+
+    for (itE = enemigos.begin(); itE != enemigos.end(); itE++)
+        (*itE)->dibujar();
 
     //Suelo
     glColor3f(0.75f, 0.63f, 0.50f);
@@ -505,8 +558,8 @@ Controlador::~Controlador() {
             if (fuegos[i][j] != nullptr)
                 delete fuegos[i][j];
 
-            if (enemigos[i][j] != nullptr)
-                delete enemigos[i][j];
+            /*if (enemigos[i][j] != nullptr)
+                delete enemigos[i][j];*/
 
             if (bonificadores[i][j] != nullptr) 
                 delete bonificadores[i][j];
