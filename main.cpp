@@ -18,16 +18,14 @@ int main(int argc, char* argv[]) {
         (*controlador).dibujar();
 
         frameTime = SDL_GetTicks() - frameStart;
-        segundo += frameTime;
-        if (frameTime < frameDelay) {
+        segundo += frameDelay;
+        if (frameTime < frameDelay) 
             SDL_Delay(frameDelay - frameTime);
-            segundo += frameDelay;
-        }
 
         if (segundo > 1000) { // 1000ms == 1segundo
-            if (!pausa && !pararTiempo) {
-                disminuirTiempo(segundo / 1000);
-            }
+            if (!pausa && !pararTiempo) 
+                disminuirTiempo(1);
+
             segundo = segundo % 1000;
         }
         

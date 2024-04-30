@@ -7,13 +7,13 @@ particula_estructura::particula_estructura(vector_3 pos, vector_3 tam, vector_3 
 
 GLfloat tiempoSegundos;
 void particula_estructura::actualizar() {
-    if (pos.y > 0.2f) {
+    if (pos.y > 0.1f) {
         tiempoSegundos = tiempoParticula / 1000.0f;
         pos.x = pos.x + velocidad.x;
 
         pos.y = max(aceleracion.y * tiempoSegundos * tiempoSegundos +
             velocidad.y * tiempoSegundos +
-            pos_inicial.y, 0.2f);
+            pos_inicial.y, 0.1f);
 
         pos.z = pos.z + velocidad.z;
         tiempoParticula += frameDelay;

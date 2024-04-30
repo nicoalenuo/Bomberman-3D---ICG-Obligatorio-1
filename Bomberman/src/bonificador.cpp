@@ -25,7 +25,6 @@ bonificador::bonificador(vector_3 pos, vector_3 tam, tipo_poder tipo_p) : objeto
     rotacion_y = 0;
 }
 
-
 random_device rdParticulaBonificador;
 mt19937 genParticulaBonificador(rdParticulaBonificador());
 uniform_real_distribution<> disParticulaBonificador(-tile_size / 2, tile_size / 2);
@@ -70,6 +69,7 @@ void bonificador::actualizar() {
             int z = getIndiceTablero(pos.z);
             bonificadores[x][z] = nullptr;
             ControladorPoderes::activarPoder(tipo, 30000); //30 segundos
+            ControladorAudio::playAudio(sonido::bonificacion);
             delete this;
     }
 }
@@ -79,7 +79,7 @@ void bonificador::dibujar() {
         glPushMatrix();
 
         glTranslatef(pos.x, pos.y, pos.z);
-        glRotatef(rotacion_y, 0, 1, 0);
+        glRotatef(GLfloat(rotacion_y), 0, 1, 0);
 
         glColor3f(1.0f, 1.0f, 0.0f);
         glBegin(GL_QUADS);

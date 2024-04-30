@@ -18,8 +18,6 @@ enum tipo_poder { //agregar aca en caso de agregar mas bonificadores, y luego ag
 	BONIFICADOR_RANDOM, //NO ELIMINAR ESTE
 };
 
-using namespace std;
-
 class ControladorPoderes{
 private: //Los poderes con temporizador tienen un tiempo. Los que no, no se pierden y duran hasta el siguiente nivel/fin de juego
 	static map<tipo_poder, bool> poderActivo;

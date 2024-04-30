@@ -7,10 +7,9 @@
 
 #include "global.h"
 #include "bomberman.h"
+#include "../constantes/constantes.h"
 
 #include <random>
-
-#include "../constantes/constantes.h"
 
 enum tipo_camara {
 	CAMARA_PRIMERA_PERSONA,

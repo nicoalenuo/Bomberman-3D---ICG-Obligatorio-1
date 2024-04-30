@@ -154,8 +154,6 @@ void generarTablero() {
             }
         }
     }
-
-
 }
 
 Controlador::Controlador() {
@@ -478,7 +476,6 @@ void Controlador::dibujar() {
     for (it = particulas.begin(); it != particulas.end(); ++it)
         (*it)->dibujar();
 
-
     for (itBorde = borde.begin(); itBorde != borde.end(); ++itBorde)
         (*itBorde)->dibujar();
 
@@ -513,15 +510,19 @@ Controlador::~Controlador() {
             if (enemigos[i][j] != nullptr)
                 delete enemigos[i][j];
 
-            if (bonificadores[i][j] != nullptr) 
+            if (bonificadores[i][j] != nullptr)
                 delete bonificadores[i][j];
-
         }
     }
 
     for (list<particula*>::iterator it = particulas.begin(); it != particulas.end();) {
         delete (*it);
         it = particulas.erase(it);
+    }
+
+    for (itBorde = borde.begin(); itBorde != borde.end(); ){
+        delete (*itBorde);
+        itBorde = borde.erase(itBorde);
     }
 
     ControladorAudio::limpiarAudios();

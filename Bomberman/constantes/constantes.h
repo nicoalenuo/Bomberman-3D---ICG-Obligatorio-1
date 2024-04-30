@@ -5,6 +5,8 @@
 
 #include "SDL_opengl.h"
 
+#include <map>
+
 const unsigned int frameDelay = 33 ; //33 milisegundos entre cada frame
 const double generadorTerreno = 0.6; //probabilidad de 0 a 1 de generar terreno destructible
 const double generadorBonificador = 0.05;

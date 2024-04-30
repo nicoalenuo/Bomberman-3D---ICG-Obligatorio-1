@@ -1,8 +1,8 @@
 #include "../lib/bomba.h"
 
 bomba::bomba(vector_3 pos, vector_3 tam, int tiempo, int largo) : objeto(pos, tam) {
-	this->tiempoBomba = tiempo;
-	this->largoBomba = largo;
+	tiempoBomba = tiempo;
+	largoBomba = largo;
 }
 
 void bomba::actualizar() { // actualiza el tiempo, y si es cero, explota
@@ -12,7 +12,6 @@ void bomba::actualizar() { // actualiza el tiempo, y si es cero, explota
         int z = getIndiceTablero(pos.z);
 
         bool alcanza = false;
-
         for (int i = z+1; !alcanza && i < min(z + this->largoBomba + 1, anchoTablero); i++) { // x fijo, z incrementa
             if (ControladorPoderes::getEstaActivo(BOMBAS_ATRAVIESAN_ESTRUCTURAS) || estructuras[x][i] == nullptr) {
                 if (fuegos[x][i] != nullptr)
