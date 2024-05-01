@@ -11,14 +11,14 @@ void eliminarEstructuras(vector_3 pos, bool isOrientacionX, int num) {
 
     if (isOrientacionX) {
         for (i; i <= f; i++) {
-            if (estructuras[x+i][z] != nullptr) {
+            if ( x+i >= 0 && x+i < largoTablero && estructuras[x+i][z] != nullptr) {
                 delete estructuras[x+i][z];
                 estructuras[x+i][z] = nullptr;
             }
         }
     } else {
         for (i; i <= f; i++) {
-            if (estructuras[x][z + i] != nullptr) {
+            if (z + i >= 0 &&  z+i < anchoTablero && estructuras[x][z + i] != nullptr) {
                 delete estructuras[x][z + i];
                 estructuras[x][z + i] = nullptr;
             }
@@ -198,6 +198,7 @@ void generarTablero() {
         enemigos.push_back(enem);
     }
     enem = nullptr;
+    cout << "XD" << endl;
 }
 
 Controlador::Controlador() {

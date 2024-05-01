@@ -3,6 +3,8 @@
 #ifndef CONTROLADORLUZ_H
 #define CONTROLADORLUZ_H
 
+#include <stack>
+
 #include "SDL_opengl.h"
 #include "global.h"
 #include "bomberman.h"

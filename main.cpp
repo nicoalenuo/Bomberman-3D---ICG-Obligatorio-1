@@ -18,18 +18,18 @@ int main(int argc, char* argv[]) {
         (*controlador).dibujar();
 
         frameTime = SDL_GetTicks() - frameStart;
-        segundo += frameDelay;
         if (frameTime < frameDelay) 
             SDL_Delay(frameDelay - frameTime);
 
-        if (segundo > 1000) { // 1000ms == 1segundo
-            if (!pausa && !pararTiempo) 
-                disminuirTiempo(1);
+        if (!finJuego) {
+            segundo += frameDelay;
+            if (segundo > 1000) { // 1000ms == 1segundo
+                if (!pausa && !pararTiempo)
+                    disminuirTiempo(1);
 
-            segundo = segundo % 1000;
+                segundo = segundo % 1000;
+            }
         }
-        
-
     } while (!fin);
 
     delete controlador;

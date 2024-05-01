@@ -157,8 +157,11 @@ void ControladorObjetos::dibujarCubo(vector_3 tam, GLuint textura, GLfloat color
 		glBindTexture(GL_TEXTURE_2D, textura);
 		glColor3f(1.0f, 1.0f, 1.0f);
 	}
-	else {
+	else if (textura == 0){
 		glColor3f(color[0], color[1], color[2]);
+	}
+	else {
+		glColor3f(1.0f, 1.0f, 1.0f);
 	}
 
 	glBegin(GL_QUADS);
