@@ -19,22 +19,22 @@ void bomberman::actualizar() {
     if (moverArriba) {
         if (mouseX >= 45 && mouseX < 135) {
             rotacionY = 90;
-            if (posicion_valida({ pos.x - velocidad * velocidad_juego, 0, pos.z }, { tam.x, 0, tam.z }))
+            if (atravesar_paredes || posicion_valida({ pos.x - velocidad * velocidad_juego, 0, pos.z }, { tam.x, 0, tam.z }))
                 pos.x -= velocidad * velocidad_juego;
         }
         else if (mouseX >= 135 && mouseX < 225) {
             rotacionY = 180;
-            if (posicion_valida({ pos.x, 0, pos.z + velocidad * velocidad_juego }, { tam.x, 0,tam.z }))
+            if (atravesar_paredes || posicion_valida({ pos.x, 0, pos.z + velocidad * velocidad_juego }, { tam.x, 0,tam.z }))
                 pos.z += velocidad * velocidad_juego;
         }
         else if (mouseX >= 225 && mouseX < 315) {
             rotacionY = 270;
-            if (posicion_valida({ pos.x + velocidad * velocidad_juego, 0, pos.z }, { tam.x, 0, tam.z }))
+            if (atravesar_paredes || posicion_valida({ pos.x + velocidad * velocidad_juego, 0, pos.z }, { tam.x, 0, tam.z }))
                 pos.x += velocidad * velocidad_juego;
         }
         else {
             rotacionY = 0;
-            if (posicion_valida({ pos.x, 0,pos.z - velocidad * velocidad_juego }, { tam.x, 0,tam.z }))
+            if (atravesar_paredes || posicion_valida({ pos.x, 0,pos.z - velocidad * velocidad_juego }, { tam.x, 0,tam.z }))
                 pos.z -= velocidad * velocidad_juego;
         }
         movimiento = true;
@@ -42,22 +42,22 @@ void bomberman::actualizar() {
     if (moverAbajo) {
         if (mouseX >= 45 && mouseX < 135) {
             rotacionY = 270;
-            if (posicion_valida({ pos.x + velocidad * velocidad_juego, 0, pos.z }, { tam.x, 0, tam.z }))
+            if (atravesar_paredes || posicion_valida({ pos.x + velocidad * velocidad_juego, 0, pos.z }, { tam.x, 0, tam.z }))
                 pos.x += velocidad * velocidad_juego;
         }
         else if (mouseX >= 135 && mouseX < 225) {
             rotacionY = 0;
-            if (posicion_valida({ pos.x, 0, pos.z - velocidad * velocidad_juego }, { tam.x, 0, tam.z }))
+            if (atravesar_paredes || posicion_valida({ pos.x, 0, pos.z - velocidad * velocidad_juego }, { tam.x, 0, tam.z }))
                 pos.z -= velocidad * velocidad_juego;
         }
         else if (mouseX >= 225 && mouseX < 315) {
             rotacionY = 90;
-            if (posicion_valida({ pos.x - velocidad * velocidad_juego, 0, pos.z }, { tam.x, 0, tam.z }))
+            if (atravesar_paredes || posicion_valida({ pos.x - velocidad * velocidad_juego, 0, pos.z }, { tam.x, 0, tam.z }))
                 pos.x -= velocidad * velocidad_juego;
         }
         else {
             rotacionY = 180;
-            if (posicion_valida({ pos.x, 0, pos.z + velocidad * velocidad_juego }, { tam.x, 0, tam.z }))
+            if (atravesar_paredes || posicion_valida({ pos.x, 0, pos.z + velocidad * velocidad_juego }, { tam.x, 0, tam.z }))
                 pos.z += velocidad * velocidad_juego;
         }
         movimiento = true;
@@ -65,22 +65,22 @@ void bomberman::actualizar() {
     if (moverDerecha) {
         if (mouseX >= 45 && mouseX < 135) {
             rotacionY = 0;
-            if (posicion_valida({ pos.x, 0, pos.z - velocidad * velocidad_juego }, { tam.x, 0, tam.z }))
+            if (atravesar_paredes || posicion_valida({ pos.x, 0, pos.z - velocidad * velocidad_juego }, { tam.x, 0, tam.z }))
                 pos.z -= velocidad * velocidad_juego;
         }
         else if (mouseX >= 135 && mouseX < 225) {
             rotacionY = 90;
-            if (posicion_valida({ pos.x - velocidad * velocidad_juego, 0, pos.z }, { tam.x, 0, tam.z }))
+            if (atravesar_paredes || posicion_valida({ pos.x - velocidad * velocidad_juego, 0, pos.z }, { tam.x, 0, tam.z }))
                 pos.x -= velocidad * velocidad_juego;
         }
         else if (mouseX >= 225 && mouseX < 315) {
             rotacionY = 180;
-            if (posicion_valida({ pos.x, 0, pos.z + velocidad * velocidad_juego }, { tam.x, 0, tam.z }))
+            if (atravesar_paredes || posicion_valida({ pos.x, 0, pos.z + velocidad * velocidad_juego }, { tam.x, 0, tam.z }))
                 pos.z += velocidad * velocidad_juego;
         }
         else {
             rotacionY = 270;
-            if (posicion_valida({ pos.x + velocidad * velocidad_juego, 0, pos.z }, { tam.x, 0, tam.z }))
+            if (atravesar_paredes || posicion_valida({ pos.x + velocidad * velocidad_juego, 0, pos.z }, { tam.x, 0, tam.z }))
                 pos.x += velocidad * velocidad_juego;
         }
         movimiento = true;
@@ -89,22 +89,22 @@ void bomberman::actualizar() {
     if (moverIzquierda) {
         if (mouseX >= 45 && mouseX < 135) {
             rotacionY = 180;
-            if (posicion_valida({ pos.x, 0, pos.z + velocidad * velocidad_juego }, { tam.x, 0, tam.z }))
+            if (atravesar_paredes || posicion_valida({ pos.x, 0, pos.z + velocidad * velocidad_juego }, { tam.x, 0, tam.z }))
                 pos.z += velocidad * velocidad_juego;
         }
         else if (mouseX >= 135 && mouseX < 225) {
             rotacionY = 270;
-            if (posicion_valida({ pos.x + velocidad * velocidad_juego, 0, pos.z }, { tam.x, 0, tam.z }))
+            if (atravesar_paredes || posicion_valida({ pos.x + velocidad * velocidad_juego, 0, pos.z }, { tam.x, 0, tam.z }))
                 pos.x += velocidad * velocidad_juego;
         }
         else if (mouseX >= 225 && mouseX < 315) {
             rotacionY = 0;
-            if (posicion_valida({ pos.x, 0, pos.z - velocidad * velocidad_juego }, { tam.x, 0, tam.z }))
+            if (atravesar_paredes || posicion_valida({ pos.x, 0, pos.z - velocidad * velocidad_juego }, { tam.x, 0, tam.z }))
                 pos.z -= velocidad * velocidad_juego;
         }
         else {
             rotacionY = 90;
-            if (posicion_valida({ pos.x - velocidad * velocidad_juego, 0, pos.z }, { tam.x, 0, tam.z }))
+            if (atravesar_paredes || posicion_valida({ pos.x - velocidad * velocidad_juego, 0, pos.z }, { tam.x, 0, tam.z }))
                 pos.x -= velocidad * velocidad_juego;
         }
         movimiento = true;

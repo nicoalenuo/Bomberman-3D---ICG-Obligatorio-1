@@ -261,7 +261,7 @@ void ControladorInterfaz::dibujarComponenteHUD(hud* hud) {
 
 void ControladorInterfaz::dibujarHUD() {
 	setPuntaje(puntaje);
-	setTiempo(tiempoJuego);
+	setTiempo(tiempoJuego / 1000);
 	setFinJuego(finJuego);
 	setCantBombas(jugador->getMaxBomba() - jugador->getCantBomba());
 

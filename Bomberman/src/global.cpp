@@ -22,6 +22,7 @@ bool mute = false; //cambiar a false para que inicie con sonido
 unsigned int pasos;
 bool tipoLuz = false; //false = facetado, true = interpolado
 bool pantallaCompleta = false;
+bool atravesar_paredes = false;
 
 objeto*** estructuras = new objeto * *[largoTablero];
 objeto*** bombas = new objeto * *[largoTablero];
@@ -49,7 +50,7 @@ bool inmortal = false;
 
 int nivel = 1;
 int puntaje = 0;
-int tiempoJuego = 200; //segundos
+int tiempoJuego = 200000; //milisegundos
 
 bool puertaAbierta = false;
 
@@ -78,11 +79,15 @@ void toggle_inmortal() {
     inmortal = !inmortal;
 }
 
+void toggle_atravesar_paredes() {
+    atravesar_paredes = !atravesar_paredes;
+}
+
 void aumentarNivel() {
     nivel++;
+    tiempoJuego = 200000;
     if (nivel >= INT_MAX) {
         nivel = INT_MAX;
-        finJuego = true;
     }
 }
 
@@ -90,7 +95,6 @@ void sumarPuntaje(int puntos) {
     puntaje += puntos;
     if (puntos > INT_MAX) {
         puntos = INT_MAX;
-        finJuego = true;
     }
 }
 

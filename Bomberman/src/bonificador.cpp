@@ -30,7 +30,6 @@ mt19937 genParticulaBonificador(rdParticulaBonificador());
 uniform_real_distribution<> disParticulaBonificador(-tile_size / 2, tile_size / 2);
 uniform_real_distribution<> disParticulaBonificadorVelocidad(-0.01, 0.01);
 void bonificador::actualizar() { 
-    glLoadIdentity();
     if (subiendo) {
         pos.y += 0.03f;
         if (pos.y > tile_size)
@@ -50,6 +49,9 @@ void bonificador::actualizar() {
         visible = true;
 
     if (visible) {
+        GLfloat colorLuz[4] = { 1.0f, 1.0f, 0.0f, 0.1f };
+        ControladorLuz::pedirLuz(pos, colorLuz);
+
         particulas.push_back(
             new particula_bonificador(
                 { GLfloat(pos.x + disParticulaBonificador(genParticulaBonificador)), 0.0f, GLfloat(pos.z + disParticulaBonificador(genParticulaBonificador)) },

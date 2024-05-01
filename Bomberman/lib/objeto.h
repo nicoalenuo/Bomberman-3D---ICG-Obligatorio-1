@@ -13,6 +13,7 @@
 #include "ControladorTexturas.h"
 #include "ControladorAudio.h"
 #include "ControladorPoderes.h"
+#include "ControladorLuz.h"
 
 class objeto {
 protected:

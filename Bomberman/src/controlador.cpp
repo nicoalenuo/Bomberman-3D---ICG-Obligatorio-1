@@ -27,6 +27,8 @@ void eliminarEstructuras(vector_3 pos, bool isOrientacionX, int num) {
 }
 
 void generarTablero() {
+    cout << nivel << endl;
+
     if (jugador == nullptr) {
         jugador = new bomberman(
             { tile_size / 2, 0, tile_size / 2 },
@@ -198,7 +200,6 @@ void generarTablero() {
         enemigos.push_back(enem);
     }
     enem = nullptr;
-    cout << "XD" << endl;
 }
 
 Controlador::Controlador() {
@@ -246,6 +247,7 @@ Controlador::Controlador() {
     ControladorObjetos::cargarObjetos();
     ControladorInterfaz::cargarInterfaz();
     ControladorAudio::cargarAudios();
+    ControladorLuz::cargarLuces();
     ControladorPoderes::cargarPoderes();
 }
 
@@ -404,6 +406,9 @@ void Controlador::manejarEventos() {
                     case SDLK_F8:
                         pausarTiempo();
                         break;
+                    case SDLK_F9:
+                        toggle_atravesar_paredes();
+                        break;
                     case SDLK_F11:
                         SDL_SetWindowFullscreen(window,
                             SDL_GetWindowFlags(window) & SDL_WINDOW_FULLSCREEN ? 
@@ -448,58 +453,61 @@ list<enemigo*>::iterator itE;
 list<objeto*>::iterator itBorde;
 
 void Controlador::actualizar() {
+    if (!pausa && !pararTiempo)
+        disminuirTiempo(frameDelay);
+
     if (puertaAbierta && puerta->intersecta(jugador)) {
         ControladorAudio::playAudio(sonido::bonificacion);
+        aumentarNivel();
         generarTablero();
-    } else {
-        ControladorPoderes::actualizarTemporizadores();
+    } 
+    ControladorPoderes::actualizarTemporizadores();
 
-        jugador->actualizar();
-        puerta->actualizar();
+    jugador->actualizar();
+    puerta->actualizar();
 
-        for (int i = 0; i < largoTablero; i++) {
-            for (int j = 0; j < anchoTablero; j++) {
-                if (bombas[i][j] != nullptr)
-                    bombas[i][j]->actualizar();
+    for (int i = 0; i < largoTablero; i++) {
+        for (int j = 0; j < anchoTablero; j++) {
+            if (bombas[i][j] != nullptr)
+                bombas[i][j]->actualizar();
 
-                if (fuegos[i][j] != nullptr)
-                    fuegos[i][j]->actualizar();
+            if (fuegos[i][j] != nullptr)
+                fuegos[i][j]->actualizar();
 
-                /*if (enemigos[i][j] != nullptr)
-                    enemigos[i][j]->actualizar();*/
+            /*if (enemigos[i][j] != nullptr)
+                enemigos[i][j]->actualizar();*/
 
-                if (bonificadores[i][j] != nullptr)
-                    bonificadores[i][j]->actualizar();
-            }
+            if (bonificadores[i][j] != nullptr)
+                bonificadores[i][j]->actualizar();
         }
-
-        for (list<particula*>::iterator it = particulas.begin(); it != particulas.end(); /*se actualiza dentro del bucle */) {
-            (*it)->actualizar();
-            if ((*it)->getEliminar()) {
-                delete (*it);
-                it = particulas.erase(it);
-            }
-            else {
-                ++it;
-            }
-        }
-
-        for (itE = enemigos.begin(); itE != enemigos.end();){
-            if((*itE)->intersecta(jugador))
-                finJuego = true;
-            (*itE)->actualizar();
-            if ((*itE)->getEliminar()) {
-                delete (*itE);
-                itE = enemigos.erase(itE);
-            }
-            else {
-                itE++;
-            }
-        }
-
-        if (!puertaAbierta && enemigos.empty())
-            puertaAbierta = true;
     }
+
+    for (list<particula*>::iterator it = particulas.begin(); it != particulas.end(); /*se actualiza dentro del bucle */) {
+        (*it)->actualizar();
+        if ((*it)->getEliminar()) {
+            delete (*it);
+            it = particulas.erase(it);
+        }
+        else {
+            ++it;
+        }
+    }
+
+    for (itE = enemigos.begin(); itE != enemigos.end();){
+        if((*itE)->intersecta(jugador))
+            finJuego = true;
+        (*itE)->actualizar();
+        if ((*itE)->getEliminar()) {
+            delete (*itE);
+            itE = enemigos.erase(itE);
+        }
+        else {
+            itE++;
+        }
+    }
+
+    if (!puertaAbierta && enemigos.empty()) 
+        puertaAbierta = true;
 }
 
 void Controlador::dibujar() {
@@ -507,7 +515,9 @@ void Controlador::dibujar() {
     glLoadIdentity();
 
     ControladorCamara::colocarCamara();
-    ControladorLuz::colocarLuces();
+
+    if (texturas_habilitadas)
+        ControladorLuz::colocarLuces();
 
     jugador->dibujar();
     puerta->dibujar();
@@ -540,15 +550,18 @@ void Controlador::dibujar() {
     glBegin(GL_QUADS);
     glNormal3f(0.0f, 1.0f, 0.0f);
     glVertex3f(0, 0, 0);
-    glVertex3f(0, 0, anchoTablero * tile_size);
-    glVertex3f(largoTablero * tile_size, 0, anchoTablero * tile_size);
     glVertex3f(largoTablero * tile_size, 0, 0);
+    glVertex3f(largoTablero * tile_size, 0, anchoTablero * tile_size);
+    glVertex3f(0, 0, anchoTablero * tile_size);
     glEnd();
     
-    glDisable(GL_LIGHTING);
+    if (texturas_habilitadas)
+        ControladorLuz::quitarLuces();
+
 
     for (it = particulas.begin(); it != particulas.end(); ++it)
         (*it)->dibujar();
+
 
     ControladorInterfaz::dibujarHUD();
 

@@ -7,11 +7,15 @@
 
 #include "SDL_opengl.h"
 #include "global.h"
-#include "bomberman.h"
-#include "../constantes/constantes.h"
 
 enum TIPO_LUZ_AMBIENTE { MANIANA, TARDE, NOCHE, SIN_LUZ_AMBIENTE };
 enum TIPO_LUZ_BONIFICADOR {AMARILLO, CELESTE ,VIOLETA, SIN_LUZ_BONIFICADOR };
+
+struct luz{
+	GLenum idLuz;
+	vector_3 posicion;
+	GLfloat color[4];
+};
 
 class ControladorLuz {
 	private:
@@ -24,8 +28,14 @@ class ControladorLuz {
 		static GLfloat light_offset_z;
 		static TIPO_LUZ_AMBIENTE colorLuzAmbiente;
 		static TIPO_LUZ_BONIFICADOR colorLuzBonificador;
+
+		static stack<GLenum> lucesDisponibles;
+		static stack<luz> lucesAMostrar;
 	public:
+		static void cargarLuces();
+		static void pedirLuz(vector_3 pos, GLfloat color[4]);
 		static void colocarLuces();
+		static void quitarLuces();
 		static void cambiarColorLuzAmbiente();
 		static void cambiarColorLuzBonificador();
 };

@@ -8,6 +8,9 @@ bool personaje::posicion_valida(vector_3 pos, vector_3 tam) { //para colision co
     int largoTableroAux = largoTablero * int(tile_size);
     int anchoTableroAux = anchoTablero * int(tile_size);
 
+    if (pos.x - tam.x < 0 || pos.x + tam.x >= largoTableroAux || pos.z - tam.z < 0 || pos.z + tam.z >= anchoTableroAux)
+        return false;
+
     objeto* obj_1 = estructuras[int(pos.x - tam.x) / int(tile_size)][int(pos.z - tam.z) / int(tile_size)];
     objeto* obj_2 = estructuras[int(pos.x - tam.x) / int(tile_size)][int(pos.z + tam.z) / int(tile_size)];
     objeto* obj_3 = estructuras[int(pos.x + tam.x) / int(tile_size)][int(pos.z - tam.z) / int(tile_size)];
@@ -19,10 +22,6 @@ bool personaje::posicion_valida(vector_3 pos, vector_3 tam) { //para colision co
     objeto* obj_8 = bombas[int(pos.x + tam.x) / int(tile_size)][int(pos.z + tam.z) / int(tile_size)];
 
     return
-        pos.x - tam.x >= 0 &&
-        pos.x + tam.x < largoTableroAux&&
-        pos.z - tam.z >= 0 &&
-        pos.z + tam.z < anchoTableroAux &&
         (obj_1 == nullptr || pos.x - tam.x < obj_1->getPosicion().x - obj_1->getTamanio().x || pos.x - tam.x > obj_1->getPosicion().x + obj_1->getTamanio().x || pos.z - tam.z < obj_1->getPosicion().z - obj_1->getTamanio().z || pos.z - tam.z > obj_1->getPosicion().z + obj_1->getTamanio().z) &&
         (obj_2 == nullptr || pos.x - tam.x < obj_2->getPosicion().x - obj_2->getTamanio().x || pos.x - tam.x > obj_2->getPosicion().x + obj_2->getTamanio().x || pos.z + tam.z < obj_2->getPosicion().z - obj_2->getTamanio().z || pos.z + tam.z > obj_2->getPosicion().z + obj_2->getTamanio().z) &&
         (obj_3 == nullptr || pos.x + tam.x < obj_3->getPosicion().x - obj_3->getTamanio().x || pos.x + tam.x > obj_3->getPosicion().x + obj_3->getTamanio().x || pos.z - tam.z < obj_3->getPosicion().z - obj_3->getTamanio().z || pos.z - tam.z > obj_3->getPosicion().z + obj_3->getTamanio().z) &&
@@ -34,14 +33,13 @@ bool personaje::posicion_valida(vector_3 pos, vector_3 tam) { //para colision co
 }
 
 bool personaje::contactoConFuego() {
-    objeto* obj_1 = fuegos[getIndiceTablero(pos.x - tam.x)][getIndiceTablero(pos.z - tam.z)];
-    objeto* obj_2 = fuegos[getIndiceTablero(pos.x - tam.x)][getIndiceTablero(pos.z + tam.z)];
-    objeto* obj_3 = fuegos[getIndiceTablero(pos.x + tam.x)][getIndiceTablero(pos.z - tam.z)];
-    objeto* obj_4 = fuegos[getIndiceTablero(pos.x + tam.x)][getIndiceTablero(pos.z + tam.z)];
+    int largoTableroAux = largoTablero * int(tile_size);
+    int anchoTableroAux = anchoTablero * int(tile_size);
 
-    return 
-        obj_1 != nullptr || 
-        obj_2 != nullptr || 
-        obj_3 != nullptr || 
-        obj_4 != nullptr;
+    return (
+        (pos.x - tam.x >= 0 && pos.z - tam.z >= 0 && fuegos[getIndiceTablero(pos.x - tam.x)][getIndiceTablero(pos.z - tam.z)] != nullptr) ||
+        (pos.x - tam.x >= 0 && pos.z + tam.z < anchoTableroAux && fuegos[getIndiceTablero(pos.x - tam.x)][getIndiceTablero(pos.z + tam.z)] != nullptr) ||
+        (pos.x + tam.x < largoTableroAux && pos.z - tam.z >= 0 && fuegos[getIndiceTablero(pos.x + tam.x)][getIndiceTablero(pos.z - tam.z)] != nullptr) ||
+        (pos.x + tam.x < largoTableroAux && pos.z + tam.z < anchoTableroAux && fuegos[getIndiceTablero(pos.x + tam.x)][getIndiceTablero(pos.z + tam.z)] != nullptr)
+    );
 }

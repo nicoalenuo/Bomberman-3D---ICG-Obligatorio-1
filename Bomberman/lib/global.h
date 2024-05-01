@@ -8,6 +8,12 @@
 
 using namespace std;
 
+struct vector_3 {
+	GLfloat x;
+	GLfloat y;
+	GLfloat z;
+};
+
 class objeto;
 class particula;
 class bomberman;
@@ -38,6 +44,7 @@ extern unsigned int pasos;
 extern int puntaje;
 extern bool tipoLuz;
 extern bool inmortal;
+extern bool atravesar_paredes;
 
 extern objeto*** estructuras;
 extern objeto*** bombas;
@@ -67,6 +74,7 @@ extern void toggle_wireframe();
 extern void toggle_texturas();
 extern void toggle_tipoLuz();
 extern void toggle_inmortal();
+extern void toggle_atravesar_paredes();
 
 extern void aumentarNivel();
 extern void sumarPuntaje(int puntos);

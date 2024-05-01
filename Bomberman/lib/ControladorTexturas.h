@@ -9,15 +9,9 @@
 #include "FreeImage.h"
 #include <GL/glu.h>
 
-#include "../constantes/constantes.h"
+#include "global.h"
 
 using namespace std;
-
-struct vector_3 {
-	GLfloat x;
-	GLfloat y;
-	GLfloat z;
-};
 
 enum tipo_textura { //agregar aca en caso de agregar mas texturas, y la direccion en el cpp
 	ESTRUCTURA_DESTRUCTIBLE,
