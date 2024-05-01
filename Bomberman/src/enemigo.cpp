@@ -12,6 +12,25 @@ enemigo::enemigo(vector_3 pos, vector_3 tam): personaje(pos, tam, GLfloat(0.1)){
     probCambiarPos = 0.3;
 }
 
+enemigo::enemigo(vector_3 pos, vector_3 tam, bool orientacionX) : personaje(pos, tam, GLfloat(0.1)) {
+    this->orientacionX = orientacionX;
+    if (orientacionX) {
+        moverX = true;
+        moverNX = false;
+        moverZ = false;
+        moverNZ = false;
+    } else {
+        moverX = false;
+        moverNX = false;
+        moverZ = true;
+        moverNZ = false;
+    }
+    
+    eliminar = false;
+
+    probCambiarPos = 0.3;
+}
+
 bool enemigo::getOrientacionX() {
     return orientacionX;
 }
@@ -39,11 +58,41 @@ bool enemigo::intersecta(bomberman* b) {
 }
 
 bool centroConMovimiento(vector_3 pos) {
-    cout << pos.x << " " << pos.z << endl;
-    return round(pos.x - tile_size / 2) == (pos.x - tile_size / 2) &&
-           round(pos.z - tile_size / 2) == (pos.z - tile_size / 2) &&
-           int(pos.x - tile_size / 2) % 2 == 0 && 
-           int(pos.z - tile_size / 2) % 2 == 0;
+    return abs(round(pos.x - tile_size / 2) - (pos.x - tile_size / 2)) < 0.001 &&
+           abs(round(pos.z - tile_size / 2) - (pos.z - tile_size / 2)) < 0.001 &&
+           getIndiceTablero(pos.x) % 2 == 0 && 
+           getIndiceTablero(pos.z) % 2 == 0;
+}
+
+bool posicion_valida_parcial(vector_3 pos, bool orientacionX) {
+    int largoTableroAux = largoTablero * int(tile_size);
+    int anchoTableroAux = anchoTablero * int(tile_size);
+
+    int x,z,p,n;
+    x = getIndiceTablero(pos.x);
+    z = getIndiceTablero(pos.z);
+
+    objeto *obj_1, *obj_2, *obj_3, *obj_4;
+
+    if (orientacionX) {
+        p = x + 1;
+        n = x - 1;
+        obj_1 = estructuras[p][z];
+        obj_2 = estructuras[n][z];
+        obj_3 = bombas[p][z];
+        obj_4 = bombas[n][z];
+    } else {
+        p = z + 1;
+        n = z - 1;
+        obj_1 = estructuras[x][p];
+        obj_2 = estructuras[x][n];
+        obj_3 = bombas[x][p];
+        obj_4 = bombas[x][n];
+    }
+
+    return
+        (obj_1 == nullptr && obj_3 == nullptr) ||
+        (obj_2 == nullptr && obj_4 == nullptr);
 }
 
 
@@ -55,20 +104,18 @@ void enemigo::actualizar() {
     uniform_real_distribution<> dis(0.0, 1.0);
 
     if (orientacionX) {
-        if (centroConMovimiento(pos) && (dis(gen) < probCambiarPos)) {//corregir
-            cout << "centro" << endl;
+        if (centroConMovimiento(pos) && (dis(gen) < probCambiarPos) && posicion_valida_parcial(pos, false)) {//corregir
             moverX = false;
             moverNX = false;
-            moverZ = true;
-            moverNZ = false;
+            moverZ = dis(gen) < probCambiarPos;
+            moverNZ = !moverZ;
             orientacionX = false;
             cambio = true;
         }
         if (moverX) {
             if (posicion_valida({ pos.x + velocidad * velocidad_juego, 0, pos.z }, { tam.x, 0, tam.z })) {
                 pos.x += velocidad * velocidad_juego;
-            }
-            else {
+            } else {
                 moverX = false;
                 moverNX = true;
             }
@@ -76,18 +123,16 @@ void enemigo::actualizar() {
         if (moverNX) {
             if (posicion_valida({ pos.x - velocidad * velocidad_juego, 0, pos.z }, { tam.x, 0, tam.z })) {
                 pos.x -= velocidad * velocidad_juego;
-            }
-            else {
+            } else {
                 moverX = true;
                 moverNX = false;
             }
         }
     }
     if (!orientacionX) {
-        if (!cambio && centroConMovimiento(pos) && (dis(gen) < probCambiarPos)) {//corregir
-            cout << "centro" << endl;
-            moverX = true;
-            moverNX = false;
+        if (!cambio && centroConMovimiento(pos) && (dis(gen) < probCambiarPos) && posicion_valida_parcial(pos, true)) {//corregir
+            moverX = dis(gen) < probCambiarPos;
+            moverNX = !moverX;
             moverZ = false;
             moverNZ = false;
             orientacionX = true;

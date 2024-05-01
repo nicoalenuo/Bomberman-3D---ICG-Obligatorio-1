@@ -164,15 +164,24 @@ void generarTablero() {
     }
 
     //Enemigos
-    enemigo* enem = new enemigo(
-        { GLfloat(4.5 * tile_size), 0, GLfloat(4.5 * tile_size) },
-        { GLfloat(tile_size / 4), tile_size, GLfloat(tile_size / 4) }
-    );
+    vector<pair<int, int>> posEnemigos = { {6, 4}, {12, 8}, {18, 2}, {2, 6}};
+    enemigo* enem;
+    bool orientacionX;
 
-    eliminarEstructuras(enem->getPosicion(),enem->getOrientacionX(), 1);
+    for (vector<pair<int, int>>::iterator itP = posEnemigos.begin(); itP != posEnemigos.end(); itP++) {
+        orientacionX = (dis(gen) < 0.5);
+        enem = new enemigo(
+            { (GLfloat)(itP->first) * tile_size + tile_size / 2, 0, (GLfloat)(itP->second) * tile_size + tile_size / 2 },
+            { GLfloat(tile_size / 4), tile_size, GLfloat(tile_size / 4) },
+            orientacionX
 
-    enemigos.push_back(enem);
+        );
 
+        eliminarEstructuras(enem->getPosicion(), enem->getOrientacionX(), 3);
+
+        enemigos.push_back(enem);
+    }
+    enem = nullptr;
 }
 
 Controlador::Controlador() {

@@ -23,6 +23,8 @@ private:
 public:
 	enemigo(vector_3 pos, vector_3 tam);
 
+	enemigo(vector_3 pos, vector_3 tam, bool orientacionX);
+
 	bool getOrientacionX();
 	void setOrientacionX(bool orientacionX);
 
