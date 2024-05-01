@@ -106,7 +106,9 @@ void enemigo::actualizar() {
     uniform_real_distribution<> dis(0.0, 1.0);
 
     if (orientacionX) {
-        if (centroConMovimiento(pos) && (dis(gen) < probCambiarPos) && posicion_valida_parcial(pos, false)) {//corregir
+        if (centroConMovimiento(pos) && (dis(gen) < probCambiarPos) && posicion_valida_parcial(pos, false)) {
+            //falta corregir, al usar centroConMovimiento me toma en cuenta no solo los centros si no tambien las aristas
+            //por eso a veces hace un movimineto extranio entre dos esquinas, lo voy a corregir despues @victor
             moverX = false;
             moverNX = false;
             moverZ = dis(gen) < probCambiarPos;
@@ -132,7 +134,7 @@ void enemigo::actualizar() {
         }
     }
     if (!orientacionX) {
-        if (!cambio && centroConMovimiento(pos) && (dis(gen) < probCambiarPos) && posicion_valida_parcial(pos, true)) {//corregir
+        if (!cambio && centroConMovimiento(pos) && (dis(gen) < probCambiarPos) && posicion_valida_parcial(pos, true)) {
             moverX = dis(gen) < probCambiarPos;
             moverNX = !moverX;
             moverZ = false;
