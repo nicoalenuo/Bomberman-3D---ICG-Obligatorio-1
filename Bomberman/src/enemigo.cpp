@@ -75,15 +75,17 @@ bool posicion_valida_parcial(vector_3 pos, bool orientacionX) {
     objeto *obj_1, *obj_2, *obj_3, *obj_4;
 
     if (orientacionX) {
-        p = x + 1;
-        n = x - 1;
+        p = min(x + 1, largoTablero);
+        n = max(x - 1, 0);
+        cout << p << " " << n << endl;
         obj_1 = estructuras[p][z];
         obj_2 = estructuras[n][z];
         obj_3 = bombas[p][z];
         obj_4 = bombas[n][z];
     } else {
-        p = z + 1;
-        n = z - 1;
+        p = min(z + 1, anchoTablero);
+        n = max(z - 1, 0);
+        cout << p << " " << n << endl;
         obj_1 = estructuras[x][p];
         obj_2 = estructuras[x][n];
         obj_3 = bombas[x][p];
