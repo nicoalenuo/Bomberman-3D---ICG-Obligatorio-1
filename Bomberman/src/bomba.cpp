@@ -3,120 +3,97 @@
 bomba::bomba(vector_3 pos, vector_3 tam, int tiempo, int largo) : objeto(pos, tam) {
 	tiempoBomba = tiempo;
 	largoBomba = largo;
+    agrandandose = false;
+    scale = 1.0f;
 }
 
-void bomba::actualizar() { // actualiza el tiempo, y si es cero, explota
-   tiempoBomba -= frameDelay * velocidad_juego;
-    if (this->tiempoBomba <= 0) {
-        int x = getIndiceTablero(pos.x);
-        int z = getIndiceTablero(pos.z);
+int xBomba, zBomba, dx, dz, nx, nz;
+void bomba::actualizar() {
+    if (agrandandose) {
+        scale += 0.01f;
+        if (scale > 1.1f)
+            agrandandose = false;
+    }
+    else {
+        scale -= 0.01f;
+        if (scale < 0.9f)
+            agrandandose = true;
+    }
 
-        bool alcanza = false;
-        for (int i = z+1; !alcanza && i < min(z + this->largoBomba + 1, anchoTablero); i++) { // x fijo, z incrementa
-            if (ControladorPoderes::getEstaActivo(BOMBAS_ATRAVIESAN_ESTRUCTURAS) || estructuras[x][i] == nullptr) {
-                if (fuegos[x][i] != nullptr)
-                    delete fuegos[x][i];
+    tiempoBomba -= frameDelay * velocidad_juego;
+    bool alcanza;
+    if (tiempoBomba <= 0) {
+        xBomba = getIndiceTablero(pos.x);
+        zBomba = getIndiceTablero(pos.z);
 
-                fuegos[x][i] = new fuego(
-                    { GLfloat(x * tile_size) + tile_size / 2 , 0.0f, GLfloat(i * tile_size) + tile_size / 2 },
-                    { tile_size / 2, tile_size, tile_size / 2 },
-                    1500
-                );
-            }
-            if (estructuras[x][i] != nullptr) {
-                alcanza = !ControladorPoderes::getEstaActivo(BOMBAS_ATRAVIESAN_ESTRUCTURAS);
-                estructura* est = dynamic_cast<estructura*>(estructuras[x][i]);
-                if (est->getDestructible()) {
-                    estructuras[x][i] = nullptr;
-                    delete est;
+        for (int dir = 0; dir < 4; dir++) {
+            dx = 0;
+            dz = 0;
+            alcanza = false;
+
+            if (dir == 0)  // z fijo, x incrementa
+                dx = 1;
+            else if (dir == 1)  // z fijo, x decrementa
+                dx = -1;
+            else if (dir == 2)  // x fijo, z incrementa
+                dz = 1;
+            else if (dir == 3)  // x fijo, z decrementa
+                dz = -1;
+
+            for (int i = 1; i <= largoBomba && !alcanza; i++) {
+                nx = xBomba + i * dx;
+                nz = zBomba + i * dz;
+
+                if (nx >= 0 && nx < largoTablero && nz >= 0 && nz < anchoTablero) {
+                    if (ControladorPoderes::getEstaActivo(BOMBAS_ATRAVIESAN_ESTRUCTURAS) || estructuras[nx][nz] == nullptr) {
+                        if (fuegos[nx][nz] != nullptr)
+                            delete fuegos[nx][nz];
+
+                        fuegos[nx][nz] = new fuego(
+                            { GLfloat(nx * tile_size) + tile_size / 2 , 0.0f, GLfloat(nz * tile_size) + tile_size / 2 },
+                            { tile_size / 2, tile_size, tile_size / 2 },
+                            1500
+                        );
+                    }
+
+                    if (estructuras[nx][nz] != nullptr) {
+                        alcanza = !ControladorPoderes::getEstaActivo(BOMBAS_ATRAVIESAN_ESTRUCTURAS);
+                        estructura* est = dynamic_cast<estructura*>(estructuras[nx][nz]);
+                        if (est->getDestructible()) {
+                            estructuras[nx][nz] = nullptr;
+                            delete est;
+                        }
+                    }
+                }
+                else {
+                    alcanza = true; 
                 }
             }
         }
 
-        alcanza = false;
-        for (int i = z - 1; !alcanza && i >= max(z - this->largoBomba, 0); i--) { // x fijo, z decrementa
-            if (ControladorPoderes::getEstaActivo(BOMBAS_ATRAVIESAN_ESTRUCTURAS) || estructuras[x][i] == nullptr) {
-                if (fuegos[x][i] != nullptr)
-                    delete fuegos[x][i];
+        if (fuegos[xBomba][zBomba] != nullptr) 
+            delete fuegos[xBomba][zBomba];
 
-                fuegos[x][i] = new fuego(
-                    { GLfloat(x * tile_size) + tile_size / 2 , 0.0f, GLfloat(i * tile_size) + tile_size / 2 },
-                    { tile_size / 2, tile_size, tile_size / 2 },
-                    1500
-                );
-            }
-            if (estructuras[x][i] != nullptr) {
-                alcanza = !ControladorPoderes::getEstaActivo(BOMBAS_ATRAVIESAN_ESTRUCTURAS);
-                estructura* est = dynamic_cast<estructura*>(estructuras[x][i]);
-                if (est->getDestructible()) {
-                    estructuras[x][i] = nullptr;
-                    delete est;
-                }
-            }    
-        }
-
-        alcanza = false;
-        for (int i = x + 1; !alcanza && i < min(x + this->largoBomba + 1, largoTablero); i++) { // z fijo, x incrementa
-            if (ControladorPoderes::getEstaActivo(BOMBAS_ATRAVIESAN_ESTRUCTURAS) || estructuras[i][z] == nullptr) {
-                if (fuegos[i][z] != nullptr)
-                    delete fuegos[i][z];
-
-                fuegos[i][z] = new fuego(
-                    { GLfloat(i * tile_size) + tile_size / 2 , 0.0f, GLfloat(z * tile_size) + tile_size / 2 },
-                    { tile_size / 2, tile_size, tile_size / 2 },
-                    1500
-                );
-            }
-            if (estructuras[i][z] != nullptr) {
-                alcanza = !ControladorPoderes::getEstaActivo(BOMBAS_ATRAVIESAN_ESTRUCTURAS);
-                estructura* est = dynamic_cast<estructura*>(estructuras[i][z]);
-                if (est->getDestructible()) {
-                    estructuras[i][z] = nullptr;
-                    delete est;
-                }
-            }
-        }
-
-        alcanza = false;
-        for (int i = x - 1; !alcanza && i >= max(x - this->largoBomba, 0); i--) { // z fijo, x decrementa
-            if (ControladorPoderes::getEstaActivo(BOMBAS_ATRAVIESAN_ESTRUCTURAS) || estructuras[i][z] == nullptr) {
-                if (fuegos[i][z] != nullptr)
-                    delete fuegos[i][z];
-
-                fuegos[i][z] = new fuego(
-                    { GLfloat(i * tile_size) + tile_size / 2 , 0.0f, GLfloat(z * tile_size) + tile_size / 2 },
-                    { tile_size / 2, tile_size, tile_size / 2 },
-                    1500
-                );
-            }
-            if (estructuras[i][z] != nullptr) {
-                alcanza = !ControladorPoderes::getEstaActivo(BOMBAS_ATRAVIESAN_ESTRUCTURAS);
-                estructura* est = dynamic_cast<estructura*>(estructuras[i][z]);
-                if (est->getDestructible()) {
-                    estructuras[i][z] = nullptr;
-                    delete est;
-                }
-            } 
-        }
-
-        fuegos[x][z] = new fuego(
-            { GLfloat(x * tile_size) + tile_size / 2 , 0.0f, GLfloat(z * tile_size) + tile_size / 2 },
+        fuegos[xBomba][zBomba] = new fuego(
+            { GLfloat(xBomba * tile_size) + tile_size / 2 , 0.0f, GLfloat(zBomba * tile_size) + tile_size / 2 },
             { tile_size / 2, tile_size, tile_size / 2 },
-              1500
-        ); 
+            1500
+        );
 
         jugador->disminuirCantBomba();
 
         ControladorCamara::sacudir(1000);
 
-        bombas[x][z] = nullptr;
+        bombas[xBomba][zBomba] = nullptr;
         delete this;
-    } 
+    }
 }
+
 
 void bomba::dibujar() {
     glPushMatrix();
     glTranslatef(pos.x, pos.y, pos.z);
+    glScalef(scale, scale, scale);
     ControladorObjetos::dibujar(OBJ_BOMBA);
     glPopMatrix();
 }

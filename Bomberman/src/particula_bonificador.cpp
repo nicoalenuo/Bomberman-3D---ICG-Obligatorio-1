@@ -23,53 +23,10 @@ void particula_bonificador::actualizar() {
         eliminar = true;
 }
 
+GLfloat colorParticulaBonificador[3] = { 1.0f, 1.0f, 0.5f };
 void particula_bonificador::dibujar() {
     glPushMatrix();
-
     glTranslatef(pos.x, pos.y, pos.z);
-    glColor3f(1.0f, 1.0f, 0.5f);
-    glBegin(GL_QUADS);
-
-    //Cara de abajo
-    glVertex3f(-tam.x, 0, -tam.z);
-    glVertex3f(tam.x, 0, -tam.z);
-    glVertex3f(tam.x, 0, tam.z);
-    glVertex3f(-tam.x, 0, tam.z);
-
-    // Cara de arriba
-    glVertex3f(-tam.x, tam.y, -tam.z);
-    glVertex3f(tam.x, tam.y, -tam.z);
-    glVertex3f(tam.x, tam.y, tam.z);
-    glVertex3f(-tam.x, tam.y, tam.z);
-
-    // Cara de atras
-    glVertex3f(-tam.x, 0, -tam.z);
-    glVertex3f(tam.x, 0, -tam.z);
-    glVertex3f(tam.x, tam.y, -tam.z);
-    glVertex3f(-tam.x, tam.y, -tam.z);
-
-    // Cara de adelante
-    glVertex3f(-tam.x, 0, tam.z);
-    glVertex3f(tam.x, 0, tam.z);
-    glVertex3f(tam.x, tam.y, tam.z);
-    glVertex3f(-tam.x, tam.y, tam.z);
-
-    // Cara izquierda
-    glVertex3f(-tam.x, 0, -tam.z);
-    glVertex3f(-tam.x, 0, tam.z);
-    glVertex3f(-tam.x, tam.y, tam.z);
-    glVertex3f(-tam.x, tam.y, -tam.z);
-
-    // Cara derecha 
-    glVertex3f(tam.x, 0, -tam.z);
-    glVertex3f(tam.x, 0, tam.z);
-    glVertex3f(tam.x, tam.y, tam.z);
-    glVertex3f(tam.x, tam.y, -tam.z);
-
-    glEnd();
-
-    if (texturas_habilitadas)
-        glDisable(GL_TEXTURE_2D);
-
+    ControladorObjetos::dibujarCubo(tam, 0, colorParticulaBonificador);
     glPopMatrix();
 }

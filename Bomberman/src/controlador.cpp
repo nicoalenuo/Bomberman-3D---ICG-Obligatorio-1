@@ -242,7 +242,7 @@ inline void colocarBomba() { //para evitar repetir codigo
                 { posBombaXTablero * tile_size + tile_size / 2, 0, posBombaZTablero * tile_size + tile_size / 2 },
                 { tile_size / 4, tile_size / 2, tile_size / 4 },
                 2000, //2 segundos
-                2
+                ControladorPoderes::getEstaActivo(AUMENTAR_ALCANCE_BOMBAS) ? 2 : 1
             );
             bombas[posBombaXTablero][posBombaZTablero] = bomba_obj;
 
@@ -414,9 +414,6 @@ void Controlador::actualizar() {
 
         for (int i = 0; i < largoTablero; i++) {
             for (int j = 0; j < anchoTablero; j++) {
-                if (estructuras[i][j] != nullptr)
-                    estructuras[i][j]->actualizar();
-
                 if (bombas[i][j] != nullptr)
                     bombas[i][j]->actualizar();
 
@@ -449,7 +446,7 @@ void Controlador::dibujar() {
     glLoadIdentity();
 
     ControladorCamara::colocarCamara();
-    //ControladorLuz::colocarLuces();
+    ControladorLuz::colocarLuces();
 
     jugador->dibujar();
     puerta->dibujar();
@@ -462,9 +459,6 @@ void Controlador::dibujar() {
             if (bombas[i][j] != nullptr)
                 bombas[i][j]->dibujar();
 
-            if (fuegos[i][j] != nullptr)
-                fuegos[i][j]->dibujar();
-
             if (enemigos[i][j] != nullptr)
                 enemigos[i][j]->dibujar();
 
@@ -473,8 +467,6 @@ void Controlador::dibujar() {
         }
     }
 
-    for (it = particulas.begin(); it != particulas.end(); ++it)
-        (*it)->dibujar();
 
     for (itBorde = borde.begin(); itBorde != borde.end(); ++itBorde)
         (*itBorde)->dibujar();
@@ -482,6 +474,7 @@ void Controlador::dibujar() {
     //Suelo
     glColor3f(0.75f, 0.63f, 0.50f);
     glBegin(GL_QUADS);
+    glNormal3f(0.0f, 1.0f, 0.0f);
     glVertex3f(0, 0, 0);
     glVertex3f(0, 0, anchoTablero * tile_size);
     glVertex3f(largoTablero * tile_size, 0, anchoTablero * tile_size);
@@ -489,6 +482,9 @@ void Controlador::dibujar() {
     glEnd();
     
     glDisable(GL_LIGHTING);
+
+    for (it = particulas.begin(); it != particulas.end(); ++it)
+        (*it)->dibujar();
 
     ControladorInterfaz::dibujarHUD();
 

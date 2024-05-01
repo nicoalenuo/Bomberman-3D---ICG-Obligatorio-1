@@ -14,12 +14,6 @@
 #include "ControladorAudio.h"
 #include "ControladorPoderes.h"
 
-struct vector_3 {
-	GLfloat x;
-	GLfloat y;
-	GLfloat z;
-};
-
 class objeto {
 protected:
 	vector_3 pos;

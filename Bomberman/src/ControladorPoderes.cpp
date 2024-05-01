@@ -30,14 +30,10 @@ bool ControladorPoderes::getEstaActivo(tipo_poder poder) {
 }
 
 void ControladorPoderes::activarPoder(tipo_poder poder, int temporizador) {
-	temporizadorPoder[BOMBAS_ATRAVIESAN_ESTRUCTURAS] = 30000;
-	temporizadorPoder[INMORTALIDAD] = 30000;
-	if (temporizadorPoder.count(poder) == 1) {
+	if (temporizadorPoder.count(poder) == 1) 
 		temporizadorPoder[poder] = temporizador;
-	}
-	else {
+	else 
 		poderActivo[poder] = true;
-	}
 }
 
 void ControladorPoderes::desactivarPoder(tipo_poder poder) {

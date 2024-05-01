@@ -15,7 +15,7 @@ enum tipo_poder { //agregar aca en caso de agregar mas bonificadores, y luego ag
 	AUMENTAR_VELOCIDAD, //
 	BOMBAS_ATRAVIESAN_ESTRUCTURAS,
 	AUMENTAR_CANTIDAD_BOMBAS,
-	BONIFICADOR_RANDOM, //NO ELIMINAR ESTE
+	BONIFICADOR_RANDOM //NO ELIMINAR ESTE
 };
 
 class ControladorPoderes{

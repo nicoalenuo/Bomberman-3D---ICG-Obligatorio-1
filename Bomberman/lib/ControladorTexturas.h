@@ -13,6 +13,12 @@
 
 using namespace std;
 
+struct vector_3 {
+	GLfloat x;
+	GLfloat y;
+	GLfloat z;
+};
+
 enum tipo_textura { //agregar aca en caso de agregar mas texturas, y la direccion en el cpp
 	ESTRUCTURA_DESTRUCTIBLE,
 	ESTRUCTURA_NO_DESTRUCTIBLE,

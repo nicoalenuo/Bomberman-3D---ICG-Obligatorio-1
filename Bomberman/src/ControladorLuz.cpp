@@ -12,7 +12,7 @@ GLfloat ControladorLuz::light_color[4] = { 1, 1, 1, 1 };
 GLfloat ControladorLuz::material_ambient_diffuse_color[4] = { 1, 1, 1, 1 };
 GLfloat ControladorLuz::material_specular_color[4] = { 0, 1, 0, 1 };
 GLfloat ControladorLuz::light_offset_x = 0.f;
-GLfloat ControladorLuz::light_offset_y = 50.f;
+GLfloat ControladorLuz::light_offset_y = 10.f;
 GLfloat ControladorLuz::light_offset_z = 0.f;
 
 
@@ -20,9 +20,9 @@ void ControladorLuz::colocarLuces() {
 	if (texturas_habilitadas) {
 		glEnable(GL_LIGHTING);
 		glEnable(GL_LIGHT0); 
-		light_position[0] = jugador->getPosicion().x + light_offset_x;
-		light_position[1] = jugador->getPosicion().y + light_offset_y;
-		light_position[2] = jugador->getPosicion().z + light_offset_z;
+		light_position[0] = light_offset_x;
+		light_position[1] = light_offset_y;
+		light_position[2] = light_offset_z;
 		glLightfv(GL_LIGHT0, GL_POSITION, light_position);
 		glLightfv(GL_LIGHT0, GL_AMBIENT, light_color);
 	}
