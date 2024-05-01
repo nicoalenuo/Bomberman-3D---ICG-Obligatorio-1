@@ -25,12 +25,13 @@ bool pantallaCompleta = false;
 
 objeto*** estructuras = new objeto * *[largoTablero];
 objeto*** bombas = new objeto * *[largoTablero];
-objeto*** enemigos = new objeto * *[largoTablero];
+//objeto*** enemigos = new objeto * *[largoTablero];
 objeto*** fuegos = new objeto * *[largoTablero];
 objeto*** bonificadores = new objeto * *[largoTablero];
 
 list<objeto*> borde;
 list<particula*> particulas;
+list<enemigo*> enemigos;
 
 bomberman* jugador;
 
@@ -49,6 +50,8 @@ bool inmortal = false;
 int nivel = 1;
 int puntaje = 0;
 int tiempoJuego = 200; //segundos
+
+bool puertaAbierta = false;
 
 void toggle_pausa() {
     pausa = !pausa;

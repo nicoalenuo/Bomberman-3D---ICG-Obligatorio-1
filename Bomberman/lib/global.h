@@ -12,6 +12,7 @@ class objeto;
 class particula;
 class bomberman;
 class door;
+class enemigo;
 
 extern int velocidad_juego;
 
@@ -40,12 +41,14 @@ extern bool inmortal;
 
 extern objeto*** estructuras;
 extern objeto*** bombas;
-extern objeto*** enemigos;
+//extern objeto*** enemigos;
 extern objeto*** fuegos;
 extern objeto*** bonificadores;
 
 extern list<objeto*> borde;
 extern list<particula*> particulas;
+
+extern list<enemigo*> enemigos;
 
 extern bomberman* jugador;
 extern door* puerta;
@@ -57,6 +60,7 @@ extern bool finJuego;
 extern int nivel;
 extern int puntaje; 
 extern int tiempoJuego; //segundos
+extern bool puertaAbierta;
 
 extern void toggle_pausa(); //muestra la interfaz de settings ademas de pausar
 extern void toggle_wireframe();

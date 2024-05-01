@@ -1,16 +1,7 @@
 #include "../lib/door.h"
 
 door::door(vector_3 pos, vector_3 tam) : objeto(pos, tam) {
-    this->abierta = true;//Hay que inicializar en falso y setear en true cuando no existan enemigos
     this->visible = false;
-}
-
-bool door::getAbierta() {
-    return this->abierta;
-}
-
-void door::setAbierta(bool abierta) {
-    this->abierta = abierta;
 }
 
 bool door::getVisible() {
