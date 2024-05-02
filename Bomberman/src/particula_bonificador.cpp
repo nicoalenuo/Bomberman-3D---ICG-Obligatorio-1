@@ -9,11 +9,11 @@ void particula_bonificador::actualizar() {
     if (pos.y < 10 * tile_size) {
         tiempoSegundosParticulaBonificador = tiempoParticula / 1000.0f;
 
-        pos.x = pos.x + velocidad.x;
+        pos.x = pos.x + velocidad.x * (elapsed_time / frameDelay);
         pos.y = (aceleracion.y * tiempoSegundosParticulaBonificador * tiempoSegundosParticulaBonificador) + (velocidad.y * tiempoSegundosParticulaBonificador) + pos_inicial.y;
-        pos.z = pos.z + velocidad.z;
+        pos.z = pos.z + velocidad.z * (elapsed_time / frameDelay);
 
-        tiempoParticula += frameDelay;
+        tiempoParticula += elapsed_time;
     }
     else {
         eliminar = true;

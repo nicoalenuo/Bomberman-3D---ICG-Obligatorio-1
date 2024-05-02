@@ -1,6 +1,6 @@
 ﻿#include "../lib/global.h"
 
-int velocidad_juego = 1;
+float velocidad_juego = 1;
 
 bool moverArriba = false;
 bool moverAbajo = false;
@@ -20,7 +20,6 @@ bool texturas_habilitadas = true;
 bool audio_habilitado = true;
 bool mute = false; //cambiar a false para que inicie con sonido
 
-unsigned int pasos;
 bool tipoLuz = false; //false = facetado, true = interpolado
 bool pantallaCompleta = false;
 bool atravesar_paredes = false;
@@ -40,6 +39,11 @@ bomberman* jugador;
 door* puerta;
 int largoPantalla = WINDOW_WIDTH;
 int altoPantalla = WINDOW_HEIGHT;
+
+
+chrono::duration<int> delta_time;
+GLfloat elapsed_time;
+chrono::high_resolution_clock::time_point current_t, previous_t;
 
 int getIndiceTablero(GLfloat coord) {
     return int(floor(coord / tile_size));
@@ -99,8 +103,8 @@ void sumarPuntaje(int puntos) {
     }
 }
 
-void disminuirTiempo(int segundos){
-    tiempoJuego -= segundos;
+void disminuirTiempo(GLfloat milisegundos){
+    tiempoJuego -= int(elapsed_time);
     if (tiempoJuego <= 0) {
         tiempoJuego = 0;
         finJuego = true;

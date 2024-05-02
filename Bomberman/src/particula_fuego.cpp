@@ -23,11 +23,11 @@ void particula_fuego::actualizar() {
     if ((pos.y < 2 * tile_size && tipoColor == FUEGO_ROJO) || (pos.y < 1)) {
         tiempoSegundosParticulaFuego = tiempoParticula / 1000.0f;
 
-        pos.x = pos.x + velocidad.x;
+        pos.x = pos.x + velocidad.x * (elapsed_time / frameDelay);
         pos.y = (aceleracion.y * tiempoSegundosParticulaFuego * tiempoSegundosParticulaFuego) + (velocidad.y * tiempoSegundosParticulaFuego) + pos_inicial.y;
-        pos.z = pos.z + velocidad.z;
+        pos.z = pos.z + velocidad.z * (elapsed_time / frameDelay);
 
-        tiempoParticula += frameDelay;
+        tiempoParticula += elapsed_time ;
     }
     else {
         eliminar = true;

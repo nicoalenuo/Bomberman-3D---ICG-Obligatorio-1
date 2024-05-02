@@ -49,7 +49,7 @@ GLfloat angleRadiansX, angleRadiansY, camX, camY, camZ;
 
 void ControladorCamara::colocarCamara(vector_3 pos) {
 	if (tiempoSacudirse > 0)
-		tiempoSacudirse -= frameDelay * velocidad_juego;
+		tiempoSacudirse -= int(elapsed_time);
 
 	switch (camara_actual) {
 		case CAMARA_ISOMETRICA:
@@ -67,7 +67,7 @@ void ControladorCamara::colocarCamara(vector_3 pos) {
 			);
 			break;
 		case CAMARA_PRIMERA_PERSONA:
-			angleRadiansX = fmod(mouseX + 180, 360) * radians;
+			angleRadiansX = GLfloat(fmod(mouseX + 180, 360)) * radians;
 
 			camX = sin(angleRadiansX);
 			camZ = cos(angleRadiansX);

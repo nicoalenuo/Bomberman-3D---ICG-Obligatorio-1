@@ -4,7 +4,7 @@ random_device rdBonificador;
 mt19937 genBonificador(rdBonificador());
 uniform_real_distribution<> disBonificador(0.0, 1.0); 
 bonificador::bonificador(vector_3 pos, vector_3 tam, tipo_poder tipo_p) : objeto(pos, tam) {
-    //tremenda función me acabo de hacer, y que paseo que te acabo de meter ;)
+    //tremenda funciï¿½n me acabo de hacer, y que paseo que te acabo de meter ;)
     //que manera de robar codigo de internet ahre
     if (tipo_p == BONIFICADOR_RANDOM) {
         double intervalo = 1.0 / ((static_cast<int>(tipo_poder::BONIFICADOR_RANDOM)) - 1);
@@ -23,6 +23,7 @@ bonificador::bonificador(vector_3 pos, vector_3 tam, tipo_poder tipo_p) : objeto
     subiendo = true;
     visible = false;
     rotacion_y = 0;
+    tiempo_entre_particulas = 0;
 }
 
 random_device rdParticulaBonificador;
@@ -30,36 +31,40 @@ mt19937 genParticulaBonificador(rdParticulaBonificador());
 uniform_real_distribution<> disParticulaBonificador(-tile_size / 2, tile_size / 2);
 uniform_real_distribution<> disParticulaBonificadorVelocidad(-0.01, 0.01);
 void bonificador::actualizar() { 
-    if (subiendo) {
-        pos.y += 0.03f;
-        if (pos.y > tile_size)
-            subiendo = false;
-    }
-    else {
-        pos.y -= 0.03f;
-        if (pos.y < tile_size / 2)
-            subiendo = true;
-    }
-
-    rotacion_y += 4;
-    rotacion_y %= 360;
-
-
     if (!visible && estructuras[getIndiceTablero(pos.x)][getIndiceTablero(pos.z)] == nullptr) 
         visible = true;
 
     if (visible) {
+        tiempo_entre_particulas += int(elapsed_time);
+
+        if (subiendo) {
+            pos.y += 0.03f * (elapsed_time / frameDelay);
+            if (pos.y > tile_size)
+                subiendo = false;
+        }
+        else {
+            pos.y -= 0.03f * (elapsed_time / frameDelay);
+            if (pos.y < tile_size / 2)
+                subiendo = true;
+        }
+
+        rotacion_y += 4 * (elapsed_time / frameDelay);
+        rotacion_y = GLfloat(fmod(rotacion_y, 360));
+
         GLfloat colorLuz[4] = { 1.0f, 1.0f, 0.0f, 0.1f };
         ControladorLuz::pedirLuz(pos, colorLuz);
 
-        particulas.push_back(
-            new particula_bonificador(
-                { GLfloat(pos.x + disParticulaBonificador(genParticulaBonificador)), 0.0f, GLfloat(pos.z + disParticulaBonificador(genParticulaBonificador)) },
-                { GLfloat(0.025), GLfloat(0.025), GLfloat(0.025) },
-                { 0.0f, 0.5f, 0.0f },
-                { GLfloat(disParticulaBonificadorVelocidad(genParticulaBonificador)), 0, GLfloat(disParticulaBonificadorVelocidad(genParticulaBonificador)) }
-            )
-        );
+        if (tiempo_entre_particulas > 30) {
+            particulas.push_back(
+                new particula_bonificador(
+                    { GLfloat(pos.x + disParticulaBonificador(genParticulaBonificador)), 0.0f, GLfloat(pos.z + disParticulaBonificador(genParticulaBonificador)) },
+                    { GLfloat(0.025), GLfloat(0.025), GLfloat(0.025) },
+                    { 0.0f, 0.5f, 0.0f },
+                    { GLfloat(disParticulaBonificadorVelocidad(genParticulaBonificador)), 0, GLfloat(disParticulaBonificadorVelocidad(genParticulaBonificador)) }
+                )
+            );
+            tiempo_entre_particulas = 0;
+        }
     }
 
     if (visible &&
@@ -81,7 +86,7 @@ void bonificador::dibujar() {
     if (visible) { //se asume que si no es nullptr, es una estructura destructible por como se crea
         glPushMatrix();
         glTranslatef(pos.x, pos.y, pos.z);
-        glRotatef(GLfloat(rotacion_y), 0, 1, 0);
+        glRotatef(rotacion_y, 0, 1, 0);
         ControladorObjetos::dibujarCubo(tam, 0, colorBonificador);
         glPopMatrix();
     }

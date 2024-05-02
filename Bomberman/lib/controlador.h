@@ -9,6 +9,7 @@
 #include <GL/glu.h>
 
 #include <random>
+#include <chrono>
 
 #include "personaje.h"
 #include "bomba.h"

@@ -104,6 +104,7 @@ void enemigo::actualizar() {
     random_device rd;
     mt19937 gen(rd());
     uniform_real_distribution<> dis(0.0, 1.0);
+    GLfloat desplazamiento = velocidad * (elapsed_time / frameDelay);
 
     if (orientacionX) {
         if (centroConMovimiento(pos) && (dis(gen) < probCambiarPos) && posicion_valida_parcial(pos, false)) {
@@ -117,16 +118,16 @@ void enemigo::actualizar() {
             cambio = true;
         }
         if (moverX) {
-            if (posicion_valida({ pos.x + velocidad * velocidad_juego, 0, pos.z }, { tam.x, 0, tam.z })) {
-                pos.x += velocidad * velocidad_juego;
+            if (posicion_valida({ pos.x + desplazamiento, 0, pos.z }, { tam.x, 0, tam.z })) {
+                pos.x += desplazamiento;
             } else {
                 moverX = false;
                 moverNX = true;
             }
         }
         if (moverNX) {
-            if (posicion_valida({ pos.x - velocidad * velocidad_juego, 0, pos.z }, { tam.x, 0, tam.z })) {
-                pos.x -= velocidad * velocidad_juego;
+            if (posicion_valida({ pos.x - desplazamiento, 0, pos.z }, { tam.x, 0, tam.z })) {
+                pos.x -= desplazamiento;
             } else {
                 moverX = true;
                 moverNX = false;
@@ -142,8 +143,8 @@ void enemigo::actualizar() {
             orientacionX = true;
         }
         if (moverZ) {
-            if (posicion_valida({ pos.x, 0, pos.z + velocidad * velocidad_juego }, { tam.x, 0, tam.z })) {
-                pos.z += velocidad * velocidad_juego;
+            if (posicion_valida({ pos.x, 0, pos.z + desplazamiento }, { tam.x, 0, tam.z })) {
+                pos.z += desplazamiento;
             }
             else {
                 moverZ = false;
@@ -151,8 +152,8 @@ void enemigo::actualizar() {
             }
         }
         if (moverNZ) {
-            if (posicion_valida({ pos.x, 0, pos.z - velocidad * velocidad_juego }, { tam.x, 0, tam.z })) {
-                pos.z -= velocidad * velocidad_juego;
+            if (posicion_valida({ pos.x, 0, pos.z - desplazamiento }, { tam.x, 0, tam.z })) {
+                pos.z -= desplazamiento;
             }
             else {
                 moverZ = true;

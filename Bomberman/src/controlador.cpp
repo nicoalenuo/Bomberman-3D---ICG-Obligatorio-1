@@ -88,7 +88,7 @@ void generarTablero() {
                     if (random_num <= generadorBonificador) {
                         cout << "bonificador en: " << i << " " << j << endl;
                         bonificadores[i][j] = new bonificador(
-                            { (GLfloat)i * tile_size + tile_size / 2, 4* tile_size / 2, (GLfloat)j * tile_size + tile_size / 2 },
+                            { (GLfloat)i * tile_size + tile_size / 2, tile_size / 2, (GLfloat)j * tile_size + tile_size / 2 },
                             { 0.1f, 0.7f, 0.1f },
                             BONIFICADOR_RANDOM
                         );
@@ -197,6 +197,7 @@ void generarTablero() {
 
         enemigos.push_back(enem);
     }
+    current_t = chrono::high_resolution_clock::now();
 }
 
 Controlador::Controlador() {
@@ -409,6 +410,14 @@ void Controlador::manejarEventos() {
                     case SDLK_F9:
                         toggle_atravesar_paredes();
                         break;
+                    case SDLK_F10:
+                        if (velocidad_juego == 1)
+                            velocidad_juego = 2;
+                        else if (velocidad_juego == 2)
+                            velocidad_juego = 0.5;
+                        else
+                            velocidad_juego = 1;
+                        break;
                     case SDLK_F11:
                         SDL_SetWindowFullscreen(window,
                             SDL_GetWindowFlags(window) & SDL_WINDOW_FULLSCREEN ? 
@@ -419,7 +428,7 @@ void Controlador::manejarEventos() {
                 }
             break;
             case SDL_MOUSEMOTION:
-                mouseX = fmod(mouseX - (evento.motion.xrel * SENSIBILIDAD_MOUSE), 360);
+                mouseX = GLfloat(fmod(mouseX - (evento.motion.xrel * SENSIBILIDAD_MOUSE), 360));
                 if (mouseX < 0)
                     mouseX += 360;
 
@@ -459,11 +468,20 @@ list<enemigo*>::iterator itE;
 list<objeto*>::iterator itBorde;
 
 void Controlador::actualizar() {
-    if (!pausa && !pararTiempo)
-        disminuirTiempo(frameDelay);
+    previous_t = current_t;
+    current_t = chrono::high_resolution_clock::now();
+    delta_time = chrono::duration_cast<chrono::duration<int>>((current_t - previous_t)*1000);
+    elapsed_time = delta_time.count() * velocidad_juego;
+
+    if (pausa)
+        return;
+
+    if (!pausa && !finJuego && !pararTiempo)
+        disminuirTiempo(elapsed_time);
 
     if (puertaAbierta && puerta->intersecta(jugador)) {
         ControladorAudio::playAudio(sonido::bonificacion);
+        ControladorPoderes::cargarPoderes(); 
         aumentarNivel();
         generarTablero();
     } 
@@ -516,8 +534,7 @@ void Controlador::actualizar() {
     if (!puertaAbierta && enemigos.empty()) {
         puertaAbierta = true;
         ControladorAudio::playAudio(sonido::puertaAbierta);
-    }
-        
+    }  
 }
 
 void Controlador::dibujar() {

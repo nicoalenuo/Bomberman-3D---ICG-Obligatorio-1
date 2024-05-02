@@ -9,20 +9,19 @@ GLfloat tiempoSegundos;
 void particula_estructura::actualizar() {
     if (pos.y > 0.1f) {
         tiempoSegundos = tiempoParticula / 1000.0f;
-        pos.x = pos.x + velocidad.x;
+        pos.x = pos.x + velocidad.x * (elapsed_time / frameDelay);
 
         pos.y = max(aceleracion.y * tiempoSegundos * tiempoSegundos +
             velocidad.y * tiempoSegundos +
             pos_inicial.y, 0.1f);
 
-        pos.z = pos.z + velocidad.z;
-        tiempoParticula += frameDelay;
+        pos.z = pos.z + velocidad.z * (elapsed_time / frameDelay);
+        tiempoParticula += elapsed_time;
     }
     else {
-        tiempoEliminacion += frameDelay * velocidad_juego;
-        if (tiempoEliminacion > 4000) { //para que caigan al suelo, y queden ahi por 3 segundos
+        tiempoEliminacion += int(elapsed_time);
+        if (tiempoEliminacion > 4000) //para que caigan al suelo, y queden ahi por 4 segundos
             eliminar = true;
-        }
     }
 
     if (pos.x < 0 || pos.z < 0 || pos.x > largoTablero * tile_size || pos.z > anchoTablero * tile_size)

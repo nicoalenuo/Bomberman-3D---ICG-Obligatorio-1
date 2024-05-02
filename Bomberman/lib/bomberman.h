@@ -8,8 +8,9 @@
 
 class bomberman : public personaje {
 private:
-	int vida, maxBomba, cantActual, largoBomba, tiempoBomba, rotacion_y_actual, rotacion_z_actual;
+	int vida, maxBomba, cantActual, largoBomba, tiempoBomba;
 	bool moverBomba, balanceandoseDerecha;
+	GLfloat pasos, rotacion_y_actual, rotacion_z_actual;
 public:
 	bomberman(vector_3 pos, vector_3 tam, GLfloat velocidad);
 

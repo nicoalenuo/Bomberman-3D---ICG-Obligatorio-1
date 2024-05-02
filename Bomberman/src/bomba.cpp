@@ -8,9 +8,9 @@ bomba::bomba(vector_3 pos, vector_3 tam, int tiempo, int largo) : objeto(pos, ta
 
 int xBomba, zBomba, dx, dz, nx, nz;
 void bomba::actualizar() {
-    scale += 0.005f;
+    scale += GLfloat(0.005f * (elapsed_time / frameDelay));
 
-    tiempoBomba -= frameDelay * velocidad_juego;
+    tiempoBomba -= int(elapsed_time);
     bool alcanza;
     if (tiempoBomba <= 0) {
         xBomba = getIndiceTablero(pos.x);

@@ -14,7 +14,8 @@ class bonificador : public objeto {
 private:
 	tipo_poder tipo; 
 	bool subiendo, visible;
-	int rotacion_y;
+	GLfloat rotacion_y;
+	int tiempo_entre_particulas;
 public:
 	bonificador(vector_3 pos, vector_3 tam, tipo_poder tipo);
 

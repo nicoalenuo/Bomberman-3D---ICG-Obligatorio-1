@@ -14,7 +14,7 @@ void ControladorPoderes::cargarPoderes() {
 void ControladorPoderes::actualizarTemporizadores() {
 	for (pair<const tipo_poder, int> &kv : temporizadorPoder) 
 		if (kv.second > 0)
-			kv.second -= frameDelay;
+			kv.second -= int(elapsed_time);
 }
 
 int ControladorPoderes::getTiempoRestante(tipo_poder poder) {
