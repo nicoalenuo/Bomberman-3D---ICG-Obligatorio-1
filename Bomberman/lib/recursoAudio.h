@@ -29,6 +29,7 @@ public:
 	void detener();
 	void pausar();
 	void reanudar();
+	void silenciar(bool mute);
 
 	~recursoAudio();
 

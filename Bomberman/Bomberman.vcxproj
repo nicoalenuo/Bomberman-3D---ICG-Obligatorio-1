@@ -104,6 +104,7 @@
     <ClCompile Include="src\global.cpp" />
     <ClCompile Include="src\objeto.cpp" />
     <ClCompile Include="src\particula.cpp" />
+    <ClCompile Include="src\particula_bonificador.cpp" />
     <ClCompile Include="src\particula_estructura.cpp" />
     <ClCompile Include="src\particula_fuego.cpp" />
     <ClCompile Include="src\personaje.cpp" />
@@ -132,6 +133,7 @@
     <ClInclude Include="lib\hud.h" />
     <ClInclude Include="lib\objeto.h" />
     <ClInclude Include="lib\particula.h" />
+    <ClInclude Include="lib\particula_bonificador.h" />
     <ClInclude Include="lib\particula_estructura.h" />
     <ClInclude Include="lib\particula_fuego.h" />
     <ClInclude Include="lib\personaje.h" />
@@ -154,7 +156,8 @@
     <Image Include="texturas\estructura_no_destructible.png" />
     <Image Include="texturas\inmortalidad.png" />
     <Image Include="texturas\player.png" />
-    <Image Include="texturas\puerta.png" />
+    <Image Include="texturas\puerta.jpg" />
+    <Image Include="texturas\suelo.jpg" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

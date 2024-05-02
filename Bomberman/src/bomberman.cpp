@@ -1,60 +1,16 @@
 #include "../lib/bomberman.h"
 
-poder::poder(float cant, tipo_poder power){
-    cantidad = cant;
-    powerUp = power;
-}
-
-void poder::setCantidad(float cant) {
-    cantidad = cant;
-}
-
 bomberman::bomberman(vector_3 pos, vector_3 tam, GLfloat velocidad) : personaje(pos, tam, velocidad) {
     vida = 1;
-    moverBomba = false;
-    largoBomba = 2;
+    moverBomba = false; //por el momento esta no se va a utilizar
+    largoBomba = 1;
     tiempoBomba = 2000;
     maxBomba = 1;
     cantActual = 0;
     rotacion_y_actual = 0;
     rotacion_z_actual = 0;
     balanceandoseDerecha = false;
-    for (int i = 0; i < static_cast<int>(tipo_poder::BONIFICADOR_RANDOM); i++) {
-        tipo_poder powerUp = static_cast<tipo_poder>(i);
-        poderes.push_back(poder(0, static_cast<tipo_poder>(i)));
-    }
-}
-
-void bomberman::agregarPoder(poder powerUp) {
-    for (auto it = poderes.begin(); it != poderes.end(); ++it) {
-        if (powerUp.powerUp = it->powerUp) {
-            switch (powerUp.powerUp) {
-             case AUMENTAR_ALCANCE_BOMBAS:
-                 if(it->cantidad < 10)
-                    it->cantidad++;
-                 break;
-             case INMORTALIDAD:
-                 it->cantidad = 5.f; //segundos de inmortalidad
-                 break;
-             case AUMENTAR_VELOCIDAD:
-                 it->cantidad = 1.f; //duplica la velocidad
-                 break;
-             case BOMBAS_ATRAVIESAN_ESTRUCTURAS: 
-                 it->cantidad = 1.f; // 1 = atraviesa, 0 = no atraviesa
-                 break;
-             case AUMENTAR_CANTIDAD_BOMBAS:
-                 if(it->cantidad<10)
-                    it->cantidad++;
-                 break;
-             case BONIFICADOR_RANDOM:
-                 //realmente, este caso, no ocurre nunca, pero no me vayan a borrar el BonificadorRandom, si lo hacen, Chayanne llora
-                 break;
-             default:
-                 // no hace nada
-                 break;
-            }
-        }
-    }
+    inmortal = false;
 }
 
 int rotacionY, rotacionZ;
@@ -64,22 +20,22 @@ void bomberman::actualizar() {
     if (moverArriba) {
         if (mouseX >= 45 && mouseX < 135) {
             rotacionY = 90;
-            if (posicion_valida({ pos.x - velocidad * velocidad_juego, 0, pos.z }, { tam.x, 0, tam.z }))
+            if (atravesar_paredes || posicion_valida({ pos.x - velocidad * velocidad_juego, 0, pos.z }, { tam.x, 0, tam.z }))
                 pos.x -= velocidad * velocidad_juego;
         }
         else if (mouseX >= 135 && mouseX < 225) {
             rotacionY = 180;
-            if (posicion_valida({ pos.x, 0, pos.z + velocidad * velocidad_juego }, { tam.x, 0,tam.z }))
+            if (atravesar_paredes || posicion_valida({ pos.x, 0, pos.z + velocidad * velocidad_juego }, { tam.x, 0,tam.z }))
                 pos.z += velocidad * velocidad_juego;
         }
         else if (mouseX >= 225 && mouseX < 315) {
             rotacionY = 270;
-            if (posicion_valida({ pos.x + velocidad * velocidad_juego, 0, pos.z }, { tam.x, 0, tam.z }))
+            if (atravesar_paredes || posicion_valida({ pos.x + velocidad * velocidad_juego, 0, pos.z }, { tam.x, 0, tam.z }))
                 pos.x += velocidad * velocidad_juego;
         }
         else {
             rotacionY = 0;
-            if (posicion_valida({ pos.x, 0,pos.z - velocidad * velocidad_juego }, { tam.x, 0,tam.z }))
+            if (atravesar_paredes || posicion_valida({ pos.x, 0,pos.z - velocidad * velocidad_juego }, { tam.x, 0,tam.z }))
                 pos.z -= velocidad * velocidad_juego;
         }
         movimiento = true;
@@ -87,22 +43,22 @@ void bomberman::actualizar() {
     if (moverAbajo) {
         if (mouseX >= 45 && mouseX < 135) {
             rotacionY = 270;
-            if (posicion_valida({ pos.x + velocidad * velocidad_juego, 0, pos.z }, { tam.x, 0, tam.z }))
+            if (atravesar_paredes || posicion_valida({ pos.x + velocidad * velocidad_juego, 0, pos.z }, { tam.x, 0, tam.z }))
                 pos.x += velocidad * velocidad_juego;
         }
         else if (mouseX >= 135 && mouseX < 225) {
             rotacionY = 0;
-            if (posicion_valida({ pos.x, 0, pos.z - velocidad * velocidad_juego }, { tam.x, 0, tam.z }))
+            if (atravesar_paredes || posicion_valida({ pos.x, 0, pos.z - velocidad * velocidad_juego }, { tam.x, 0, tam.z }))
                 pos.z -= velocidad * velocidad_juego;
         }
         else if (mouseX >= 225 && mouseX < 315) {
             rotacionY = 90;
-            if (posicion_valida({ pos.x - velocidad * velocidad_juego, 0, pos.z }, { tam.x, 0, tam.z }))
+            if (atravesar_paredes || posicion_valida({ pos.x - velocidad * velocidad_juego, 0, pos.z }, { tam.x, 0, tam.z }))
                 pos.x -= velocidad * velocidad_juego;
         }
         else {
             rotacionY = 180;
-            if (posicion_valida({ pos.x, 0, pos.z + velocidad * velocidad_juego }, { tam.x, 0, tam.z }))
+            if (atravesar_paredes || posicion_valida({ pos.x, 0, pos.z + velocidad * velocidad_juego }, { tam.x, 0, tam.z }))
                 pos.z += velocidad * velocidad_juego;
         }
         movimiento = true;
@@ -110,22 +66,22 @@ void bomberman::actualizar() {
     if (moverDerecha) {
         if (mouseX >= 45 && mouseX < 135) {
             rotacionY = 0;
-            if (posicion_valida({ pos.x, 0, pos.z - velocidad * velocidad_juego }, { tam.x, 0, tam.z }))
+            if (atravesar_paredes || posicion_valida({ pos.x, 0, pos.z - velocidad * velocidad_juego }, { tam.x, 0, tam.z }))
                 pos.z -= velocidad * velocidad_juego;
         }
         else if (mouseX >= 135 && mouseX < 225) {
             rotacionY = 90;
-            if (posicion_valida({ pos.x - velocidad * velocidad_juego, 0, pos.z }, { tam.x, 0, tam.z }))
+            if (atravesar_paredes || posicion_valida({ pos.x - velocidad * velocidad_juego, 0, pos.z }, { tam.x, 0, tam.z }))
                 pos.x -= velocidad * velocidad_juego;
         }
         else if (mouseX >= 225 && mouseX < 315) {
             rotacionY = 180;
-            if (posicion_valida({ pos.x, 0, pos.z + velocidad * velocidad_juego }, { tam.x, 0, tam.z }))
+            if (atravesar_paredes || posicion_valida({ pos.x, 0, pos.z + velocidad * velocidad_juego }, { tam.x, 0, tam.z }))
                 pos.z += velocidad * velocidad_juego;
         }
         else {
             rotacionY = 270;
-            if (posicion_valida({ pos.x + velocidad * velocidad_juego, 0, pos.z }, { tam.x, 0, tam.z }))
+            if (atravesar_paredes || posicion_valida({ pos.x + velocidad * velocidad_juego, 0, pos.z }, { tam.x, 0, tam.z }))
                 pos.x += velocidad * velocidad_juego;
         }
         movimiento = true;
@@ -134,22 +90,22 @@ void bomberman::actualizar() {
     if (moverIzquierda) {
         if (mouseX >= 45 && mouseX < 135) {
             rotacionY = 180;
-            if (posicion_valida({ pos.x, 0, pos.z + velocidad * velocidad_juego }, { tam.x, 0, tam.z }))
+            if (atravesar_paredes || posicion_valida({ pos.x, 0, pos.z + velocidad * velocidad_juego }, { tam.x, 0, tam.z }))
                 pos.z += velocidad * velocidad_juego;
         }
         else if (mouseX >= 135 && mouseX < 225) {
             rotacionY = 270;
-            if (posicion_valida({ pos.x + velocidad * velocidad_juego, 0, pos.z }, { tam.x, 0, tam.z }))
+            if (atravesar_paredes || posicion_valida({ pos.x + velocidad * velocidad_juego, 0, pos.z }, { tam.x, 0, tam.z }))
                 pos.x += velocidad * velocidad_juego;
         }
         else if (mouseX >= 225 && mouseX < 315) {
             rotacionY = 0;
-            if (posicion_valida({ pos.x, 0, pos.z - velocidad * velocidad_juego }, { tam.x, 0, tam.z }))
+            if (atravesar_paredes || posicion_valida({ pos.x, 0, pos.z - velocidad * velocidad_juego }, { tam.x, 0, tam.z }))
                 pos.z -= velocidad * velocidad_juego;
         }
         else {
             rotacionY = 90;
-            if (posicion_valida({ pos.x - velocidad * velocidad_juego, 0, pos.z }, { tam.x, 0, tam.z }))
+            if (atravesar_paredes || posicion_valida({ pos.x - velocidad * velocidad_juego, 0, pos.z }, { tam.x, 0, tam.z }))
                 pos.x -= velocidad * velocidad_juego;
         }
         movimiento = true;
@@ -210,16 +166,6 @@ void bomberman::actualizar() {
         rotacion_z_actual = 0;
     }
 
-    //actualizarPoderes
-    for (auto it = poderes.begin(); it != poderes.end(); ++it) {
-        if ((*it).powerUp == tipo_poder::INMORTALIDAD) {
-            (*it).cantidad -= frameDelay;
-            if ((*it).cantidad < 0) {
-                (*it).cantidad = 0;
-            }
-        }
-    }
-
     //Sonido de pisadas
     if (movimiento) {
         pasos++;
@@ -230,7 +176,9 @@ void bomberman::actualizar() {
         ControladorAudio::playAudio(sonido::pasos);
     }
 
-    if (!inmortal && contactoConFuego())
+    //Chequeo con fuego
+
+    if (!inmortal && !ControladorPoderes::getEstaActivo(INMORTALIDAD) && contactoConFuego())
         finJuego = true;
 }
 

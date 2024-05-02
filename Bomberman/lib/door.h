@@ -8,14 +8,10 @@
 
 class door : public objeto {
 private:
-	bool abierta;
 	bool visible;
 
 public:
 	door(vector_3 pos, vector_3 tam);
-
-	bool getAbierta();
-	void setAbierta(bool abierta);
 
 	bool getVisible();
 	void setVisible(bool visible);

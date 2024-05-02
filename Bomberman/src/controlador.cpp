@@ -1,6 +1,30 @@
 #include "../lib/controlador.h"
 
-Controlador* Controlador::instancia = nullptr; 
+Controlador* Controlador::instancia = nullptr;
+
+void eliminarEstructuras(vector_3 pos, bool isOrientacionX, int num) {
+    int x = getIndiceTablero(pos.x);
+    int z = getIndiceTablero(pos.z);
+
+    int i = -num;
+    int f = num;
+
+    if (isOrientacionX) {
+        for (i; i <= f; i++) {
+            if ( x+i >= 0 && x+i < largoTablero && estructuras[x+i][z] != nullptr) {
+                delete estructuras[x+i][z];
+                estructuras[x+i][z] = nullptr;
+            }
+        }
+    } else {
+        for (i; i <= f; i++) {
+            if (z + i >= 0 &&  z+i < anchoTablero && estructuras[x][z + i] != nullptr) {
+                delete estructuras[x][z + i];
+                estructuras[x][z + i] = nullptr;
+            }
+        }
+    }
+}
 
 void generarTablero() {
     if (jugador == nullptr) {
@@ -20,7 +44,7 @@ void generarTablero() {
         estructuras[i] = new objeto * [anchoTablero];
         bombas[i] = new objeto * [anchoTablero];
         fuegos[i] = new objeto * [anchoTablero];
-        enemigos[i] = new objeto * [anchoTablero];
+        //enemigos[i] = new objeto * [anchoTablero];
         bonificadores[i] = new objeto * [anchoTablero];
     }
 
@@ -29,7 +53,7 @@ void generarTablero() {
             estructuras[i][j] = nullptr;
             bombas[i][j] = nullptr;
             fuegos[i][j] = nullptr;
-            enemigos[i][j] = nullptr;
+            //enemigos[i][j] = nullptr;
             bonificadores[i][j] = nullptr;
         }
     }
@@ -116,14 +140,14 @@ void generarTablero() {
 
     puerta = new door(
         { posicionesValidas[posicionPuerta]->getPosicion().x , 0, posicionesValidas[posicionPuerta]->getPosicion().z },
-        { tile_size / 2, tile_size, tile_size / 2 }
+        { tile_size / 2, tile_size/4, tile_size / 2 }
     );
 
     posicionesValidas.clear();*/
     //Fin Estructura posicionar bomba
     puerta = new door(
         { GLfloat(2.5 * tile_size), 0, GLfloat(tile_size / 2) },
-        { GLfloat(tile_size / 2), tile_size, GLfloat(tile_size / 2) }
+        { GLfloat(tile_size / 2), tile_size/4, GLfloat(tile_size / 2)}
     );
 
     if (bonificadores[0][0] != nullptr) {
@@ -139,6 +163,41 @@ void generarTablero() {
         bonificadores[1][0] = nullptr;
     }
 
+
+    for (int i = -1; i <= largoTablero; i++) { // x toma valor -1 y largoTablero en los bordes
+        for (int j = -1; j <= anchoTablero; j++) { // z toma valor -1 y anchoTablero en los bordes
+            for (int k = -1; k < 1; k++) { // para y toma valor -1 y 0
+                if (i == -1 || i == largoTablero || j == -1 || j == anchoTablero) {
+                    objeto* est = new estructura(
+                        { (GLfloat)i * tile_size + tile_size / 2,(GLfloat)k * tile_size, (GLfloat)j * tile_size + tile_size / 2 },
+                        { tile_size / 2, tile_size, tile_size / 2 },
+                        false
+                    );
+                    borde.push_back(est);
+                }
+            }
+        }
+    }
+
+    //Enemigos
+    vector<pair<int, int>> posEnemigos = { {6, 4}, {12, 8}, {18, 2}, {2, 6} };
+    enemigo* enem;
+    bool orientacionX;
+
+    for (vector<pair<int, int>>::iterator itP = posEnemigos.begin(); itP != posEnemigos.end(); itP++) {
+        orientacionX = (dis(gen) < 0.5);
+        enem = new enemigo(
+            { (GLfloat)(itP->first) * tile_size + tile_size / 2, 0, (GLfloat)(itP->second) * tile_size + tile_size / 2 },
+            { GLfloat(tile_size / 4), tile_size, GLfloat(tile_size / 4) },
+            orientacionX
+
+        );
+
+        eliminarEstructuras(enem->getPosicion(), enem->getOrientacionX(), 3);
+
+        enemigos.push_back(enem);
+    }
+    enem = nullptr;
 }
 
 Controlador::Controlador() {
@@ -158,6 +217,7 @@ Controlador::Controlador() {
     );
 
     context = SDL_GL_CreateContext(window);
+
     if (context == NULL) {
         cerr << "[GL Context Error]: " << SDL_GetError() << endl;
         SDL_Quit();
@@ -185,6 +245,8 @@ Controlador::Controlador() {
     ControladorObjetos::cargarObjetos();
     ControladorInterfaz::cargarInterfaz();
     ControladorAudio::cargarAudios();
+    ControladorLuz::cargarLuces();
+    ControladorPoderes::cargarPoderes();
 }
 
 Controlador* Controlador::getInstance() {
@@ -225,7 +287,7 @@ inline void colocarBomba() { //para evitar repetir codigo
                 { posBombaXTablero * tile_size + tile_size / 2, 0, posBombaZTablero * tile_size + tile_size / 2 },
                 { tile_size / 4, tile_size / 2, tile_size / 4 },
                 2000, //2 segundos
-                2
+                ControladorPoderes::getEstaActivo(AUMENTAR_ALCANCE_BOMBAS) ? 2 : 1
             );
             bombas[posBombaXTablero][posBombaZTablero] = bomba_obj;
 
@@ -235,23 +297,6 @@ inline void colocarBomba() { //para evitar repetir codigo
             }
 
             ControladorAudio::playAudio(sonido::explosion); // hay que separar el sonido de la bomba en dos (quemando mecha, explosion), ya que cuando una bomba explota la otra, sigue quemando mecha
-        }
-    }
-}
-
-void Controlador::dibujarBordeTablero() {
-    for (int i = -1; i <= largoTablero; i++) { // x toma valor -1 y largoTablero en los bordes
-        for(int j = -1 ; j<=anchoTablero; j++){ // z toma valor -1 y anchoTablero en los bordes
-            for (int k = -1; k < 1; k++) { // para y toma valor -1 y 0
-                if (i<0 || i>=largoTablero || j<0 || j>=anchoTablero) {
-                    estructura* est = new estructura(
-                        { (GLfloat)i * tile_size + tile_size / 2,(GLfloat)k * tile_size, (GLfloat)j * tile_size + tile_size / 2 },
-                        { tile_size / 2, tile_size, tile_size / 2 },
-                        false
-                    );
-                    est->dibujar();
-                }
-            }
         }
     }
 }
@@ -276,7 +321,13 @@ void Controlador::manejarEventos() {
                          ControladorCamara::cambiarTipoCamara();
                          break;
                     case SDLK_p:
-                        toggle_pausa();
+                        toggle(pausa);
+                        toggle(pararTiempo);
+                        if (pausa) {
+                            ControladorAudio::pausarAudio();
+                        } else {
+                            ControladorAudio::reanudarAudio();
+                        }
                         break;
                     case SDLK_UP:
                         moverArriba = true;
@@ -290,22 +341,21 @@ void Controlador::manejarEventos() {
                     case SDLK_LEFT:
                         moverIzquierda = true;
                         break;
-                    case SDLK_u:
+                    case SDLK_1:
                         ControladorAudio::playAudio(sonido::pasos);
                         break;
-                    case SDLK_j:
+                    case SDLK_2:
                         ControladorAudio::playAudio(sonido::bonificacion);
                         break;
-                    case SDLK_k:
+                    case SDLK_3:
                         ControladorAudio::playAudio(sonido::explosion);
                         break;
-                    case SDLK_l :
+                    case SDLK_4 :
                         ControladorAudio::playAudio(sonido::muerte);
                         break;
                     case SDLK_m://mute
-                        ControladorAudio::detenerAudio();
+                        ControladorAudio::silenciarAudio();
                         break;
-                    
                 }
                 break;
             case SDL_KEYUP:
@@ -323,17 +373,17 @@ void Controlador::manejarEventos() {
                         moverIzquierda = false;
                         break;
                     case SDLK_F1:
-                        wireframe = !wireframe;
+                        toggle(wireframe);
                         if (wireframe)
                             glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
                         else
                             glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
                         break;
                     case SDLK_F2:
-                        toggle_texturas();
+                        toggle(texturas_habilitadas);
                         break;
                     case SDLK_F3:
-                        toggle_tipoLuz();
+                        toggle(tipoLuz);
                         if (tipoLuz)
                             glShadeModel(GL_SMOOTH);
                         else
@@ -346,19 +396,19 @@ void Controlador::manejarEventos() {
                         //No esta cambiando nada
                         break;
                     case SDLK_F5:
-                        //cambiar el color de luz (bonificador)
-                        //ControladorLuz::cambiarColorLuzBonificador();
-                        //Recordar hacer sombras
-                        //No esta cambiando nada
+                        toggle(mostrarHud);
                         break;
                     case SDLK_F6:
                         //acelerar o disminuir velocidad de juego (global)
                         break;
                     case SDLK_F7:
-                        toggle_inmortal();
+                        toggle(inmortal);
                         break;
                     case SDLK_F8:
-                        pausarTiempo();
+                        toggle(pararTiempo);
+                        break;
+                    case SDLK_F9:
+                        toggle(atravesar_paredes);
                         break;
                     case SDLK_F11:
                         SDL_SetWindowFullscreen(window,
@@ -389,6 +439,20 @@ void Controlador::manejarEventos() {
             break;
             }
         }
+        const Uint8* movimientoCamara = SDL_GetKeyboardState(NULL);
+
+        if (movimientoCamara[SDL_SCANCODE_I]) {
+            ControladorLuz::moverCamara({ 0, 0, -(float)(velocidadCamara * velocidad_juego * frameDelay / 1000) });
+        }
+        if (movimientoCamara[SDL_SCANCODE_J]) {
+            ControladorLuz::moverCamara({ -(float)(velocidadCamara * velocidad_juego * frameDelay / 1000), 0, 0 });
+        }
+        if (movimientoCamara[SDL_SCANCODE_K]) {
+            ControladorLuz::moverCamara({ 0, 0, (float)(velocidadCamara * velocidad_juego * frameDelay / 1000) });
+        }
+        if (movimientoCamara[SDL_SCANCODE_L]) {
+            ControladorLuz::moverCamara({ (float)(velocidadCamara * velocidad_juego * frameDelay / 1000), 0, 0 });
+        }
     } else {
         moverArriba = false; moverAbajo = false; moverDerecha = false; moverIzquierda = false;
         while (SDL_PollEvent(&evento)) {
@@ -400,46 +464,65 @@ void Controlador::manejarEventos() {
 }
 
 list<particula*>::iterator it;
+list<enemigo*>::iterator itE;
+list<objeto*>::iterator itBorde;
+
 void Controlador::actualizar() {
-    if (puerta->getAbierta() && puerta->intersecta(jugador)) {
-        cout << "Fin juego" << endl;
+    if (!pausa && !pararTiempo)
+        disminuirTiempo(frameDelay);
+
+    if (puertaAbierta && puerta->intersecta(jugador)) {
         ControladorAudio::playAudio(sonido::bonificacion);
+        aumentarNivel();
         generarTablero();
-    }
-    else {
-        jugador->actualizar();
-        puerta->actualizar();
+    } 
+    ControladorPoderes::actualizarPoderes();
 
-        for (int i = 0; i < largoTablero; i++) {
-            for (int j = 0; j < anchoTablero; j++) {
-                if (estructuras[i][j] != nullptr)
-                    estructuras[i][j]->actualizar();
+    jugador->actualizar();
+    puerta->actualizar();
 
-                if (bombas[i][j] != nullptr)
-                    bombas[i][j]->actualizar();
+    for (int i = 0; i < largoTablero; i++) {
+        for (int j = 0; j < anchoTablero; j++) {
+            if (bombas[i][j] != nullptr)
+                bombas[i][j]->actualizar();
 
-                if (fuegos[i][j] != nullptr)
-                    fuegos[i][j]->actualizar();
+            if (fuegos[i][j] != nullptr)
+                fuegos[i][j]->actualizar();
 
-                if (enemigos[i][j] != nullptr)
-                    enemigos[i][j]->actualizar();
+            /*if (enemigos[i][j] != nullptr)
+                enemigos[i][j]->actualizar();*/
 
-                if (bonificadores[i][j] != nullptr)
-                    bonificadores[i][j]->actualizar();
-            }
-        }
-
-        for (list<particula*>::iterator it = particulas.begin(); it != particulas.end(); /*se actualiza dentro del bucle */) {
-            (*it)->actualizar();
-            if ((*it)->getEliminar()) {
-                delete (*it);
-                it = particulas.erase(it);
-            }
-            else {
-                ++it;
-            }
+            if (bonificadores[i][j] != nullptr)
+                bonificadores[i][j]->actualizar();
         }
     }
+
+    for (list<particula*>::iterator it = particulas.begin(); it != particulas.end(); /*se actualiza dentro del bucle */) {
+        (*it)->actualizar();
+        if ((*it)->getEliminar()) {
+            delete (*it);
+            it = particulas.erase(it);
+        }
+        else {
+            ++it;
+        }
+    }
+
+    for (itE = enemigos.begin(); itE != enemigos.end();){
+        if((*itE)->intersecta(jugador))
+            finJuego = true;
+        (*itE)->actualizar();
+        if ((*itE)->getEliminar()) {
+            delete (*itE);
+            itE = enemigos.erase(itE);
+        }
+        else {
+            itE++;
+        }
+    }
+
+    if (!puertaAbierta && enemigos.empty()) 
+        puertaAbierta = true;
 }
 
 void Controlador::dibujar() {
@@ -447,10 +530,13 @@ void Controlador::dibujar() {
     glLoadIdentity();
 
     ControladorCamara::colocarCamara();
-    ControladorLuz::colocarLuces();
+
+    if (texturas_habilitadas)
+        ControladorLuz::colocarLuces();
+
+    ControladorObjetos::dibujarSuelo();
 
     jugador->dibujar();
-    puerta->dibujar();
 
     for (int i = 0; i < largoTablero; i++) {
         for (int j = 0; j < anchoTablero; j++) {
@@ -460,38 +546,36 @@ void Controlador::dibujar() {
             if (bombas[i][j] != nullptr)
                 bombas[i][j]->dibujar();
 
-            if (enemigos[i][j] != nullptr)
-                enemigos[i][j]->dibujar();
+            /*if (enemigos[i][j] != nullptr)
+                enemigos[i][j]->dibujar();*/
+        }
+    }
 
+    for (itBorde = borde.begin(); itBorde != borde.end(); ++itBorde)
+        (*itBorde)->dibujar();
+
+    for (itE = enemigos.begin(); itE != enemigos.end(); itE++)
+        (*itE)->dibujar();
+
+    //La puerta, el suelo, los bonificadores y el fuego, no dependen de la luz por 2 motivos (son la fuente de luz)
+    puerta->dibujar();
+
+    if (texturas_habilitadas)
+        ControladorLuz::quitarLuces();
+
+    for (int i = 0; i < largoTablero; i++) {
+        for (int j = 0; j < anchoTablero; j++) {
             if (bonificadores[i][j] != nullptr)
                 bonificadores[i][j]->dibujar();
         }
     }
 
-    /*
-    cuando se dibuja una bomba, no se que pasa pero no se hace quita la textura a los bonificadores y a las particulasaunque tenga disable
-    (si se le quita, pq se dibujan las texturas de las estructuras en mayor posición)
-    */
-
-    for (it = particulas.begin(); it != particulas.end(); ++it) //esto es mas raro aun, las particulas de la estructura se dibuja, pero las del fuego no?
+    for (it = particulas.begin(); it != particulas.end(); ++it)
         (*it)->dibujar();
 
-    //Suelo
-    
-    glColor3f(0.75f, 0.63f, 0.50f);
-    glBegin(GL_QUADS);
-    glVertex3f(0, 0, 0);
-    glVertex3f(0, 0, anchoTablero * tile_size);
-    glVertex3f(largoTablero * tile_size, 0, anchoTablero * tile_size);
-    glVertex3f(largoTablero * tile_size, 0, 0);
-    glEnd();
-
-    dibujarBordeTablero();
-    
-    glDisable(GL_LIGHTING);
-
-    //HUD
-    ControladorInterfaz::dibujarHUD();
+    if (mostrarHud) {
+        ControladorInterfaz::dibujarHUD();
+    }
 
     SDL_GL_SwapWindow(window);
 }
@@ -508,18 +592,22 @@ Controlador::~Controlador() {
             if (fuegos[i][j] != nullptr)
                 delete fuegos[i][j];
 
-            if (enemigos[i][j] != nullptr)
-                delete enemigos[i][j];
+            /*if (enemigos[i][j] != nullptr)
+                delete enemigos[i][j];*/
 
-            if (bonificadores[i][j] != nullptr) 
+            if (bonificadores[i][j] != nullptr)
                 delete bonificadores[i][j];
-
         }
     }
 
     for (list<particula*>::iterator it = particulas.begin(); it != particulas.end();) {
         delete (*it);
         it = particulas.erase(it);
+    }
+
+    for (itBorde = borde.begin(); itBorde != borde.end(); ){
+        delete (*itBorde);
+        itBorde = borde.erase(itBorde);
     }
 
     ControladorAudio::limpiarAudios();

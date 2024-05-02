@@ -10,6 +10,9 @@ uniform_real_distribution<> disParticulaFuego(-tile_size/2, tile_size/2);
 uniform_real_distribution<> disParticulaFuegoVelocidad(-0.03, 0.03);
 int x, z;
 void fuego::actualizar() {
+	GLfloat colorLuz[4] = { 1.0f, 0.0f, 0.0f, 0.1f };
+	ControladorLuz::pedirLuz(pos, colorLuz);
+
 	tiempoFuego -= frameDelay;
 	x = getIndiceTablero(pos.x);
 	z = getIndiceTablero(pos.z);
@@ -17,7 +20,7 @@ void fuego::actualizar() {
 	if (bombas[x][z] != nullptr) 
 		dynamic_cast<bomba*>(bombas[x][z])->setTiempoBomba(0);
 
-	if (bonificadores[x][z] != nullptr) {
+	if (!ControladorPoderes::getEstaActivo(BOMBAS_ATRAVIESAN_ESTRUCTURAS) && bonificadores[x][z] != nullptr) {
 		delete bonificadores[x][z];
 		bonificadores[x][z] = nullptr;
 	}

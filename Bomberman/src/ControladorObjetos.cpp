@@ -171,3 +171,138 @@ void ControladorObjetos::dibujar(tipo_obj obj) {
 		glDisable(GL_TEXTURE_2D);
 	}
 }
+
+void ControladorObjetos::dibujarCubo(vector_3 tam, GLuint textura, GLfloat color[3]) {
+	if (texturas_habilitadas && textura != 0) {
+		glEnable(GL_TEXTURE_2D);
+		glBindTexture(GL_TEXTURE_2D, textura);
+		glColor3f(1.0f, 1.0f, 1.0f);
+	} else {
+		glColor3f(color[0], color[1], color[2]);
+	}
+
+	glBegin(GL_QUADS);
+
+	// Cara de abajo
+	glNormal3f(0.0f, -1.0f, 0.0f); // Normal hacia abajo
+
+	glTexCoord2f(0, 0);
+	glVertex3f(-tam.x, 0, -tam.z);
+
+	glTexCoord2f(0, 1);
+	glVertex3f(tam.x, 0, -tam.z);
+
+	glTexCoord2f(1, 1);
+	glVertex3f(tam.x, 0, tam.z);
+
+	glTexCoord2f(1, 0);
+	glVertex3f(-tam.x, 0, tam.z);
+
+	// Cara de arriba
+	glNormal3f(0.0f, 1.0f, 0.0f); // Normal hacia arriba
+
+	glTexCoord2f(0, 0);
+	glVertex3f(-tam.x, tam.y, -tam.z);
+
+	glTexCoord2f(0, 1);
+	glVertex3f(tam.x, tam.y, -tam.z);
+
+	glTexCoord2f(1, 1);
+	glVertex3f(tam.x, tam.y, tam.z);
+
+	glTexCoord2f(1, 0);
+	glVertex3f(-tam.x, tam.y, tam.z);
+
+	// Cara de atr�s
+	glNormal3f(0.0f, 0.0f, -1.0f); // Normal hacia atr�s
+
+	glTexCoord2f(0, 0);
+	glVertex3f(-tam.x, 0, -tam.z);
+
+	glTexCoord2f(0, 1);
+	glVertex3f(tam.x, 0, -tam.z);
+
+	glTexCoord2f(1, 1);
+	glVertex3f(tam.x, tam.y, -tam.z);
+
+	glTexCoord2f(1, 0);
+	glVertex3f(-tam.x, tam.y, -tam.z);
+
+	// Cara de adelante
+	glNormal3f(0.0f, 0.0f, 1.0f); // Normal hacia adelante
+
+	glTexCoord2f(0, 0);
+	glVertex3f(-tam.x, 0, tam.z);
+
+	glTexCoord2f(0, 1);
+	glVertex3f(tam.x, 0, tam.z);
+
+	glTexCoord2f(1, 1);
+	glVertex3f(tam.x, tam.y, tam.z);
+
+	glTexCoord2f(1, 0);
+	glVertex3f(-tam.x, tam.y, tam.z);
+
+	// Cara izquierda
+	glNormal3f(-1.0f, 0.0f, 0.0f); // Normal hacia la izquierda
+
+	glTexCoord2f(0, 0);
+	glVertex3f(-tam.x, 0, -tam.z);
+
+	glTexCoord2f(0, 1);
+	glVertex3f(-tam.x, 0, tam.z);
+
+	glTexCoord2f(1, 1);
+	glVertex3f(-tam.x, tam.y, tam.z);
+
+	glTexCoord2f(1, 0);
+	glVertex3f(-tam.x, tam.y, -tam.z);
+
+	// Cara derecha
+	glNormal3f(1.0f, 0.0f, 0.0f); // Normal hacia la derecha
+
+	glTexCoord2f(0, 0);
+	glVertex3f(tam.x, 0, -tam.z);
+
+	glTexCoord2f(0, 1);
+	glVertex3f(tam.x, 0, tam.z);
+
+	glTexCoord2f(1, 1);
+	glVertex3f(tam.x, tam.y, tam.z);
+
+	glTexCoord2f(1, 0);
+	glVertex3f(tam.x, tam.y, -tam.z);
+
+	glEnd();
+
+	if (texturas_habilitadas)
+		glDisable(GL_TEXTURE_2D);
+}
+
+void ControladorObjetos::dibujarSuelo() {
+	GLuint textura = ControladorTexturas::getTextura(TEXTURA_SUELO);
+
+	glColor3f(0.75f, 0.63f, 0.50f);
+
+	if (texturas_habilitadas) {
+		glEnable(GL_TEXTURE_2D);
+		glBindTexture(GL_TEXTURE_2D, textura);
+		glColor3f(1.0f, 1.0f, 1.0f);
+	}
+
+	for (int i = 0; i < largoTablero; i++) {
+		for (int j = 0; j < anchoTablero; j++) {
+			glBegin(GL_QUADS);
+			glNormal3f(0.0f, 1.0f, 0.0f);
+			glTexCoord2d(0, 0); glVertex3f(i * tile_size, 0, j * tile_size);
+			glTexCoord2d(1, 0); glVertex3f((i + 1) * tile_size, 0, j * tile_size);
+			glTexCoord2d(1, 1); glVertex3f((i + 1) * tile_size, 0, (j + 1) * tile_size);
+			glTexCoord2d(0, 1); glVertex3f(i * tile_size, 0, (j + 1) * tile_size);
+			glEnd();
+		}
+	}
+
+	if (texturas_habilitadas) {
+		glDisable(GL_TEXTURE_2D);
+	}
+}

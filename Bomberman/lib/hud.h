@@ -8,7 +8,16 @@
 #include "SDL_ttf.h"
 #include <GL/glu.h>
 
-enum class position { top_left, top_right, top_center, left, right, center, bottom_left, bottom_right, bottom_center };
+enum class position { 
+	top_left, top_right,
+	top_center, 
+	left,
+	right,
+	center,
+	bottom_left,
+	bottom_right,
+	bottom_center 
+};
 
 class hud {
 	public: 

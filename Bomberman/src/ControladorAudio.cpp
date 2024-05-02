@@ -4,15 +4,7 @@ ALCdevice* ControladorAudio::openALDevice = nullptr;
 ALCcontext* ControladorAudio::openALContext = nullptr;
 ALCboolean ControladorAudio::contextMadeCurrent = false;
 
-ALuint ControladorAudio::bufferMuerte;
-ALuint ControladorAudio::bufferExplosion;
-ALuint ControladorAudio::bufferBonificacion;
-ALuint ControladorAudio::bufferPasos;
-
-recursoAudio* ControladorAudio::raMuerte;
-recursoAudio* ControladorAudio::raExplosion;
-recursoAudio* ControladorAudio::raBonificacion;
-recursoAudio* ControladorAudio::raPasos;
+list<sounds> ControladorAudio::sonidos = list<sounds>();
 
 void ControladorAudio::initOpenAl() {
 	openALDevice = alcOpenDevice(nullptr); //obtengo el dispositivo
@@ -38,62 +30,79 @@ void ControladorAudio::cargarAudios() {
 	
 	initOpenAl();
 
-	bufferMuerte = bufferAudio::agregarSonido("audio/muerte.wav");
-	bufferExplosion = bufferAudio::agregarSonido("audio/explosion.wav");
-	bufferBonificacion = bufferAudio::agregarSonido("audio/bonificacion.wav");
-	bufferPasos = bufferAudio::agregarSonido("audio/pasos.wav");
+	list<ALuint> buffers = list<ALuint>();
+	buffers.push_back(bufferAudio::agregarSonido("audio/muerte.wav"));
+	buffers.push_back(bufferAudio::agregarSonido("audio/explosion.wav"));
+	buffers.push_back(bufferAudio::agregarSonido("audio/bonificacion.wav"));
+	buffers.push_back(bufferAudio::agregarSonido("audio/pasos.wav"));
 
-	raMuerte = new recursoAudio(bufferMuerte);
-	raExplosion = new recursoAudio(bufferExplosion);
-	raBonificacion = new recursoAudio(bufferBonificacion);
-	raPasos = new recursoAudio(bufferPasos);
+	int i = 0;
+	for (auto audio = buffers.begin(); audio != buffers.end(); ++audio) {
+		sounds sound = {static_cast<sonido>(i),new recursoAudio((*audio)) };
+		sonidos.push_back(sound);
+		i++;
+	}
+
+	while (!buffers.empty()) {
+		buffers.pop_back();
+	}
+
 }
 
 void ControladorAudio::playAudio(sonido s) {
 	if (!mute) {
-		switch (s) {
-			case sonido::muerte:
-				raMuerte->play();
-				break;
-			case sonido::explosion:
-				raExplosion->play();
-				break;
-			case sonido::bonificacion:
-				raBonificacion->play();
-				break;
-			case sonido::pasos:
-				raPasos->play();
-				break;
+		boolean encontrado = false;
+		for (auto songs = sonidos.begin(); !encontrado && songs != sonidos.end(); ++songs) {
+			if (songs->sonido == s) {
+				songs->recurso->play();
+				encontrado = true;
+			}
 		}
 	}
 }
 
-void ControladorAudio::pausarAudio() {
-
-}
-
-void ControladorAudio::reanudarAudio() {
-
-}
-
-void ControladorAudio::detenerAudio() {
+void ControladorAudio::pausarAudio() { //se lo llama cuando se pausa el juego
 	if (!mute) {
-		raMuerte->detener();
-		raExplosion->detener();
-		raBonificacion->detener();
-		raPasos->detener();
+		for (auto songs = sonidos.begin(); songs != sonidos.end(); ++songs) {
+			songs->recurso->pausar();
+		}
+	}
+}
+
+void ControladorAudio::reanudarAudio() { //se lo llama cuando se saca la pausa al juego
+	if (!mute) {
+		for (auto songs = sonidos.begin(); songs != sonidos.end(); ++songs) {
+			songs->recurso->reanudar();
+		}
+	}
+}
+
+void ControladorAudio::detenerAudio() { //creo que ya no usamos el detenerAudio ni el detener
+	if (!mute) {
+		for (auto songs = sonidos.begin(); songs != sonidos.end(); ++songs) {
+			songs->recurso->detener();
+		}
 	}
 	mute = !mute;
 }
 
+void ControladorAudio::silenciarAudio() {
+	mute = !mute;
+	for (auto songs = sonidos.begin(); songs != sonidos.end(); ++songs) {
+		songs->recurso->silenciar(mute);
+	}
+}
+
 //Se deberia controlar las excepciones
 void ControladorAudio::limpiarAudios() {
-	delete raMuerte;
-	delete raExplosion;
-	delete raBonificacion;
-	delete raPasos;
+	
+	while (!sonidos.empty()) {
+		delete sonidos.begin()->recurso;
+		sonidos.pop_front();
+	}
 
 	bufferAudio::limpiarBuffer();
+
 	alcMakeContextCurrent(nullptr);
 	alcDestroyContext(openALContext);
 	alcCloseDevice(openALDevice);

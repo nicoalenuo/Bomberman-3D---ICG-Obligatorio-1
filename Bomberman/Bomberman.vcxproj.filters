@@ -90,6 +90,9 @@
     <ClCompile Include="src\particula_fuego.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\particula_bonificador.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="lib\controlador.h">
@@ -168,6 +171,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="lib\particula_fuego.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="lib\particula_bonificador.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

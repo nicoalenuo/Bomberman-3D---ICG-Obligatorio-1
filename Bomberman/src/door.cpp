@@ -1,16 +1,7 @@
 #include "../lib/door.h"
 
 door::door(vector_3 pos, vector_3 tam) : objeto(pos, tam) {
-    this->abierta = true;//Hay que inicializar en falso y setear en true cuando no existan enemigos
     this->visible = false;
-}
-
-bool door::getAbierta() {
-    return this->abierta;
-}
-
-void door::setAbierta(bool abierta) {
-    this->abierta = abierta;
 }
 
 bool door::getVisible() {
@@ -42,90 +33,92 @@ void door::dibujar() {
         glPushMatrix();
         glTranslatef(pos.x, pos.y, pos.z);
 
+        glColor3f(80.f / 255, 2.f/255, 186.f/255);
+
         if (texturas_habilitadas) {
             glEnable(GL_TEXTURE_2D);
             glBindTexture(GL_TEXTURE_2D, ControladorTexturas::getTextura(TEXTURA_PUERTA));
+            glColor3f(1.f, 1.f, 1.f);
         }
-        glColor3f(1.0, 0.f, 1.0);
 
         glBegin(GL_QUADS);
 
         //Cara de abajo
-        glTexCoord2f(0.5, 0.5);
+        glTexCoord2f(0, 0);
         glVertex3f(-tam.x, 0, -tam.z);
 
-        glTexCoord2f(0.5, 1);
+        glTexCoord2f(0, 1);
         glVertex3f(tam.x, 0, -tam.z);
 
         glTexCoord2f(1, 1);
         glVertex3f(tam.x, 0, tam.z);
 
-        glTexCoord2f(1, 0.5);
+        glTexCoord2f(1, 0);
         glVertex3f(-tam.x, 0, tam.z);
 
         // Cara de arriba
-        glTexCoord2f(0.5, 0.5);
+        glTexCoord2f(0, 0);
         glVertex3f(-tam.x, tam.y, -tam.z);
 
-        glTexCoord2f(0.5, 1);
+        glTexCoord2f(0, 1);
         glVertex3f(tam.x, tam.y, -tam.z);
 
         glTexCoord2f(1, 1);
         glVertex3f(tam.x, tam.y, tam.z);
 
-        glTexCoord2f(1, 0.5);
+        glTexCoord2f(1, 0);
         glVertex3f(-tam.x, tam.y, tam.z);
 
         // Cara de atras
         glTexCoord2f(1, 0);
         glVertex3f(-tam.x, 0, -tam.z);
 
-        glTexCoord2f(0.5, 0);
+        glTexCoord2f(0, 0);
         glVertex3f(tam.x, 0, -tam.z);
 
-        glTexCoord2f(0.5, 0.5);
+        glTexCoord2f(0, 1);
         glVertex3f(tam.x, tam.y, -tam.z);
 
-        glTexCoord2f(1, 0.5);
+        glTexCoord2f(1, 1);
         glVertex3f(-tam.x, tam.y, -tam.z);
 
         // Cara de adelante
-        glTexCoord2f(0.5, 0);
+        glTexCoord2f(1, 0);
         glVertex3f(-tam.x, 0, tam.z);
 
         glTexCoord2f(0, 0);
         glVertex3f(tam.x, 0, tam.z);
 
-        glTexCoord2f(0, 0.5);
+        glTexCoord2f(0, 1);
         glVertex3f(tam.x, tam.y, tam.z);
 
-        glTexCoord2f(0.5, 0.5);
+        glTexCoord2f(1, 1);
         glVertex3f(-tam.x, tam.y, tam.z);
 
         // Cara izquierda
-        glTexCoord2f(0.5, 0);
+        glTexCoord2f(1, 0);
         glVertex3f(-tam.x, 0, -tam.z);
 
         glTexCoord2f(0, 0);
         glVertex3f(-tam.x, 0, tam.z);
 
-        glTexCoord2f(0, 0.5);
+        glTexCoord2f(0, 1);
         glVertex3f(-tam.x, tam.y, tam.z);
 
-        glTexCoord2f(0.5, 0.5);
+        glTexCoord2f(1, 1);
         glVertex3f(-tam.x, tam.y, -tam.z);
 
         // Cara derecha (x = 1)
-        glTexCoord2f(0.5, 0);
+        glTexCoord2f(1, 0);
         glVertex3f(tam.x, 0, -tam.z);
 
         glTexCoord2f(0, 0);
         glVertex3f(tam.x, 0, tam.z);
 
-        glTexCoord2f(0, 0.5);
+        glTexCoord2f(0, 1);
         glVertex3f(tam.x, tam.y, tam.z);
 
-        glTexCoord2f(0.5, 0.5);
+        glTexCoord2f(1, 1);
         glVertex3f(tam.x, tam.y, -tam.z);
 
         glEnd();

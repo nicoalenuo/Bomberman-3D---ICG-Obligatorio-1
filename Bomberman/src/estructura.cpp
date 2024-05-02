@@ -34,102 +34,20 @@ void estructura::actualizar() {
 void estructura::dibujar() {
     glPushMatrix();
     glTranslatef(pos.x, pos.y, pos.z);
-
+    GLfloat color[3];
     if (destructible) {
-        glColor3f(144.f / 255.f, 12.f / 255.f, 63.f / 255.f);
+        color[0] = 144.f / 255;
+        color[1] = 12.f / 255;
+        color[2] = 63.f / 255;
     } else {
-        glColor3f(175.f / 255.f, 175.f / 255.f, 175.f / 255.f);
+        color[0] = 175.f / 255;
+        color[1] = 175.f / 255;
+        color[2] = 175.f / 255;
     }
-
+    GLuint textura = 0;
     if (texturas_habilitadas) {
-        glEnable(GL_TEXTURE_2D);
-        glBindTexture(GL_TEXTURE_2D, ControladorTexturas::getTextura(destructible ? ESTRUCTURA_DESTRUCTIBLE : ESTRUCTURA_NO_DESTRUCTIBLE));
+        textura = ControladorTexturas::getTextura(destructible ? ESTRUCTURA_DESTRUCTIBLE : ESTRUCTURA_NO_DESTRUCTIBLE);
     }
-
-    glBegin(GL_QUADS);
-
-    //Cara de abajo
-    glTexCoord2f(0, 0);
-    glVertex3f(-tam.x, 0, -tam.z);
-
-    glTexCoord2f(0, 1);
-    glVertex3f(tam.x, 0, -tam.z);
-
-    glTexCoord2f(1, 1);
-    glVertex3f(tam.x, 0, tam.z);
-
-    glTexCoord2f(1, 0);
-    glVertex3f(-tam.x, 0, tam.z);
-
-    // Cara de arriba
-    glTexCoord2f(0, 0);
-    glVertex3f(-tam.x, tam.y, -tam.z);
-
-    glTexCoord2f(0, 1);
-    glVertex3f(tam.x, tam.y, -tam.z);
-
-    glTexCoord2f(1, 1);
-    glVertex3f(tam.x, tam.y, tam.z);
-
-    glTexCoord2f(1, 0);
-    glVertex3f(-tam.x, tam.y, tam.z);
-
-    // Cara de atras
-    glTexCoord2f(0, 0);
-    glVertex3f(-tam.x, 0, -tam.z);
-
-    glTexCoord2f(0, 1);
-    glVertex3f(tam.x, 0, -tam.z);
-
-    glTexCoord2f(1, 1);
-    glVertex3f(tam.x, tam.y, -tam.z);
-
-    glTexCoord2f(1, 0);
-    glVertex3f(-tam.x, tam.y, -tam.z);
-
-    // Cara de adelante
-    glTexCoord2f(0, 0);
-    glVertex3f(-tam.x, 0, tam.z);
-
-    glTexCoord2f(0, 1);
-    glVertex3f(tam.x, 0, tam.z);
-
-    glTexCoord2f(1, 1);
-    glVertex3f(tam.x, tam.y, tam.z);
-
-    glTexCoord2f(1, 0);
-    glVertex3f(-tam.x, tam.y, tam.z);
-
-    // Cara izquierda
-    glTexCoord2f(0, 0);
-    glVertex3f(-tam.x, 0, -tam.z);
-
-    glTexCoord2f(0, 1);
-    glVertex3f(-tam.x, 0, tam.z);
-
-    glTexCoord2f(1, 1);
-    glVertex3f(-tam.x, tam.y, tam.z);
-
-    glTexCoord2f(1, 0);
-    glVertex3f(-tam.x, tam.y, -tam.z);
-
-    // Cara derecha 
-    glTexCoord2f(0, 0);
-    glVertex3f(tam.x, 0, -tam.z);
-
-    glTexCoord2f(0, 1);
-    glVertex3f(tam.x, 0, tam.z);
-
-    glTexCoord2f(1, 1);
-    glVertex3f(tam.x, tam.y, tam.z);
-
-    glTexCoord2f(1, 0);
-    glVertex3f(tam.x, tam.y, -tam.z);
-
-    glEnd();
-
-    if (texturas_habilitadas)
-        glDisable(GL_TEXTURE_2D);
-    
+    ControladorObjetos::dibujarCubo(tam, textura, color);
     glPopMatrix();
 }

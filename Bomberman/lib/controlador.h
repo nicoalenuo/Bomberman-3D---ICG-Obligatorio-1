@@ -25,6 +25,7 @@
 #include "ControladorInterfaz.h"
 #include "ControladorAudio.h"
 #include "ControladorLuz.h"
+#include "ControladorPoderes.h"
 
 class Controlador {
 private:
@@ -35,13 +36,9 @@ private:
 	SDL_Window* window;
 	SDL_GLContext context;
 	SDL_Event evento;
-
-	SDL_DisplayMode pantalla;
 	
 public:
 	static Controlador* getInstance();
-
-	void dibujarBordeTablero();
 
 	void manejarEventos();
 	void actualizar();
