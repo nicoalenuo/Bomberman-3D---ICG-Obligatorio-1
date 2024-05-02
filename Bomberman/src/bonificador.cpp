@@ -76,7 +76,7 @@ void bonificador::actualizar() {
             int z = getIndiceTablero(pos.z);
             bonificadores[x][z] = nullptr;
             cout << "bonificador agarrado: " << tipo << endl;
-            ControladorPoderes::activarPoder(tipo, 30000);
+            ControladorPoderes::activarPoder(tipo, ControladorPoderes::poderDependeDeTiempo(tipo) ? 10000 : 1);
             ControladorAudio::playAudio(sonido::bonificacion);
             delete this;
     }

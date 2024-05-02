@@ -260,7 +260,7 @@ Controlador* Controlador::getInstance() {
 
 int posBombaXTablero, posBombaZTablero;
 inline void colocarBomba() { //para evitar repetir codigo
-    if (jugador->getMaxBomba() > jugador->getCantBomba()) {
+    if (jugador->bombaDisponible()) {
         if (ControladorCamara::camaraMiraHacia(EJE_MENOS_X)) {
             posBombaXTablero = getIndiceTablero(jugador->getPosicion().x - tile_size);
             posBombaZTablero = getIndiceTablero(jugador->getPosicion().z);
@@ -289,7 +289,7 @@ inline void colocarBomba() { //para evitar repetir codigo
                 { posBombaXTablero * tile_size + tile_size / 2, 0, posBombaZTablero * tile_size + tile_size / 2 },
                 { tile_size / 4, tile_size / 2, tile_size / 4 },
                 2000, //2 segundos
-                ControladorPoderes::getEstaActivo(AUMENTAR_ALCANCE_BOMBAS) ? 2 : 1
+                1 + ControladorPoderes::getValor(AUMENTAR_ALCANCE_BOMBAS)
             );
             bombas[posBombaXTablero][posBombaZTablero] = bomba_obj;
 
@@ -304,7 +304,7 @@ inline void colocarBomba() { //para evitar repetir codigo
 }
 
 void Controlador::manejarEventos() {
-    if (!finJuego) {
+    if (!finJuego && !pausa) {
         while (SDL_PollEvent(&evento)) {
             switch (evento.type) {
             case SDL_QUIT:
@@ -472,8 +472,11 @@ void Controlador::manejarEventos() {
     } else {
         moverArriba = false; moverAbajo = false; moverDerecha = false; moverIzquierda = false;
         while (SDL_PollEvent(&evento)) {
-            if (evento.type == SDL_KEYDOWN && evento.key.keysym.sym == SDLK_ESCAPE ) {
-                fin = true;
+            if (evento.type == SDL_KEYDOWN) {
+                if (evento.key.keysym.sym == SDLK_ESCAPE)
+                    fin = true;
+                else if(evento.key.keysym.sym == SDLK_p)
+                    toggle(pausa);
             }
         }
     }
@@ -587,8 +590,7 @@ void Controlador::dibujar() {
     //La puerta, el suelo, los bonificadores y el fuego, no dependen de la luz por 2 motivos (son la fuente de luz)
     puerta->dibujar();
 
-    if (texturas_habilitadas)
-        ControladorLuz::quitarLuces();
+    ControladorLuz::quitarLuces();
 
     for (int i = 0; i < largoTablero; i++) {
         for (int j = 0; j < anchoTablero; j++) {

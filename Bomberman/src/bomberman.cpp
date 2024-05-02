@@ -1,11 +1,7 @@
 #include "../lib/bomberman.h"
 
 bomberman::bomberman(vector_3 pos, vector_3 tam, GLfloat velocidad) : personaje(pos, tam, velocidad) {
-    vida = 1;
     moverBomba = false; //por el momento esta no se va a utilizar
-    largoBomba = 1;
-    tiempoBomba = 2000;
-    maxBomba = 1;
     cantActual = 0;
     rotacion_y_actual = 0;
     rotacion_z_actual = 0;
@@ -18,7 +14,7 @@ bool movimiento;
 GLfloat desplazamiento;
 void bomberman::actualizar() { //perdon a la persona que tenga que entender esto
     movimiento = false;
-    desplazamiento = velocidad * (elapsed_time / frameDelay) * (ControladorPoderes::getEstaActivo(AUMENTAR_VELOCIDAD) ? 2 : 1);
+    desplazamiento = velocidad * (elapsed_time / frameDelay) * (ControladorPoderes::getValor(AUMENTAR_VELOCIDAD) ? 2 : 1);
     if (moverArriba) {
         if (ControladorCamara::camaraMiraHacia(EJE_MENOS_X)) {
             rotacionY = 90;
@@ -180,8 +176,7 @@ void bomberman::actualizar() { //perdon a la persona que tenga que entender esto
     }
 
     //Chequeo con fuego
-
-    if (!inmortal && !ControladorPoderes::getEstaActivo(INMORTALIDAD) && contactoConFuego())
+    if (!inmortal && !ControladorPoderes::getValor(INMORTALIDAD) && contactoConFuego())
         finJuego = true;
 }
 

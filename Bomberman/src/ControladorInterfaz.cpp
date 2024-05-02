@@ -113,7 +113,7 @@ void ControladorInterfaz::cargarInterfaz() {
 	setPuntaje(puntaje);
 	setTiempo(tiempoJuego);
 	setFinJuego(fin);
-	setCantBombas(jugador->getMaxBomba());
+	setCantBombas(ControladorPoderes::getValor(AUMENTAR_CANTIDAD_BOMBAS) + 1);
 	//setPoderes(jugador->getPoderes()); //FALTA: Problema en setPoderes, algo pasa que no carga
 }
 
@@ -266,7 +266,7 @@ void ControladorInterfaz::dibujarHUD() {
 	setPuntaje(puntaje);
 	setTiempo(tiempoJuego / 1000);
 	setFinJuego(finJuego);
-	setCantBombas(jugador->getMaxBomba() - jugador->getCantBomba());
+	setCantBombas(ControladorPoderes::getValor(AUMENTAR_CANTIDAD_BOMBAS) + 1 - jugador->getCantBomba());
 
 	glClear(GL_DEPTH_BUFFER_BIT);
 	glDisable(GL_DEPTH_TEST);
