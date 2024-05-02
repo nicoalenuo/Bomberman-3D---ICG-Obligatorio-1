@@ -23,6 +23,7 @@ public:
 	void setTono(float& tono);
 	void setGanancia(float& ganancia);
 	void setPosicion(float& x, float& y, float& z);
+	void setBucle(bool bucle);
 	//void setVelocidad(float x, float y, float z);
 
 	void play();

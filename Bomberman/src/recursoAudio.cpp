@@ -38,6 +38,11 @@ void recursoAudio::setPosicion(float& x, float& y, float& z) {
 	alSource3f(this->recurso, AL_POSITION, x, y, z);
 }
 
+void recursoAudio::setBucle(bool bucle) {
+	this->bucle = bucle;
+	alSourcei(this->recurso, AL_LOOPING, bucle);
+}
+
 void recursoAudio::play() {
 	/*if (buffer_to_play != p_Buffer)
 	{
@@ -62,7 +67,10 @@ void recursoAudio::pausar() {
 }
 
 void recursoAudio::reanudar() {
-	alSourcePlay(this->recurso);
+	ALint estado;
+	alGetSourcei(recurso, AL_SOURCE_STATE, &estado);
+	if(estado == AL_PAUSED)
+		alSourcePlay(this->recurso);
 }
 
 recursoAudio::~recursoAudio() {

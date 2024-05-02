@@ -246,6 +246,8 @@ Controlador::Controlador() {
     ControladorAudio::cargarAudios();
     ControladorLuz::cargarLuces();
     ControladorPoderes::cargarPoderes();
+
+    ControladorAudio::playAudio(sonido::inicioJuego);
 }
 
 Controlador* Controlador::getInstance() {
@@ -321,6 +323,7 @@ void Controlador::manejarEventos() {
                          break;
                     case SDLK_p:
                         toggle_pausa();
+                        ControladorAudio::pausarAudio();
                         break;
                     case SDLK_UP:
                         moverArriba = true;
@@ -510,8 +513,11 @@ void Controlador::actualizar() {
         }
     }
 
-    if (!puertaAbierta && enemigos.empty()) 
+    if (!puertaAbierta && enemigos.empty()) {
         puertaAbierta = true;
+        ControladorAudio::playAudio(sonido::puertaAbierta);
+    }
+        
 }
 
 void Controlador::dibujar() {

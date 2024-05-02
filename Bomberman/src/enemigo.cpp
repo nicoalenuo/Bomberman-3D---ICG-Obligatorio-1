@@ -75,15 +75,17 @@ bool posicion_valida_parcial(vector_3 pos, bool orientacionX) {
     objeto *obj_1, *obj_2, *obj_3, *obj_4;
 
     if (orientacionX) {
-        p = x + 1;
-        n = x - 1;
+        p = min(x + 1, largoTablero);
+        n = max(x - 1, 0);
+        cout << p << " " << n << endl;
         obj_1 = estructuras[p][z];
         obj_2 = estructuras[n][z];
         obj_3 = bombas[p][z];
         obj_4 = bombas[n][z];
     } else {
-        p = z + 1;
-        n = z - 1;
+        p = min(z + 1, anchoTablero);
+        n = max(z - 1, 0);
+        cout << p << " " << n << endl;
         obj_1 = estructuras[x][p];
         obj_2 = estructuras[x][n];
         obj_3 = bombas[x][p];
@@ -104,7 +106,9 @@ void enemigo::actualizar() {
     uniform_real_distribution<> dis(0.0, 1.0);
 
     if (orientacionX) {
-        if (centroConMovimiento(pos) && (dis(gen) < probCambiarPos) && posicion_valida_parcial(pos, false)) {//corregir
+        if (centroConMovimiento(pos) && (dis(gen) < probCambiarPos) && posicion_valida_parcial(pos, false)) {
+            //falta corregir, al usar centroConMovimiento me toma en cuenta no solo los centros si no tambien las aristas
+            //por eso a veces hace un movimineto extranio entre dos esquinas, lo voy a corregir despues @victor
             moverX = false;
             moverNX = false;
             moverZ = dis(gen) < probCambiarPos;
@@ -130,7 +134,7 @@ void enemigo::actualizar() {
         }
     }
     if (!orientacionX) {
-        if (!cambio && centroConMovimiento(pos) && (dis(gen) < probCambiarPos) && posicion_valida_parcial(pos, true)) {//corregir
+        if (!cambio && centroConMovimiento(pos) && (dis(gen) < probCambiarPos) && posicion_valida_parcial(pos, true)) {
             moverX = dis(gen) < probCambiarPos;
             moverNX = !moverX;
             moverZ = false;
