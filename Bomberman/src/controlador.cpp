@@ -27,13 +27,11 @@ void eliminarEstructuras(vector_3 pos, bool isOrientacionX, int num) {
 }
 
 void generarTablero() {
-    cout << nivel << endl;
-
     if (jugador == nullptr) {
         jugador = new bomberman(
             { tile_size / 2, 0, tile_size / 2 },
             { tile_size / 6, tile_size / 2, tile_size / 6 },
-            GLfloat(0.1)
+            0.1f
         );
     }
     else {
@@ -199,7 +197,6 @@ void generarTablero() {
 
         enemigos.push_back(enem);
     }
-    enem = nullptr;
 }
 
 Controlador::Controlador() {
@@ -419,15 +416,21 @@ void Controlador::manejarEventos() {
                 }
             break;
             case SDL_MOUSEMOTION:
-                mouseX = (mouseX - evento.motion.xrel) % 360;
+                mouseX = fmod(mouseX - (evento.motion.xrel * SENSIBILIDAD_MOUSE), 360);
                 if (mouseX < 0)
                     mouseX += 360;
 
-                mouseY = mouseY - evento.motion.yrel;
+                mouseY = mouseY - (evento.motion.yrel * SENSIBILIDAD_MOUSE);
                 if (mouseY < 1)
                     mouseY = 1;
                 else if (mouseY > 90)
                     mouseY = 90;
+
+                mouseY_invertido = mouseY_invertido + (evento.motion.yrel * SENSIBILIDAD_MOUSE);
+                if (mouseY_invertido < 1)
+                    mouseY_invertido = 1;
+                else if (mouseY_invertido > 90)
+                    mouseY_invertido = 90;
             break;
             case SDL_MOUSEBUTTONDOWN:
                 switch (evento.button.button) {
@@ -461,6 +464,7 @@ void Controlador::actualizar() {
         aumentarNivel();
         generarTablero();
     } 
+
     ControladorPoderes::actualizarTemporizadores();
 
     jugador->actualizar();
@@ -482,7 +486,7 @@ void Controlador::actualizar() {
         }
     }
 
-    for (list<particula*>::iterator it = particulas.begin(); it != particulas.end(); /*se actualiza dentro del bucle */) {
+    for (it = particulas.begin(); it != particulas.end(); /*se actualiza dentro del bucle */) {
         (*it)->actualizar();
         if ((*it)->getEliminar()) {
             delete (*it);
@@ -514,7 +518,7 @@ void Controlador::dibujar() {
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     glLoadIdentity();
 
-    ControladorCamara::colocarCamara();
+    ControladorCamara::colocarCamara(jugador->getPosicion());
 
     if (texturas_habilitadas)
         ControladorLuz::colocarLuces();
@@ -538,7 +542,6 @@ void Controlador::dibujar() {
         }
     }
 
-
     for (itBorde = borde.begin(); itBorde != borde.end(); ++itBorde)
         (*itBorde)->dibujar();
 
@@ -555,13 +558,10 @@ void Controlador::dibujar() {
     glVertex3f(0, 0, anchoTablero * tile_size);
     glEnd();
     
-    if (texturas_habilitadas)
-        ControladorLuz::quitarLuces();
-
+    ControladorLuz::quitarLuces();
 
     for (it = particulas.begin(); it != particulas.end(); ++it)
         (*it)->dibujar();
-
 
     ControladorInterfaz::dibujarHUD();
 

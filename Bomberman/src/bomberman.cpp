@@ -14,20 +14,20 @@ bomberman::bomberman(vector_3 pos, vector_3 tam, GLfloat velocidad) : personaje(
 
 int rotacionY, rotacionZ;
 bool movimiento;
-void bomberman::actualizar() {
+void bomberman::actualizar() { //perdon a la persona que tenga que entender esto
     movimiento = false;
     if (moverArriba) {
-        if (mouseX >= 45 && mouseX < 135) {
+        if (ControladorCamara::camaraMiraHacia(EJE_MENOS_X)) {
             rotacionY = 90;
             if (atravesar_paredes || posicion_valida({ pos.x - velocidad * velocidad_juego, 0, pos.z }, { tam.x, 0, tam.z }))
                 pos.x -= velocidad * velocidad_juego;
         }
-        else if (mouseX >= 135 && mouseX < 225) {
+        else if (ControladorCamara::camaraMiraHacia(EJE_Z)) {
             rotacionY = 180;
             if (atravesar_paredes || posicion_valida({ pos.x, 0, pos.z + velocidad * velocidad_juego }, { tam.x, 0,tam.z }))
                 pos.z += velocidad * velocidad_juego;
         }
-        else if (mouseX >= 225 && mouseX < 315) {
+        else if (ControladorCamara::camaraMiraHacia(EJE_X)) {
             rotacionY = 270;
             if (atravesar_paredes || posicion_valida({ pos.x + velocidad * velocidad_juego, 0, pos.z }, { tam.x, 0, tam.z }))
                 pos.x += velocidad * velocidad_juego;
@@ -40,17 +40,17 @@ void bomberman::actualizar() {
         movimiento = true;
     }
     if (moverAbajo) {
-        if (mouseX >= 45 && mouseX < 135) {
+        if (ControladorCamara::camaraMiraHacia(EJE_MENOS_X)) {
             rotacionY = 270;
             if (atravesar_paredes || posicion_valida({ pos.x + velocidad * velocidad_juego, 0, pos.z }, { tam.x, 0, tam.z }))
                 pos.x += velocidad * velocidad_juego;
         }
-        else if (mouseX >= 135 && mouseX < 225) {
+        else if (ControladorCamara::camaraMiraHacia(EJE_Z)) {
             rotacionY = 0;
             if (atravesar_paredes || posicion_valida({ pos.x, 0, pos.z - velocidad * velocidad_juego }, { tam.x, 0, tam.z }))
                 pos.z -= velocidad * velocidad_juego;
         }
-        else if (mouseX >= 225 && mouseX < 315) {
+        else if (ControladorCamara::camaraMiraHacia(EJE_X)) {
             rotacionY = 90;
             if (atravesar_paredes || posicion_valida({ pos.x - velocidad * velocidad_juego, 0, pos.z }, { tam.x, 0, tam.z }))
                 pos.x -= velocidad * velocidad_juego;
@@ -63,17 +63,17 @@ void bomberman::actualizar() {
         movimiento = true;
     }
     if (moverDerecha) {
-        if (mouseX >= 45 && mouseX < 135) {
+        if (ControladorCamara::camaraMiraHacia(EJE_MENOS_X)) {
             rotacionY = 0;
             if (atravesar_paredes || posicion_valida({ pos.x, 0, pos.z - velocidad * velocidad_juego }, { tam.x, 0, tam.z }))
                 pos.z -= velocidad * velocidad_juego;
         }
-        else if (mouseX >= 135 && mouseX < 225) {
+        else if (ControladorCamara::camaraMiraHacia(EJE_Z)) {
             rotacionY = 90;
             if (atravesar_paredes || posicion_valida({ pos.x - velocidad * velocidad_juego, 0, pos.z }, { tam.x, 0, tam.z }))
                 pos.x -= velocidad * velocidad_juego;
         }
-        else if (mouseX >= 225 && mouseX < 315) {
+        else if (ControladorCamara::camaraMiraHacia(EJE_X)) {
             rotacionY = 180;
             if (atravesar_paredes || posicion_valida({ pos.x, 0, pos.z + velocidad * velocidad_juego }, { tam.x, 0, tam.z }))
                 pos.z += velocidad * velocidad_juego;
@@ -87,17 +87,17 @@ void bomberman::actualizar() {
     }
 
     if (moverIzquierda) {
-        if (mouseX >= 45 && mouseX < 135) {
+        if (ControladorCamara::camaraMiraHacia(EJE_MENOS_X)) {
             rotacionY = 180;
             if (atravesar_paredes || posicion_valida({ pos.x, 0, pos.z + velocidad * velocidad_juego }, { tam.x, 0, tam.z }))
                 pos.z += velocidad * velocidad_juego;
         }
-        else if (mouseX >= 135 && mouseX < 225) {
+        else if (ControladorCamara::camaraMiraHacia(EJE_Z)) {
             rotacionY = 270;
             if (atravesar_paredes || posicion_valida({ pos.x + velocidad * velocidad_juego, 0, pos.z }, { tam.x, 0, tam.z }))
                 pos.x += velocidad * velocidad_juego;
         }
-        else if (mouseX >= 225 && mouseX < 315) {
+        else if (ControladorCamara::camaraMiraHacia(EJE_X)) {
             rotacionY = 0;
             if (atravesar_paredes || posicion_valida({ pos.x, 0, pos.z - velocidad * velocidad_juego }, { tam.x, 0, tam.z }))
                 pos.z -= velocidad * velocidad_juego;

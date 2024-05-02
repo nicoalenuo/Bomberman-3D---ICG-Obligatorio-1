@@ -12,7 +12,7 @@
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{253970C5-4794-4D0E-AC65-24BFFE03C8A7}</ProjectGuid>
-    <RootNamespace>OpenGLbasico</RootNamespace>
+    <RootNamespace>Bomberman</RootNamespace>
     <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
     <ProjectName>Bomberman</ProjectName>
   </PropertyGroup>

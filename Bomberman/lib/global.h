@@ -27,8 +27,9 @@ extern bool moverAbajo;
 extern bool moverDerecha;
 extern bool moverIzquierda;
 
-extern int mouseX;
-extern int mouseY;
+extern GLfloat mouseX;
+extern GLfloat mouseY;
+extern GLfloat mouseY_invertido;
 
 extern int cantLuces;
 

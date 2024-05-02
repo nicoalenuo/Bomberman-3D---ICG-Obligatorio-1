@@ -23,4 +23,6 @@ const float WINDOW_RATIO = (float) WINDOW_WIDTH / (float) WINDOW_HEIGHT;
 const int largoTablero = 29;
 const int anchoTablero = 11;
 
+const double SENSIBILIDAD_MOUSE = 0.2;
+
 #endif

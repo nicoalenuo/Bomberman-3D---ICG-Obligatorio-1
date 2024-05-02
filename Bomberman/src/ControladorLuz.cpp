@@ -1,4 +1,5 @@
 #include "../lib/ControladorLuz.h"
+#include <iostream>
 
 // DEJEN COMENTADO ESTO PQ ME OLVIDO LOS ENUMS Y NO QUIERO IR AL .h
 // enum TIPO_LUZ_AMBIENTE { MANIANA, TARDE, NOCHE, SIN_LUZ };
@@ -9,8 +10,8 @@ TIPO_LUZ_AMBIENTE ControladorLuz::colorLuzAmbiente = MANIANA;
 TIPO_LUZ_BONIFICADOR ControladorLuz::colorLuzBonificador = AMARILLO;
 GLfloat ControladorLuz::light_position[4] = { 0, 0, 0, 1 };
 GLfloat ControladorLuz::light_color[4] = { 1, 1, 1, 1 };
-GLfloat ControladorLuz::material_ambient_diffuse_color[4] = { 1, 1, 1, 1 };
-GLfloat ControladorLuz::material_specular_color[4] = { 0, 1, 0, 1 };
+GLfloat ControladorLuz::material_ambient_diffuse_color[4] = { 0.5f, 0.5f, 0.5f, 0.0f };
+GLfloat ControladorLuz::material_specular_color[4] = { 0, 0, 0, 1 };
 GLfloat ControladorLuz::light_offset_x = 0.f;
 GLfloat ControladorLuz::light_offset_y = 10.f;
 GLfloat ControladorLuz::light_offset_z = 0.f;
@@ -49,6 +50,8 @@ void ControladorLuz::colocarLuces() {
 	light_position[2] = light_offset_z;
 	glLightfv(GL_LIGHT0, GL_POSITION, light_position);
 	glLightfv(GL_LIGHT0, GL_AMBIENT, light_color);
+	glMaterialfv(GL_FRONT_AND_BACK, GL_DIFFUSE, material_ambient_diffuse_color);
+	glMaterialfv(GL_FRONT_AND_BACK, GL_SPECULAR, material_specular_color);
 
 
 	while (!lucesAMostrar.empty()) {
@@ -58,33 +61,19 @@ void ControladorLuz::colocarLuces() {
 		light_position[0] = luzAMostrar.posicion.x;
 		light_position[1] = luzAMostrar.posicion.y;
 		light_position[2] = luzAMostrar.posicion.z;
-		glLightf(luzAMostrar.idLuz, GL_QUADRATIC_ATTENUATION, 0.05f); 
+		glLightf(luzAMostrar.idLuz, GL_QUADRATIC_ATTENUATION, 0.03f); //para que se concentre cerca del foco
 		glLightfv(luzAMostrar.idLuz, GL_POSITION, light_position);
 		glLightfv(luzAMostrar.idLuz, GL_AMBIENT, luzAMostrar.color);
 	}
 }
 
 void ControladorLuz::quitarLuces() {
-	glDisable(GL_LIGHT0);
-	glDisable(GL_LIGHT1);
-	glDisable(GL_LIGHT2);
-	glDisable(GL_LIGHT3);
-	glDisable(GL_LIGHT4);
-	glDisable(GL_LIGHT5);
-	glDisable(GL_LIGHT6);
-	glDisable(GL_LIGHT7);
+	for (int idLuz = lucesDisponibles.top() + 1; idLuz <= GL_LIGHT7; idLuz++) {
+		lucesDisponibles.push(idLuz);
+		glDisable(idLuz);
+	}
+
 	glDisable(GL_LIGHTING);
-
-	while (!lucesDisponibles.empty())
-		lucesDisponibles.pop();
-
-	lucesDisponibles.push(GL_LIGHT1);
-	lucesDisponibles.push(GL_LIGHT2);
-	lucesDisponibles.push(GL_LIGHT3);
-	lucesDisponibles.push(GL_LIGHT4);
-	lucesDisponibles.push(GL_LIGHT5);
-	lucesDisponibles.push(GL_LIGHT6);
-	lucesDisponibles.push(GL_LIGHT7);
 }
 
 void ControladorLuz::cambiarColorLuzAmbiente() {

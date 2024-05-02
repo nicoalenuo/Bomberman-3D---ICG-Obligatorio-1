@@ -3,22 +3,12 @@
 bomba::bomba(vector_3 pos, vector_3 tam, int tiempo, int largo) : objeto(pos, tam) {
 	tiempoBomba = tiempo;
 	largoBomba = largo;
-    agrandandose = false;
-    scale = 1.0f;
+    scale = 0.9f;
 }
 
 int xBomba, zBomba, dx, dz, nx, nz;
 void bomba::actualizar() {
-    if (agrandandose) {
-        scale += 0.01f;
-        if (scale > 1.1f)
-            agrandandose = false;
-    }
-    else {
-        scale -= 0.01f;
-        if (scale < 0.9f)
-            agrandandose = true;
-    }
+    scale += 0.005f;
 
     tiempoBomba -= frameDelay * velocidad_juego;
     bool alcanza;
@@ -52,7 +42,8 @@ void bomba::actualizar() {
                         fuegos[nx][nz] = new fuego(
                             { GLfloat(nx * tile_size) + tile_size / 2 , 0.0f, GLfloat(nz * tile_size) + tile_size / 2 },
                             { tile_size / 2, tile_size, tile_size / 2 },
-                            1500
+                            1500,
+                            false
                         );
                     }
 
@@ -77,7 +68,8 @@ void bomba::actualizar() {
         fuegos[xBomba][zBomba] = new fuego(
             { GLfloat(xBomba * tile_size) + tile_size / 2 , 0.0f, GLfloat(zBomba * tile_size) + tile_size / 2 },
             { tile_size / 2, tile_size, tile_size / 2 },
-            1500
+            1500,
+            true
         );
 
         jugador->disminuirCantBomba();

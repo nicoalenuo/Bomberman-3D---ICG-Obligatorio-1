@@ -3,11 +3,12 @@
 #ifndef CONTROLADORCAMARA_H
 #define CONTROLADORCAMARA_H
 
+#include "SDL.h"
 #include "SDL_opengl.h"
+#include "FreeImage.h"
+#include <GL/glu.h>
 
 #include "global.h"
-#include "bomberman.h"
-#include "../constantes/constantes.h"
 
 #include <random>
 
@@ -31,7 +32,7 @@ private:
 	static int tiempoSacudirse;
 public:
 	static void cambiarTipoCamara();
-	static void colocarCamara();
+	static void colocarCamara(vector_3 pos);
 	static void sacudir(int tiempo);
 	static bool camaraMiraHacia(tipo_direccion direccion);
 };

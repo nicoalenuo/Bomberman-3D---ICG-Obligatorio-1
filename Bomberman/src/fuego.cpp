@@ -1,7 +1,8 @@
 #include "../lib/fuego.h"
 
-fuego::fuego(vector_3 pos, vector_3 tam, int tiempo) : objeto(pos, tam) {
+fuego::fuego(vector_3 pos, vector_3 tam, int tiempo, bool centro) : objeto(pos, tam) {
 	tiempoFuego = tiempo;
+	this->centro = centro;
 }
 
 random_device rdParticulaFuego;
@@ -10,8 +11,10 @@ uniform_real_distribution<> disParticulaFuego(-tile_size/2, tile_size/2);
 uniform_real_distribution<> disParticulaFuegoVelocidad(-0.03, 0.03);
 int x, z;
 void fuego::actualizar() {
-	GLfloat colorLuz[4] = { 1.0f, 0.0f, 0.0f, 0.1f };
-	ControladorLuz::pedirLuz(pos, colorLuz);
+	if (centro) {
+		GLfloat colorLuz[4] = { 1.0f, 0.0f, 0.0f, 0.1f };
+		ControladorLuz::pedirLuz(pos, colorLuz);
+	}
 
 	tiempoFuego -= frameDelay;
 	x = getIndiceTablero(pos.x);

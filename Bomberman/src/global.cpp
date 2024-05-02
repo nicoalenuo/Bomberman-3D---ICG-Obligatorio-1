@@ -7,8 +7,9 @@ bool moverAbajo = false;
 bool moverDerecha = false;
 bool moverIzquierda = false;
 
-int mouseX = 0;
-int mouseY = 0;
+GLfloat mouseX = 0;
+GLfloat mouseY = 0;
+GLfloat mouseY_invertido = 0;
 
 int cantLuces = 1; //la ambiente
 

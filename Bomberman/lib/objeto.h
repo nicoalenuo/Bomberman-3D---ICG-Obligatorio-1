@@ -7,13 +7,12 @@
 #include "SDL.h"
 #include "SDL_opengl.h"
 
-#include "../constantes/constantes.h"
-
 #include "ControladorObjetos.h"
 #include "ControladorTexturas.h"
 #include "ControladorAudio.h"
 #include "ControladorPoderes.h"
 #include "ControladorLuz.h"
+#include "ControladorCamara.h"
 
 class objeto {
 protected:
