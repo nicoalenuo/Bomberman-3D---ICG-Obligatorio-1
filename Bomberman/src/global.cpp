@@ -17,11 +17,10 @@ bool pausa = false;
 bool pararTiempo = false;
 bool wireframe = false;
 bool texturas_habilitadas = true;
-bool audio_habilitado = true;
 bool mute = false; //cambiar a false para que inicie con sonido
+bool mostrarHud = true;
 
 bool tipoLuz = false; //false = facetado, true = interpolado
-bool pantallaCompleta = false;
 bool atravesar_paredes = false;
 
 objeto*** estructuras = new objeto * *[largoTablero];
@@ -37,6 +36,7 @@ list<enemigo*> enemigos;
 bomberman* jugador;
 
 door* puerta;
+
 int largoPantalla = WINDOW_WIDTH;
 int altoPantalla = WINDOW_HEIGHT;
 
@@ -59,33 +59,8 @@ int tiempoJuego = 200000; //milisegundos
 
 bool puertaAbierta = false;
 
-void toggle_pausa() {
-    pausa = !pausa;
-    pararTiempo = !pararTiempo;
-}
-
-void toggle_wireframe() {
-    wireframe = !wireframe;
-}
-
-void toggle_texturas() {
-    texturas_habilitadas = !texturas_habilitadas;
-}
-
-void toggle_tipoLuz() {
-    tipoLuz = !tipoLuz;
-}
-
-void toggle_pantallaCompleta() {
-    pantallaCompleta = !pantallaCompleta;
-}
-
-void toggle_inmortal() {
-    inmortal = !inmortal;
-}
-
-void toggle_atravesar_paredes() {
-    atravesar_paredes = !atravesar_paredes;
+void toggle(bool &valor){
+    valor = !valor;
 }
 
 void aumentarNivel() {
@@ -109,8 +84,4 @@ void disminuirTiempo(GLfloat milisegundos){
         tiempoJuego = 0;
         finJuego = true;
     }
-}
-
-void pausarTiempo() {
-    pararTiempo = !pararTiempo;
 }

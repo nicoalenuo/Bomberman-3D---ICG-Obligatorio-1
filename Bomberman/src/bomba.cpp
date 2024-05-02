@@ -35,7 +35,7 @@ void bomba::actualizar() {
                 nz = zBomba + i * dz;
 
                 if (nx >= 0 && nx < largoTablero && nz >= 0 && nz < anchoTablero) {
-                    if (ControladorPoderes::getEstaActivo(BOMBAS_ATRAVIESAN_ESTRUCTURAS) || estructuras[nx][nz] == nullptr) {
+                    if (estructuras[nx][nz] == nullptr || (ControladorPoderes::getEstaActivo(BOMBAS_ATRAVIESAN_ESTRUCTURAS) && dynamic_cast<estructura*>(estructuras[nx][nz])->getDestructible())) {
                         if (fuegos[nx][nz] != nullptr)
                             delete fuegos[nx][nz];
 

@@ -75,7 +75,8 @@ void bonificador::actualizar() {
             int x = getIndiceTablero(pos.x);
             int z = getIndiceTablero(pos.z);
             bonificadores[x][z] = nullptr;
-            ControladorPoderes::activarPoder(tipo, 30000); //30 segundos
+            cout << "bonificador agarrado: " << tipo << endl;
+            ControladorPoderes::activarPoder(tipo, 30000);
             ControladorAudio::playAudio(sonido::bonificacion);
             delete this;
     }
@@ -84,6 +85,8 @@ void bonificador::actualizar() {
 GLfloat colorBonificador[3] = { 1.0f, 1.0f, 0.0f };
 void bonificador::dibujar() {
     if (visible) { //se asume que si no es nullptr, es una estructura destructible por como se crea
+        GLfloat colorLuz[4] = { 1.0f, 1.0f, 0.0f, 0.1f };
+        ControladorLuz::pedirLuz(pos, colorLuz);
         glPushMatrix();
         glTranslatef(pos.x, pos.y, pos.z);
         glRotatef(rotacion_y, 0, 1, 0);

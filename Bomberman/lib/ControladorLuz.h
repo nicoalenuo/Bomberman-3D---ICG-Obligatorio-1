@@ -27,7 +27,6 @@ class ControladorLuz {
 		static GLfloat light_offset_y;
 		static GLfloat light_offset_z;
 		static TIPO_LUZ_AMBIENTE colorLuzAmbiente;
-		static TIPO_LUZ_BONIFICADOR colorLuzBonificador;
 
 		static stack<GLenum> lucesDisponibles;
 		static stack<luz> lucesAMostrar;
@@ -37,7 +36,7 @@ class ControladorLuz {
 		static void colocarLuces();
 		static void quitarLuces();
 		static void cambiarColorLuzAmbiente();
-		static void cambiarColorLuzBonificador();
+		static void moverCamara(vector_3 pos);
 };
 
 #endif

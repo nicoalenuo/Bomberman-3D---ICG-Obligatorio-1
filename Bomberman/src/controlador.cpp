@@ -140,14 +140,14 @@ void generarTablero() {
 
     puerta = new door(
         { posicionesValidas[posicionPuerta]->getPosicion().x , 0, posicionesValidas[posicionPuerta]->getPosicion().z },
-        { tile_size / 2, tile_size, tile_size / 2 }
+        { tile_size / 2, tile_size/4, tile_size / 2 }
     );
 
     posicionesValidas.clear();*/
     //Fin Estructura posicionar bomba
     puerta = new door(
         { GLfloat(2.5 * tile_size), 0, GLfloat(tile_size / 2) },
-        { GLfloat(tile_size / 2), tile_size, GLfloat(tile_size / 2)}
+        { GLfloat(tile_size / 2), tile_size/4, GLfloat(tile_size / 2)}
     );
 
     if (bonificadores[0][0] != nullptr) {
@@ -298,7 +298,7 @@ inline void colocarBomba() { //para evitar repetir codigo
                 bonificadores[posBombaXTablero][posBombaZTablero] = nullptr;
             }
 
-            ControladorAudio::playAudio(sonido::explosion); // hay que separar el sonido de la bomba en dos, ya que cuando una bomba explota la otra, no suena a tiempo
+            ControladorAudio::playAudio(sonido::explosion); // hay que separar el sonido de la bomba en dos (quemando mecha, explosion), ya que cuando una bomba explota la otra, sigue quemando mecha
         }
     }
 }
@@ -323,8 +323,13 @@ void Controlador::manejarEventos() {
                          ControladorCamara::cambiarTipoCamara();
                          break;
                     case SDLK_p:
-                        toggle_pausa();
-                        ControladorAudio::pausarAudio();
+                        toggle(pausa);
+                        toggle(pararTiempo);
+                        if (pausa) {
+                            ControladorAudio::pausarAudio();
+                        } else {
+                            ControladorAudio::reanudarAudio();
+                        }
                         break;
                     case SDLK_UP:
                         moverArriba = true;
@@ -338,20 +343,20 @@ void Controlador::manejarEventos() {
                     case SDLK_LEFT:
                         moverIzquierda = true;
                         break;
-                    case SDLK_u:
+                    case SDLK_1:
                         ControladorAudio::playAudio(sonido::pasos);
                         break;
-                    case SDLK_j:
+                    case SDLK_2:
                         ControladorAudio::playAudio(sonido::bonificacion);
                         break;
-                    case SDLK_k:
+                    case SDLK_3:
                         ControladorAudio::playAudio(sonido::explosion);
                         break;
-                    case SDLK_l :
+                    case SDLK_4 :
                         ControladorAudio::playAudio(sonido::muerte);
                         break;
                     case SDLK_m://mute
-                        ControladorAudio::detenerAudio();
+                        ControladorAudio::silenciarAudio();
                         break;
                 }
                 break;
@@ -370,17 +375,17 @@ void Controlador::manejarEventos() {
                         moverIzquierda = false;
                         break;
                     case SDLK_F1:
-                        wireframe = !wireframe;
+                        toggle(wireframe);
                         if (wireframe)
                             glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
                         else
                             glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
                         break;
                     case SDLK_F2:
-                        toggle_texturas();
+                        toggle(texturas_habilitadas);
                         break;
                     case SDLK_F3:
-                        toggle_tipoLuz();
+                        toggle(tipoLuz);
                         if (tipoLuz)
                             glShadeModel(GL_SMOOTH);
                         else
@@ -393,22 +398,19 @@ void Controlador::manejarEventos() {
                         //No esta cambiando nada
                         break;
                     case SDLK_F5:
-                        //cambiar el color de luz (bonificador)
-                        //ControladorLuz::cambiarColorLuzBonificador();
-                        //Recordar hacer sombras
-                        //No esta cambiando nada
+                        toggle(mostrarHud);
                         break;
                     case SDLK_F6:
                         //acelerar o disminuir velocidad de juego (global)
                         break;
                     case SDLK_F7:
-                        toggle_inmortal();
+                        toggle(inmortal);
                         break;
                     case SDLK_F8:
-                        pausarTiempo();
+                        toggle(pararTiempo);
                         break;
                     case SDLK_F9:
-                        toggle_atravesar_paredes();
+                        toggle(atravesar_paredes);
                         break;
                     case SDLK_F10:
                         if (velocidad_juego == 1)
@@ -453,6 +455,20 @@ void Controlador::manejarEventos() {
             break;
             }
         }
+        const Uint8* movimientoCamara = SDL_GetKeyboardState(NULL);
+
+        if (movimientoCamara[SDL_SCANCODE_I]) {
+            ControladorLuz::moverCamara({ 0, 0, -(float)(velocidadCamara * velocidad_juego * frameDelay / 1000) });
+        }
+        if (movimientoCamara[SDL_SCANCODE_J]) {
+            ControladorLuz::moverCamara({ -(float)(velocidadCamara * velocidad_juego * frameDelay / 1000), 0, 0 });
+        }
+        if (movimientoCamara[SDL_SCANCODE_K]) {
+            ControladorLuz::moverCamara({ 0, 0, (float)(velocidadCamara * velocidad_juego * frameDelay / 1000) });
+        }
+        if (movimientoCamara[SDL_SCANCODE_L]) {
+            ControladorLuz::moverCamara({ (float)(velocidadCamara * velocidad_juego * frameDelay / 1000), 0, 0 });
+        }
     } else {
         moverArriba = false; moverAbajo = false; moverDerecha = false; moverIzquierda = false;
         while (SDL_PollEvent(&evento)) {
@@ -485,7 +501,6 @@ void Controlador::actualizar() {
         aumentarNivel();
         generarTablero();
     } 
-
     ControladorPoderes::actualizarTemporizadores();
 
     jugador->actualizar();
@@ -546,8 +561,9 @@ void Controlador::dibujar() {
     if (texturas_habilitadas)
         ControladorLuz::colocarLuces();
 
+    ControladorObjetos::dibujarSuelo();
+
     jugador->dibujar();
-    puerta->dibujar();
 
     for (int i = 0; i < largoTablero; i++) {
         for (int j = 0; j < anchoTablero; j++) {
@@ -559,9 +575,6 @@ void Controlador::dibujar() {
 
             /*if (enemigos[i][j] != nullptr)
                 enemigos[i][j]->dibujar();*/
-
-            if (bonificadores[i][j] != nullptr)
-                bonificadores[i][j]->dibujar();
         }
     }
 
@@ -571,22 +584,25 @@ void Controlador::dibujar() {
     for (itE = enemigos.begin(); itE != enemigos.end(); itE++)
         (*itE)->dibujar();
 
-    //Suelo
-    glColor3f(0.75f, 0.63f, 0.50f);
-    glBegin(GL_QUADS);
-    glNormal3f(0.0f, 1.0f, 0.0f);
-    glVertex3f(0, 0, 0);
-    glVertex3f(largoTablero * tile_size, 0, 0);
-    glVertex3f(largoTablero * tile_size, 0, anchoTablero * tile_size);
-    glVertex3f(0, 0, anchoTablero * tile_size);
-    glEnd();
-    
-    ControladorLuz::quitarLuces();
+    //La puerta, el suelo, los bonificadores y el fuego, no dependen de la luz por 2 motivos (son la fuente de luz)
+    puerta->dibujar();
+
+    if (texturas_habilitadas)
+        ControladorLuz::quitarLuces();
+
+    for (int i = 0; i < largoTablero; i++) {
+        for (int j = 0; j < anchoTablero; j++) {
+            if (bonificadores[i][j] != nullptr)
+                bonificadores[i][j]->dibujar();
+        }
+    }
 
     for (it = particulas.begin(); it != particulas.end(); ++it)
         (*it)->dibujar();
 
-    ControladorInterfaz::dibujarHUD();
+    if (mostrarHud) {
+        ControladorInterfaz::dibujarHUD();
+    }
 
     SDL_GL_SwapWindow(window);
 }

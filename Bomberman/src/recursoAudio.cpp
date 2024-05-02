@@ -43,15 +43,14 @@ void recursoAudio::setBucle(bool bucle) {
 	alSourcei(this->recurso, AL_LOOPING, bucle);
 }
 
+ALint estado;
 void recursoAudio::play() {
 	/*if (buffer_to_play != p_Buffer)
 	{
 		p_Buffer = buffer_to_play;
 		alSourcei(p_Source, AL_BUFFER, (ALint)p_Buffer);
 	}*/
-
-	alSourcePlay(this->recurso);
-
+	alSourcePlay(recurso);
 	//ALint state = AL_PLAYING;
 	/*while (state == AL_PLAYING && alGetError() == AL_NO_ERROR) {
 		alGetSourcei(p_Source, AL_SOURCE_STATE, &state);
@@ -59,18 +58,32 @@ void recursoAudio::play() {
 }
 
 void recursoAudio::detener() {
-	alSourceStop(this->recurso);
+	alGetSourcei(recurso, AL_SOURCE_STATE, &estado);
+	if (estado == AL_PLAYING) {
+		alSourceStop(recurso);
+	}
 }
 
 void recursoAudio::pausar() {
-	alSourcePause(this->recurso);
+	alGetSourcei(recurso, AL_SOURCE_STATE, &estado);
+	if (estado == AL_PLAYING) {
+		alSourcePause(recurso);
+	}
 }
 
 void recursoAudio::reanudar() {
-	ALint estado;
 	alGetSourcei(recurso, AL_SOURCE_STATE, &estado);
-	if(estado == AL_PAUSED)
-		alSourcePlay(this->recurso);
+	if (estado == AL_PAUSED) {
+		alSourcePlay(recurso);
+	}
+}
+
+void recursoAudio::silenciar(bool mute) {
+	if (mute) {
+		alSourcef(recurso, AL_GAIN, 0.0f);
+	} else {
+		alSourcef(recurso, AL_GAIN, this->ganancia);
+	}
 }
 
 recursoAudio::~recursoAudio() {

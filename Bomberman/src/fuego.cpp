@@ -23,7 +23,7 @@ void fuego::actualizar() {
 	if (bombas[x][z] != nullptr) 
 		dynamic_cast<bomba*>(bombas[x][z])->setTiempoBomba(0);
 
-	if (bonificadores[x][z] != nullptr) {
+	if (!ControladorPoderes::getEstaActivo(BOMBAS_ATRAVIESAN_ESTRUCTURAS) && bonificadores[x][z] != nullptr) {
 		delete bonificadores[x][z];
 		bonificadores[x][z] = nullptr;
 	}
