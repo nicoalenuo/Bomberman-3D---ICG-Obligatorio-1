@@ -24,6 +24,7 @@ enum tipo_textura { //agregar aca en caso de agregar mas texturas, y la direccio
 	TEXTURA_AUMENTAR_VELOCIDAD,
 	TEXTURA_BOMBAS_ATRAVIESAN_ESTRUCTURAS,
 	TEXTURA_INMORTALIDAD,
+	TEXTURA_SUELO,
 };
 
 class ControladorTexturas{

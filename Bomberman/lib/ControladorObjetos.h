@@ -35,6 +35,7 @@ public:
     static void cargarObjetos();
     static void dibujar(tipo_obj obj);
     static void dibujarCubo(vector_3 tam, GLuint textura, GLfloat color[3]); //textura es 0 si no tiene
+    static void dibujarSuelo();
 };
 
 #endif

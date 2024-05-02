@@ -32,11 +32,13 @@ void particula_estructura::actualizar() {
 void particula_estructura::dibujar() {
     glPushMatrix();
 
+    glColor3f(144.f / 255.f, 12.f / 255.f, 63.f / 255.f);
+
     if (texturas_habilitadas) {
         glEnable(GL_TEXTURE_2D);
         glBindTexture(GL_TEXTURE_2D, textura);
+        glColor3f(1.f, 1.f, 1.f);
     }
-    glColor3f(1.0f, 1.0f, 1.0f);
 
     glTranslatef(pos.x, pos.y, pos.z);
 

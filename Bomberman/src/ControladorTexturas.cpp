@@ -1,4 +1,5 @@
 #include "../lib/ControladorTexturas.h"
+#include <iostream>
 
 map<tipo_textura, GLuint> ControladorTexturas::texturas;
 
@@ -7,12 +8,13 @@ map<tipo_textura, char*> ControladorTexturas::direcciones_texturas = {
     {ESTRUCTURA_NO_DESTRUCTIBLE, "texturas/estructura_no_destructible.png"},
     {PLAYER, "texturas/player.png"},
     {TEXTURA_BOMBA, "texturas/bomba.png"},
-    {TEXTURA_PUERTA, "texturas/puerta.png"},
+    {TEXTURA_PUERTA, "texturas/puerta.jpg"},
     {TEXTURA_AUMENTAR_ALCANCE_BOMBA, "texturas/aumentar_alcance_bombas.png"},
     {TEXTURA_AUMENTAR_CANTIDAD_BOMBA, "texturas/aumentar_cantidad_bombas.png"},
     {TEXTURA_AUMENTAR_VELOCIDAD, "texturas/aumentar_velocidad.png"},
     {TEXTURA_BOMBAS_ATRAVIESAN_ESTRUCTURAS, "texturas/bombas_atraviesan_estructuras.png"},
-    {TEXTURA_INMORTALIDAD, "texturas/inmortalidad.png"}
+    {TEXTURA_INMORTALIDAD, "texturas/inmortalidad.png"},
+    {TEXTURA_SUELO, "texturas/suelo.jpg"}
 };
 
 void ControladorTexturas::cargarTexturas() {

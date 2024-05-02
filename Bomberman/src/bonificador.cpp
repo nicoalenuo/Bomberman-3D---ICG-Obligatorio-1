@@ -4,7 +4,7 @@ random_device rdBonificador;
 mt19937 genBonificador(rdBonificador());
 uniform_real_distribution<> disBonificador(0.0, 1.0); 
 bonificador::bonificador(vector_3 pos, vector_3 tam, tipo_poder tipo_p) : objeto(pos, tam) {
-    //tremenda función me acabo de hacer, y que paseo que te acabo de meter ;)
+    //tremenda funciï¿½n me acabo de hacer, y que paseo que te acabo de meter ;)
     //que manera de robar codigo de internet ahre
     if (tipo_p == BONIFICADOR_RANDOM) {
         double intervalo = 1.0 / ((static_cast<int>(tipo_poder::BONIFICADOR_RANDOM)) - 1);
@@ -44,14 +44,10 @@ void bonificador::actualizar() {
     rotacion_y += 4;
     rotacion_y %= 360;
 
-
     if (!visible && estructuras[getIndiceTablero(pos.x)][getIndiceTablero(pos.z)] == nullptr) 
         visible = true;
 
     if (visible) {
-        GLfloat colorLuz[4] = { 1.0f, 1.0f, 0.0f, 0.1f };
-        ControladorLuz::pedirLuz(pos, colorLuz);
-
         particulas.push_back(
             new particula_bonificador(
                 { GLfloat(pos.x + disParticulaBonificador(genParticulaBonificador)), 0.0f, GLfloat(pos.z + disParticulaBonificador(genParticulaBonificador)) },
@@ -70,7 +66,8 @@ void bonificador::actualizar() {
             int x = getIndiceTablero(pos.x);
             int z = getIndiceTablero(pos.z);
             bonificadores[x][z] = nullptr;
-            ControladorPoderes::activarPoder(tipo, 30000); //30 segundos
+            cout << "bonificador agarrado: " << tipo << endl;
+            ControladorPoderes::agregarPoder(tipo);
             ControladorAudio::playAudio(sonido::bonificacion);
             delete this;
     }
@@ -79,6 +76,8 @@ void bonificador::actualizar() {
 GLfloat colorBonificador[3] = { 1.0f, 1.0f, 0.0f };
 void bonificador::dibujar() {
     if (visible) { //se asume que si no es nullptr, es una estructura destructible por como se crea
+        GLfloat colorLuz[4] = { 1.0f, 1.0f, 0.0f, 0.1f };
+        ControladorLuz::pedirLuz(pos, colorLuz);
         glPushMatrix();
         glTranslatef(pos.x, pos.y, pos.z);
         glRotatef(GLfloat(rotacion_y), 0, 1, 0);

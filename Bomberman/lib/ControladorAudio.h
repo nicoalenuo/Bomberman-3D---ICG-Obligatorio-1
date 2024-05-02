@@ -18,6 +18,11 @@ using namespace std;
 
 enum class sonido { muerte, explosion, bonificacion, pasos, inicioJuego, puertaAbierta, musica};
 
+struct sounds{
+	sonido sonido;
+	recursoAudio* recurso;
+};
+
 class ControladorAudio{
 private:
 
@@ -25,22 +30,7 @@ private:
 	static ALCcontext* openALContext;
 	static ALCboolean contextMadeCurrent;
 
-	static ALuint bufferMuerte;
-	static ALuint bufferExplosion;
-	static ALuint bufferBonificacion;
-	static ALuint bufferPasos;
-	static ALuint bufferInicioJuego;
-	static ALuint bufferPuertaAbierta;
-
-	static ALuint bufferMusica;
-	
-	static recursoAudio* raMuerte;
-	static recursoAudio* raExplosion;
-	static recursoAudio* raBonificacion;
-	static recursoAudio* raPasos;
-	static recursoAudio* raInicioJuego;
-	static recursoAudio* raPuertaAbierta;
-	static recursoAudio* raMusica;
+	static list<sounds> sonidos;
 
 	static void initOpenAl();
 public:
@@ -51,6 +41,7 @@ public:
 	static void pausarAudio();
 	static void reanudarAudio();
 	static void detenerAudio();
+	static void silenciarAudio();
 
 	static void limpiarAudios();
 

@@ -1,54 +1,89 @@
 #include "../lib/ControladorPoderes.h"
+#include "../lib/bomberman.h"
 
-map<tipo_poder, bool> ControladorPoderes::poderActivo;
-map<tipo_poder, int> ControladorPoderes::temporizadorPoder;
+//enum tipo_poder { AUMENTAR_ALCANCE_BOMBAS, INMORTALIDAD, AUMENTAR_VELOCIDAD, BOMBAS_ATRAVIESAN_ESTRUCTURAS, AUMENTAR_CANTIDAD_BOMBAS, BONIFICADOR_RANDOM }
+//para recordar cuales son los tipo_poder sin tener que ir al .h a cada rato
 
-void ControladorPoderes::cargarPoderes() {
-	temporizadorPoder[INMORTALIDAD] = 0; 
-	temporizadorPoder[BOMBAS_ATRAVIESAN_ESTRUCTURAS] = 0; 
-	poderActivo[AUMENTAR_VELOCIDAD] = false;
-	poderActivo[AUMENTAR_CANTIDAD_BOMBAS] = false;
-	poderActivo[AUMENTAR_ALCANCE_BOMBAS] = false;
+list<poder*> ControladorPoderes::poderes;
+
+void ControladorPoderes::cargarPoderes() { //carga poderes al inicio de cada partida
+	for (int i = 0; i < static_cast<int>(BONIFICADOR_RANDOM); i++) {
+		poder* powerUp = new poder{ static_cast<tipo_poder>(i) ,0.f };
+		poderes.push_back(powerUp);
+	}
 }
 
-void ControladorPoderes::actualizarTemporizadores() {
-	for (pair<const tipo_poder, int> &kv : temporizadorPoder) 
-		if (kv.second > 0)
-			kv.second -= frameDelay;
+bool ControladorPoderes::poderDependeTiempo(tipo_poder poder) {
+	return (poder == INMORTALIDAD || poder == AUMENTAR_VELOCIDAD);
 }
 
-int ControladorPoderes::getTiempoRestante(tipo_poder poder) {
-	return 
-		temporizadorPoder[poder] > 0 ? 
-			temporizadorPoder[poder] : 
-			0;
+bool ControladorPoderes::poderEsBooleano(tipo_poder poder) {
+	return (poder == BOMBAS_ATRAVIESAN_ESTRUCTURAS); //aquí iria tmabien el MOVER_BOMBA
+}
+
+void ControladorPoderes::actualizarPoderes() { // cada vez que bomberman se actualiza, va a tener que llamar a esta funcion
+	for (auto it = poderes.begin(); it != poderes.end(); ++it) {
+		if (poderDependeTiempo((*it)->tipoPoder)){
+			if ((*it)->valorPoder > 0) {
+				(*it)->valorPoder -= frameDelay;
+			}
+			if ((*it)->valorPoder <= 0){
+				(*it)->valorPoder = 0;
+				if ((*it)->tipoPoder == AUMENTAR_VELOCIDAD) {
+					jugador->setVelocidad(0.1f);
+				}
+			} 
+		} 
+	}
+}
+
+float ControladorPoderes::getValor(tipo_poder poder) {
+	for (auto it = poderes.begin(); it != poderes.end(); ++it) {
+		if ((*it)->tipoPoder == poder) {
+			return (*it)->valorPoder;
+		}
+	}
+	return 0; //no debería de llegar acá nunca
+}
+
+void ControladorPoderes::agregarPoder(tipo_poder poder) { //cuando el bonificador sea tocado por el bomberman, va a llamar a esta funcion
+	float valor = 1;
+	bool encontrado = false;
+	if (poderDependeTiempo(poder)) {
+		valor = 8000; //8000ms == 8 segundos
+	}
+	for (auto it = poderes.begin(); !encontrado && it != poderes.end(); ++it) {
+		if ((*it)->tipoPoder == poder) {
+			encontrado = true;
+			switch (poder) {
+				case AUMENTAR_ALCANCE_BOMBAS:
+					(*it)->valorPoder = (*it)->valorPoder + valor;
+					jugador->setLargoBomba((int) (*it)->valorPoder);
+					break;
+				case INMORTALIDAD:
+					(*it)->valorPoder = valor;
+					break;
+				case AUMENTAR_VELOCIDAD:
+					(*it)->valorPoder = valor;
+					jugador->setVelocidad(0.2f);
+					break;
+				case BOMBAS_ATRAVIESAN_ESTRUCTURAS:
+					(*it)->valorPoder = 1;
+					break;
+				case AUMENTAR_CANTIDAD_BOMBAS:
+					(*it)->valorPoder = (*it)->valorPoder + valor;
+					jugador->setMaxBomba((int) (*it)->valorPoder);
+					break;
+			}
+		}
+	}
 }
 
 bool ControladorPoderes::getEstaActivo(tipo_poder poder) {
-	return (temporizadorPoder.count(poder) == 1 && temporizadorPoder[poder] > 0) ||
-			(poderActivo.count(poder) == 1 && poderActivo[poder]);
-}
-
-void ControladorPoderes::activarPoder(tipo_poder poder, int temporizador) {
-	if (temporizadorPoder.count(poder) == 1) 
-		temporizadorPoder[poder] = temporizador;
-	else 
-		poderActivo[poder] = true;
-}
-
-void ControladorPoderes::desactivarPoder(tipo_poder poder) {
-	if (temporizadorPoder.count(poder) == 1) {
-		temporizadorPoder[poder] = 0;
+	for (auto it = poderes.begin(); it != poderes.end(); ++it) {
+		if ((*it)->tipoPoder == poder) {
+			return (*it)->valorPoder > 0;
+		}
 	}
-	else {
-		poderActivo[poder] = false;
-	}
-}
-
-void ControladorPoderes::desactivarPoderes() {
-	for (pair<const tipo_poder, bool> &kv : poderActivo)
-		kv.second = false;
-
-	for (pair<const tipo_poder, int> &kv : temporizadorPoder) 
-		kv.second = 0;
+	return false;
 }

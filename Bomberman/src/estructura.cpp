@@ -34,6 +34,20 @@ void estructura::actualizar() {
 void estructura::dibujar() {
     glPushMatrix();
     glTranslatef(pos.x, pos.y, pos.z);
-    ControladorObjetos::dibujarCubo(tam, ControladorTexturas::getTextura(destructible ? ESTRUCTURA_DESTRUCTIBLE : ESTRUCTURA_NO_DESTRUCTIBLE), nullptr);
+    GLfloat color[3];
+    if (destructible) {
+        color[0] = 144.f / 255;
+        color[1] = 12.f / 255;
+        color[2] = 63.f / 255;
+    } else {
+        color[0] = 175.f / 255;
+        color[1] = 175.f / 255;
+        color[2] = 175.f / 255;
+    }
+    GLuint textura = 0;
+    if (texturas_habilitadas) {
+        textura = ControladorTexturas::getTextura(destructible ? ESTRUCTURA_DESTRUCTIBLE : ESTRUCTURA_NO_DESTRUCTIBLE);
+    }
+    ControladorObjetos::dibujarCubo(tam, textura, color);
     glPopMatrix();
 }

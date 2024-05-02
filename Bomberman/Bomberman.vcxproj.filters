@@ -211,5 +211,8 @@
     <Image Include="texturas\player.png">
       <Filter>Resource Files</Filter>
     </Image>
+    <Image Include="texturas\puerta.png">
+      <Filter>Resource Files</Filter>
+    </Image>
   </ItemGroup>
 </Project>

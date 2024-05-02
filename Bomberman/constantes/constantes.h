@@ -20,6 +20,8 @@ const int WINDOW_WIDTH = 1280;
 const int WINDOW_HEIGHT = 720;
 const float WINDOW_RATIO = (float) WINDOW_WIDTH / (float) WINDOW_HEIGHT;
 
+const float velocidadCamara = 10;
+
 const int largoTablero = 29;
 const int anchoTablero = 11;
 

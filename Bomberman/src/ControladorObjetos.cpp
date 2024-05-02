@@ -95,23 +95,24 @@ tuple<vector<char>, vector<vector<float>>> ControladorObjetos::cargarObj(string 
 	return { commands, data };
 }
 
-GLenum primitive;
 vector<char> commands;
 vector<vector<float>> data_obj;
 GLuint texture;
 void ControladorObjetos::dibujar(tipo_obj obj) {
 	switch (obj) {
 		case (OBJ_PLAYER):
-			primitive = GL_TRIANGLES;
 			commands = player_commands;
 			data_obj = player_data;
-			texture = ControladorTexturas::getTextura(PLAYER);
+			if (texturas_habilitadas) {
+				texture = ControladorTexturas::getTextura(PLAYER);
+			}
 			break;
 		case (OBJ_BOMBA):
-			primitive = GL_TRIANGLES;
 			commands = bomba_commands;
 			data_obj = bomba_data;
-			texture = ControladorTexturas::getTextura(TEXTURA_BOMBA);
+			if (texturas_habilitadas) {
+				texture = ControladorTexturas::getTextura(TEXTURA_BOMBA);
+			}
 			break;
 	}
 
@@ -120,7 +121,8 @@ void ControladorObjetos::dibujar(tipo_obj obj) {
 		glBindTexture(GL_TEXTURE_2D, texture);
 	}
 
-	glBegin(primitive);
+	glBegin(GL_TRIANGLES);
+
 	for (size_t i = 0; i < commands.size(); i++) {
 		switch (commands[i]) {
 			case('V'): {
@@ -136,19 +138,38 @@ void ControladorObjetos::dibujar(tipo_obj obj) {
 				break;
 			}
 			case('C'): {
-				glColor3f(data_obj[i][0], data_obj[i][1], data_obj[i][2]);
+				if (texturas_habilitadas) {
+					glColor3f(data_obj[i][0], data_obj[i][1], data_obj[i][2]);
+				} else {
+					if (obj == OBJ_PLAYER) {
+						glColor3f(1.f, 1.f, 1.f);
+					} else {
+						glColor3f(0.f, 0.f, 0.f);
+					}
+				}
 				break;
 			}
 			case('A'): {
-				glColor4f(data_obj[i][0], data_obj[i][1], data_obj[i][2], data_obj[i][3]);
+				if (texturas_habilitadas) {
+					glColor4f(data_obj[i][0], data_obj[i][1], data_obj[i][2], data_obj[i][3]);
+				}
+				else {
+					if (obj == OBJ_PLAYER) {
+						glColor4f(1.f, 1.f, 1.f, 1.f);
+					}
+					else {
+						glColor4f(0.f, 0.f, 0.f, 1.f);
+					}
+				}
 				break;
 			}
 		}
 	}
 	glEnd();
 
-	if (texturas_habilitadas)
+	if (texturas_habilitadas) {
 		glDisable(GL_TEXTURE_2D);
+	}
 }
 
 void ControladorObjetos::dibujarCubo(vector_3 tam, GLuint textura, GLfloat color[3]) {
@@ -156,12 +177,8 @@ void ControladorObjetos::dibujarCubo(vector_3 tam, GLuint textura, GLfloat color
 		glEnable(GL_TEXTURE_2D);
 		glBindTexture(GL_TEXTURE_2D, textura);
 		glColor3f(1.0f, 1.0f, 1.0f);
-	}
-	else if (textura == 0){
+	} else {
 		glColor3f(color[0], color[1], color[2]);
-	}
-	else {
-		glColor3f(1.0f, 1.0f, 1.0f);
 	}
 
 	glBegin(GL_QUADS);
@@ -196,8 +213,8 @@ void ControladorObjetos::dibujarCubo(vector_3 tam, GLuint textura, GLfloat color
 	glTexCoord2f(1, 0);
 	glVertex3f(-tam.x, tam.y, tam.z);
 
-	// Cara de atrás
-	glNormal3f(0.0f, 0.0f, -1.0f); // Normal hacia atrás
+	// Cara de atrï¿½s
+	glNormal3f(0.0f, 0.0f, -1.0f); // Normal hacia atrï¿½s
 
 	glTexCoord2f(0, 0);
 	glVertex3f(-tam.x, 0, -tam.z);
@@ -260,4 +277,32 @@ void ControladorObjetos::dibujarCubo(vector_3 tam, GLuint textura, GLfloat color
 
 	if (texturas_habilitadas)
 		glDisable(GL_TEXTURE_2D);
+}
+
+void ControladorObjetos::dibujarSuelo() {
+	GLuint textura = ControladorTexturas::getTextura(TEXTURA_SUELO);
+
+	glColor3f(0.75f, 0.63f, 0.50f);
+
+	if (texturas_habilitadas) {
+		glEnable(GL_TEXTURE_2D);
+		glBindTexture(GL_TEXTURE_2D, textura);
+		glColor3f(1.0f, 1.0f, 1.0f);
+	}
+
+	for (int i = 0; i < largoTablero; i++) {
+		for (int j = 0; j < anchoTablero; j++) {
+			glBegin(GL_QUADS);
+			glNormal3f(0.0f, 1.0f, 0.0f);
+			glTexCoord2d(0, 0); glVertex3f(i * tile_size, 0, j * tile_size);
+			glTexCoord2d(1, 0); glVertex3f((i + 1) * tile_size, 0, j * tile_size);
+			glTexCoord2d(1, 1); glVertex3f((i + 1) * tile_size, 0, (j + 1) * tile_size);
+			glTexCoord2d(0, 1); glVertex3f(i * tile_size, 0, (j + 1) * tile_size);
+			glEnd();
+		}
+	}
+
+	if (texturas_habilitadas) {
+		glDisable(GL_TEXTURE_2D);
+	}
 }

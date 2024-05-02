@@ -7,6 +7,9 @@ hud* ControladorInterfaz::hudGameOver = nullptr;
 hud* ControladorInterfaz::hudCantBombas = nullptr;
 list<hudPoder> ControladorInterfaz::poderes = list<hudPoder>();
 
+float const MARGEN_HUD = 10.f * WINDOW_RATIO;
+float const MARGEN_PODERES = 30.f;
+
 void ControladorInterfaz::setPuntaje(int puntos) {
 	setMensajeEnComponente("Puntaje: " + to_string(puntaje), interfaz, hudPuntaje);
 }
@@ -182,10 +185,10 @@ void ControladorInterfaz::dibujarComponenteHUDPoderes() {
 		glColor3f(hud->colorMensaje.r, hud->colorMensaje.g, hud->colorMensaje.b);
 		
 		glBegin(GL_QUADS); {
-			glTexCoord2d(0.f, 1.f); glVertex3f(largoPantalla - 30.f - hud->mensajeSurface->w, altoPantalla - 3.f - hud->mensajeSurface->h, 0.f);
-			glTexCoord2d(1.f, 1.f); glVertex3f(largoPantalla - 30.f, altoPantalla - 3.f - hud->mensajeSurface->h, 0.f);
-			glTexCoord2d(1.f, 0.f); glVertex3f(largoPantalla - 30.f, altoPantalla -  3.f, 0.f);
-			glTexCoord2d(0.f, 0.f); glVertex3f(largoPantalla - 30.f - hud->mensajeSurface->w, altoPantalla - 3.f, 0.f);
+			glTexCoord2d(0.f, 1.f); glVertex3f(largoPantalla - 30.f - hud->mensajeSurface->w, altoPantalla - MARGEN_HUD - hud->mensajeSurface->h, 0.f);
+			glTexCoord2d(1.f, 1.f); glVertex3f(largoPantalla - 30.f, altoPantalla - MARGEN_HUD - hud->mensajeSurface->h, 0.f);
+			glTexCoord2d(1.f, 0.f); glVertex3f(largoPantalla - 30.f, altoPantalla -  MARGEN_HUD, 0.f);
+			glTexCoord2d(0.f, 0.f); glVertex3f(largoPantalla - 30.f - hud->mensajeSurface->w, altoPantalla - MARGEN_HUD, 0.f);
 		} glEnd();
 		//dibujarTextura(GLUint text) //logo correspondiente a cada poder
 		//realmente no es una función, va acá de una
@@ -201,10 +204,10 @@ void ControladorInterfaz::dibujarComponenteHUD(hud* hud) {
 			glBindTexture(GL_TEXTURE_2D, hud->idTextura);
 			glColor3f(hud->colorMensaje.r, hud->colorMensaje.g, hud->colorMensaje.b);
 			glBegin(GL_QUADS); {
-				glTexCoord2d(0.f, 1.f); glVertex3f(30.f, 3.f + hud->mensajeSurface->h, 0.f);
-				glTexCoord2d(1.f, 1.f); glVertex3f(30.f + hud->mensajeSurface->w, 3.f + hud->mensajeSurface->h, 0.f);
-				glTexCoord2d(1.f, 0.f); glVertex3f(30.f + hud->mensajeSurface->w, 3.f, 0.f);
-				glTexCoord2d(0.f, 0.f); glVertex3f(30.f, 3.f, 0.f);
+				glTexCoord2d(0.f, 1.f); glVertex3f(30.f, MARGEN_HUD + hud->mensajeSurface->h, 0.f);
+				glTexCoord2d(1.f, 1.f); glVertex3f(30.f + hud->mensajeSurface->w, MARGEN_HUD + hud->mensajeSurface->h, 0.f);
+				glTexCoord2d(1.f, 0.f); glVertex3f(30.f + hud->mensajeSurface->w, MARGEN_HUD, 0.f);
+				glTexCoord2d(0.f, 0.f); glVertex3f(30.f, MARGEN_HUD, 0.f);
 			} glEnd();
 			glDisable(GL_TEXTURE_2D);
 			break;
@@ -213,10 +216,10 @@ void ControladorInterfaz::dibujarComponenteHUD(hud* hud) {
 			glBindTexture(GL_TEXTURE_2D, hud->idTextura);
 			glColor3f(hud->colorMensaje.r, hud->colorMensaje.g, hud->colorMensaje.b);
 			glBegin(GL_QUADS); {
-				glTexCoord2d(0.f, 1.f); glVertex3f(largoPantalla - 30.f - hud->mensajeSurface->w, 3.f + hud->mensajeSurface->h, 0.f);
-				glTexCoord2d(1.f, 1.f); glVertex3f(largoPantalla - 30.f, 3.f + hud->mensajeSurface->h, 0.f);
-				glTexCoord2d(1.f, 0.f); glVertex3f(largoPantalla - 30.f, 3.f, 0.f);
-				glTexCoord2d(0.f, 0.f); glVertex3f(largoPantalla - 30.f - hud->mensajeSurface->w, 3.f, 0.f);
+				glTexCoord2d(0.f, 1.f); glVertex3f(largoPantalla - 30.f - hud->mensajeSurface->w, MARGEN_HUD + hud->mensajeSurface->h, 0.f);
+				glTexCoord2d(1.f, 1.f); glVertex3f(largoPantalla - 30.f, MARGEN_HUD + hud->mensajeSurface->h, 0.f);
+				glTexCoord2d(1.f, 0.f); glVertex3f(largoPantalla - 30.f, MARGEN_HUD, 0.f);
+				glTexCoord2d(0.f, 0.f); glVertex3f(largoPantalla - 30.f - hud->mensajeSurface->w, MARGEN_HUD, 0.f);
 			} glEnd();
 			glDisable(GL_TEXTURE_2D);
 			break;
@@ -225,10 +228,10 @@ void ControladorInterfaz::dibujarComponenteHUD(hud* hud) {
 			glBindTexture(GL_TEXTURE_2D, hud->idTextura);
 			glColor3f(hud->colorMensaje.r, hud->colorMensaje.g, hud->colorMensaje.b);
 			glBegin(GL_QUADS); {
-				glTexCoord2d(0.f, 1.f); glVertex3f(largoPantalla / 2.f - hud->mensajeSurface->w / 2.f, 3.f + hud->mensajeSurface->h, 0.f);
-				glTexCoord2d(1.f, 1.f); glVertex3f(largoPantalla / 2.f + hud->mensajeSurface->w / 2.f, 3.f + hud->mensajeSurface->h, 0.f);
-				glTexCoord2d(1.f, 0.f); glVertex3f(largoPantalla / 2.f + hud->mensajeSurface->w / 2.f, 3.f, 0.f);
-				glTexCoord2d(0.f, 0.f); glVertex3f(largoPantalla / 2.f - hud->mensajeSurface->w / 2.f, 3.f, 0.f);
+				glTexCoord2d(0.f, 1.f); glVertex3f(largoPantalla / 2.f - hud->mensajeSurface->w / 2.f, MARGEN_HUD + hud->mensajeSurface->h, 0.f);
+				glTexCoord2d(1.f, 1.f); glVertex3f(largoPantalla / 2.f + hud->mensajeSurface->w / 2.f, MARGEN_HUD + hud->mensajeSurface->h, 0.f);
+				glTexCoord2d(1.f, 0.f); glVertex3f(largoPantalla / 2.f + hud->mensajeSurface->w / 2.f, MARGEN_HUD, 0.f);
+				glTexCoord2d(0.f, 0.f); glVertex3f(largoPantalla / 2.f - hud->mensajeSurface->w / 2.f, MARGEN_HUD, 0.f);
 			} glEnd();
 			glDisable(GL_TEXTURE_2D);
 			break;
@@ -237,10 +240,10 @@ void ControladorInterfaz::dibujarComponenteHUD(hud* hud) {
 			glBindTexture(GL_TEXTURE_2D, hud->idTextura);
 			glColor3f(hud->colorMensaje.r, hud->colorMensaje.g, hud->colorMensaje.b);
 			glBegin(GL_QUADS); {
-				glTexCoord2d(0.f, 0.f); glVertex3f(30.f, altoPantalla - 3.f - hud->mensajeSurface->h, 0.f);
-				glTexCoord2d(0.f, 1.f); glVertex3f(30.f, altoPantalla - 3.f, 0.f);
-				glTexCoord2d(1.f, 1.f); glVertex3f(30.f + hud->mensajeSurface->w, altoPantalla - 3.f, 0.f); 
-				glTexCoord2d(1.f, 0.f); glVertex3f(30.f + hud->mensajeSurface->w, altoPantalla - 3.f - hud->mensajeSurface->h, 0.f);
+				glTexCoord2d(0.f, 0.f); glVertex3f(30.f, altoPantalla - MARGEN_HUD - hud->mensajeSurface->h, 0.f);
+				glTexCoord2d(0.f, 1.f); glVertex3f(30.f, altoPantalla - MARGEN_HUD, 0.f);
+				glTexCoord2d(1.f, 1.f); glVertex3f(30.f + hud->mensajeSurface->w, altoPantalla - MARGEN_HUD, 0.f); 
+				glTexCoord2d(1.f, 0.f); glVertex3f(30.f + hud->mensajeSurface->w, altoPantalla - MARGEN_HUD - hud->mensajeSurface->h, 0.f);
 			} glEnd();
 			glDisable(GL_TEXTURE_2D);
 
@@ -249,10 +252,10 @@ void ControladorInterfaz::dibujarComponenteHUD(hud* hud) {
 			glBindTexture(GL_TEXTURE_2D, ControladorTexturas::getTextura(TEXTURA_AUMENTAR_CANTIDAD_BOMBA));
 			glColor3f(1.0f, 1.0f, 1.0f);
 			glBegin(GL_QUADS); {
-				glTexCoord2d(0.f, 0.f); glVertex3f(30.f + hud->mensajeSurface->w, altoPantalla - 3.f, 0.f);
-				glTexCoord2d(0.f, 1.f); glVertex3f(30.f + hud->mensajeSurface->w, altoPantalla - 3.f - hud->mensajeSurface->h, 0.f);
-				glTexCoord2d(1.f, 1.f); glVertex3f(30.f + hud->mensajeSurface->w + hud->mensajeSurface->h, altoPantalla - 3.f - hud->mensajeSurface->h, 0.f);
-				glTexCoord2d(1.f, 0.f); glVertex3f(30.f + hud->mensajeSurface->w + hud->mensajeSurface->h, altoPantalla - 3.f, 0.f);
+				glTexCoord2d(0.f, 0.f); glVertex3f(30.f + hud->mensajeSurface->w, altoPantalla - MARGEN_HUD, 0.f);
+				glTexCoord2d(0.f, 1.f); glVertex3f(30.f + hud->mensajeSurface->w, altoPantalla - MARGEN_HUD - hud->mensajeSurface->h, 0.f);
+				glTexCoord2d(1.f, 1.f); glVertex3f(30.f + hud->mensajeSurface->w + hud->mensajeSurface->h, altoPantalla - MARGEN_HUD - hud->mensajeSurface->h, 0.f);
+				glTexCoord2d(1.f, 0.f); glVertex3f(30.f + hud->mensajeSurface->w + hud->mensajeSurface->h, altoPantalla - MARGEN_HUD, 0.f);
 			}glEnd();
 			glDisable(GL_TEXTURE_2D);
 			break;
@@ -264,6 +267,9 @@ void ControladorInterfaz::dibujarHUD() {
 	setTiempo(tiempoJuego / 1000);
 	setFinJuego(finJuego);
 	setCantBombas(jugador->getMaxBomba() - jugador->getCantBomba());
+
+	glClear(GL_DEPTH_BUFFER_BIT);
+	glDisable(GL_DEPTH_TEST);
 
 	glMatrixMode(GL_PROJECTION); glPushMatrix(); glLoadIdentity();
 	glOrtho(0, largoPantalla, altoPantalla, 0, -1.0, 1.0);
@@ -290,5 +296,7 @@ void ControladorInterfaz::dibujarHUD() {
 
 	glMatrixMode(GL_PROJECTION); glPopMatrix();
 	glMatrixMode(GL_MODELVIEW); glPopMatrix();
+
+	glEnable(GL_DEPTH_TEST);
 }
 
