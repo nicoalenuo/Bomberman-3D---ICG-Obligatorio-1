@@ -8,11 +8,19 @@ ALuint ControladorAudio::bufferMuerte;
 ALuint ControladorAudio::bufferExplosion;
 ALuint ControladorAudio::bufferBonificacion;
 ALuint ControladorAudio::bufferPasos;
+ALuint ControladorAudio::bufferInicioJuego;
+ALuint ControladorAudio::bufferPuertaAbierta;
+
+ALuint ControladorAudio::bufferMusica;
 
 recursoAudio* ControladorAudio::raMuerte;
 recursoAudio* ControladorAudio::raExplosion;
 recursoAudio* ControladorAudio::raBonificacion;
 recursoAudio* ControladorAudio::raPasos;
+recursoAudio* ControladorAudio::raInicioJuego;
+recursoAudio* ControladorAudio::raPuertaAbierta;
+
+recursoAudio* ControladorAudio::raMusica;
 
 void ControladorAudio::initOpenAl() {
 	openALDevice = alcOpenDevice(nullptr); //obtengo el dispositivo
@@ -42,11 +50,21 @@ void ControladorAudio::cargarAudios() {
 	bufferExplosion = bufferAudio::agregarSonido("audio/explosion.wav");
 	bufferBonificacion = bufferAudio::agregarSonido("audio/bonificacion.wav");
 	bufferPasos = bufferAudio::agregarSonido("audio/pasos.wav");
+	bufferInicioJuego = bufferAudio::agregarSonido("audio/inicioJuego.wav");
+	bufferPuertaAbierta = bufferAudio::agregarSonido("audio/puertaAbierta.wav");
+
+	bufferMusica = bufferAudio::agregarSonido("audio/bomberman.wav");
 
 	raMuerte = new recursoAudio(bufferMuerte);
 	raExplosion = new recursoAudio(bufferExplosion);
 	raBonificacion = new recursoAudio(bufferBonificacion);
 	raPasos = new recursoAudio(bufferPasos);
+	raInicioJuego = new recursoAudio(bufferInicioJuego);
+	raPuertaAbierta = new recursoAudio(bufferPuertaAbierta);
+
+	raMusica = new recursoAudio(bufferMusica);
+	raMusica->setBucle(true);
+	raMusica->play();
 }
 
 void ControladorAudio::playAudio(sonido s) {
@@ -64,16 +82,51 @@ void ControladorAudio::playAudio(sonido s) {
 			case sonido::pasos:
 				raPasos->play();
 				break;
+			case sonido::inicioJuego:
+				raInicioJuego->play();
+				break;
+			case sonido::puertaAbierta:
+				raPuertaAbierta->play();
+				break;
+			case sonido::musica:
+				raMusica->play();
+				break;
 		}
 	}
 }
 
 void ControladorAudio::pausarAudio() {
+	if (pausa) {
+		raMuerte->pausar();
+		raExplosion->pausar();
+		raBonificacion->pausar();
+		raPasos->pausar();
+		raInicioJuego->pausar();
+		raPuertaAbierta->pausar();
 
+		raMusica->pausar();
+	} else {
+		raMuerte->reanudar();
+		raExplosion->reanudar();
+		raBonificacion->reanudar();
+		raPasos->reanudar();
+		raInicioJuego->reanudar();
+		raPuertaAbierta->reanudar();
+
+		raMusica->reanudar();
+	}
+	
 }
 
 void ControladorAudio::reanudarAudio() {
+	raMuerte->reanudar();
+	raExplosion->reanudar();
+	raBonificacion->reanudar();
+	raPasos->reanudar();
+	raInicioJuego->reanudar();
+	raPuertaAbierta->reanudar();
 
+	raMusica->reanudar();
 }
 
 void ControladorAudio::detenerAudio() {
@@ -82,6 +135,13 @@ void ControladorAudio::detenerAudio() {
 		raExplosion->detener();
 		raBonificacion->detener();
 		raPasos->detener();
+		raInicioJuego->detener();
+		raPuertaAbierta->detener();
+
+		raMusica->pausar();
+	} else {
+		raMusica->reanudar();
+
 	}
 	mute = !mute;
 }
@@ -92,6 +152,9 @@ void ControladorAudio::limpiarAudios() {
 	delete raExplosion;
 	delete raBonificacion;
 	delete raPasos;
+	delete raInicioJuego;
+	delete raPuertaAbierta;
+	delete raMusica;
 
 	bufferAudio::limpiarBuffer();
 	alcMakeContextCurrent(nullptr);

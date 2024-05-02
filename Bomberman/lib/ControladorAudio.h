@@ -16,7 +16,7 @@
 
 using namespace std;
 
-enum class sonido { muerte, explosion, bonificacion, pasos};
+enum class sonido { muerte, explosion, bonificacion, pasos, inicioJuego, puertaAbierta, musica};
 
 class ControladorAudio{
 private:
@@ -29,11 +29,18 @@ private:
 	static ALuint bufferExplosion;
 	static ALuint bufferBonificacion;
 	static ALuint bufferPasos;
+	static ALuint bufferInicioJuego;
+	static ALuint bufferPuertaAbierta;
+
+	static ALuint bufferMusica;
 	
 	static recursoAudio* raMuerte;
 	static recursoAudio* raExplosion;
 	static recursoAudio* raBonificacion;
 	static recursoAudio* raPasos;
+	static recursoAudio* raInicioJuego;
+	static recursoAudio* raPuertaAbierta;
+	static recursoAudio* raMusica;
 
 	static void initOpenAl();
 public:
