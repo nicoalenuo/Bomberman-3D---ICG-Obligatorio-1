@@ -38,7 +38,6 @@ void ControladorAudio::cargarAudios() {
 	buffers.push_back(bufferAudio::agregarSonido("audio/inicioJuego.wav"));
 	buffers.push_back(bufferAudio::agregarSonido("audio/puertaAbierta.wav"));
 	buffers.push_back(bufferAudio::agregarSonido("audio/bomberman.wav"));
-	//buffers.push_back(bufferAudio::agregarSonido("audio/musica.wav")); //Se puede escuchar la musica si se apreta "7" pero no está en el proyecto, como?
 
 	int i = 0;
 	for (auto audio = buffers.begin(); audio != buffers.end(); ++audio) {

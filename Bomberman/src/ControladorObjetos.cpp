@@ -99,7 +99,6 @@ vector<char> commands;
 vector<vector<float>> data_obj;
 GLuint texture;
 void ControladorObjetos::dibujar(tipo_obj obj) {
-	texture = 0;
 	switch (obj) {
 		case (OBJ_PLAYER):
 			commands = player_commands;
@@ -279,9 +278,6 @@ void ControladorObjetos::dibujarCubo(vector_3 tam, GLuint textura, GLfloat color
 	if (texturas_habilitadas)
 		glDisable(GL_TEXTURE_2D);
 }
-/*
-Excepción producida en 0x5ADCAD9E (ig75icd32.dll) en Bomberman.exe: 0xC0000005: Infracción de acceso al escribir en la ubicación 0x000000A0.
-*/
 
 void ControladorObjetos::dibujarSuelo() {
 	GLuint textura = ControladorTexturas::getTextura(TEXTURA_SUELO);

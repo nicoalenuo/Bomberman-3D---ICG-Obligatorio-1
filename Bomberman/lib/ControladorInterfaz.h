@@ -25,6 +25,7 @@ class ControladorInterfaz {
 		static hud* hudPuntaje;
 		static hud* hudTiempo;
 		static hud* hudGameOver;
+		static hud* hudCantBombas;
 		static list<hudPoder> poderes;
 
 		static void setMensajeEnComponente(string mensaje, TTF_Font* fuente, hud* componente);
@@ -35,13 +36,13 @@ class ControladorInterfaz {
 		static void dibujarHUD();
 		static hud* getHud(int numero);
 		static void setHud(int indice, hud* hud);
-		static hud* getHudPoderes(tipo_poder tipo);
-		static void setHudPoderes(tipo_poder tipo, hud* hud);
+		static hud* getHudPoderes(int indice);
+		static void setHudPoderes(int indice, hud* hud);
 		static void setPuntaje(int puntos);
 		static void setTiempo(int tiem);
 		static void setFinJuego(bool finJuego);
-		static void setPoderes(map<tipo_poder, int> powerUp);
-		static void liberarMemoria();
+		static void setCantBombas(int cant);
+		//static void setPoderes(list<poder> powerUp);
 };
 
 #endif

@@ -10,12 +10,12 @@
 using namespace std;
 
 enum tipo_poder { //agregar aca en caso de agregar mas bonificadores, y luego agregar casos al switch ControladorInterfaz
-	AUMENTAR_CANTIDAD_BOMBAS,
 	AUMENTAR_ALCANCE_BOMBAS,
 	INMORTALIDAD, // segundos de inmortalidad
 	AUMENTAR_VELOCIDAD, //
 	BOMBAS_ATRAVIESAN_ESTRUCTURAS,
-	BONIFICADOR_RANDOM, //NO ELIMINAR ESTE
+	AUMENTAR_CANTIDAD_BOMBAS,
+	BONIFICADOR_RANDOM //NO ELIMINAR ESTE
 };
 
 class ControladorPoderes {
@@ -30,7 +30,6 @@ public:
 	static bool poderEsBooleano(tipo_poder poder);
 	static void activarPoder(tipo_poder poder, int temporizador);
 	static void desactivarPoder(tipo_poder poder);
-	static map<tipo_poder,int> obtenerPoderes();
 };
 
 #endif
