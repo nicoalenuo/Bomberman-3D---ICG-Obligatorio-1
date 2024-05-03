@@ -8,7 +8,7 @@
 #include <iostream>
 #include "vector"
 #include <thread>
-#include<windows.h> 
+#include <windows.h> 
 
 #include "bufferAudio.h"
 #include "recursoAudio.h"

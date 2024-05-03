@@ -159,6 +159,15 @@
     <Image Include="texturas\puerta.jpg" />
     <Image Include="texturas\suelo.jpg" />
   </ItemGroup>
+  <ItemGroup>
+    <Media Include="audio\bomberman.wav" />
+    <Media Include="audio\bonificacion.wav" />
+    <Media Include="audio\explosion.wav" />
+    <Media Include="audio\inicioJuego.wav" />
+    <Media Include="audio\muerte.wav" />
+    <Media Include="audio\pasos.wav" />
+    <Media Include="audio\puertaAbierta.wav" />
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>

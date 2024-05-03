@@ -68,12 +68,13 @@ void ControladorLuz::colocarLuces() {
 	}
 }
 
-void ControladorLuz::quitarLuces() {
-	for (int idLuz = lucesDisponibles.top() + 1; idLuz <= GL_LIGHT7; idLuz++) {
-		lucesDisponibles.push(idLuz);
-		glDisable(idLuz);
+void ControladorLuz::quitarLuces() { //hay que rehacer esta función, no se está sacando las luces del arreglo de lucesAMostrar y no se lo está poniendo a lucesDisponibles
+	if (!lucesDisponibles.empty()) {
+		for (int idLuz = lucesDisponibles.top() + 1; idLuz <= GL_LIGHT7; idLuz++) {
+			lucesDisponibles.push(idLuz);
+			glDisable(idLuz);
+		}
 	}
-
 	glDisable(GL_LIGHTING);
 }
 

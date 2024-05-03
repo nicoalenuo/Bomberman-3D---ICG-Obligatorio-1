@@ -211,8 +211,34 @@
     <Image Include="texturas\player.png">
       <Filter>Resource Files</Filter>
     </Image>
-    <Image Include="texturas\puerta.png">
+    <Image Include="texturas\puerta.jpg">
       <Filter>Resource Files</Filter>
     </Image>
+    <Image Include="texturas\suelo.jpg">
+      <Filter>Resource Files</Filter>
+    </Image>
+  </ItemGroup>
+  <ItemGroup>
+    <Media Include="audio\bomberman.wav">
+      <Filter>Resource Files</Filter>
+    </Media>
+    <Media Include="audio\bonificacion.wav">
+      <Filter>Resource Files</Filter>
+    </Media>
+    <Media Include="audio\explosion.wav">
+      <Filter>Resource Files</Filter>
+    </Media>
+    <Media Include="audio\inicioJuego.wav">
+      <Filter>Resource Files</Filter>
+    </Media>
+    <Media Include="audio\muerte.wav">
+      <Filter>Resource Files</Filter>
+    </Media>
+    <Media Include="audio\pasos.wav">
+      <Filter>Resource Files</Filter>
+    </Media>
+    <Media Include="audio\puertaAbierta.wav">
+      <Filter>Resource Files</Filter>
+    </Media>
   </ItemGroup>
 </Project>

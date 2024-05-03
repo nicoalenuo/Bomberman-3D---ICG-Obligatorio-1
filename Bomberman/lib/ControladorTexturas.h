@@ -10,6 +10,7 @@
 #include <GL/glu.h>
 
 #include "global.h"
+#include "ControladorPoderes.h"
 
 using namespace std;
 
@@ -25,6 +26,7 @@ enum tipo_textura { //agregar aca en caso de agregar mas texturas, y la direccio
 	TEXTURA_BOMBAS_ATRAVIESAN_ESTRUCTURAS,
 	TEXTURA_INMORTALIDAD,
 	TEXTURA_SUELO,
+	TEXTURA_FALLIDA,
 };
 
 class ControladorTexturas{
@@ -34,6 +36,7 @@ private:
 public:
 	static void cargarTexturas();
 	static GLuint getTextura(tipo_textura tipo) { return texturas[tipo]; };
+	static tipo_textura getTipoTexturaPoder(tipo_poder tipo);
 };
 
 #endif
