@@ -243,10 +243,10 @@ Controlador::Controlador() {
 
     ControladorTexturas::cargarTexturas();
     ControladorObjetos::cargarObjetos();
-    ControladorInterfaz::cargarInterfaz();
     ControladorAudio::cargarAudios();
     ControladorLuz::cargarLuces();
     ControladorPoderes::cargarPoderes();
+    ControladorInterfaz::cargarInterfaz();
 
     ControladorAudio::playAudio(sonido::inicioJuego);
 }
@@ -344,16 +344,23 @@ void Controlador::manejarEventos() {
                         moverIzquierda = true;
                         break;
                     case SDLK_1:
-                        ControladorAudio::playAudio(sonido::pasos);
+                        ControladorAudio::playAudio(sonido::muerte);
                         break;
                     case SDLK_2:
-                        ControladorAudio::playAudio(sonido::bonificacion);
-                        break;
-                    case SDLK_3:
                         ControladorAudio::playAudio(sonido::explosion);
                         break;
+                    case SDLK_3:
+                        ControladorAudio::playAudio(sonido::bonificacion);
+                        break;
                     case SDLK_4 :
-                        ControladorAudio::playAudio(sonido::muerte);
+                        ControladorAudio::playAudio(sonido::pasos);
+                    case SDLK_5:
+                        ControladorAudio::playAudio(sonido::inicioJuego);
+                    case SDLK_6:
+                        ControladorAudio::playAudio(sonido::puertaAbierta);
+                        break;
+                    case SDLK_7:
+                        ControladorAudio::playAudio(sonido::musica);
                         break;
                     case SDLK_m://mute
                         ControladorAudio::silenciarAudio();
@@ -402,6 +409,12 @@ void Controlador::manejarEventos() {
                         break;
                     case SDLK_F6:
                         //acelerar o disminuir velocidad de juego (global)
+                        if (velocidad_juego == 1)
+                            velocidad_juego = 2.f;
+                        else if (velocidad_juego == 2)
+                            velocidad_juego = 0.5f;
+                        else
+                            velocidad_juego = 1.f;
                         break;
                     case SDLK_F7:
                         toggle(inmortal);
@@ -412,20 +425,8 @@ void Controlador::manejarEventos() {
                     case SDLK_F9:
                         toggle(atravesar_paredes);
                         break;
-                    case SDLK_F10:
-                        if (velocidad_juego == 1)
-                            velocidad_juego = 2;
-                        else if (velocidad_juego == 2)
-                            velocidad_juego = 0.5;
-                        else
-                            velocidad_juego = 1;
-                        break;
                     case SDLK_F11:
-                        SDL_SetWindowFullscreen(window,
-                            SDL_GetWindowFlags(window) & SDL_WINDOW_FULLSCREEN ? 
-                                0 : 
-                                SDL_WINDOW_FULLSCREEN
-                        );
+                        SDL_SetWindowFullscreen(window, SDL_GetWindowFlags(window) & SDL_WINDOW_FULLSCREEN ? 0 : SDL_WINDOW_FULLSCREEN);
                         break;
                 }
             break;
@@ -526,7 +527,7 @@ void Controlador::actualizar() {
     }
 
     for (it = particulas.begin(); it != particulas.end(); /*se actualiza dentro del bucle */) {
-        (*it)->actualizar();
+        //(*it)->actualizar();
         if ((*it)->getEliminar()) {
             delete (*it);
             it = particulas.erase(it);
@@ -590,7 +591,7 @@ void Controlador::dibujar() {
     //La puerta, el suelo, los bonificadores y el fuego, no dependen de la luz por 2 motivos (son la fuente de luz)
     puerta->dibujar();
 
-    ControladorLuz::quitarLuces();
+    ControladorLuz::quitarLuces(); //arreglar problema cuando hay muchas luces, y aparecen sin estructuras. explota una bomba y el programa revienta
 
     for (int i = 0; i < largoTablero; i++) {
         for (int j = 0; j < anchoTablero; j++) {
@@ -599,8 +600,9 @@ void Controlador::dibujar() {
         }
     }
 
-    for (it = particulas.begin(); it != particulas.end(); ++it)
-        (*it)->dibujar();
+    for (it = particulas.begin(); it != particulas.end(); ++it) {
+        //(*it)->dibujar(); // Acá es donde tira el error de: Excepción producida en 0x5ADCAD9E (ig75icd32.dll) en Bomberman.exe: 0xC0000005: Infracción de acceso al escribir en la ubicación 0x000000A0.
+    }
 
     if (mostrarHud) {
         ControladorInterfaz::dibujarHUD();

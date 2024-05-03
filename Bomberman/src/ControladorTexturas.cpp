@@ -14,7 +14,8 @@ map<tipo_textura, char*> ControladorTexturas::direcciones_texturas = {
     {TEXTURA_AUMENTAR_VELOCIDAD, "texturas/aumentar_velocidad.png"},
     {TEXTURA_BOMBAS_ATRAVIESAN_ESTRUCTURAS, "texturas/bombas_atraviesan_estructuras.png"},
     {TEXTURA_INMORTALIDAD, "texturas/inmortalidad.png"},
-    {TEXTURA_SUELO, "texturas/suelo.jpg"}
+    {TEXTURA_SUELO, "texturas/suelo.jpg"},
+    {TEXTURA_FALLIDA, "texturas/chayang.jpeg"}
 };
 
 void ControladorTexturas::cargarTexturas() {
@@ -43,4 +44,25 @@ void ControladorTexturas::cargarTexturas() {
 
         texturas[kv.first] = textura;
     }
+}
+
+tipo_textura ControladorTexturas::getTipoTexturaPoder(tipo_poder tipo) {
+    switch (tipo) {
+        case tipo_poder::AUMENTAR_CANTIDAD_BOMBAS:
+            return TEXTURA_AUMENTAR_CANTIDAD_BOMBA;
+            break;
+        case tipo_poder::AUMENTAR_ALCANCE_BOMBAS:
+            return TEXTURA_AUMENTAR_ALCANCE_BOMBA;
+            break;
+        case tipo_poder::INMORTALIDAD:
+            return TEXTURA_INMORTALIDAD;
+            break;
+        case tipo_poder::AUMENTAR_VELOCIDAD:
+            return TEXTURA_AUMENTAR_VELOCIDAD;
+            break;
+        case tipo_poder::BOMBAS_ATRAVIESAN_ESTRUCTURAS:
+            return TEXTURA_BOMBAS_ATRAVIESAN_ESTRUCTURAS;
+            break;
+    }
+    return TEXTURA_FALLIDA;
 }
