@@ -30,7 +30,7 @@ public:
 	static bool poderEsBooleano(tipo_poder poder);
 	static void activarPoder(tipo_poder poder, int temporizador);
 	static void desactivarPoder(tipo_poder poder);
-	static map<tipo_poder,int> obtenerPoderes();
+	static map<tipo_poder, int> obtenerPoderes();
 };
 
 #endif

@@ -505,6 +505,7 @@ void Controlador::actualizar() {
         aumentarNivel();
         generarTablero();
     } 
+
     ControladorPoderes::actualizarTemporizadores();
 
     jugador->actualizar();
@@ -512,22 +513,25 @@ void Controlador::actualizar() {
 
     for (int i = 0; i < largoTablero; i++) {
         for (int j = 0; j < anchoTablero; j++) {
-            if (bombas[i][j] != nullptr)
+            if (bombas[i][j] != nullptr) {
                 bombas[i][j]->actualizar();
+            }
 
-            if (fuegos[i][j] != nullptr)
+            if (fuegos[i][j] != nullptr) {
                 fuegos[i][j]->actualizar();
+            }
 
             /*if (enemigos[i][j] != nullptr)
                 enemigos[i][j]->actualizar();*/
 
-            if (bonificadores[i][j] != nullptr)
+            if (bonificadores[i][j] != nullptr) {
                 bonificadores[i][j]->actualizar();
+            }
         }
     }
 
     for (it = particulas.begin(); it != particulas.end(); /*se actualiza dentro del bucle */) {
-        //(*it)->actualizar();
+        (*it)->actualizar();
         if ((*it)->getEliminar()) {
             delete (*it);
             it = particulas.erase(it);
@@ -538,8 +542,10 @@ void Controlador::actualizar() {
     }
 
     for (itE = enemigos.begin(); itE != enemigos.end();){
-        if((*itE)->intersecta(jugador))
+        if ((*itE)->intersecta(jugador)) {
             finJuego = true;
+        }
+
         (*itE)->actualizar();
         if ((*itE)->getEliminar()) {
             delete (*itE);
@@ -571,37 +577,42 @@ void Controlador::dibujar() {
 
     for (int i = 0; i < largoTablero; i++) {
         for (int j = 0; j < anchoTablero; j++) {
-            if (estructuras[i][j] != nullptr)
+            if (estructuras[i][j] != nullptr) {
                 estructuras[i][j]->dibujar();
+            }
 
-            if (bombas[i][j] != nullptr)
+            if (bombas[i][j] != nullptr) {
                 bombas[i][j]->dibujar();
+            }
 
             /*if (enemigos[i][j] != nullptr)
                 enemigos[i][j]->dibujar();*/
         }
     }
 
-    for (itBorde = borde.begin(); itBorde != borde.end(); ++itBorde)
+    for (itBorde = borde.begin(); itBorde != borde.end(); itBorde++) {
         (*itBorde)->dibujar();
+    }
 
-    for (itE = enemigos.begin(); itE != enemigos.end(); itE++)
+    for (itE = enemigos.begin(); itE != enemigos.end(); itE++) {
         (*itE)->dibujar();
+    }
 
     //La puerta, el suelo, los bonificadores y el fuego, no dependen de la luz por 2 motivos (son la fuente de luz)
     puerta->dibujar();
 
-    ControladorLuz::quitarLuces(); //arreglar problema cuando hay muchas luces, y aparecen sin estructuras. explota una bomba y el programa revienta
+    ControladorLuz::quitarLuces();
 
     for (int i = 0; i < largoTablero; i++) {
         for (int j = 0; j < anchoTablero; j++) {
-            if (bonificadores[i][j] != nullptr)
+            if (bonificadores[i][j] != nullptr) {
                 bonificadores[i][j]->dibujar();
+            }
         }
     }
 
-    for (it = particulas.begin(); it != particulas.end(); ++it) {
-        //(*it)->dibujar(); // Acá es donde tira el error de: Excepción producida en 0x5ADCAD9E (ig75icd32.dll) en Bomberman.exe: 0xC0000005: Infracción de acceso al escribir en la ubicación 0x000000A0.
+    for (it = particulas.begin(); it != particulas.end(); it++) {
+        (*it)->dibujar();
     }
 
     if (mostrarHud) {
@@ -642,6 +653,7 @@ Controlador::~Controlador() {
     }
 
     ControladorAudio::limpiarAudios();
+    ControladorInterfaz::liberarInterfaz();
 
     SDL_GL_DeleteContext(context);
     SDL_DestroyWindow(window);

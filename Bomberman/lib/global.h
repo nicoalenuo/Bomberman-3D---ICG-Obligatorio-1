@@ -44,8 +44,6 @@ extern bool atravesar_paredes;
 extern bool pausa;
 extern bool mute;
 
-extern int puntaje;
-
 extern objeto*** estructuras;
 extern objeto*** bombas;
 //extern objeto*** enemigos;
@@ -65,7 +63,7 @@ extern int getIndiceTablero(GLfloat coord);
 extern bool fin;
 extern bool finJuego;
 extern int nivel;
-extern int puntaje; 
+extern UINT puntaje;
 extern int tiempoJuego; //segundos
 extern bool puertaAbierta;
 

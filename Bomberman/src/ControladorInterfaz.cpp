@@ -28,6 +28,7 @@ hud* ControladorInterfaz::getHudPoderes(tipo_poder tipo) {
 			return it->hud;
 		}
 	} //asumimos que it no puede llegar al final
+	cout << "error: poder no encontrado" << endl;
 	return nullptr;
 }
 
@@ -48,7 +49,6 @@ void ControladorInterfaz::setHudPoderes(tipo_poder tipo, hud* hud) {
 void ControladorInterfaz::setPoderes(map<tipo_poder, int> powerUp){
 	for (auto it = powerUp.begin(); it != powerUp.end(); ++it) {
 		if (ControladorPoderes::poderDependeDeTiempo(it->first)) {
-			if(it->second != 0)
 			setMensajeEnComponente(to_string(it->second / 1000), interfaz, getHudPoderes(it->first));
 		} else {
 			string mensaje = to_string(it->second);
@@ -80,8 +80,9 @@ void ControladorInterfaz::setMensajeEnComponente(string mensaje, TTF_Font* fuent
 	TTF_SizeText(fuente, mensaje.c_str(), &(componente->width), &(componente->height));
 
 	//Create a surface to the correct size in RGB format, and copy the old image
-	if(componente->colorSurface != NULL)
+	if (componente->colorSurface != NULL) {
 		SDL_FreeSurface(componente->colorSurface);
+	}
 	componente->colorSurface = SDL_CreateRGBSurface(0, componente->width, componente->height, 32, 0, 0x0000ff00, 0x000000ff, 0xff000000); //el problema puede ser por no destruir la componente antes de crear una nueva?
 	if (componente->colorSurface == NULL) {
 		cerr << "SDL_CreateRGBSurface() failed: " << SDL_GetError() << endl;
@@ -112,7 +113,6 @@ void ControladorInterfaz::cargarInterfaz() {
 
 	for (int i = 0; i < static_cast<int>(tipo_poder::BONIFICADOR_RANDOM); i++) {
 		hudPoder hudPoder{};
-		hudPoder.hud = nullptr;
 		hudPoder.hud = new hud();
 		hudPoder.hud->colorMensaje = { 255, 255, 255 };
 		hudPoder.hud->posicion = position::bottom_left;
@@ -284,7 +284,7 @@ void ControladorInterfaz::dibujarHUD() {
 	glEnable(GL_DEPTH_TEST);
 }
 
-void ControladorInterfaz::liberarMemoria() {
+void ControladorInterfaz::liberarInterfaz() {
 	SDL_FreeSurface(hudPuntaje->mensajeSurface);
 	SDL_FreeSurface(hudPuntaje->colorSurface);
 	SDL_FreeSurface(hudTiempo->mensajeSurface);

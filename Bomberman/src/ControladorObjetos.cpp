@@ -276,8 +276,9 @@ void ControladorObjetos::dibujarCubo(vector_3 tam, GLuint textura, GLfloat color
 
 	glEnd();
 
-	if (texturas_habilitadas)
+	if (texturas_habilitadas && textura != 0) {
 		glDisable(GL_TEXTURE_2D);
+	}
 }
 /*
 Excepción producida en 0x5ADCAD9E (ig75icd32.dll) en Bomberman.exe: 0xC0000005: Infracción de acceso al escribir en la ubicación 0x000000A0.

@@ -34,17 +34,6 @@ bool ControladorPoderes::poderEsBooleano(tipo_poder poder) {
 	return poder == BOMBAS_ATRAVIESAN_ESTRUCTURAS;
 }
 
-map<tipo_poder, int> ControladorPoderes::obtenerPoderes() {
-	map<tipo_poder, int> poderes = map<tipo_poder, int>();
-	for (auto it = temporizadorPoder.begin(); it != temporizadorPoder.end(); ++it) {
-		poderes.insert(*it);
-	}
-	for (auto it = poderActivo.begin(); it != poderActivo.end(); ++it) {
-		poderes.insert(*it);
-	}
-	return poderes;
-}
-
 void ControladorPoderes::activarPoder(tipo_poder poder, int valor) {
 	if (temporizadorPoder.count(poder) == 1)
 		temporizadorPoder[poder] += valor;
@@ -57,4 +46,18 @@ void ControladorPoderes::desactivarPoder(tipo_poder poder) {
 		temporizadorPoder[poder] = 0;
 	else 
 		poderActivo[poder] = 0;
+}
+
+map<tipo_poder, int> ControladorPoderes::obtenerPoderes() {
+	map<tipo_poder, int> poderes = map<tipo_poder, int>();
+	for (int i = 0; i < static_cast<int>(BONIFICADOR_RANDOM); i++) {
+		tipo_poder tipo = static_cast<tipo_poder>(i);
+		if (temporizadorPoder.count(tipo) == 1) {
+			poderes.insert(pair<tipo_poder, int>(tipo, temporizadorPoder[tipo]));
+		}
+		else {
+			poderes.insert(pair<tipo_poder, int>(tipo, poderActivo[tipo]));
+		}
+	}
+	return poderes;
 }

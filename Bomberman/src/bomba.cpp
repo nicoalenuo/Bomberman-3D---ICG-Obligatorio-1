@@ -51,8 +51,11 @@ void bomba::actualizar() {
                         alcanza = !ControladorPoderes::getValor(BOMBAS_ATRAVIESAN_ESTRUCTURAS);
                         estructura* est = dynamic_cast<estructura*>(estructuras[nx][nz]);
                         if (est->getDestructible()) {
-                            estructuras[nx][nz] = nullptr;
                             delete est;
+                            if (estructuras[nx][nz] != nullptr) {
+                                cout << "aloh?" << endl;
+                            }
+                            estructuras[nx][nz] = nullptr;
                         }
                     }
                 }

@@ -41,7 +41,7 @@ class ControladorInterfaz {
 		static void setTiempo(int tiem);
 		static void setFinJuego(bool finJuego);
 		static void setPoderes(map<tipo_poder, int> powerUp);
-		static void liberarMemoria();
+		static void liberarInterfaz();
 };
 
 #endif

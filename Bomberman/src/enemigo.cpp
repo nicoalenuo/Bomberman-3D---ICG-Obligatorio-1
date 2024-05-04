@@ -160,8 +160,11 @@ void enemigo::actualizar() {
         }
     }
 
-    if (contactoConFuego())
+    if (contactoConFuego()) {
+        sumarPuntaje(1000);
         eliminar = true;
+    }
+
 }
 
 void enemigo::dibujar() {
