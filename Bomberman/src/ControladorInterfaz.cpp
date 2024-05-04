@@ -20,20 +20,6 @@ hud* ControladorInterfaz::getHudPoderes(tipo_poder tipo) {
 	return nullptr;
 }
 
-void ControladorInterfaz::setHudPoderes(tipo_poder tipo, hud* hud) {
-	bool encontrado = false;
-	hudPoder hudPoder;
-	for (auto it = poderes.begin(); !encontrado && it != poderes.end(); ++it) {
-		if (it->poder == tipo) {
-			hudPoder = (*it);
-			encontrado = true;
-		}
-	}
-	if(hudPoder.hud != nullptr)
-		delete hudPoder.hud;
-	hudPoder.hud = hud;
-}
-
 void ControladorInterfaz::setPoderes(map<tipo_poder, int> powerUp){
 	for (auto it = powerUp.begin(); it != powerUp.end(); ++it) {
 		if (ControladorPoderes::poderDependeDeTiempo(it->first)) {
@@ -57,7 +43,7 @@ void ControladorInterfaz::setMensajeEnComponente(string mensaje, TTF_Font* fuent
 		SDL_FreeSurface(componente->mensajeSurface);
 	}
 	componente->mensajeSurface = TTF_RenderText_Blended(fuente, mensaje.c_str(), { 255, 255, 255 });
-	if (componente->mensajeSurface == NULL) { // no renderiza el texto correctamente
+	if (componente->mensajeSurface == NULL) { 
 		cerr << "TTF_RenderText error: " << SDL_GetError() << endl;
 		return;
 	}
@@ -116,37 +102,6 @@ void ControladorInterfaz::cargarInterfaz() {
 	hudPuntaje->posicion = position::top_right;
 	hudTiempo->posicion = position::top_left;
 	hudGameOver->posicion = position::top_center;
-}
-
-hud* ControladorInterfaz::getHud(int numero) {
-	switch (numero) {
-	case 0:
-		return hudPuntaje;
-	case 1:
-		return hudTiempo;
-	case 2:
-		return hudGameOver;
-	}
-}
-
-void ControladorInterfaz::setHud(int indice, hud* hud){
-	switch (indice) {
-	case 0:
-		if (hudPuntaje != nullptr)
-			delete hudPuntaje;
-		hudPuntaje = hud;
-		break;
-	case 1:
-		if (hudTiempo != nullptr)
-			delete hudTiempo;
-		hudTiempo = hud;
-		break;
-	case 2:
-		if (hudGameOver != nullptr)
-			delete hudGameOver;
-		hudGameOver = hud;
-		break;
-	}
 }
 
 void ControladorInterfaz::dibujarComponenteHUDPoderes() {
@@ -236,10 +191,7 @@ void ControladorInterfaz::dibujarHUD() {
 	setMensajeEnComponente("Puntaje: " + to_string(puntaje), interfaz, hudPuntaje);
 	setMensajeEnComponente("Tiempo: " + to_string(tiempoJuego / 1000), interfaz, hudTiempo);
 	setMensajeEnComponente(finJuego ? "GAME OVER!" : " ", interfaz, hudGameOver);
-
-	map<tipo_poder, int> poderes = ControladorPoderes::obtenerPoderes();
-
-	setPoderes(poderes);
+	setPoderes(ControladorPoderes::obtenerPoderes());
 
 	glClear(GL_DEPTH_BUFFER_BIT);
 	glDisable(GL_DEPTH_TEST);

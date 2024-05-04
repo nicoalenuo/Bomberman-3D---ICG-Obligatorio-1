@@ -47,7 +47,7 @@ bool fin = false;
 bool finJuego = false;
 
 int nivel = 1;
-UINT puntaje = 0;
+int puntaje = 0;
 int tiempoJuego = 200000; //milisegundos
 
 bool puertaAbierta = false;

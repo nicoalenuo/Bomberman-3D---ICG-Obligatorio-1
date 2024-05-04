@@ -32,10 +32,7 @@ class ControladorInterfaz {
 		static void dibujarComponenteHUD(hud* hud);
 		static void dibujarComponenteHUDPoderes();
 		static void dibujarHUD();
-		static hud* getHud(int numero);
-		static void setHud(int indice, hud* hud);
 		static hud* getHudPoderes(tipo_poder tipo);
-		static void setHudPoderes(tipo_poder tipo, hud* hud);
 		static void setPoderes(map<tipo_poder, int> powerUp);
 		static void liberarInterfaz();
 };
