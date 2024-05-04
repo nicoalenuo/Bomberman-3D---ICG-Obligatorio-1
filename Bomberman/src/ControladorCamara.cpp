@@ -4,18 +4,7 @@ tipo_camara ControladorCamara::camara_actual = CAMARA_ISOMETRICA;
 int ControladorCamara::tiempoSacudirse = 0;
 
 void ControladorCamara::cambiarTipoCamara() {
-	switch (camara_actual) {
-		case CAMARA_ISOMETRICA:
-			camara_actual = CAMARA_PRIMERA_PERSONA;
-			break;
-		default:
-		case CAMARA_PRIMERA_PERSONA:
-			camara_actual = CAMARA_TERCERA_PERSONA;
-			break;
-		case CAMARA_TERCERA_PERSONA:
-			camara_actual = CAMARA_ISOMETRICA;
-			break;
-	}
+	camara_actual = tipo_camara((int(camara_actual) + 1) % 3);
 }
 
 bool ControladorCamara::camaraMiraHacia(tipo_direccion direccion) {
@@ -53,7 +42,6 @@ void ControladorCamara::colocarCamara(vector_3 pos) {
 
 	switch (camara_actual) {
 		case CAMARA_ISOMETRICA:
-		default:
 			angleRadiansX = mouseX * radians;
 
 			camX = pos.x + 20.0f * sin(angleRadiansX);
@@ -93,8 +81,5 @@ void ControladorCamara::colocarCamara(vector_3 pos) {
 				pos.z,
 				0, 1, 0);
 			break;
-		case CAMARA_ORIGINAL:
-			break;
-
 	}
 }

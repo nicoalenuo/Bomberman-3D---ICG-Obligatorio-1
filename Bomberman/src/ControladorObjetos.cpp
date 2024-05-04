@@ -104,16 +104,12 @@ void ControladorObjetos::dibujar(tipo_obj obj) {
 		case (OBJ_PLAYER):
 			commands = player_commands;
 			data_obj = player_data;
-			if (texturas_habilitadas) {
-				texture = ControladorTexturas::getTextura(PLAYER);
-			}
+			texture = ControladorTexturas::getTextura(PLAYER);
 			break;
 		case (OBJ_BOMBA):
 			commands = bomba_commands;
 			data_obj = bomba_data;
-			if (texturas_habilitadas) {
-				texture = ControladorTexturas::getTextura(TEXTURA_BOMBA);
-			}
+			texture = ControladorTexturas::getTextura(TEXTURA_BOMBA);
 			break;
 	}
 
@@ -178,7 +174,7 @@ void ControladorObjetos::dibujarCubo(vector_3 tam, GLuint textura, GLfloat color
 		glEnable(GL_TEXTURE_2D);
 		glBindTexture(GL_TEXTURE_2D, textura);
 		glColor3f(1.0f, 1.0f, 1.0f);
-	} else {
+	} else if (color != nullptr){
 		glColor3f(color[0], color[1], color[2]);
 	}
 
@@ -280,32 +276,34 @@ void ControladorObjetos::dibujarCubo(vector_3 tam, GLuint textura, GLfloat color
 		glDisable(GL_TEXTURE_2D);
 	}
 }
-/*
-Excepción producida en 0x5ADCAD9E (ig75icd32.dll) en Bomberman.exe: 0xC0000005: Infracción de acceso al escribir en la ubicación 0x000000A0.
-*/
 
 void ControladorObjetos::dibujarSuelo() {
-	GLuint textura = ControladorTexturas::getTextura(TEXTURA_SUELO);
 
 	glColor3f(0.75f, 0.63f, 0.50f);
 
 	if (texturas_habilitadas) {
 		glEnable(GL_TEXTURE_2D);
-		glBindTexture(GL_TEXTURE_2D, textura);
+		glBindTexture(GL_TEXTURE_2D, ControladorTexturas::getTextura(TEXTURA_SUELO));
 		glColor3f(1.0f, 1.0f, 1.0f);
 	}
 
-	for (int i = 0; i < largoTablero; i++) {
-		for (int j = 0; j < anchoTablero; j++) {
-			glBegin(GL_QUADS);
-			glNormal3f(0.0f, 1.0f, 0.0f);
-			glTexCoord2d(0, 0); glVertex3f(i * tile_size, 0, j * tile_size);
-			glTexCoord2d(1, 0); glVertex3f((i + 1) * tile_size, 0, j * tile_size);
-			glTexCoord2d(1, 1); glVertex3f((i + 1) * tile_size, 0, (j + 1) * tile_size);
-			glTexCoord2d(0, 1); glVertex3f(i * tile_size, 0, (j + 1) * tile_size);
-			glEnd();
-		}
-	}
+	glBegin(GL_QUADS);
+
+	glNormal3f(0.0f, 1.0f, 0.0f);
+
+	glTexCoord2d(0, 0);
+	glVertex3f(0, 0, 0);
+
+	glTexCoord2d(largoTablero, 0);
+	glVertex3f(largoTablero * tile_size, 0, 0);
+
+	glTexCoord2d(largoTablero , anchoTablero);
+	glVertex3f(largoTablero * tile_size, 0, anchoTablero * tile_size);
+
+	glTexCoord2d(0, anchoTablero );
+	glVertex3f(0, 0, anchoTablero * tile_size);
+
+	glEnd();
 
 	if (texturas_habilitadas) {
 		glDisable(GL_TEXTURE_2D);

@@ -13,8 +13,7 @@
 
 using namespace std;
 
-class hudPoder {
-public:
+struct hudPoder {
 	hud* hud;
 	tipo_poder poder;
 };
@@ -37,9 +36,6 @@ class ControladorInterfaz {
 		static void setHud(int indice, hud* hud);
 		static hud* getHudPoderes(tipo_poder tipo);
 		static void setHudPoderes(tipo_poder tipo, hud* hud);
-		static void setPuntaje(int puntos);
-		static void setTiempo(int tiem);
-		static void setFinJuego(bool finJuego);
 		static void setPoderes(map<tipo_poder, int> powerUp);
 		static void liberarInterfaz();
 };

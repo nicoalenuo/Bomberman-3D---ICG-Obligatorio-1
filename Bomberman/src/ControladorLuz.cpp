@@ -1,5 +1,4 @@
 #include "../lib/ControladorLuz.h"
-#include "../lib/bomberman.h"
 
 // DEJEN COMENTADO ESTO PQ ME OLVIDO LOS ENUMS Y NO QUIERO IR AL .h A CADA RATO
 // enum TIPO_LUZ_AMBIENTE { MANIANA, TARDE, NOCHE, SIN_LUZ };
@@ -17,43 +16,33 @@ stack<GLenum> ControladorLuz::lucesDisponibles;
 stack<luz> ControladorLuz::lucesAMostrar;
 
 void ControladorLuz::cargarLuces() {
-	lucesDisponibles.push(GL_LIGHT1);
-	lucesDisponibles.push(GL_LIGHT2);
-	lucesDisponibles.push(GL_LIGHT3);
-	lucesDisponibles.push(GL_LIGHT4);
-	lucesDisponibles.push(GL_LIGHT5);
-	lucesDisponibles.push(GL_LIGHT6);
-	lucesDisponibles.push(GL_LIGHT7);
+	for (int idLuz = GL_LIGHT1; idLuz <= GL_LIGHT7; idLuz++) {
+		lucesDisponibles.push(idLuz);
+	}
 }
 
 void ControladorLuz::pedirLuz(vector_3 pos, GLfloat color[4]) {
 	if (!lucesDisponibles.empty()) {
-		GLenum idLuzDisponible = lucesDisponibles.top();
-		lucesDisponibles.pop();
 		lucesAMostrar.push({
-			idLuzDisponible,
+			lucesDisponibles.top(),
 			pos,
 			{color[0], color[1], color[2], color[3]}
 			}
 		);
+		lucesDisponibles.pop();
 	}
 }
 
-void ControladorLuz::colocarLuces() {
+void ControladorLuz::colocarLuces(vector_3 pos) {
 	glEnable(GL_LIGHTING);
 	glEnable(GL_LIGHT0); 
-	//cout << "offset" << endl;
-	//cout << "x:" << light_offset_x << " y:" << light_offset_y << " z:" << light_offset_z << endl;
-	light_position[0] = jugador->getPosicion().x + light_offset_x;
-	light_position[1] = jugador->getPosicion().y + light_offset_y;
-	light_position[2] = jugador->getPosicion().z + light_offset_z;
-	//cout << "posicion luz" << endl;
-	//cout << "x: " << light_position[0] << " y:" << light_position[1] << " z:" << light_position[2] << endl;
+	light_position[0] = pos.x + light_offset_x;
+	light_position[1] = pos.y + light_offset_y;
+	light_position[2] = pos.z + light_offset_z;
 	glLightfv(GL_LIGHT0, GL_POSITION, light_position);
 	glLightfv(GL_LIGHT0, GL_AMBIENT, light_color);
 	glMaterialfv(GL_FRONT_AND_BACK, GL_DIFFUSE, material_ambient_diffuse_color);
 	glMaterialfv(GL_FRONT_AND_BACK, GL_SPECULAR, material_specular_color);
-
 
 	while (!lucesAMostrar.empty()) {
 		luz luzAMostrar = lucesAMostrar.top();
@@ -68,12 +57,10 @@ void ControladorLuz::colocarLuces() {
 	}
 }
 
-void ControladorLuz::quitarLuces() { //hay que rehacer esta función, no se está sacando las luces del arreglo de lucesAMostrar y no se lo está poniendo a lucesDisponibles
-	if (!lucesDisponibles.empty()) {
-		for (int idLuz = lucesDisponibles.top() + 1; idLuz <= GL_LIGHT7; idLuz++) {
-			lucesDisponibles.push(idLuz);
-			glDisable(idLuz);
-		}
+void ControladorLuz::quitarLuces() { 
+	for (int idLuz = lucesDisponibles.empty() ? GL_LIGHT1 : lucesDisponibles.top() + 1; idLuz <= GL_LIGHT7; idLuz++) {
+		lucesDisponibles.push(idLuz);
+		glDisable(idLuz);
 	}
 	glDisable(GL_LIGHTING);
 }

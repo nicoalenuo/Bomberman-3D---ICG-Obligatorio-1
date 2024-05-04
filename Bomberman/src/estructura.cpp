@@ -44,10 +44,6 @@ void estructura::dibujar() {
         color[1] = 175.f / 255;
         color[2] = 175.f / 255;
     }
-    GLuint textura = 0;
-    if (texturas_habilitadas) {
-        textura = ControladorTexturas::getTextura(destructible ? ESTRUCTURA_DESTRUCTIBLE : ESTRUCTURA_NO_DESTRUCTIBLE);
-    }
-    ControladorObjetos::dibujarCubo(tam, textura, color);
+    ControladorObjetos::dibujarCubo(tam, ControladorTexturas::getTextura(destructible ? ESTRUCTURA_DESTRUCTIBLE : ESTRUCTURA_NO_DESTRUCTIBLE), color);
     glPopMatrix();
 }

@@ -13,8 +13,8 @@ private:
 public:
 	door(vector_3 pos, vector_3 tam);
 
-	bool getVisible();
-	void setVisible(bool visible);
+	bool getVisible() const { return visible; };
+	void setVisible(bool visible) { this->visible = visible; };
 
 	bool intersecta(bomberman* b);
 
