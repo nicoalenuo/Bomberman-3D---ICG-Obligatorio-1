@@ -30,8 +30,6 @@ extern GLfloat mouseX;
 extern GLfloat mouseY;
 extern GLfloat mouseY_invertido;
 
-extern int cantLuces;
-
 extern bool wireframe;
 extern bool texturas_habilitadas;
 extern float velocidad_juego;
@@ -48,13 +46,11 @@ extern int puntaje;
 
 extern objeto*** estructuras;
 extern objeto*** bombas;
-//extern objeto*** enemigos;
 extern objeto*** fuegos;
 extern objeto*** bonificadores;
 
 extern list<objeto*> borde;
 extern list<particula*> particulas;
-
 extern list<enemigo*> enemigos;
 
 extern bomberman* jugador;
@@ -66,7 +62,7 @@ extern bool fin;
 extern bool finJuego;
 extern int nivel;
 extern int puntaje; 
-extern int tiempoJuego; //segundos
+extern int tiempoJuego; //milisegundos
 extern bool puertaAbierta;
 
 extern chrono::duration<int> delta_time;
@@ -81,4 +77,5 @@ extern void disminuirTiempo(GLfloat milisegundos);
 
 extern int largoPantalla;
 extern int altoPantalla;
+
 #endif

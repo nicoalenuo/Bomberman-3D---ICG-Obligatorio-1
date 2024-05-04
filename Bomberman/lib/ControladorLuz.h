@@ -33,7 +33,7 @@ class ControladorLuz {
 	public:
 		static void cargarLuces();
 		static void pedirLuz(vector_3 pos, GLfloat color[4]);
-		static void colocarLuces();
+		static void colocarLuces(vector_3 pos);
 		static void quitarLuces();
 		static void cambiarColorLuzAmbiente();
 		static void moverCamara(vector_3 pos);

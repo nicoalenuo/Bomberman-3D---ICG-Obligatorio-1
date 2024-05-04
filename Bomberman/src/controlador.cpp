@@ -198,6 +198,7 @@ void generarTablero() {
         enemigos.push_back(enem);
     }
     current_t = chrono::high_resolution_clock::now();
+    puertaAbierta = false;
 }
 
 Controlador::Controlador() {
@@ -399,10 +400,7 @@ void Controlador::manejarEventos() {
                             glShadeModel(GL_FLAT);
                         break;
                     case SDLK_F4:
-                        //cambiar el color de luz (ambiente)
                         ControladorLuz::cambiarColorLuzAmbiente();
-                        //Recordar hacer sombras
-                        //No esta cambiando nada
                         break;
                     case SDLK_F5:
                         toggle(mostrarHud);
@@ -442,8 +440,8 @@ void Controlador::manejarEventos() {
                     mouseY = 90;
 
                 mouseY_invertido = mouseY_invertido + (evento.motion.yrel * SENSIBILIDAD_MOUSE);
-                if (mouseY_invertido < 1)
-                    mouseY_invertido = 1;
+                if (mouseY_invertido < 5)
+                    mouseY_invertido = 5;
                 else if (mouseY_invertido > 90)
                     mouseY_invertido = 90;
             break;
@@ -483,15 +481,11 @@ void Controlador::manejarEventos() {
     }
 }
 
-list<particula*>::iterator it;
-list<enemigo*>::iterator itE;
-list<objeto*>::iterator itBorde;
-
 void Controlador::actualizar() {
     previous_t = current_t;
     current_t = chrono::high_resolution_clock::now();
     delta_time = chrono::duration_cast<chrono::duration<int>>((current_t - previous_t)*1000);
-    elapsed_time = delta_time.count() * velocidad_juego;
+    elapsed_time = delta_time.count() * velocidad_juego + 1;
 
     if (pausa)
         return;
@@ -501,7 +495,7 @@ void Controlador::actualizar() {
 
     if (puertaAbierta && puerta->intersecta(jugador)) {
         ControladorAudio::playAudio(sonido::bonificacion);
-        ControladorPoderes::cargarPoderes(); 
+        ControladorPoderes::cargarPoderes();
         aumentarNivel();
         generarTablero();
     } 
@@ -518,16 +512,13 @@ void Controlador::actualizar() {
             if (fuegos[i][j] != nullptr)
                 fuegos[i][j]->actualizar();
 
-            /*if (enemigos[i][j] != nullptr)
-                enemigos[i][j]->actualizar();*/
-
             if (bonificadores[i][j] != nullptr)
                 bonificadores[i][j]->actualizar();
         }
     }
 
-    for (it = particulas.begin(); it != particulas.end(); /*se actualiza dentro del bucle */) {
-        //(*it)->actualizar();
+    for (list<particula*>::iterator it = particulas.begin(); it != particulas.end(); /*se actualiza dentro del bucle */) {
+        (*it)->actualizar();
         if ((*it)->getEliminar()) {
             delete (*it);
             it = particulas.erase(it);
@@ -537,9 +528,10 @@ void Controlador::actualizar() {
         }
     }
 
-    for (itE = enemigos.begin(); itE != enemigos.end();){
-        if((*itE)->intersecta(jugador))
+    for (list<enemigo*>::iterator itE = enemigos.begin(); itE != enemigos.end();){
+        if (!inmortal && !ControladorPoderes::getValor(INMORTALIDAD) && (*itE)->intersecta(jugador)) {
             finJuego = true;
+        }
         (*itE)->actualizar();
         if ((*itE)->getEliminar()) {
             delete (*itE);
@@ -563,7 +555,7 @@ void Controlador::dibujar() {
     ControladorCamara::colocarCamara(jugador->getPosicion());
 
     if (texturas_habilitadas)
-        ControladorLuz::colocarLuces();
+        ControladorLuz::colocarLuces(jugador->getPosicion());
 
     ControladorObjetos::dibujarSuelo();
 
@@ -576,22 +568,18 @@ void Controlador::dibujar() {
 
             if (bombas[i][j] != nullptr)
                 bombas[i][j]->dibujar();
-
-            /*if (enemigos[i][j] != nullptr)
-                enemigos[i][j]->dibujar();*/
         }
     }
 
-    for (itBorde = borde.begin(); itBorde != borde.end(); ++itBorde)
+    for (list<objeto*>::iterator itBorde = borde.begin(); itBorde != borde.end(); ++itBorde)
         (*itBorde)->dibujar();
 
-    for (itE = enemigos.begin(); itE != enemigos.end(); itE++)
+    for (list<enemigo*>::iterator itE = enemigos.begin(); itE != enemigos.end(); itE++)
         (*itE)->dibujar();
 
-    //La puerta, el suelo, los bonificadores y el fuego, no dependen de la luz por 2 motivos (son la fuente de luz)
     puerta->dibujar();
 
-    ControladorLuz::quitarLuces(); //arreglar problema cuando hay muchas luces, y aparecen sin estructuras. explota una bomba y el programa revienta
+    ControladorLuz::quitarLuces(); 
 
     for (int i = 0; i < largoTablero; i++) {
         for (int j = 0; j < anchoTablero; j++) {
@@ -600,8 +588,8 @@ void Controlador::dibujar() {
         }
     }
 
-    for (it = particulas.begin(); it != particulas.end(); ++it) {
-        //(*it)->dibujar(); // Acá es donde tira el error de: Excepción producida en 0x5ADCAD9E (ig75icd32.dll) en Bomberman.exe: 0xC0000005: Infracción de acceso al escribir en la ubicación 0x000000A0.
+    for (list<particula*>::iterator it = particulas.begin(); it != particulas.end(); ++it) {
+        (*it)->dibujar();
     }
 
     if (mostrarHud) {
@@ -623,9 +611,6 @@ Controlador::~Controlador() {
             if (fuegos[i][j] != nullptr)
                 delete fuegos[i][j];
 
-            /*if (enemigos[i][j] != nullptr)
-                delete enemigos[i][j];*/
-
             if (bonificadores[i][j] != nullptr)
                 delete bonificadores[i][j];
         }
@@ -636,12 +621,18 @@ Controlador::~Controlador() {
         it = particulas.erase(it);
     }
 
-    for (itBorde = borde.begin(); itBorde != borde.end(); ){
+    for (list<objeto*>::iterator itBorde = borde.begin(); itBorde != borde.end();){
         delete (*itBorde);
         itBorde = borde.erase(itBorde);
     }
 
+    for (list<enemigo*>::iterator itE = enemigos.begin(); itE != enemigos.end();) {
+        (*itE)->dibujar();
+        itE = enemigos.erase(itE);
+    }
+
     ControladorAudio::limpiarAudios();
+    ControladorInterfaz::liberarMemoria();
 
     SDL_GL_DeleteContext(context);
     SDL_DestroyWindow(window);

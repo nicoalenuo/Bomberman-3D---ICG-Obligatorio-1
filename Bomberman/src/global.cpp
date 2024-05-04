@@ -1,6 +1,6 @@
 ﻿#include "../lib/global.h"
 
-float velocidad_juego = 1;
+float velocidad_juego = 1.0f;
 
 bool moverArriba = false;
 bool moverAbajo = false;
@@ -11,21 +11,19 @@ GLfloat mouseX = 0;
 GLfloat mouseY = 0;
 GLfloat mouseY_invertido = 0;
 
-int cantLuces = 1; //la ambiente
-
 bool pausa = false;
 bool pararTiempo = false;
 bool wireframe = false;
 bool texturas_habilitadas = true;
 bool mute = false; //cambiar a false para que inicie con sonido
 bool mostrarHud = true;
+bool inmortal = false;
 
 bool tipoLuz = false; //false = facetado, true = interpolado
 bool atravesar_paredes = false;
 
 objeto*** estructuras = new objeto * *[largoTablero];
 objeto*** bombas = new objeto * *[largoTablero];
-//objeto*** enemigos = new objeto * *[largoTablero];
 objeto*** fuegos = new objeto * *[largoTablero];
 objeto*** bonificadores = new objeto * *[largoTablero];
 
@@ -40,24 +38,23 @@ door* puerta;
 int largoPantalla = WINDOW_WIDTH;
 int altoPantalla = WINDOW_HEIGHT;
 
-
 chrono::duration<int> delta_time;
 GLfloat elapsed_time;
 chrono::high_resolution_clock::time_point current_t, previous_t;
 
-int getIndiceTablero(GLfloat coord) {
-    return int(floor(coord / tile_size));
-}
 
 bool fin = false;
 bool finJuego = false;
-bool inmortal = false;
 
 int nivel = 1;
 int puntaje = 0;
 int tiempoJuego = 200000; //milisegundos
 
 bool puertaAbierta = false;
+
+int getIndiceTablero(GLfloat coord) {
+    return int(floor(coord / tile_size));
+}
 
 void toggle(bool &valor){
     valor = !valor;
