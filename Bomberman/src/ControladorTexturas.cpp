@@ -15,7 +15,7 @@ map<tipo_textura, char*> ControladorTexturas::direcciones_texturas = {
     {TEXTURA_BOMBAS_ATRAVIESAN_ESTRUCTURAS, "texturas/bombas_atraviesan_estructuras.png"},
     {TEXTURA_INMORTALIDAD, "texturas/inmortalidad.png"},
     {TEXTURA_SUELO, "texturas/suelo.jpg"},
-    {TEXTURA_FALLIDA, "texturas/chayang.jpeg"}
+    {TEXTURA_FALLIDA, "texturas/chayang.jpeg"},
     {TEXTURA_ENEMY_ROJO, "texturas/rojo.png" },
     {TEXTURA_ENEMY_AZUL, "texturas/azul.png" },
     {TEXTURA_ENEMY_VERDE, "texturas/verde.png" }

@@ -366,7 +366,7 @@ void Controlador::manejarEventos() {
                     case SDLK_7:
                         ControladorAudio::playAudio(sonido::musica);
                         break;
-                    case SDLK_8
+                    case SDLK_8:
                         ControladorAudio::playMecha({ 0,0,0 });
                         break;
                     case SDLK_m://mute
