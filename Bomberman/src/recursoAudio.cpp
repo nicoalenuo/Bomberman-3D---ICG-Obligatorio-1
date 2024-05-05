@@ -45,16 +45,7 @@ void recursoAudio::setBucle(bool bucle) {
 
 ALint estado;
 void recursoAudio::play() {
-	/*if (buffer_to_play != p_Buffer)
-	{
-		p_Buffer = buffer_to_play;
-		alSourcei(p_Source, AL_BUFFER, (ALint)p_Buffer);
-	}*/
 	alSourcePlay(recurso);
-	//ALint state = AL_PLAYING;
-	/*while (state == AL_PLAYING && alGetError() == AL_NO_ERROR) {
-		alGetSourcei(p_Source, AL_SOURCE_STATE, &state);
-	}*/
 }
 
 void recursoAudio::detener() {

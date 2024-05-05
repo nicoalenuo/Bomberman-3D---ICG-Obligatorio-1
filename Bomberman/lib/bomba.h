@@ -11,10 +11,10 @@
 
 class bomba : public objeto {
 private:
-	int tiempoBomba, largoBomba;
+	int tiempoBomba, largoBomba, idSonido;
 	GLfloat scale;
 public:
-	bomba(vector_3 pos, vector_3 tam, int tiempo, int largo);
+	bomba(vector_3 pos, vector_3 tam, int tiempo, int largo, int id);
 
 	int getTiempoBomba() const { return tiempoBomba; };
 	void setTiempoBomba(int tiempo) { tiempoBomba = tiempo; };
