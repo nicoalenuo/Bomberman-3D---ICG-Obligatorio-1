@@ -4,10 +4,13 @@ vector<char> ControladorObjetos::bomba_commands;
 vector<vector<float>> ControladorObjetos::bomba_data;
 vector<char> ControladorObjetos::player_commands;
 vector<vector<float>> ControladorObjetos::player_data;
+vector<char> ControladorObjetos::enemy_commands;
+vector<vector<float>> ControladorObjetos::enemy_data;
 
 void ControladorObjetos::cargarObjetos() {
 	tie(player_commands, player_data) = ControladorObjetos::cargarObj("objs/player.obj", 0);
 	tie(bomba_commands, bomba_data) = ControladorObjetos::cargarObj("objs/bomba.obj", 0);
+	tie(enemy_commands, enemy_data) = ControladorObjetos::cargarObj("objs/enemy.obj", 0);
 }
 
 tuple<vector<char>, vector<vector<float>>> ControladorObjetos::cargarObj(string file, int type) {
@@ -112,6 +115,27 @@ void ControladorObjetos::dibujar(tipo_obj obj) {
 			data_obj = bomba_data;
 			if (texturas_habilitadas) {
 				texture = ControladorTexturas::getTextura(TEXTURA_BOMBA);
+			}
+			break;
+		case (OBJ_ENEMY_ROJO):
+			commands = enemy_commands;
+			data_obj = enemy_data;
+			if (texturas_habilitadas) {
+				texture = ControladorTexturas::getTextura(TEXTURA_ENEMY_ROJO);
+			}
+			break;
+		case (OBJ_ENEMY_AZUL):
+			commands = enemy_commands;
+			data_obj = enemy_data;
+			if (texturas_habilitadas) {
+				texture = ControladorTexturas::getTextura(TEXTURA_ENEMY_AZUL);
+			}
+			break;
+		case (OBJ_ENEMY_VERDE):
+			commands = enemy_commands;
+			data_obj = enemy_data;
+			if (texturas_habilitadas) {
+				texture = ControladorTexturas::getTextura(TEXTURA_ENEMY_VERDE);
 			}
 			break;
 	}

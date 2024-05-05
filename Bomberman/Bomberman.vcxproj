@@ -158,6 +158,7 @@
     <Image Include="texturas\player.png" />
     <Image Include="texturas\puerta.jpg" />
     <Image Include="texturas\suelo.jpg" />
+	<Image Include="texturas\rojo.jpg" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

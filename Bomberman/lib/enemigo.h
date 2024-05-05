@@ -6,24 +6,29 @@
 #include "personaje.h"
 #include "bomberman.h"
 
+enum color_enemigo {
+	ROJO,
+	AZUL,
+	VERDE
+};
+
 class enemigo : public personaje {
 private:
-	//orientacionX == true -> eje x
-	//orientacionX == false -> eje z
-	bool orientacionX;
-	bool moverX;
-	bool moverNX;
-	bool moverZ;
-	bool moverNZ;
+	bool orientacionX, moverX, moverNX, moverZ, moverNZ;
 
 	bool eliminar;
 
+	color_enemigo color;
+
 	double probCambiarPos;
+
+	bool balanceandoseDerecha;
+	GLfloat rotacion_y_actual, rotacion_z_actual;
 
 public:
 	enemigo(vector_3 pos, vector_3 tam);
 
-	enemigo(vector_3 pos, vector_3 tam, bool orientacionX);
+	enemigo(vector_3 pos, vector_3 tam, bool orientacionX, color_enemigo color);
 
 	bool getOrientacionX();
 	void setOrientacionX(bool orientacionX);

@@ -67,6 +67,7 @@ extern bool finJuego;
 extern int nivel;
 extern int puntaje; 
 extern int tiempoJuego; //segundos
+extern bool temporizador;
 extern bool puertaAbierta;
 
 extern chrono::duration<int> delta_time;
