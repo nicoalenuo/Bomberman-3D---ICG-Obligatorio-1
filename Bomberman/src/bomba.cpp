@@ -4,11 +4,36 @@ bomba::bomba(vector_3 pos, vector_3 tam, int tiempo, int largo) : objeto(pos, ta
 	tiempoBomba = tiempo;
 	largoBomba = largo;
     scale = 0.9f;
+    cayendo = true;
 }
 
 int xBomba, zBomba, dx, dz, nx, nz;
 void bomba::actualizar() {
     scale += GLfloat(0.005f * (elapsed_time / frameDelay));
+
+    if (cayendo && pos.y > 0.0f) {
+        pos.y -= 0.05f;
+
+        if (pos.y <= 0.0f) {
+            pos.y = 0;
+            cayendo = false;
+
+            random_device rdVelocidadParticulaTierra;
+            mt19937 genVelocidadParticulaTierra(rdVelocidadParticulaTierra());
+            uniform_real_distribution<> disVelocidadParticulaTierra(-0.2, 0.2);
+
+            for (int i = 0; i < 40; i++) {
+                particulas.push_back(new particula_tierra(
+                    pos,
+                    { GLfloat(0.05f), GLfloat(0.05f), GLfloat(0.05f) },
+                    { 0, -25, 0 },
+                    { GLfloat(disVelocidadParticulaTierra(genVelocidadParticulaTierra)), 5, GLfloat(disVelocidadParticulaTierra(genVelocidadParticulaTierra)) },
+                    ControladorTexturas::getTextura(TEXTURA_SUELO)
+                    )
+                );
+            }
+        }
+    }
 
     tiempoBomba -= int(elapsed_time);
     bool alcanza;

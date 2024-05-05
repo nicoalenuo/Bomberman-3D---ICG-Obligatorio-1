@@ -3,7 +3,6 @@
 #ifndef CONTROLADOROBJETOS_H
 #define CONTROLADOROBJETOS_H
 
-#include <iostream>
 #include <fstream>
 #include <string>
 #include <sstream>
@@ -14,6 +13,7 @@
 
 #include "global.h"
 #include "ControladorTexturas.h"
+#include "ControladorCamara.h"
 
 using namespace std;
 
@@ -30,12 +30,13 @@ private:
     static vector<char>  player_commands;
     static vector<vector<float>> player_data;
 
-    static tuple<vector<char>, vector<vector<float>>> cargarObj(string file, int type);
+    static void cargarObj(string file, vector<char> &commands_output, vector<vector<float>> &data_output);
 public:
     static void cargarObjetos();
     static void dibujar(tipo_obj obj);
     static void dibujarCubo(vector_3 tam, GLuint textura, GLfloat color[3]); //textura es 0 si no tiene
     static void dibujarSuelo();
+    static void dibujarMarcadorBomba(vector_3 pos);
 };
 
 #endif

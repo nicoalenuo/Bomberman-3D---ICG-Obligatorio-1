@@ -1,57 +1,38 @@
-#include "../lib/particula_estructura.h"
+#include "../lib/particula_tierra.h"
 
-particula_estructura::particula_estructura(vector_3 pos, vector_3 tam, vector_3 ac, vector_3 vel, GLuint textura) : particula(pos, tam, ac, vel) {
-    tiempoEliminacion = 0;
-    color_alpha = 1.0f;
+
+particula_tierra::particula_tierra(vector_3 pos, vector_3 tam, vector_3 ac, vector_3 vel, GLuint textura) : particula(pos, tam, ac, vel) {
     this->textura = textura;
 }
 
-GLfloat tiempoSegundos;
-void particula_estructura::actualizar() {
-    if (pos.y > 0.1f) {
-        tiempoSegundos = tiempoParticula / 1000.0f;
+void particula_tierra::actualizar() {
+    if (pos.y >= 0)  {
         pos.x = pos.x + velocidad.x * (elapsed_time / frameDelay);
-
-        pos.y = max(aceleracion.y * tiempoSegundos * tiempoSegundos +
-            velocidad.y * tiempoSegundos +
-            pos_inicial.y, 0.1f);
-
+        pos.y = (aceleracion.y * tiempoParticula * tiempoParticula / (1000.0f * 1000.0f)) + (velocidad.y * (tiempoParticula / 1000.0f)) + pos_inicial.y;
         pos.z = pos.z + velocidad.z * (elapsed_time / frameDelay);
+
         tiempoParticula += elapsed_time;
     }
     else {
-        if (tiempoEliminacion > 4000) {
-            if (color_alpha > 0.0f) {
-                color_alpha -= 0.02f * elapsed_time / frameDelay;
-            }
-            else {
-                eliminar = true;
-            }
-        }
-        else {
-            tiempoEliminacion += int(elapsed_time);
-        }
+        eliminar = true;
     }
 
     if (pos.x < 0 || pos.z < 0 || pos.x > largoTablero * tile_size || pos.z > anchoTablero * tile_size)
         eliminar = true;
 }
 
-void particula_estructura::dibujar() {
+void particula_tierra::dibujar() {
     glPushMatrix();
 
-    glColor3f(0.56f, 0.0f, 0.25f);
+    glColor3f(144.f / 255.f, 12.f / 255.f, 63.f / 255.f);
 
     if (texturas_habilitadas) {
         glEnable(GL_TEXTURE_2D);
         glBindTexture(GL_TEXTURE_2D, textura);
-        glColor4f(1.f, 1.f, 1.f, color_alpha);
+        glColor3f(1.f, 1.f, 1.f);
     }
 
     glTranslatef(pos.x, pos.y, pos.z);
-
-    glEnable(GL_BLEND);
-    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
     glBegin(GL_QUADS);
 
@@ -134,10 +115,10 @@ void particula_estructura::dibujar() {
     glVertex3f(tam.x, tam.y, -tam.z);
 
     glEnd();
-    glDisable(GL_BLEND);
 
     if (texturas_habilitadas)
         glDisable(GL_TEXTURE_2D);
 
     glPopMatrix();
+
 }

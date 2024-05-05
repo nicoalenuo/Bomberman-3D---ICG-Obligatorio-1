@@ -107,6 +107,7 @@
     <ClCompile Include="src\particula_bonificador.cpp" />
     <ClCompile Include="src\particula_estructura.cpp" />
     <ClCompile Include="src\particula_fuego.cpp" />
+    <ClCompile Include="src\particula_tierra.cpp" />
     <ClCompile Include="src\personaje.cpp" />
     <ClCompile Include="src\cargadorAudio.cpp" />
     <ClCompile Include="src\bufferAudio.cpp" />
@@ -136,6 +137,7 @@
     <ClInclude Include="lib\particula_bonificador.h" />
     <ClInclude Include="lib\particula_estructura.h" />
     <ClInclude Include="lib\particula_fuego.h" />
+    <ClInclude Include="lib\particula_tierra.h" />
     <ClInclude Include="lib\personaje.h" />
     <ClInclude Include="lib\cargadorAudio.h" />
     <ClInclude Include="lib\bufferAudio.h" />

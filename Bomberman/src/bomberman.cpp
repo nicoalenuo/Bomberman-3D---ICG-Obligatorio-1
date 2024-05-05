@@ -10,11 +10,13 @@ bomberman::bomberman(vector_3 pos, vector_3 tam, GLfloat velocidad) : personaje(
 }
 
 GLfloat rotacionY, rotacionZ;
-bool movimiento;
-GLfloat desplazamiento;
 void bomberman::actualizar() { //perdon a la persona que tenga que entender esto
-    movimiento = false;
-    desplazamiento = velocidad * (elapsed_time / frameDelay) * (ControladorPoderes::getValor(AUMENTAR_VELOCIDAD) ? 2 : 1);
+    random_device rdVelocidadParticulaTierra;
+    mt19937 genVelocidadParticulaTierra(rdVelocidadParticulaTierra());
+    uniform_real_distribution<> disVelocidadParticulaTierra(-0.1, 0.1);
+
+    bool movimiento = false;
+    GLfloat desplazamiento = velocidad * (elapsed_time / frameDelay) * (ControladorPoderes::getValor(AUMENTAR_VELOCIDAD) ? 2 : 1);
     if (moverArriba) {
         if (ControladorCamara::camaraMiraHacia(EJE_MENOS_X)) {
             rotacionY = 90;
@@ -148,7 +150,7 @@ void bomberman::actualizar() { //perdon a la persona que tenga que entender esto
     
     if (moverArriba || moverDerecha || moverIzquierda || moverAbajo){
         if (balanceandoseDerecha) {
-            rotacion_z_actual += GLfloat(2 * (elapsed_time / frameDelay));
+            rotacion_z_actual += 2 * (elapsed_time / frameDelay);
             if (rotacion_z_actual > 8) {
                 balanceandoseDerecha = false;
             }
@@ -173,6 +175,17 @@ void bomberman::actualizar() { //perdon a la persona que tenga que entender esto
     if (pasos >= 12) {
         pasos = 0;
         ControladorAudio::playAudio(sonido::pasos);
+
+        for (int i = 0; i < 10; i++) {
+            particulas.push_back(new particula_tierra(
+                pos,
+                { GLfloat(0.05f), GLfloat(0.05f), GLfloat(0.05f) },
+                { 0, -25, 0 },
+                { GLfloat(disVelocidadParticulaTierra(genVelocidadParticulaTierra)), 5, GLfloat(disVelocidadParticulaTierra(genVelocidadParticulaTierra)) },
+                ControladorTexturas::getTextura(TEXTURA_SUELO)
+                )
+            );
+        }
     }
 
     //Chequeo con fuego

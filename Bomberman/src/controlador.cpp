@@ -287,7 +287,7 @@ inline void colocarBomba() { //para evitar repetir codigo
             jugador->aumentarCantBomba();
 
             objeto* bomba_obj = new bomba(
-                { posBombaXTablero * tile_size + tile_size / 2, 0, posBombaZTablero * tile_size + tile_size / 2 },
+                { posBombaXTablero * tile_size + tile_size / 2, 1, posBombaZTablero * tile_size + tile_size / 2 },
                 { tile_size / 4, tile_size / 2, tile_size / 4 },
                 2000, //2 segundos
                 1 + ControladorPoderes::getValor(AUMENTAR_ALCANCE_BOMBAS)
@@ -558,8 +558,9 @@ void Controlador::dibujar() {
 
     ControladorCamara::colocarCamara(jugador->getPosicion());
 
-    if (texturas_habilitadas)
+    if (texturas_habilitadas) {
         ControladorLuz::colocarLuces(jugador->getPosicion());
+    }
 
     ControladorObjetos::dibujarSuelo();
 
@@ -600,6 +601,8 @@ void Controlador::dibujar() {
     for (list<particula*>::iterator it = particulas.begin(); it != particulas.end(); ++it) {
         (*it)->dibujar();
     }
+
+    ControladorObjetos::dibujarMarcadorBomba(jugador->getPosicion());
 
     if (mostrarHud) {
         ControladorInterfaz::dibujarHUD();

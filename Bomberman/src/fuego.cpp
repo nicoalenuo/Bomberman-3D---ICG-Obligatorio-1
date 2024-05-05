@@ -9,16 +9,16 @@ random_device rdParticulaFuego;
 mt19937 genParticulaFuego(rdParticulaFuego());
 uniform_real_distribution<> disParticulaFuego(-tile_size/2, tile_size/2);
 uniform_real_distribution<> disParticulaFuegoVelocidad(-0.03, 0.03);
-int x, z;
 void fuego::actualizar() {
 	if (centro) {
-		GLfloat colorLuz[4] = { 1.0f, 0.0f, 0.0f, 0.1f };
+		GLfloat colorLuz[4] = { 1.0f, 0.0f, 0.0f, 1.0f };
 		ControladorLuz::pedirLuz(pos, colorLuz);
 	}
 
 	tiempoFuego -= int(elapsed_time);
-	x = getIndiceTablero(pos.x);
-	z = getIndiceTablero(pos.z);
+
+	int x = getIndiceTablero(pos.x);
+	int z = getIndiceTablero(pos.z);
 
 	if (bombas[x][z] != nullptr) 
 		dynamic_cast<bomba*>(bombas[x][z])->setTiempoBomba(0);

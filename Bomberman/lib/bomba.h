@@ -13,6 +13,7 @@ class bomba : public objeto {
 private:
 	int tiempoBomba, largoBomba;
 	GLfloat scale;
+	bool cayendo;
 public:
 	bomba(vector_3 pos, vector_3 tam, int tiempo, int largo);
 

@@ -12,7 +12,7 @@ enum tipo_color { //dependiendo del color, se comportan de formas distintas
 
 class particula_fuego : public particula{
 private:
-	GLfloat color[3];
+	GLfloat color[4];
 	tipo_color tipoColor;
 public:
 	particula_fuego(vector_3 pos, vector_3 tam, vector_3 ac, vector_3 vel);

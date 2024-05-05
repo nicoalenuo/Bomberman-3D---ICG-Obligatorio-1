@@ -3,8 +3,11 @@
 #ifndef BOMBERMAN_H
 #define BOMBERMAN_H
 
+#include <random>
+
 #include "personaje.h"
 #include "bonificador.h"
+#include "particula_tierra.h"
 
 class bomberman : public personaje {
 private:

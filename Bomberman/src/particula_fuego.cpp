@@ -18,16 +18,13 @@ particula_fuego::particula_fuego(vector_3 pos, vector_3 tam, vector_3 ac, vector
     }
 }
 
-GLfloat tiempoSegundosParticulaFuego;
 void particula_fuego::actualizar() {
     if ((pos.y < 2 * tile_size && tipoColor == FUEGO_ROJO) || (pos.y < 1)) {
-        tiempoSegundosParticulaFuego = tiempoParticula / 1000.0f;
+        tiempoParticula += elapsed_time;
 
         pos.x = pos.x + velocidad.x * (elapsed_time / frameDelay);
-        pos.y = (aceleracion.y * tiempoSegundosParticulaFuego * tiempoSegundosParticulaFuego) + (velocidad.y * tiempoSegundosParticulaFuego) + pos_inicial.y;
+        pos.y = (aceleracion.y * tiempoParticula * tiempoParticula / (1000.0f * 1000.0f)) + (velocidad.y * tiempoParticula) + pos_inicial.y;
         pos.z = pos.z + velocidad.z * (elapsed_time / frameDelay);
-
-        tiempoParticula += elapsed_time ;
     }
     else {
         eliminar = true;

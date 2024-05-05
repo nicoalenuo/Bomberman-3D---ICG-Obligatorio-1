@@ -6,11 +6,11 @@ vector<char> ControladorObjetos::player_commands;
 vector<vector<float>> ControladorObjetos::player_data;
 
 void ControladorObjetos::cargarObjetos() {
-	tie(player_commands, player_data) = ControladorObjetos::cargarObj("objs/player.obj", 0);
-	tie(bomba_commands, bomba_data) = ControladorObjetos::cargarObj("objs/bomba.obj", 0);
+	ControladorObjetos::cargarObj("objs/player.obj", player_commands, player_data);
+	ControladorObjetos::cargarObj("objs/bomba.obj", bomba_commands, bomba_data);
 }
 
-tuple<vector<char>, vector<vector<float>>> ControladorObjetos::cargarObj(string file, int type) {
+void ControladorObjetos::cargarObj(string file, vector<char>& commands_output, vector<vector<float>>& data_output) {
 	ifstream file_stream(file);
 	if (!file_stream) {
 		cerr << "Cannot open: " << file << endl;
@@ -45,14 +45,8 @@ tuple<vector<char>, vector<vector<float>>> ControladorObjetos::cargarObj(string 
 			temp_normals.push_back({ x, y, z });
 		}
 		else if (command == "f") {
-			if (type == 1) {
-				file_stream >> face1 >> face2 >> face3 >> face4;
-				faces = { face1, face2, face3, face4 };
-			}
-			else { // Triangulos
-				file_stream >> face1 >> face2 >> face3;
-				faces = { face1, face2, face3 };
-			}
+			file_stream >> face1 >> face2 >> face3;
+			faces = { face1, face2, face3 };
 			for (size_t i = 0; i < faces.size(); i++) {
 				istringstream sub_stream(faces[i]);
 				getline(sub_stream, subline, '/');
@@ -92,14 +86,14 @@ tuple<vector<char>, vector<vector<float>>> ControladorObjetos::cargarObj(string 
 		commands.push_back('V'); data.push_back(temp_vertices[vertex_indices[i]]);
 	}
 
-	return { commands, data };
+	commands_output = commands;
+	data_output = data;
 }
 
 vector<char> commands;
 vector<vector<float>> data_obj;
 GLuint texture;
 void ControladorObjetos::dibujar(tipo_obj obj) {
-	texture = 0;
 	switch (obj) {
 		case (OBJ_PLAYER):
 			commands = player_commands;
@@ -135,29 +129,11 @@ void ControladorObjetos::dibujar(tipo_obj obj) {
 				break;
 			}
 			case('C'): {
-				if (texturas_habilitadas) {
-					glColor3f(data_obj[i][0], data_obj[i][1], data_obj[i][2]);
-				} else {
-					if (obj == OBJ_PLAYER) {
-						glColor3f(1.f, 1.f, 1.f);
-					} else {
-						glColor3f(0.f, 0.f, 0.f);
-					}
-				}
+				glColor3f(data_obj[i][0], data_obj[i][1], data_obj[i][2]);
 				break;
 			}
 			case('A'): {
-				if (texturas_habilitadas) {
-					glColor4f(data_obj[i][0], data_obj[i][1], data_obj[i][2], data_obj[i][3]);
-				}
-				else {
-					if (obj == OBJ_PLAYER) {
-						glColor4f(1.f, 1.f, 1.f, 1.f);
-					}
-					else {
-						glColor4f(0.f, 0.f, 0.f, 1.f);
-					}
-				}
+				glColor4f(data_obj[i][0], data_obj[i][1], data_obj[i][2], data_obj[i][3]);
 				break;
 			}
 		}
@@ -307,5 +283,45 @@ void ControladorObjetos::dibujarSuelo() {
 
 	if (texturas_habilitadas) {
 		glDisable(GL_TEXTURE_2D);
+	}
+}
+
+void ControladorObjetos::dibujarMarcadorBomba(vector_3 pos) {
+	int posX, posZ;
+
+	if (ControladorCamara::camaraMiraHacia(EJE_MENOS_X)) {
+		posX = getIndiceTablero(pos.x - tile_size);
+		posZ = getIndiceTablero(pos.z);
+	}
+	else if (ControladorCamara::camaraMiraHacia(EJE_Z)) {
+		posX = getIndiceTablero(pos.x);
+		posZ = getIndiceTablero(pos.z + tile_size);
+	}
+	else if (ControladorCamara::camaraMiraHacia(EJE_X)) {
+		posX = getIndiceTablero(pos.x + tile_size);
+		posZ = getIndiceTablero(pos.z);
+	}
+	else {
+		posX = getIndiceTablero(pos.x);
+		posZ = getIndiceTablero(pos.z - tile_size);
+	}
+
+
+	if (posX >= 0 && posX < largoTablero && posZ >= 0 && posZ < anchoTablero && estructuras[posX][posZ] == nullptr && bombas[posX][posZ] == nullptr) {
+
+		glEnable(GL_BLEND);
+		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
+		glColor4f(0.7f, 0.0f, 0.0f, 0.3f);
+
+		glBegin(GL_QUADS);
+
+		glVertex3f(posX * tile_size + tile_size / 8, 0.02f, posZ * tile_size + tile_size / 8);
+		glVertex3f(posX * tile_size + 7 * tile_size / 8, 0.02f, posZ * tile_size + tile_size / 8);
+		glVertex3f(posX * tile_size + 7 * tile_size/8, 0.02f, posZ * tile_size + 7 * tile_size / 8);
+		glVertex3f(posX * tile_size + tile_size / 8, 0.02f, posZ * tile_size + 7 * tile_size / 8);
+
+		glEnd();
+		glDisable(GL_BLEND);
 	}
 }
