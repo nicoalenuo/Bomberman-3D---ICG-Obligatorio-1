@@ -186,7 +186,7 @@ void enemigo::actualizar() {
     }
 
     if (contactoConFuego()) {
-        sumarPuntaje(1000);
+        sumarPuntaje(100);
         eliminar = true;
     }
 

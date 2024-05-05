@@ -12,7 +12,7 @@ estructura::~estructura() {
     int posZ = getIndiceTablero(pos.z);
     if (destructible) {
         estructuras[posX][posZ] = nullptr;
-        sumarPuntaje(100);
+        sumarPuntaje(10);
         for (int j = 0; j < 150; j++) {
             particulas.push_back(
                 new particula_estructura(

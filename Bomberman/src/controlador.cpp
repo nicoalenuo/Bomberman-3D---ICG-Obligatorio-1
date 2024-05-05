@@ -182,12 +182,12 @@ void generarTablero() {
     }
 
     //Enemigos
-    vector<pair<int, int>> posEnemigos = { {6, 4}, {12, 8}, {18, 2}, {2, 6} };
+    vector<pair<int, int>> posEnemigos = { {6, 4}, {12, 8}, {18, 2}, {2, 6} }; //hay que sacar lo hardcodeado y poner una cant random (entre un rango) y posiciones randoms
     enemigo* enem;
     bool orientacionX;
     double prob;
 
-    for (vector<pair<int, int>>::iterator itP = posEnemigos.begin(); itP != posEnemigos.end(); itP++) {
+    for (vector<pair<int, int>>::iterator itP = posEnemigos.begin(); itP != posEnemigos.end(); itP++) { 
         prob = dis(gen);
         orientacionX = (prob < 0.5);
         enem = new enemigo(
@@ -197,7 +197,8 @@ void generarTablero() {
             (prob < 0.33?ROJO: (prob < 0.66? AZUL:VERDE))
         );
 
-        eliminarEstructuras(enem->getPosicion(), enem->getOrientacionX(), 3);
+        //esta función es demasiado peligrosa como para estar cuando se generen enemigos en posiciones randoms pq puede aparecer cerca del inicio y eliminar las 3 estructuras que permiten un inicio satisfactorio
+        eliminarEstructuras(enem->getPosicion(), enem->getOrientacionX(), 3); //se está eliminando una estructura pero no el bonificador
 
         enemigos.push_back(enem);
     }
@@ -286,7 +287,7 @@ inline void colocarBomba() { //para evitar repetir codigo
         if (posBombaXTablero >= 0 && posBombaXTablero < largoTablero &&
             posBombaZTablero >= 0 && posBombaZTablero < anchoTablero &&
             bombas[posBombaXTablero][posBombaZTablero] == nullptr &&
-            estructuras[posBombaXTablero][posBombaZTablero] == nullptr)
+            estructuras[posBombaXTablero][posBombaZTablero] == nullptr) //falta hacer que no se pueda poner bomba justo donde hay un enemigo
         {
             jugador->aumentarCantBomba();
 
