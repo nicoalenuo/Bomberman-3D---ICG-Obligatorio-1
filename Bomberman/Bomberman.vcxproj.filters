@@ -223,6 +223,15 @@
     <Image Include="texturas\suelo.jpg">
       <Filter>Resource Files</Filter>
     </Image>
+    <Image Include="texturas\rojo.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+	<Image Include="texturas\azul.png">
+		<Filter>Resource Files</Filter>
+	</Image>
+	<Image Include="texturas\verde.png">
+		<Filter>Resource Files</Filter>
+	</Image>
   </ItemGroup>
   <ItemGroup>
     <Media Include="audio\bomberman.wav">

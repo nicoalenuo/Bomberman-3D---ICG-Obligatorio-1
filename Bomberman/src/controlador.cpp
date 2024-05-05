@@ -27,6 +27,8 @@ void eliminarEstructuras(vector_3 pos, bool isOrientacionX, int num) {
 }
 
 void generarTablero() {
+    temporizador = false;
+
     if (jugador == nullptr) {
         jugador = new bomberman(
             { tile_size / 2, 0, tile_size / 2 },
@@ -183,14 +185,16 @@ void generarTablero() {
     vector<pair<int, int>> posEnemigos = { {6, 4}, {12, 8}, {18, 2}, {2, 6} };
     enemigo* enem;
     bool orientacionX;
+    double prob;
 
     for (vector<pair<int, int>>::iterator itP = posEnemigos.begin(); itP != posEnemigos.end(); itP++) {
-        orientacionX = (dis(gen) < 0.5);
+        prob = dis(gen);
+        orientacionX = (prob < 0.5);
         enem = new enemigo(
             { (GLfloat)(itP->first) * tile_size + tile_size / 2, 0, (GLfloat)(itP->second) * tile_size + tile_size / 2 },
             { GLfloat(tile_size / 4), tile_size, GLfloat(tile_size / 4) },
-            orientacionX
-
+            orientacionX,
+            (prob < 0.33?ROJO: (prob < 0.66? AZUL:VERDE))
         );
 
         eliminarEstructuras(enem->getPosicion(), enem->getOrientacionX(), 3);
@@ -290,7 +294,8 @@ inline void colocarBomba() { //para evitar repetir codigo
                 { posBombaXTablero * tile_size + tile_size / 2, 1, posBombaZTablero * tile_size + tile_size / 2 },
                 { tile_size / 4, tile_size / 2, tile_size / 4 },
                 2000, //2 segundos
-                1 + ControladorPoderes::getValor(AUMENTAR_ALCANCE_BOMBAS)
+                1 + ControladorPoderes::getValor(AUMENTAR_ALCANCE_BOMBAS),
+                ControladorAudio::playMecha({ posBombaXTablero * tile_size + tile_size / 2, 0, posBombaZTablero * tile_size + tile_size / 2 })
             );
             bombas[posBombaXTablero][posBombaZTablero] = bomba_obj;
 
@@ -298,8 +303,6 @@ inline void colocarBomba() { //para evitar repetir codigo
                 delete bonificadores[posBombaXTablero][posBombaZTablero];
                 bonificadores[posBombaXTablero][posBombaZTablero] = nullptr;
             }
-
-            ControladorAudio::playAudio(sonido::explosion); // hay que separar el sonido de la bomba en dos (quemando mecha, explosion), ya que cuando una bomba explota la otra, sigue quemando mecha
         }
     }
 }
@@ -348,10 +351,10 @@ void Controlador::manejarEventos() {
                         ControladorAudio::playAudio(sonido::muerte);
                         break;
                     case SDLK_2:
-                        ControladorAudio::playAudio(sonido::explosion);
+                        ControladorAudio::playAudio(sonido::bonificacion);
                         break;
                     case SDLK_3:
-                        ControladorAudio::playAudio(sonido::bonificacion);
+                        ControladorAudio::playBomba({0,0,0});
                         break;
                     case SDLK_4 :
                         ControladorAudio::playAudio(sonido::pasos);
@@ -362,6 +365,9 @@ void Controlador::manejarEventos() {
                         break;
                     case SDLK_7:
                         ControladorAudio::playAudio(sonido::musica);
+                        break;
+                    case SDLK_8:
+                        ControladorAudio::playMecha({ 0,0,0 });
                         break;
                     case SDLK_m://mute
                         ControladorAudio::silenciarAudio();
@@ -407,12 +413,18 @@ void Controlador::manejarEventos() {
                         break;
                     case SDLK_F6:
                         //acelerar o disminuir velocidad de juego (global)
-                        if (velocidad_juego == 1)
+                        if (velocidad_juego == 1) {
                             velocidad_juego = 2.f;
-                        else if (velocidad_juego == 2)
+                            ControladorAudio::modificarVelocidad(2.f);
+                        }
+                        else if (velocidad_juego == 2) {
                             velocidad_juego = 0.5f;
-                        else
+                            ControladorAudio::modificarVelocidad(0.5f);
+                        }
+                        else {
                             velocidad_juego = 1.f;
+                            ControladorAudio::modificarVelocidad(1.f);
+                        }
                         break;
                     case SDLK_F7:
                         toggle(inmortal);
@@ -548,8 +560,13 @@ void Controlador::actualizar() {
 
     if (!puertaAbierta && enemigos.empty()) {
         puertaAbierta = true;
-        ControladorAudio::playAudio(sonido::puertaAbierta);
-    }  
+        ControladorAudio::playAudio(sonido::puertaAbierta, puerta->getPosicion());
+    }
+
+    if (!temporizador && tiempoJuego <= 10000) {
+        temporizador = true;
+        ControladorAudio::playAudio(sonido::timer10);
+    }
 }
 
 void Controlador::dibujar() {

@@ -9,10 +9,14 @@ enemigo::enemigo(vector_3 pos, vector_3 tam): personaje(pos, tam, GLfloat(0.1)){
     
     eliminar = false;
 
-    probCambiarPos = 0.3;
+    probCambiarPos = 1;
+
+    rotacion_y_actual = 0;
+    rotacion_z_actual = 0;
+    balanceandoseDerecha = false;
 }
 
-enemigo::enemigo(vector_3 pos, vector_3 tam, bool orientacionX) : personaje(pos, tam, GLfloat(0.1)) {
+enemigo::enemigo(vector_3 pos, vector_3 tam, bool orientacionX, color_enemigo color) : personaje(pos, tam, GLfloat(0.1)) {
     this->orientacionX = orientacionX;
     if (orientacionX) {
         moverX = true;
@@ -29,6 +33,8 @@ enemigo::enemigo(vector_3 pos, vector_3 tam, bool orientacionX) : personaje(pos,
     eliminar = false;
 
     probCambiarPos = 0.3;
+
+    this->color = color;
 }
 
 bool enemigo::getOrientacionX() {
@@ -58,10 +64,10 @@ bool enemigo::intersecta(bomberman* b) {
 }
 
 bool centroConMovimiento(vector_3 pos) {
-    return abs(round(pos.x - tile_size / 2) - (pos.x - tile_size / 2)) < 0.001 &&
-           abs(round(pos.z - tile_size / 2) - (pos.z - tile_size / 2)) < 0.001 &&
-           getIndiceTablero(pos.x) % 2 == 0 && 
-           getIndiceTablero(pos.z) % 2 == 0;
+    return abs(round(pos.x) - (pos.x)) < 0.01 &&
+           abs(round(pos.z) - (pos.z)) < 0.01 &&
+           int(round(pos.x)) % 2 == 1 &&
+           int(round(pos.z)) % 2 == 1;
 }
 
 bool posicion_valida_parcial(vector_3 pos, bool orientacionX) {
@@ -106,8 +112,6 @@ void enemigo::actualizar() {
 
     if (orientacionX) {
         if (centroConMovimiento(pos) && (dis(gen) < probCambiarPos) && posicion_valida_parcial(pos, false)) {
-            //falta corregir, al usar centroConMovimiento me toma en cuenta no solo los centros si no tambien las aristas
-            //por eso a veces hace un movimineto extranio entre dos esquinas, lo voy a corregir despues @victor
             moverX = false;
             moverNX = false;
             moverZ = dis(gen) < probCambiarPos;
@@ -118,17 +122,21 @@ void enemigo::actualizar() {
         if (moverX) {
             if (posicion_valida({ pos.x + desplazamiento, 0, pos.z }, { tam.x, 0, tam.z })) {
                 pos.x += desplazamiento;
+                rotacion_y_actual = 0;
             } else {
                 moverX = false;
                 moverNX = true;
+                rotacion_y_actual = 180;
             }
         }
         if (moverNX) {
             if (posicion_valida({ pos.x - desplazamiento, 0, pos.z }, { tam.x, 0, tam.z })) {
                 pos.x -= desplazamiento;
+                rotacion_y_actual = 180;
             } else {
                 moverX = true;
                 moverNX = false;
+                rotacion_y_actual = 0;
             }
         }
     }
@@ -143,20 +151,37 @@ void enemigo::actualizar() {
         if (moverZ) {
             if (posicion_valida({ pos.x, 0, pos.z + desplazamiento }, { tam.x, 0, tam.z })) {
                 pos.z += desplazamiento;
+                rotacion_y_actual = 270;
             }
             else {
                 moverZ = false;
                 moverNZ = true;
+                rotacion_y_actual = 90;
             }
         }
         if (moverNZ) {
             if (posicion_valida({ pos.x, 0, pos.z - desplazamiento }, { tam.x, 0, tam.z })) {
                 pos.z -= desplazamiento;
+                rotacion_y_actual = 90;
             }
             else {
                 moverZ = true;
                 moverNZ = false;
+                rotacion_y_actual = 270;
             }
+        }
+    }
+
+    if (balanceandoseDerecha) {
+        rotacion_z_actual += GLfloat(2 * (elapsed_time / frameDelay));
+        if (rotacion_z_actual > 8) {
+            balanceandoseDerecha = false;
+        }
+    }
+    else {
+        rotacion_z_actual -= 2 * (elapsed_time / frameDelay);
+        if (rotacion_z_actual < -8) {
+            balanceandoseDerecha = true;
         }
     }
 
@@ -170,98 +195,19 @@ void enemigo::actualizar() {
 void enemigo::dibujar() {
     glPushMatrix();
     glTranslatef(pos.x, pos.y, pos.z);
-
-    /*if (texturas_habilitadas) {
-        glEnable(GL_TEXTURE_2D);
-        glBindTexture(GL_TEXTURE_2D, ControladorTexturas::getTextura(TEXTURA_PUERTA));
-    }*/
-
-    glColor3f(1.0f, 0.5f, 0.f);
-
-    glBegin(GL_QUADS);
-
-    //Cara de abajo
-    //glTexCoord2f(0.5, 0.5);
-    glVertex3f(-tam.x, 0, -tam.z);
-
-    //glTexCoord2f(0.5, 1);
-    glVertex3f(tam.x, 0, -tam.z);
-
-    //glTexCoord2f(1, 1);
-    glVertex3f(tam.x, 0, tam.z);
-
-    //glTexCoord2f(1, 0.5);
-    glVertex3f(-tam.x, 0, tam.z);
-
-    // Cara de arriba
-    //glTexCoord2f(0.5, 0.5);
-    glVertex3f(-tam.x, tam.y, -tam.z);
-
-    //glTexCoord2f(0.5, 1);
-    glVertex3f(tam.x, tam.y, -tam.z);
-
-    //glTexCoord2f(1, 1);
-    glVertex3f(tam.x, tam.y, tam.z);
-
-    //glTexCoord2f(1, 0.5);
-    glVertex3f(-tam.x, tam.y, tam.z);
-
-    // Cara de atras
-    //glTexCoord2f(1, 0);
-    glVertex3f(-tam.x, 0, -tam.z);
-
-    //glTexCoord2f(0.5, 0);
-    glVertex3f(tam.x, 0, -tam.z);
-
-    //glTexCoord2f(0.5, 0.5);
-    glVertex3f(tam.x, tam.y, -tam.z);
-
-    //glTexCoord2f(1, 0.5);
-    glVertex3f(-tam.x, tam.y, -tam.z);
-
-    // Cara de adelante
-    //glTexCoord2f(0.5, 0);
-    glVertex3f(-tam.x, 0, tam.z);
-
-    //glTexCoord2f(0, 0);
-    glVertex3f(tam.x, 0, tam.z);
-
-    //glTexCoord2f(0, 0.5);
-    glVertex3f(tam.x, tam.y, tam.z);
-
-    //glTexCoord2f(0.5, 0.5);
-    glVertex3f(-tam.x, tam.y, tam.z);
-
-    // Cara izquierda
-    //glTexCoord2f(0.5, 0);
-    glVertex3f(-tam.x, 0, -tam.z);
-
-    //glTexCoord2f(0, 0);
-    glVertex3f(-tam.x, 0, tam.z);
-
-    //glTexCoord2f(0, 0.5);
-    glVertex3f(-tam.x, tam.y, tam.z);
-
-    //glTexCoord2f(0.5, 0.5);
-    glVertex3f(-tam.x, tam.y, -tam.z);
-
-    // Cara derecha (x = 1)
-    //glTexCoord2f(0.5, 0);
-    glVertex3f(tam.x, 0, -tam.z);
-
-    //glTexCoord2f(0, 0);
-    glVertex3f(tam.x, 0, tam.z);
-
-    //glTexCoord2f(0, 0.5);
-    glVertex3f(tam.x, tam.y, tam.z);
-
-    //glTexCoord2f(0.5, 0.5);
-    glVertex3f(tam.x, tam.y, -tam.z);
-
-    glEnd();
-
-    //if (texturas_habilitadas)
-    //tg    glDisable(GL_TEXTURE_2D);
-
+    //glRotatef(rotacion_z_actual, 0, 0, 1); //falta ajustar para que nj
+    glRotatef(rotacion_y_actual, 0, 1, 0);
+    switch (color) {
+        case ROJO:
+            ControladorObjetos::dibujar(OBJ_ENEMY_ROJO);
+            break;
+        case AZUL:
+            ControladorObjetos::dibujar(OBJ_ENEMY_AZUL);
+            break;
+        case VERDE:
+            ControladorObjetos::dibujar(OBJ_ENEMY_VERDE);
+            break;
+    }
+   
     glPopMatrix();
 }

@@ -1,10 +1,11 @@
 #include "../lib/bomba.h"
 
-bomba::bomba(vector_3 pos, vector_3 tam, int tiempo, int largo) : objeto(pos, tam) {
+bomba::bomba(vector_3 pos, vector_3 tam, int tiempo, int largo, int id) : objeto(pos, tam) {
 	tiempoBomba = tiempo;
 	largoBomba = largo;
     scale = 0.9f;
     cayendo = true;
+    idSonido = id;
 }
 
 int xBomba, zBomba, dx, dz, nx, nz;
@@ -99,6 +100,9 @@ void bomba::actualizar() {
             1500,
             true
         );
+
+        ControladorAudio::detenerMecha(idSonido);
+        ControladorAudio::playBomba(pos);
 
         jugador->disminuirCantBomba();
 

@@ -160,6 +160,9 @@
     <Image Include="texturas\player.png" />
     <Image Include="texturas\puerta.jpg" />
     <Image Include="texturas\suelo.jpg" />
+	<Image Include="texturas\rojo.jpg" />
+	<Image Include="texturas\azul.jpg" />
+	<Image Include="texturas\verde.jpg" />
   </ItemGroup>
   <ItemGroup>
     <Media Include="audio\bomberman.wav" />

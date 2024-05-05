@@ -6,7 +6,6 @@
 #include <fstream>
 #include <string>
 #include <sstream>
-#include <tuple>
 #include <vector>
 
 #include "SDL_opengl.h"
@@ -19,7 +18,10 @@ using namespace std;
 
 enum tipo_obj {
     OBJ_PLAYER,
-    OBJ_BOMBA
+    OBJ_BOMBA,
+    OBJ_ENEMY_ROJO,
+    OBJ_ENEMY_AZUL,
+    OBJ_ENEMY_VERDE
 };
 
 class ControladorObjetos{
@@ -29,6 +31,10 @@ private:
 
     static vector<char>  player_commands;
     static vector<vector<float>> player_data;
+
+    
+    static vector<char>  enemy_commands;
+    static vector<vector<float>> enemy_data;
 
     static void cargarObj(string file, vector<char> &commands_output, vector<vector<float>> &data_output);
 public:
