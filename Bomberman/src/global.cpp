@@ -9,9 +9,9 @@ bool moverIzquierda = false;
 
 GLfloat mouseX = 0;
 GLfloat mouseY = 0;
-GLfloat mouseY_invertido = 0;
+GLfloat mouseY_invertido = 45;
 
-bool pausa = false;
+bool pausa = true;
 bool pararTiempo = false;
 bool wireframe = false;
 bool texturas_habilitadas = true;
@@ -19,7 +19,7 @@ bool mute = false; //cambiar a false para que inicie con sonido
 bool mostrarHud = true;
 bool inmortal = false;
 
-bool tipoLuz = false; //false = facetado, true = interpolado
+bool tipoLuz = true; //false = facetado, true = interpolado
 bool atravesar_paredes = false;
 
 objeto*** estructuras = new objeto * *[largoTablero];

@@ -131,7 +131,6 @@
     <ClInclude Include="lib\estructura.h" />
     <ClInclude Include="lib\fuego.h" />
     <ClInclude Include="lib\global.h" />
-    <ClInclude Include="lib\hud.h" />
     <ClInclude Include="lib\objeto.h" />
     <ClInclude Include="lib\particula.h" />
     <ClInclude Include="lib\particula_bonificador.h" />
@@ -160,9 +159,9 @@
     <Image Include="texturas\player.png" />
     <Image Include="texturas\puerta.jpg" />
     <Image Include="texturas\suelo.jpg" />
-	<Image Include="texturas\rojo.jpg" />
-	<Image Include="texturas\azul.jpg" />
-	<Image Include="texturas\verde.jpg" />
+    <Image Include="texturas\rojo.jpg" />
+    <Image Include="texturas\azul.jpg" />
+    <Image Include="texturas\verde.jpg" />
   </ItemGroup>
   <ItemGroup>
     <Media Include="audio\bomberman.wav" />

@@ -308,6 +308,36 @@ void ControladorObjetos::dibujarSuelo() {
 	if (texturas_habilitadas) {
 		glDisable(GL_TEXTURE_2D);
 	}
+
+	glColor3f(0.0f, 1.0f, 0.0f);
+
+	if (texturas_habilitadas) {
+		glEnable(GL_TEXTURE_2D);
+		glBindTexture(GL_TEXTURE_2D, ControladorTexturas::getTextura(TEXTURA_PASTO));
+		glColor3f(1.0f, 1.0f, 1.0f);
+	}
+
+	glBegin(GL_QUADS);
+
+	glNormal3f(0.0f, 1.0f, 0.0f);
+
+	glTexCoord2d(-1000, -1000);
+	glVertex3f(-1000.0f, -0.1f, -1000.0f);
+
+	glTexCoord2d(1000, -1000);
+	glVertex3f(1000.0f, -0.1f, -1000.0f);
+
+	glTexCoord2d(1000, 1000);
+	glVertex3f(1000.0f, -0.1f, 1000.0f);
+
+	glTexCoord2d(-1000, 1000);
+	glVertex3f(-1000, -0.1f, 1000);
+
+	glEnd();
+
+	if (texturas_habilitadas) {
+		glDisable(GL_TEXTURE_2D);
+	}
 }
 
 void ControladorObjetos::dibujarMarcadorBomba(vector_3 pos) {
