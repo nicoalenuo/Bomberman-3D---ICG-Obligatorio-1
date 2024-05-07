@@ -18,7 +18,9 @@ map<tipo_textura, char*> ControladorTexturas::direcciones_texturas = {
     {TEXTURA_FALLIDA, "texturas/chayang.jpeg"},
     {TEXTURA_ENEMY_ROJO, "texturas/rojo.png" },
     {TEXTURA_ENEMY_AZUL, "texturas/azul.png" },
-    {TEXTURA_ENEMY_VERDE, "texturas/verde.png" }
+    {TEXTURA_ENEMY_VERDE, "texturas/verde.png" },
+    {TEXTURA_LOGO, "texturas/logo.png"},
+    {TEXTURA_PASTO, "texturas/pasto.png"}
 };
 
 void ControladorTexturas::cargarTexturas() {

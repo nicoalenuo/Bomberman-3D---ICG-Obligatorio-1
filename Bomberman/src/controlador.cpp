@@ -265,7 +265,7 @@ Controlador* Controlador::getInstance() {
 }
 
 int posBombaXTablero, posBombaZTablero;
-inline void colocarBomba() { //para evitar repetir codigo
+inline void colocarBomba() {
     if (jugador->bombaDisponible()) {
         if (ControladorCamara::camaraMiraHacia(EJE_MENOS_X)) {
             posBombaXTablero = getIndiceTablero(jugador->getPosicion().x - tile_size);
@@ -287,7 +287,7 @@ inline void colocarBomba() { //para evitar repetir codigo
         if (posBombaXTablero >= 0 && posBombaXTablero < largoTablero &&
             posBombaZTablero >= 0 && posBombaZTablero < anchoTablero &&
             bombas[posBombaXTablero][posBombaZTablero] == nullptr &&
-            estructuras[posBombaXTablero][posBombaZTablero] == nullptr) //falta hacer que no se pueda poner bomba justo donde hay un enemigo
+            estructuras[posBombaXTablero][posBombaZTablero] == nullptr) 
         {
             jugador->aumentarCantBomba();
 
@@ -309,188 +309,161 @@ inline void colocarBomba() { //para evitar repetir codigo
 }
 
 void Controlador::manejarEventos() {
-    if (!finJuego && !pausa) {
+    if (pausa) {
         while (SDL_PollEvent(&evento)) {
             switch (evento.type) {
-            case SDL_QUIT:
-                fin = true;
-                break;
             case SDL_KEYDOWN:
                 switch (evento.key.keysym.sym) {
-                    case SDLK_ESCAPE:
-                    case SDLK_q:
-                        fin = true;
-                        break;
-                    case SDLK_b:
-                        colocarBomba();
-                        break;
-                    case SDLK_v:
-                         ControladorCamara::cambiarTipoCamara();
-                         break;
-                    case SDLK_p:
-                        toggle(pausa);
-                        toggle(pararTiempo);
-                        if (pausa) {
-                            ControladorAudio::pausarAudio();
-                        } else {
-                            ControladorAudio::reanudarAudio();
-                        }
-                        break;
-                    case SDLK_UP:
-                        moverArriba = true;
-                        break;
-                    case SDLK_RIGHT:
-                        moverDerecha = true;
-                        break;
-                    case SDLK_DOWN:
-                        moverAbajo = true;
-                        break;
-                    case SDLK_LEFT:
-                        moverIzquierda = true;
-                        break;
-                    case SDLK_1:
-                        ControladorAudio::playAudio(sonido::muerte);
-                        break;
-                    case SDLK_2:
-                        ControladorAudio::playAudio(sonido::bonificacion);
-                        break;
-                    case SDLK_3:
-                        ControladorAudio::playBomba({0,0,0});
-                        break;
-                    case SDLK_4 :
-                        ControladorAudio::playAudio(sonido::pasos);
-                    case SDLK_5:
-                        ControladorAudio::playAudio(sonido::inicioJuego);
-                    case SDLK_6:
-                        ControladorAudio::playAudio(sonido::puertaAbierta);
-                        break;
-                    case SDLK_7:
-                        ControladorAudio::playAudio(sonido::musica);
-                        break;
-                    case SDLK_8:
-                        ControladorAudio::playMecha({ 0,0,0 });
-                        break;
-                    case SDLK_m://mute
-                        ControladorAudio::silenciarAudio();
-                        break;
-                }
-                break;
-            case SDL_KEYUP:
-                switch (evento.key.keysym.sym) {
-                    case SDLK_UP:
-                        moverArriba = false;
-                        break;
-                    case SDLK_RIGHT:
-                        moverDerecha = false;
-                        break;
-                    case SDLK_DOWN:
-                        moverAbajo = false;
-                        break;
-                    case SDLK_LEFT:
-                        moverIzquierda = false;
-                        break;
-                    case SDLK_F1:
-                        toggle(wireframe);
-                        if (wireframe)
-                            glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-                        else
-                            glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
-                        break;
-                    case SDLK_F2:
-                        toggle(texturas_habilitadas);
-                        break;
-                    case SDLK_F3:
-                        toggle(tipoLuz);
-                        if (tipoLuz)
-                            glShadeModel(GL_SMOOTH);
-                        else
-                            glShadeModel(GL_FLAT);
-                        break;
-                    case SDLK_F4:
-                        ControladorLuz::cambiarColorLuzAmbiente();
-                        break;
-                    case SDLK_F5:
-                        toggle(mostrarHud);
-                        break;
-                    case SDLK_F6:
-                        //acelerar o disminuir velocidad de juego (global)
-                        if (velocidad_juego == 1) {
-                            velocidad_juego = 2.f;
-                            ControladorAudio::modificarVelocidad(2.f);
-                        }
-                        else if (velocidad_juego == 2) {
-                            velocidad_juego = 0.5f;
-                            ControladorAudio::modificarVelocidad(0.5f);
-                        }
-                        else {
-                            velocidad_juego = 1.f;
-                            ControladorAudio::modificarVelocidad(1.f);
-                        }
-                        break;
-                    case SDLK_F7:
-                        toggle(inmortal);
-                        break;
-                    case SDLK_F8:
-                        toggle(pararTiempo);
-                        break;
-                    case SDLK_F9:
-                        toggle(atravesar_paredes);
-                        break;
-                    case SDLK_F11:
-                        SDL_SetWindowFullscreen(window, SDL_GetWindowFlags(window) & SDL_WINDOW_FULLSCREEN ? 0 : SDL_WINDOW_FULLSCREEN);
-                        break;
-                }
-            break;
-            case SDL_MOUSEMOTION:
-                mouseX = GLfloat(fmod(mouseX - (evento.motion.xrel * SENSIBILIDAD_MOUSE), 360));
-                if (mouseX < 0)
-                    mouseX += 360;
-
-                mouseY = mouseY - (evento.motion.yrel * SENSIBILIDAD_MOUSE);
-                if (mouseY < 1)
-                    mouseY = 1;
-                else if (mouseY > 90)
-                    mouseY = 90;
-
-                mouseY_invertido = mouseY_invertido + (evento.motion.yrel * SENSIBILIDAD_MOUSE);
-                if (mouseY_invertido < 5)
-                    mouseY_invertido = 5;
-                else if (mouseY_invertido > 90)
-                    mouseY_invertido = 90;
-            break;
-            case SDL_MOUSEBUTTONDOWN:
-                switch (evento.button.button) {
-                    case SDL_BUTTON_LEFT:
-                        colocarBomba();
+                case SDLK_p:
+                    pausa = false;
+                    break;
+                case SDLK_ESCAPE:
+                    fin = true;
+                case SDLK_UP:
+                    ControladorInterfaz::opcion_anterior();
+                    break;
+                case SDLK_DOWN:
+                    ControladorInterfaz::opcion_siguiente();
+                    break;
+                case SDLK_RETURN:
+                    ControladorInterfaz::seleccionar_opcion();
                     break;
                 }
-            break;
+                break;
             }
         }
-        const Uint8* movimientoCamara = SDL_GetKeyboardState(NULL);
+        return;
+    }
 
-        if (movimientoCamara[SDL_SCANCODE_I]) {
-            ControladorLuz::moverCamara({ 0, 0, -(float)(velocidadCamara * velocidad_juego * frameDelay / 1000) });
-        }
-        if (movimientoCamara[SDL_SCANCODE_J]) {
-            ControladorLuz::moverCamara({ -(float)(velocidadCamara * velocidad_juego * frameDelay / 1000), 0, 0 });
-        }
-        if (movimientoCamara[SDL_SCANCODE_K]) {
-            ControladorLuz::moverCamara({ 0, 0, (float)(velocidadCamara * velocidad_juego * frameDelay / 1000) });
-        }
-        if (movimientoCamara[SDL_SCANCODE_L]) {
-            ControladorLuz::moverCamara({ (float)(velocidadCamara * velocidad_juego * frameDelay / 1000), 0, 0 });
-        }
-    } else {
+    if (finJuego) {
         moverArriba = false; moverAbajo = false; moverDerecha = false; moverIzquierda = false;
         while (SDL_PollEvent(&evento)) {
             if (evento.type == SDL_KEYDOWN) {
                 if (evento.key.keysym.sym == SDLK_ESCAPE)
                     fin = true;
-                else if(evento.key.keysym.sym == SDLK_p)
+                else if (evento.key.keysym.sym == SDLK_p)
                     toggle(pausa);
             }
         }
+        return;
+    }
+
+    while (SDL_PollEvent(&evento)) {
+        switch (evento.type) {
+        case SDL_QUIT:
+            fin = true;
+            break;
+        case SDL_KEYDOWN:
+            switch (evento.key.keysym.sym) {
+                case SDLK_ESCAPE:
+                case SDLK_q:
+                    fin = true;
+                    break;
+                case SDLK_b:
+                    colocarBomba();
+                    break;
+                case SDLK_p:
+                    toggle(pausa);
+                    if (pausa) {
+                        ControladorAudio::pausarAudio();
+                    } else {
+                        ControladorAudio::reanudarAudio();
+                    }
+                    break;
+                case SDLK_UP:
+                    moverArriba = true;
+                    break;
+                case SDLK_RIGHT:
+                    moverDerecha = true;
+                    break;
+                case SDLK_DOWN:
+                    moverAbajo = true;
+                    break;
+                case SDLK_LEFT:
+                    moverIzquierda = true;
+                    break;
+                case SDLK_1:
+                    ControladorAudio::playAudio(sonido::muerte);
+                    break;
+                case SDLK_2:
+                    ControladorAudio::playAudio(sonido::bonificacion);
+                    break;
+                case SDLK_3:
+                    ControladorAudio::playBomba({0,0,0});
+                    break;
+                case SDLK_4 :
+                    ControladorAudio::playAudio(sonido::pasos);
+                case SDLK_5:
+                    ControladorAudio::playAudio(sonido::inicioJuego);
+                case SDLK_6:
+                    ControladorAudio::playAudio(sonido::puertaAbierta);
+                    break;
+                case SDLK_7:
+                    ControladorAudio::playAudio(sonido::musica);
+                    break;
+                case SDLK_8:
+                    ControladorAudio::playMecha({ 0,0,0 });
+                    break;
+            }
+            break;
+        case SDL_KEYUP:
+            switch (evento.key.keysym.sym) {
+                case SDLK_UP:
+                    moverArriba = false;
+                    break;
+                case SDLK_RIGHT:
+                    moverDerecha = false;
+                    break;
+                case SDLK_DOWN:
+                    moverAbajo = false;
+                    break;
+                case SDLK_LEFT:
+                    moverIzquierda = false;
+                    break;
+                case SDLK_F11:
+                    SDL_SetWindowFullscreen(window, SDL_GetWindowFlags(window) & SDL_WINDOW_FULLSCREEN ? 0 : SDL_WINDOW_FULLSCREEN);
+                    break;
+            }
+        break;
+        case SDL_MOUSEMOTION:
+            mouseX = GLfloat(fmod(mouseX - (evento.motion.xrel * SENSIBILIDAD_MOUSE), 360));
+            if (mouseX < 0)
+                mouseX += 360;
+
+            mouseY = mouseY - (evento.motion.yrel * SENSIBILIDAD_MOUSE);
+            if (mouseY < 1)
+                mouseY = 1;
+            else if (mouseY > 90)
+                mouseY = 90;
+
+            mouseY_invertido = mouseY_invertido + (evento.motion.yrel * SENSIBILIDAD_MOUSE);
+            if (mouseY_invertido < 5)
+                mouseY_invertido = 5;
+            else if (mouseY_invertido > 90)
+                mouseY_invertido = 90;
+        break;
+        case SDL_MOUSEBUTTONDOWN:
+            switch (evento.button.button) {
+                case SDL_BUTTON_LEFT:
+                    colocarBomba();
+                break;
+            }
+        break;
+        }
+    }
+    const Uint8* movimientoCamara = SDL_GetKeyboardState(NULL);
+
+    if (movimientoCamara[SDL_SCANCODE_I]) {
+        ControladorLuz::moverCamara({ 0, 0, -(float)(velocidadCamara * velocidad_juego * frameDelay / 1000) });
+    }
+    if (movimientoCamara[SDL_SCANCODE_J]) {
+        ControladorLuz::moverCamara({ -(float)(velocidadCamara * velocidad_juego * frameDelay / 1000), 0, 0 });
+    }
+    if (movimientoCamara[SDL_SCANCODE_K]) {
+        ControladorLuz::moverCamara({ 0, 0, (float)(velocidadCamara * velocidad_juego * frameDelay / 1000) });
+    }
+    if (movimientoCamara[SDL_SCANCODE_L]) {
+        ControladorLuz::moverCamara({ (float)(velocidadCamara * velocidad_juego * frameDelay / 1000), 0, 0 });
     }
 }
 
@@ -500,8 +473,10 @@ void Controlador::actualizar() {
     delta_time = chrono::duration_cast<chrono::duration<int>>((current_t - previous_t)*1000);
     elapsed_time = delta_time.count() * velocidad_juego + 1;
 
-    if (pausa)
+    if (pausa) {
+        mouseX += 0.3f * (elapsed_time / frameDelay) * velocidad_juego;
         return;
+    }
 
     if (!pausa && !finJuego && !pararTiempo)
         disminuirTiempo(elapsed_time);
@@ -606,7 +581,7 @@ void Controlador::dibujar() {
 
     puerta->dibujar();
 
-    ControladorLuz::quitarLuces();  
+    ControladorLuz::quitarLuces();
 
     for (int i = 0; i < largoTablero; i++) {
         for (int j = 0; j < anchoTablero; j++) {
@@ -621,6 +596,10 @@ void Controlador::dibujar() {
     }
 
     ControladorObjetos::dibujarMarcadorBomba(jugador->getPosicion());
+
+    if (pausa) {
+        ControladorInterfaz::dibujarMenu();
+    }
 
     if (mostrarHud) {
         ControladorInterfaz::dibujarHUD();

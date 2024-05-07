@@ -143,9 +143,6 @@
     <ClInclude Include="lib\ControladorInterfaz.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="lib\hud.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="lib\particula.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -223,15 +220,15 @@
     <Image Include="texturas\suelo.jpg">
       <Filter>Resource Files</Filter>
     </Image>
-    <Image Include="texturas\rojo.png">
+    <Image Include="texturas\rojo.jpg">
       <Filter>Resource Files</Filter>
     </Image>
-	<Image Include="texturas\azul.png">
-		<Filter>Resource Files</Filter>
-	</Image>
-	<Image Include="texturas\verde.png">
-		<Filter>Resource Files</Filter>
-	</Image>
+    <Image Include="texturas\azul.jpg">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="texturas\verde.jpg">
+      <Filter>Resource Files</Filter>
+    </Image>
   </ItemGroup>
   <ItemGroup>
     <Media Include="audio\bomberman.wav">

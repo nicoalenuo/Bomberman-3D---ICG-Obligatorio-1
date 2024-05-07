@@ -29,7 +29,9 @@ enum tipo_textura { //agregar aca en caso de agregar mas texturas, y la direccio
 	TEXTURA_FALLIDA,
 	TEXTURA_ENEMY_ROJO,
 	TEXTURA_ENEMY_AZUL,
-	TEXTURA_ENEMY_VERDE
+	TEXTURA_ENEMY_VERDE,
+	TEXTURA_LOGO,
+	TEXTURA_PASTO
 };
 
 class ControladorTexturas{

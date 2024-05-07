@@ -19,7 +19,6 @@
 #include "bomberman.h"
 #include "bonificador.h"
 #include "door.h"
-#include "hud.h"
 
 #include "ControladorCamara.h"
 #include "ControladorObjetos.h"
