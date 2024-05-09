@@ -29,7 +29,7 @@ void bomba::actualizar() {
                     { GLfloat(0.05f), GLfloat(0.05f), GLfloat(0.05f) },
                     { 0, -25, 0 },
                     { GLfloat(disVelocidadParticulaTierra(genVelocidadParticulaTierra)), 5, GLfloat(disVelocidadParticulaTierra(genVelocidadParticulaTierra)) },
-                    ControladorTexturas::getTextura(TEXTURA_SUELO)
+                    ControladorTexturas::getInstance()->getTextura(TEXTURA_SUELO)
                     )
                 );
             }
@@ -61,7 +61,7 @@ void bomba::actualizar() {
                 nz = zBomba + i * dz;
 
                 if (nx >= 0 && nx < largoTablero && nz >= 0 && nz < anchoTablero) {
-                    if (estructuras[nx][nz] == nullptr || (ControladorPoderes::getValor(BOMBAS_ATRAVIESAN_ESTRUCTURAS) && dynamic_cast<estructura*>(estructuras[nx][nz])->getDestructible())) {
+                    if (estructuras[nx][nz] == nullptr || (ControladorPoderes::getInstance()->getValor(BOMBAS_ATRAVIESAN_ESTRUCTURAS) && dynamic_cast<estructura*>(estructuras[nx][nz])->getDestructible())) {
                         if (fuegos[nx][nz] != nullptr)
                             delete fuegos[nx][nz];
 
@@ -74,7 +74,7 @@ void bomba::actualizar() {
                     }
 
                     if (estructuras[nx][nz] != nullptr) {
-                        alcanza = !ControladorPoderes::getValor(BOMBAS_ATRAVIESAN_ESTRUCTURAS);
+                        alcanza = !ControladorPoderes::getInstance()->getValor(BOMBAS_ATRAVIESAN_ESTRUCTURAS);
                         estructura* est = dynamic_cast<estructura*>(estructuras[nx][nz]);
                         if (est->getDestructible()) {
                             delete est;
@@ -101,12 +101,12 @@ void bomba::actualizar() {
             true
         );
 
-        ControladorAudio::detenerMecha(idSonido);
-        ControladorAudio::playBomba(pos);
+        ControladorAudio::getInstance()->detenerMecha(idSonido);
+        ControladorAudio::getInstance()->playBomba(pos);
 
         jugador->disminuirCantBomba();
 
-        ControladorCamara::sacudir(1000);
+        ControladorCamara::getInstance()->sacudir(1000);
 
         bombas[xBomba][zBomba] = nullptr;
         delete this;
@@ -118,6 +118,6 @@ void bomba::dibujar() {
     glPushMatrix();
     glTranslatef(pos.x, pos.y, pos.z);
     glScalef(scale, scale, scale);
-    ControladorObjetos::dibujar(OBJ_BOMBA);
+    ControladorObjetos::getInstance()->dibujar(OBJ_BOMBA);
     glPopMatrix();
 }

@@ -20,17 +20,24 @@ enum tipo_poder { //agregar aca en caso de agregar mas bonificadores, y luego ag
 
 class ControladorPoderes {
 private: //Los poderes con temporizador tienen un tiempo. Los que no, no se pierden y duran hasta el siguiente nivel/fin de juego
-	static map<tipo_poder, int> poderActivo;
-	static map<tipo_poder, int> temporizadorPoder;
+	static ControladorPoderes* instancia;
+	ControladorPoderes();
+
+	map<tipo_poder, int> poderActivo;
+	map<tipo_poder, int> temporizadorPoder;
 public:
-	static void cargarPoderes();
-	static void actualizarTemporizadores();
-	static int getValor(tipo_poder poder);
-	static bool poderDependeDeTiempo(tipo_poder poder);
-	static bool poderEsBooleano(tipo_poder poder);
-	static void activarPoder(tipo_poder poder, int temporizador);
-	static void desactivarPoder(tipo_poder poder);
-	static map<tipo_poder, int> obtenerPoderes();
+	static ControladorPoderes* getInstance();
+
+	void resetearPoderes();
+	void actualizarTemporizadores();
+	int getValor(tipo_poder poder);
+	bool poderDependeDeTiempo(tipo_poder poder);
+	bool poderEsBooleano(tipo_poder poder);
+	void activarPoder(tipo_poder poder, int temporizador);
+	void desactivarPoder(tipo_poder poder);
+	map<tipo_poder, int> obtenerPoderes();
+
+	~ControladorPoderes();
 };
 
 #endif

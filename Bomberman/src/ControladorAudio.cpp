@@ -1,16 +1,12 @@
 #include "../lib/ControladorAudio.h"
 
-ALCdevice* ControladorAudio::openALDevice = nullptr;
-ALCcontext* ControladorAudio::openALContext = nullptr;
-ALCboolean ControladorAudio::contextMadeCurrent = false;
+ControladorAudio* ControladorAudio::instancia = nullptr;
 
-list<sounds> ControladorAudio::sonidos = list<sounds>();
-
-int ControladorAudio::cantFuentesBomba = 4;
-int ControladorAudio::actualBomba = 0;
-int ControladorAudio::actualMecha = 0;
-recursoAudio** ControladorAudio::sonidosBomba = new recursoAudio* [cantFuentesBomba];
-recursoAudio** ControladorAudio::sonidosMecha = new recursoAudio * [cantFuentesBomba];
+ControladorAudio* ControladorAudio::getInstance() {
+	if (instancia == nullptr)
+		instancia = new ControladorAudio();
+	return instancia;
+}
 
 void ControladorAudio::initOpenAl() {
 	openALDevice = alcOpenDevice(nullptr); //obtengo el dispositivo
@@ -32,8 +28,18 @@ void ControladorAudio::initOpenAl() {
 	}
 }
 
-void ControladorAudio::cargarAudios() {
-	
+ControladorAudio::ControladorAudio() {
+
+	openALDevice = nullptr;
+	openALContext = nullptr;
+	contextMadeCurrent = false;
+
+	cantFuentesBomba = 4;
+	actualBomba = 0;
+	actualMecha = 0;
+	sonidosBomba = new recursoAudio * [cantFuentesBomba];
+	sonidosMecha = new recursoAudio * [cantFuentesBomba];
+
 	initOpenAl();
 
 	list<ALuint> buffers = list<ALuint>();
@@ -178,9 +184,7 @@ void ControladorAudio::modificarVelocidad(float velocidad) {
 	}
 }
 
-//Se deberia controlar las excepciones
-void ControladorAudio::limpiarAudios() {
-	
+ControladorAudio::~ControladorAudio() {
 	while (!sonidos.empty()) {
 		delete sonidos.begin()->recurso;
 		sonidos.pop_front();

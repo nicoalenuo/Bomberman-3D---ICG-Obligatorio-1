@@ -33,18 +33,30 @@ private:
 
 	static Controlador* instancia;
 
+	ControladorAudio* controlador_audio;
+	ControladorCamara* controlador_camara;
+	ControladorInterfaz* controlador_interfaz;
+	ControladorLuz* controlador_luz;
+	ControladorObjetos* controlador_objetos;
+	ControladorPoderes* controlador_poderes;
+	ControladorTexturas* controlador_texturas;
+
 	SDL_Window* window;
 	SDL_GLContext context;
 	SDL_Event evento;
+
+	int cantidad_enemigos_actual;
 	
 public:
 	static Controlador* getInstance();
+	~Controlador();
+
+	void inicializar_juego();
 
 	void manejarEventos();
 	void actualizar();
 	void dibujar();
 
-	~Controlador();
 };
 
 #endif

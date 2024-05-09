@@ -1,7 +1,17 @@
 #include "../lib/ControladorCamara.h"
 
-tipo_camara ControladorCamara::camara_actual = CAMARA_ISOMETRICA;
-int ControladorCamara::tiempoSacudirse = 0;
+ControladorCamara* ControladorCamara::instancia = nullptr;
+
+ControladorCamara* ControladorCamara::getInstance() {
+	if (instancia == nullptr)
+		instancia = new ControladorCamara();
+	return instancia;
+}
+
+ControladorCamara::ControladorCamara() {
+	camara_actual = CAMARA_ISOMETRICA;
+	tiempoSacudirse = 0;
+}
 
 void ControladorCamara::cambiarTipoCamara() {
 	camara_actual = tipo_camara((int(camara_actual) + 1) % 3);
@@ -82,4 +92,8 @@ void ControladorCamara::colocarCamara(vector_3 pos) {
 				0, 1, 0);
 			break;
 	}
+}
+
+ControladorCamara::~ControladorCamara() {
+
 }

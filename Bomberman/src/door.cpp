@@ -21,7 +21,7 @@ void door::dibujar() {
         glPushMatrix();
         glTranslatef(pos.x, pos.y, pos.z);
         GLfloat color[3] = { 0.31f, 0.0f, 7.72f };
-        ControladorObjetos::dibujarCubo(tam, ControladorTexturas::getTextura(TEXTURA_PUERTA), color);
+        ControladorObjetos::getInstance()->dibujarCubo(tam, ControladorTexturas::getInstance()->getTextura(TEXTURA_PUERTA), color);
         glPopMatrix();
     }
 }

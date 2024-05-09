@@ -1,21 +1,40 @@
 #include "../lib/ControladorLuz.h"
 
-// DEJEN COMENTADO ESTO PQ ME OLVIDO LOS ENUMS Y NO QUIERO IR AL .h A CADA RATO
-// enum TIPO_LUZ_AMBIENTE { MANIANA, TARDE, NOCHE, SIN_LUZ };
+ControladorLuz* ControladorLuz::instancia = nullptr;
 
-TIPO_LUZ_AMBIENTE ControladorLuz::colorLuzAmbiente = MANIANA;
-GLfloat ControladorLuz::light_position[4] = { 0, 0, 0, 1 };
-GLfloat ControladorLuz::light_color[4] = { 1, 1, 1, 1 };
-GLfloat ControladorLuz::material_ambient_diffuse_color[4] = { 0.5f, 0.5f, 0.5f, 0.0f };
-GLfloat ControladorLuz::material_specular_color[4] = { 0, 0, 0, 1 };
-GLfloat ControladorLuz::light_offset_x = 0.f;
-GLfloat ControladorLuz::light_offset_y = 10.f;
-GLfloat ControladorLuz::light_offset_z = -1.f;
+ControladorLuz* ControladorLuz::getInstance() {
+	if (instancia == nullptr)
+		instancia = new ControladorLuz();
+	return instancia;
+}
 
-stack<GLenum> ControladorLuz::lucesDisponibles;
-stack<luz> ControladorLuz::lucesAMostrar;
+ControladorLuz::ControladorLuz() {
+	colorLuzAmbiente = NOCHE;
 
-void ControladorLuz::cargarLuces() {
+	light_position[0] = 0;
+	light_position[1] = 0;
+	light_position[2] = 0;
+	light_position[3] = 1;
+
+	light_color[0] = 1;
+	light_color[1] = 1;
+	light_color[2] = 1;
+	light_color[3] = 1;
+
+	material_ambient_diffuse_color[0] = 0.5f;
+	material_ambient_diffuse_color[1] = 0.5f;
+	material_ambient_diffuse_color[2] = 0.5f;
+	material_ambient_diffuse_color[3] = 0.0f;
+
+	material_specular_color[0] = 0;
+	material_specular_color[1] = 0;
+	material_specular_color[2] = 0;
+	material_specular_color[3] = 1;
+
+	light_offset_x = 0.f;
+	light_offset_y = 10.f;
+	light_offset_z = -1.f;
+
 	for (int idLuz = GL_LIGHT1; idLuz <= GL_LIGHT7; idLuz++) {
 		lucesDisponibles.push(idLuz);
 	}
@@ -51,7 +70,7 @@ void ControladorLuz::colocarLuces(vector_3 pos) {
 		light_position[0] = luzAMostrar.posicion.x;
 		light_position[1] = luzAMostrar.posicion.y;
 		light_position[2] = luzAMostrar.posicion.z;
-		glLightf(luzAMostrar.idLuz, GL_QUADRATIC_ATTENUATION, 0.03f); //para que se concentre cerca del foco
+		glLightf(luzAMostrar.idLuz, GL_QUADRATIC_ATTENUATION, 0.01f); //para que se concentre cerca del foco
 		glLightfv(luzAMostrar.idLuz, GL_POSITION, light_position);
 		glLightfv(luzAMostrar.idLuz, GL_AMBIENT, luzAMostrar.color);
 	}
@@ -89,4 +108,8 @@ void ControladorLuz::moverCamara(vector_3 pos) {
 	light_offset_x += pos.x;
 	light_offset_y += pos.y;
 	light_offset_z += pos.z;
+}
+
+ControladorLuz::~ControladorLuz() {
+
 }

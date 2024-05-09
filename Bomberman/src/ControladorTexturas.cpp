@@ -1,29 +1,35 @@
 #include "../lib/ControladorTexturas.h"
 #include <iostream>
 
-map<tipo_textura, GLuint> ControladorTexturas::texturas;
+ControladorTexturas* ControladorTexturas::instancia = nullptr;
 
-map<tipo_textura, char*> ControladorTexturas::direcciones_texturas = {
-    {ESTRUCTURA_DESTRUCTIBLE, "texturas/estructura_destructible.jpg"},
-    {ESTRUCTURA_NO_DESTRUCTIBLE, "texturas/estructura_no_destructible.png"},
-    {PLAYER, "texturas/player.png"},
-    {TEXTURA_BOMBA, "texturas/bomba.png"},
-    {TEXTURA_PUERTA, "texturas/puerta.jpg"},
-    {TEXTURA_AUMENTAR_ALCANCE_BOMBA, "texturas/aumentar_alcance_bombas.png"},
-    {TEXTURA_AUMENTAR_CANTIDAD_BOMBA, "texturas/aumentar_cantidad_bombas.png"},
-    {TEXTURA_AUMENTAR_VELOCIDAD, "texturas/aumentar_velocidad.png"},
-    {TEXTURA_BOMBAS_ATRAVIESAN_ESTRUCTURAS, "texturas/bombas_atraviesan_estructuras.png"},
-    {TEXTURA_INMORTALIDAD, "texturas/inmortalidad.png"},
-    {TEXTURA_SUELO, "texturas/suelo.jpg"},
-    {TEXTURA_FALLIDA, "texturas/chayang.jpeg"},
-    {TEXTURA_ENEMY_ROJO, "texturas/rojo.png" },
-    {TEXTURA_ENEMY_AZUL, "texturas/azul.png" },
-    {TEXTURA_ENEMY_VERDE, "texturas/verde.png" },
-    {TEXTURA_LOGO, "texturas/logo.png"},
-    {TEXTURA_PASTO, "texturas/pasto.png"}
-};
+ControladorTexturas* ControladorTexturas::getInstance() {
+    if (instancia == nullptr)
+        instancia = new ControladorTexturas();
+    return instancia;
+}
 
-void ControladorTexturas::cargarTexturas() {
+ControladorTexturas::ControladorTexturas() {
+    direcciones_texturas = {
+        {ESTRUCTURA_DESTRUCTIBLE, "texturas/estructura_destructible.jpg"},
+        {ESTRUCTURA_NO_DESTRUCTIBLE, "texturas/estructura_no_destructible.png"},
+        {PLAYER, "texturas/player.png"},
+        {TEXTURA_BOMBA, "texturas/bomba.png"},
+        {TEXTURA_PUERTA, "texturas/puerta.jpg"},
+        {TEXTURA_AUMENTAR_ALCANCE_BOMBA, "texturas/aumentar_alcance_bombas.png"},
+        {TEXTURA_AUMENTAR_CANTIDAD_BOMBA, "texturas/aumentar_cantidad_bombas.png"},
+        {TEXTURA_AUMENTAR_VELOCIDAD, "texturas/aumentar_velocidad.png"},
+        {TEXTURA_BOMBAS_ATRAVIESAN_ESTRUCTURAS, "texturas/bombas_atraviesan_estructuras.png"},
+        {TEXTURA_INMORTALIDAD, "texturas/inmortalidad.png"},
+        {TEXTURA_SUELO, "texturas/suelo.jpg"},
+        {TEXTURA_FALLIDA, "texturas/chayang.jpeg"},
+        {TEXTURA_ENEMY_ROJO, "texturas/rojo.png" },
+        {TEXTURA_ENEMY_AZUL, "texturas/azul.png" },
+        {TEXTURA_ENEMY_VERDE, "texturas/verde.png" },
+        {TEXTURA_LOGO, "texturas/logo.png"},
+        {TEXTURA_PASTO, "texturas/pasto.png"}
+    };
+
     FREE_IMAGE_FORMAT fif;
     FIBITMAP* bitmap;
     int w, h;
@@ -70,4 +76,8 @@ tipo_textura ControladorTexturas::getTipoTexturaPoder(tipo_poder tipo) {
             break;
     }
     return TEXTURA_FALLIDA;
+}
+
+ControladorTexturas::~ControladorTexturas() {
+
 }

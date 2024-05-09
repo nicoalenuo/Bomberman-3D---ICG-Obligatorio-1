@@ -36,12 +36,18 @@ enum tipo_textura { //agregar aca en caso de agregar mas texturas, y la direccio
 
 class ControladorTexturas{
 private:
-	static map<tipo_textura, char*> direcciones_texturas;
-	static map<tipo_textura, GLuint> texturas;
+	static ControladorTexturas* instancia;
+	ControladorTexturas();
+
+	map<tipo_textura, char*> direcciones_texturas;
+	map<tipo_textura, GLuint> texturas;
 public:
-	static void cargarTexturas();
-	static GLuint getTextura(tipo_textura tipo) { return texturas[tipo]; };
-	static tipo_textura getTipoTexturaPoder(tipo_poder tipo);
+	static ControladorTexturas* getInstance();
+	
+	GLuint getTextura(tipo_textura tipo) { return texturas[tipo]; };
+	tipo_textura getTipoTexturaPoder(tipo_poder tipo);
+
+	~ControladorTexturas();
 };
 
 #endif

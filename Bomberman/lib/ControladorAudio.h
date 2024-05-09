@@ -25,37 +25,36 @@ struct sounds{
 
 class ControladorAudio{
 private:
+	static ControladorAudio* instancia;
+	ControladorAudio();
 
-	static ALCdevice* openALDevice;
-	static ALCcontext* openALContext;
-	static ALCboolean contextMadeCurrent;
+	ALCdevice* openALDevice;
+	ALCcontext* openALContext;
+	ALCboolean contextMadeCurrent;
 
-	static list<sounds> sonidos;
+	list<sounds> sonidos;
 
 	//bombas
-	static int cantFuentesBomba;
-	static int actualBomba, actualMecha;
-	static recursoAudio** sonidosBomba, ** sonidosMecha;
+	int cantFuentesBomba;
+	int actualBomba, actualMecha;
+	recursoAudio** sonidosBomba, ** sonidosMecha;
 
-	static void initOpenAl();
+	void initOpenAl();
 public:
+	static ControladorAudio* getInstance();
+	~ControladorAudio();
 
-	static void cargarAudios();
+	void playAudio(sonido s);
+	void playAudio(sonido s, vector_3 pos);
+	void playBomba(vector_3 pos);
+	int  playMecha(vector_3 pos);
+	void detenerMecha(int idMecha);
+	void pausarAudio();
+	void reanudarAudio();
+	void detenerAudio();
+	void silenciarAudio();
 
-	static void playAudio(sonido s);
-	static void playAudio(sonido s, vector_3 pos);
-	static void playBomba(vector_3 pos);
-	static int  playMecha(vector_3 pos);
-	static void detenerMecha(int idMecha);
-	static void pausarAudio();
-	static void reanudarAudio();
-	static void detenerAudio();
-	static void silenciarAudio();
-
-	static void modificarVelocidad(float velocidad);
-
-	static void limpiarAudios();
-
+	void modificarVelocidad(float velocidad);
 };
 
 #endif

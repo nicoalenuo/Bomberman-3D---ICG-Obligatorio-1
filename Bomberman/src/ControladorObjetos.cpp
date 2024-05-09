@@ -1,13 +1,14 @@
 #include "../lib/ControladorObjetos.h"
 
-vector<char> ControladorObjetos::bomba_commands;
-vector<vector<float>> ControladorObjetos::bomba_data;
-vector<char> ControladorObjetos::player_commands;
-vector<vector<float>> ControladorObjetos::player_data;
-vector<char> ControladorObjetos::enemy_commands;
-vector<vector<float>> ControladorObjetos::enemy_data;
+ControladorObjetos* ControladorObjetos::instancia = nullptr;
 
-void ControladorObjetos::cargarObjetos() {
+ControladorObjetos* ControladorObjetos::getInstance() {
+	if (instancia == nullptr)
+		instancia = new ControladorObjetos();
+	return instancia;
+}
+
+ControladorObjetos::ControladorObjetos() {
 	ControladorObjetos::cargarObj("objs/player.obj", player_commands, player_data);
 	ControladorObjetos::cargarObj("objs/bomba.obj", bomba_commands, bomba_data);
 	ControladorObjetos::cargarObj("objs/enemy.obj", enemy_commands, enemy_data);
@@ -101,32 +102,32 @@ void ControladorObjetos::dibujar(tipo_obj obj) {
 		case (OBJ_PLAYER):
 			commands = player_commands;
 			data_obj = player_data;
-			texture = ControladorTexturas::getTextura(PLAYER);
+			texture = ControladorTexturas::getInstance()->getTextura(PLAYER);
 			break;
 		case (OBJ_BOMBA):
 			commands = bomba_commands;
 			data_obj = bomba_data;
-			texture = ControladorTexturas::getTextura(TEXTURA_BOMBA);
+			texture = ControladorTexturas::getInstance()->getTextura(TEXTURA_BOMBA);
 			break;
 		case (OBJ_ENEMY_ROJO):
 			commands = enemy_commands;
 			data_obj = enemy_data;
 			if (texturas_habilitadas) {
-				texture = ControladorTexturas::getTextura(TEXTURA_ENEMY_ROJO);
+				texture = ControladorTexturas::getInstance()->getTextura(TEXTURA_ENEMY_ROJO);
 			}
 			break;
 		case (OBJ_ENEMY_AZUL):
 			commands = enemy_commands;
 			data_obj = enemy_data;
 			if (texturas_habilitadas) {
-				texture = ControladorTexturas::getTextura(TEXTURA_ENEMY_AZUL);
+				texture = ControladorTexturas::getInstance()->getTextura(TEXTURA_ENEMY_AZUL);
 			}
 			break;
 		case (OBJ_ENEMY_VERDE):
 			commands = enemy_commands;
 			data_obj = enemy_data;
 			if (texturas_habilitadas) {
-				texture = ControladorTexturas::getTextura(TEXTURA_ENEMY_VERDE);
+				texture = ControladorTexturas::getInstance()->getTextura(TEXTURA_ENEMY_VERDE);
 			}
 			break;
 	}
@@ -283,7 +284,7 @@ void ControladorObjetos::dibujarSuelo() {
 
 	if (texturas_habilitadas) {
 		glEnable(GL_TEXTURE_2D);
-		glBindTexture(GL_TEXTURE_2D, ControladorTexturas::getTextura(TEXTURA_SUELO));
+		glBindTexture(GL_TEXTURE_2D, ControladorTexturas::getInstance()->getTextura(TEXTURA_SUELO));
 		glColor3f(1.0f, 1.0f, 1.0f);
 	}
 
@@ -313,7 +314,7 @@ void ControladorObjetos::dibujarSuelo() {
 
 	if (texturas_habilitadas) {
 		glEnable(GL_TEXTURE_2D);
-		glBindTexture(GL_TEXTURE_2D, ControladorTexturas::getTextura(TEXTURA_PASTO));
+		glBindTexture(GL_TEXTURE_2D, ControladorTexturas::getInstance()->getTextura(TEXTURA_PASTO));
 		glColor3f(1.0f, 1.0f, 1.0f);
 	}
 
@@ -343,15 +344,15 @@ void ControladorObjetos::dibujarSuelo() {
 void ControladorObjetos::dibujarMarcadorBomba(vector_3 pos) {
 	int posX, posZ;
 
-	if (ControladorCamara::camaraMiraHacia(EJE_MENOS_X)) {
+	if (ControladorCamara::getInstance()->camaraMiraHacia(EJE_MENOS_X)) {
 		posX = getIndiceTablero(pos.x - tile_size);
 		posZ = getIndiceTablero(pos.z);
 	}
-	else if (ControladorCamara::camaraMiraHacia(EJE_Z)) {
+	else if (ControladorCamara::getInstance()->camaraMiraHacia(EJE_Z)) {
 		posX = getIndiceTablero(pos.x);
 		posZ = getIndiceTablero(pos.z + tile_size);
 	}
-	else if (ControladorCamara::camaraMiraHacia(EJE_X)) {
+	else if (ControladorCamara::getInstance()->camaraMiraHacia(EJE_X)) {
 		posX = getIndiceTablero(pos.x + tile_size);
 		posZ = getIndiceTablero(pos.z);
 	}
@@ -378,4 +379,8 @@ void ControladorObjetos::dibujarMarcadorBomba(vector_3 pos) {
 		glEnd();
 		glDisable(GL_BLEND);
 	}
+}
+
+ControladorObjetos::~ControladorObjetos() {
+
 }
