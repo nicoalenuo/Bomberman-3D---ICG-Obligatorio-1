@@ -26,23 +26,29 @@ enum tipo_obj {
 
 class ControladorObjetos{
 private:
-    static vector<char>  bomba_commands;
-    static vector<vector<float>> bomba_data;
+    static ControladorObjetos* instancia;
+    ControladorObjetos();
 
-    static vector<char>  player_commands;
-    static vector<vector<float>> player_data;
+    vector<char>  bomba_commands;
+    vector<vector<float>> bomba_data;
+
+    vector<char>  player_commands;
+    vector<vector<float>> player_data;
 
     
-    static vector<char>  enemy_commands;
-    static vector<vector<float>> enemy_data;
+    vector<char>  enemy_commands;
+    vector<vector<float>> enemy_data;
 
-    static void cargarObj(string file, vector<char> &commands_output, vector<vector<float>> &data_output);
+    void cargarObj(string file, vector<char> &commands_output, vector<vector<float>> &data_output);
 public:
-    static void cargarObjetos();
-    static void dibujar(tipo_obj obj);
-    static void dibujarCubo(vector_3 tam, GLuint textura, GLfloat color[3]); //textura es 0 si no tiene
-    static void dibujarSuelo();
-    static void dibujarMarcadorBomba(vector_3 pos);
+    static ControladorObjetos* getInstance();
+
+    void dibujar(tipo_obj obj);
+    void dibujarCubo(vector_3 tam, GLuint textura, GLfloat color[3]); //textura es 0 si no tiene
+    void dibujarSuelo();
+    void dibujarMarcadorBomba(vector_3 pos);
+
+    ~ControladorObjetos();
 };
 
 #endif

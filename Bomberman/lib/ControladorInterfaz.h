@@ -58,31 +58,36 @@ struct hud {
 
 class ControladorInterfaz {
 	private:
-		static TTF_Font* interfaz;
-		static hud* hudPuntaje;
-		static hud* hudTiempo;
-		static hud* hudGameOver;
+		static ControladorInterfaz* instancia;
+		ControladorInterfaz();
 
-		static map<tipo_poder, hud*> poderes;
+		TTF_Font* interfaz;
+		hud* hudPuntaje;
+		hud* hudTiempo;
+		hud* hudGameOver;
 
-		static map<tipo_opcion, hud*> opciones_actuales;
-		static map<tipo_opcion, hud*> opciones_inicio;
-		static map<tipo_opcion, hud*> opciones_configuracion;
-		static tipo_opcion opcion_seleccionada;
+		map<tipo_poder, hud*> poderes;
 
-		static void setMensajeEnComponente(string mensaje, TTF_Font* fuente, hud* componente);
+		map<tipo_opcion, hud*> opciones_actuales;
+		map<tipo_opcion, hud*> opciones_inicio;
+		map<tipo_opcion, hud*> opciones_configuracion;
+		tipo_opcion opcion_seleccionada;
+
+		void setMensajeEnComponente(string mensaje, TTF_Font* fuente, hud* componente);
 	public:
-		static void cargarInterfaz();
-		static void dibujarComponenteHUD(hud* hud);
-		static void dibujarComponenteHUDPoderes();
-		static void dibujarMenu();
-		static void dibujarHUD();
-		static void setPoderes(map<tipo_poder, int> powerUp);
-		static void liberarInterfaz();
+		static ControladorInterfaz* getInstance();
 
-		static void opcion_anterior();
-		static void opcion_siguiente();
-		static void seleccionar_opcion();
+		void dibujarComponenteHUD(hud* hud);
+		void dibujarComponenteHUDPoderes();
+		void dibujarMenu();
+		void dibujarHUD();
+		void setPoderes(map<tipo_poder, int> powerUp);
+
+		void opcion_anterior();
+		void opcion_siguiente();
+		void seleccionar_opcion();
+
+		~ControladorInterfaz();
 };
 
 #endif

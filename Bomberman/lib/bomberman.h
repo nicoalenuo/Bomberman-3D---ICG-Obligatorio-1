@@ -26,7 +26,7 @@ public:
 	bool getMoverBomba() const { return moverBomba; };
 	void setMoverBomba(bool mov) { moverBomba = mov; };
 
-	bool bombaDisponible() const { return ControladorPoderes::getValor(AUMENTAR_CANTIDAD_BOMBAS) + 1 > cantActual; };
+	bool bombaDisponible() const { return ControladorPoderes::getInstance()->getValor(AUMENTAR_CANTIDAD_BOMBAS) + 1 > cantActual; };
 
 	void actualizar();
 	void dibujar();

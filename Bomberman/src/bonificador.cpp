@@ -52,7 +52,7 @@ void bonificador::actualizar() {
         rotacion_y = GLfloat(fmod(rotacion_y, 360));
 
         GLfloat colorLuz[4] = { 1.0f, 1.0f, 0.0f, 0.1f };
-        ControladorLuz::pedirLuz(pos, colorLuz);
+        ControladorLuz::getInstance()->pedirLuz(pos, colorLuz);
 
         if (tiempo_entre_particulas > 30) {
             particulas.push_back(
@@ -76,8 +76,8 @@ void bonificador::actualizar() {
             int z = getIndiceTablero(pos.z);
             bonificadores[x][z] = nullptr;
             sumarPuntaje(500);
-            ControladorPoderes::activarPoder(tipo, ControladorPoderes::poderDependeDeTiempo(tipo) ? 10000 : 1);
-            ControladorAudio::playAudio(sonido::bonificacion);
+            ControladorPoderes::getInstance()->activarPoder(tipo, ControladorPoderes::getInstance()->poderDependeDeTiempo(tipo) ? 10000 : 1);
+            ControladorAudio::getInstance()->playAudio(sonido::bonificacion);
             delete this;
     }
 }
@@ -88,7 +88,7 @@ void bonificador::dibujar() {
         glPushMatrix();
         glTranslatef(pos.x, pos.y, pos.z);
         glRotatef(rotacion_y, 0, 1, 0);
-        ControladorObjetos::dibujarCubo(tam, 0, colorBonificador);
+        ControladorObjetos::getInstance()->dibujarCubo(tam, 0, colorBonificador);
         glPopMatrix();
     }
 }

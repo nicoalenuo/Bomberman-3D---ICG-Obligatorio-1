@@ -9,6 +9,5 @@ int main(int argc, char* argv[]) {
     } while (!fin);
 
     delete controlador;
-
     return 0;
 }

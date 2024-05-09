@@ -9,7 +9,6 @@
 #include "global.h"
 
 enum TIPO_LUZ_AMBIENTE { MANIANA, TARDE, NOCHE, SIN_LUZ_AMBIENTE };
-enum TIPO_LUZ_BONIFICADOR {AMARILLO, CELESTE ,VIOLETA, SIN_LUZ_BONIFICADOR };
 
 struct luz{
 	GLenum idLuz;
@@ -19,24 +18,30 @@ struct luz{
 
 class ControladorLuz {
 	private:
-		static GLfloat light_position[4];
-		static GLfloat light_color[4];
-		static GLfloat material_ambient_diffuse_color[4];
-		static GLfloat material_specular_color[4];
-		static GLfloat light_offset_x;
-		static GLfloat light_offset_y;
-		static GLfloat light_offset_z;
-		static TIPO_LUZ_AMBIENTE colorLuzAmbiente;
+		static ControladorLuz* instancia;
+		ControladorLuz();
 
-		static stack<GLenum> lucesDisponibles;
-		static stack<luz> lucesAMostrar;
+		GLfloat light_position[4];
+		GLfloat light_color[4];
+		GLfloat material_ambient_diffuse_color[4];
+		GLfloat material_specular_color[4];
+		GLfloat light_offset_x;
+		GLfloat light_offset_y;
+		GLfloat light_offset_z;
+		TIPO_LUZ_AMBIENTE colorLuzAmbiente;
+
+		stack<GLenum> lucesDisponibles;
+		stack<luz> lucesAMostrar;
 	public:
-		static void cargarLuces();
-		static void pedirLuz(vector_3 pos, GLfloat color[4]);
-		static void colocarLuces(vector_3 pos);
-		static void quitarLuces();
-		static void cambiarColorLuzAmbiente();
-		static void moverCamara(vector_3 pos);
+		static ControladorLuz* getInstance();
+
+		void pedirLuz(vector_3 pos, GLfloat color[4]);
+		void colocarLuces(vector_3 pos);
+		void quitarLuces();
+		void cambiarColorLuzAmbiente();
+		void moverCamara(vector_3 pos);
+
+		~ControladorLuz();
 };
 
 #endif

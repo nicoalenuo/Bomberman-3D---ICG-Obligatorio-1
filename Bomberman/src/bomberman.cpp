@@ -16,19 +16,19 @@ void bomberman::actualizar() { //perdon a la persona que tenga que entender esto
     uniform_real_distribution<> disVelocidadParticulaTierra(-0.1, 0.1);
 
     bool movimiento = false;
-    GLfloat desplazamiento = velocidad * (elapsed_time / frameDelay) * (ControladorPoderes::getValor(AUMENTAR_VELOCIDAD) ? 2 : 1);
+    GLfloat desplazamiento = velocidad * (elapsed_time / frameDelay) * (ControladorPoderes::getInstance()->getValor(AUMENTAR_VELOCIDAD) ? 2 : 1);
     if (moverArriba) {
-        if (ControladorCamara::camaraMiraHacia(EJE_MENOS_X)) {
+        if (ControladorCamara::getInstance()->camaraMiraHacia(EJE_MENOS_X)) {
             rotacionY = 90;
             if (atravesar_paredes || posicion_valida({ pos.x - desplazamiento, 0, pos.z }, { tam.x, 0, tam.z }))
                 pos.x -= desplazamiento;
         }
-        else if (ControladorCamara::camaraMiraHacia(EJE_Z)) {
+        else if (ControladorCamara::getInstance()->camaraMiraHacia(EJE_Z)) {
             rotacionY = 180;
             if (atravesar_paredes || posicion_valida({ pos.x, 0, pos.z + desplazamiento }, { tam.x, 0,tam.z }))
                 pos.z += desplazamiento;
         }
-        else if (ControladorCamara::camaraMiraHacia(EJE_X)) {
+        else if (ControladorCamara::getInstance()->camaraMiraHacia(EJE_X)) {
             rotacionY = 270;
             if (atravesar_paredes || posicion_valida({ pos.x + desplazamiento, 0, pos.z }, { tam.x, 0, tam.z }))
                 pos.x += desplazamiento;
@@ -41,17 +41,17 @@ void bomberman::actualizar() { //perdon a la persona que tenga que entender esto
         movimiento = true;
     }
     if (moverAbajo) {
-        if (ControladorCamara::camaraMiraHacia(EJE_MENOS_X)) {
+        if (ControladorCamara::getInstance()->camaraMiraHacia(EJE_MENOS_X)) {
             rotacionY = 270;
             if (atravesar_paredes || posicion_valida({ pos.x + desplazamiento, 0, pos.z }, { tam.x, 0, tam.z }))
                 pos.x += desplazamiento;
         }
-        else if (ControladorCamara::camaraMiraHacia(EJE_Z)) {
+        else if (ControladorCamara::getInstance()->camaraMiraHacia(EJE_Z)) {
             rotacionY = 0;
             if (atravesar_paredes || posicion_valida({ pos.x, 0, pos.z - desplazamiento }, { tam.x, 0, tam.z }))
                 pos.z -= desplazamiento;
         }
-        else if (ControladorCamara::camaraMiraHacia(EJE_X)) {
+        else if (ControladorCamara::getInstance()->camaraMiraHacia(EJE_X)) {
             rotacionY = 90;
             if (atravesar_paredes || posicion_valida({ pos.x - desplazamiento, 0, pos.z }, { tam.x, 0, tam.z }))
                 pos.x -= desplazamiento;
@@ -64,17 +64,17 @@ void bomberman::actualizar() { //perdon a la persona que tenga que entender esto
         movimiento = true;
     }
     if (moverDerecha) {
-        if (ControladorCamara::camaraMiraHacia(EJE_MENOS_X)) {
+        if (ControladorCamara::getInstance()->camaraMiraHacia(EJE_MENOS_X)) {
             rotacionY = 0;
             if (atravesar_paredes || posicion_valida({ pos.x, 0, pos.z - desplazamiento }, { tam.x, 0, tam.z }))
                 pos.z -= desplazamiento;
         }
-        else if (ControladorCamara::camaraMiraHacia(EJE_Z)) {
+        else if (ControladorCamara::getInstance()->camaraMiraHacia(EJE_Z)) {
             rotacionY = 90;
             if (atravesar_paredes || posicion_valida({ pos.x - desplazamiento, 0, pos.z }, { tam.x, 0, tam.z }))
                 pos.x -= desplazamiento;
         }
-        else if (ControladorCamara::camaraMiraHacia(EJE_X)) {
+        else if (ControladorCamara::getInstance()->camaraMiraHacia(EJE_X)) {
             rotacionY = 180;
             if (atravesar_paredes || posicion_valida({ pos.x, 0, pos.z + desplazamiento }, { tam.x, 0, tam.z }))
                 pos.z += desplazamiento;
@@ -88,17 +88,17 @@ void bomberman::actualizar() { //perdon a la persona que tenga que entender esto
     }
 
     if (moverIzquierda) {
-        if (ControladorCamara::camaraMiraHacia(EJE_MENOS_X)) {
+        if (ControladorCamara::getInstance()->camaraMiraHacia(EJE_MENOS_X)) {
             rotacionY = 180;
             if (atravesar_paredes || posicion_valida({ pos.x, 0, pos.z + desplazamiento }, { tam.x, 0, tam.z }))
                 pos.z += desplazamiento;
         }
-        else if (ControladorCamara::camaraMiraHacia(EJE_Z)) {
+        else if (ControladorCamara::getInstance()->camaraMiraHacia(EJE_Z)) {
             rotacionY = 270;
             if (atravesar_paredes || posicion_valida({ pos.x + desplazamiento, 0, pos.z }, { tam.x, 0, tam.z }))
                 pos.x += desplazamiento;
         }
-        else if (ControladorCamara::camaraMiraHacia(EJE_X)) {
+        else if (ControladorCamara::getInstance()->camaraMiraHacia(EJE_X)) {
             rotacionY = 0;
             if (atravesar_paredes || posicion_valida({ pos.x, 0, pos.z - desplazamiento }, { tam.x, 0, tam.z }))
                 pos.z -= desplazamiento;
@@ -174,7 +174,7 @@ void bomberman::actualizar() { //perdon a la persona que tenga que entender esto
 
     if (pasos >= 12) {
         pasos = 0;
-        ControladorAudio::playAudio(sonido::pasos);
+        ControladorAudio::getInstance()->playAudio(sonido::pasos);
 
         for (int i = 0; i < 10; i++) {
             particulas.push_back(new particula_tierra(
@@ -182,14 +182,14 @@ void bomberman::actualizar() { //perdon a la persona que tenga que entender esto
                 { GLfloat(0.05f), GLfloat(0.05f), GLfloat(0.05f) },
                 { 0, -25, 0 },
                 { GLfloat(disVelocidadParticulaTierra(genVelocidadParticulaTierra)), 5, GLfloat(disVelocidadParticulaTierra(genVelocidadParticulaTierra)) },
-                ControladorTexturas::getTextura(TEXTURA_SUELO)
+                ControladorTexturas::getInstance()->getTextura(TEXTURA_SUELO)
                 )
             );
         }
     }
 
     //Chequeo con fuego
-    if (!inmortal && !ControladorPoderes::getValor(INMORTALIDAD) && contactoConFuego())
+    if (!inmortal && !ControladorPoderes::getInstance()->getValor(INMORTALIDAD) && contactoConFuego())
         finJuego = true;
 }
 
@@ -198,6 +198,6 @@ void bomberman::dibujar() {
     glTranslatef(pos.x, pos.y, pos.z);
     glRotatef(rotacion_y_actual, 0, 1, 0);
     glRotatef(rotacion_z_actual, 0, 0, 1); 
-    ControladorObjetos::dibujar(OBJ_PLAYER);
+    ControladorObjetos::getInstance()->dibujar(OBJ_PLAYER);
     glPopMatrix();
 }

@@ -26,9 +26,7 @@ void eliminarEstructuras(vector_3 pos, bool isOrientacionX, int num) {
     }
 }
 
-void generarTablero() {
-    temporizador = false;
-
+void Controlador::inicializar_juego() {
     if (jugador == nullptr) {
         jugador = new bomberman(
             { tile_size / 2, 0, tile_size / 2 },
@@ -38,16 +36,8 @@ void generarTablero() {
     }
     else {
         jugador->setPosicionX(tile_size / 2);
-        //jugador->setPosicionY(0);
+        jugador->setPosicionY(0);
         jugador->setPosicionZ(tile_size / 2);
-    }
-
-    for (int i = 0; i < largoTablero; i++) {
-        estructuras[i] = new objeto * [anchoTablero];
-        bombas[i] = new objeto * [anchoTablero];
-        fuegos[i] = new objeto * [anchoTablero];
-        //enemigos[i] = new objeto * [anchoTablero];
-        bonificadores[i] = new objeto * [anchoTablero];
     }
 
     for (int i = 0; i < largoTablero; i++) {
@@ -55,7 +45,6 @@ void generarTablero() {
             estructuras[i][j] = nullptr;
             bombas[i][j] = nullptr;
             fuegos[i][j] = nullptr;
-            //enemigos[i][j] = nullptr;
             bonificadores[i][j] = nullptr;
         }
     }
@@ -127,31 +116,6 @@ void generarTablero() {
             true);
     }
 
-    //Estructura posicionar bomba
-    /*vector<objeto*> posicionesValidas;
-    for (int i = 2; i < largoTablero; i++, i++) {
-        for (int j = 2; j < anchoTablero; j++, j++) {
-            if (estructuras[i][j] != nullptr) {
-                posicionesValidas.push_back(estructuras[i][j]);
-            }
-        }
-    }
-
-    uniform_int_distribution<int> dis2(1, posicionesValidas.size());
-    int posicionPuerta = dis2(gen);
-
-    puerta = new door(
-        { posicionesValidas[posicionPuerta]->getPosicion().x , 0, posicionesValidas[posicionPuerta]->getPosicion().z },
-        { tile_size / 2, tile_size/4, tile_size / 2 }
-    );
-
-    posicionesValidas.clear();*/
-    //Fin Estructura posicionar bomba
-    puerta = new door(
-        { GLfloat(2.5 * tile_size), 0, GLfloat(tile_size / 2) },
-        { GLfloat(tile_size / 2), tile_size/4, GLfloat(tile_size / 2)}
-    );
-
     if (bonificadores[0][0] != nullptr) {
         delete bonificadores[0][0];
         bonificadores[0][0] = nullptr;
@@ -181,8 +145,21 @@ void generarTablero() {
         }
     }
 
-    //Enemigos
-    vector<pair<int, int>> posEnemigos = { {6, 4}, {12, 8}, {18, 2}, {2, 6} }; //hay que sacar lo hardcodeado y poner una cant random (entre un rango) y posiciones randoms
+    int cantidad_enemigos_colocados = 0;
+    vector<pair<int, int>> posEnemigos;
+
+    while (cantidad_enemigos_colocados < cantidad_enemigos_actual) {
+        int posicion_enemigo_x = dis(gen)*(largoTablero - 1);
+        int posicion_enemigo_z = dis(gen)*(anchoTablero - 1);
+        if (int(posicion_enemigo_x) % 2 == 0 &&
+            int(posicion_enemigo_z) % 2 == 0 &&
+            estructuras[getIndiceTablero(int(posicion_enemigo_x))][getIndiceTablero(int(posicion_enemigo_z))] == nullptr &&
+            int(posicion_enemigo_x) + int(posicion_enemigo_z) > 6) {
+            posEnemigos.push_back({ int(posicion_enemigo_x), int(posicion_enemigo_z)});
+            cantidad_enemigos_colocados++;
+        }
+    }
+
     enemigo* enem;
     bool orientacionX;
     double prob;
@@ -197,17 +174,43 @@ void generarTablero() {
             (prob < 0.33?ROJO: (prob < 0.66? AZUL:VERDE))
         );
 
-        //esta función es demasiado peligrosa como para estar cuando se generen enemigos en posiciones randoms pq puede aparecer cerca del inicio y eliminar las 3 estructuras que permiten un inicio satisfactorio
-        eliminarEstructuras(enem->getPosicion(), enem->getOrientacionX(), 3); //se está eliminando una estructura pero no el bonificador
+        eliminarEstructuras(enem->getPosicion(), enem->getOrientacionX(), 3);
 
         enemigos.push_back(enem);
     }
+
+    bool puertaColocada = false;
+    while (!puertaColocada) {
+        int posicion_puerta_x = dis(gen) * (largoTablero - 1);
+        int posicion_puerta_z = dis(gen) * (anchoTablero - 1);
+        if (estructuras[posicion_puerta_x][posicion_puerta_z] != nullptr && 
+            dynamic_cast<estructura*>(estructuras[posicion_puerta_x][posicion_puerta_z])->getDestructible() &&
+            posicion_puerta_x + posicion_puerta_z > 6) {
+            puertaColocada = true;
+            puerta = new door(
+                { GLfloat(posicion_puerta_x * tile_size + tile_size / 2), 0, GLfloat(posicion_puerta_z * tile_size + tile_size / 2) },
+                { GLfloat(tile_size / 2), tile_size / 4, GLfloat(tile_size / 2) }
+            );
+            cout << posicion_puerta_x << endl;
+            cout << posicion_puerta_z << endl;
+        }
+    }
+
     current_t = chrono::high_resolution_clock::now();
     puertaAbierta = false;
 }
 
 Controlador::Controlador() {
-    generarTablero();
+    for (int i = 0; i < largoTablero; i++) {
+        estructuras[i] = new objeto * [anchoTablero];
+        bombas[i] = new objeto * [anchoTablero];
+        fuegos[i] = new objeto * [anchoTablero];
+        bonificadores[i] = new objeto * [anchoTablero];
+    }
+
+    cantidad_enemigos_actual = 4;
+
+    inicializar_juego();
 
     if (SDL_Init(SDL_INIT_VIDEO) < 0) {
         cerr << "No se pudo iniciar SDL: " << SDL_GetError() << endl;
@@ -247,14 +250,15 @@ Controlador::Controlador() {
     SDL_SetRelativeMouseMode(SDL_TRUE);
     SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
 
-    ControladorTexturas::cargarTexturas();
-    ControladorObjetos::cargarObjetos();
-    ControladorAudio::cargarAudios();
-    ControladorLuz::cargarLuces();
-    ControladorPoderes::cargarPoderes();
-    ControladorInterfaz::cargarInterfaz();
+    controlador_texturas = ControladorTexturas::getInstance();
+    controlador_objetos = ControladorObjetos::getInstance();
+    controlador_audio = ControladorAudio::getInstance();
+    controlador_luz = ControladorLuz::getInstance();
+    controlador_poderes = ControladorPoderes::getInstance();
+    controlador_camara = ControladorCamara::getInstance();
+    controlador_interfaz = ControladorInterfaz::getInstance();
 
-    ControladorAudio::playAudio(sonido::inicioJuego);
+    controlador_audio->playAudio(sonido::inicioJuego);
 }
 
 Controlador* Controlador::getInstance() {
@@ -265,17 +269,17 @@ Controlador* Controlador::getInstance() {
 }
 
 int posBombaXTablero, posBombaZTablero;
-inline void colocarBomba() {
+inline void colocarBomba(ControladorCamara* controlador_camara, ControladorPoderes* controlador_poderes, ControladorAudio* controlador_audio) {
     if (jugador->bombaDisponible()) {
-        if (ControladorCamara::camaraMiraHacia(EJE_MENOS_X)) {
+        if (controlador_camara->camaraMiraHacia(EJE_MENOS_X)) {
             posBombaXTablero = getIndiceTablero(jugador->getPosicion().x - tile_size);
             posBombaZTablero = getIndiceTablero(jugador->getPosicion().z);
         }
-        else if (ControladorCamara::camaraMiraHacia(EJE_Z)) {
+        else if (controlador_camara->camaraMiraHacia(EJE_Z)) {
             posBombaXTablero = getIndiceTablero(jugador->getPosicion().x);
             posBombaZTablero = getIndiceTablero(jugador->getPosicion().z + tile_size);
         }
-        else if (ControladorCamara::camaraMiraHacia(EJE_X)) {
+        else if (controlador_camara->camaraMiraHacia(EJE_X)) {
             posBombaXTablero = getIndiceTablero(jugador->getPosicion().x + tile_size);
             posBombaZTablero = getIndiceTablero(jugador->getPosicion().z);
         }
@@ -295,8 +299,8 @@ inline void colocarBomba() {
                 { posBombaXTablero * tile_size + tile_size / 2, 1, posBombaZTablero * tile_size + tile_size / 2 },
                 { tile_size / 4, tile_size / 2, tile_size / 4 },
                 2000, //2 segundos
-                1 + ControladorPoderes::getValor(AUMENTAR_ALCANCE_BOMBAS),
-                ControladorAudio::playMecha({ posBombaXTablero * tile_size + tile_size / 2, 0, posBombaZTablero * tile_size + tile_size / 2 })
+                1 + controlador_poderes->getValor(AUMENTAR_ALCANCE_BOMBAS),
+                controlador_audio->playMecha({ posBombaXTablero * tile_size + tile_size / 2, 0, posBombaZTablero * tile_size + tile_size / 2 })
             );
             bombas[posBombaXTablero][posBombaZTablero] = bomba_obj;
 
@@ -320,13 +324,13 @@ void Controlador::manejarEventos() {
                 case SDLK_ESCAPE:
                     fin = true;
                 case SDLK_UP:
-                    ControladorInterfaz::opcion_anterior();
+                    controlador_interfaz->opcion_anterior();
                     break;
                 case SDLK_DOWN:
-                    ControladorInterfaz::opcion_siguiente();
+                    controlador_interfaz->opcion_siguiente();
                     break;
                 case SDLK_RETURN:
-                    ControladorInterfaz::seleccionar_opcion();
+                    controlador_interfaz->seleccionar_opcion();
                     break;
                 }
                 break;
@@ -360,14 +364,14 @@ void Controlador::manejarEventos() {
                     fin = true;
                     break;
                 case SDLK_b:
-                    colocarBomba();
+                    colocarBomba(controlador_camara, controlador_poderes, controlador_audio);
                     break;
                 case SDLK_p:
                     toggle(pausa);
                     if (pausa) {
-                        ControladorAudio::pausarAudio();
+                        controlador_audio->pausarAudio();
                     } else {
-                        ControladorAudio::reanudarAudio();
+                        controlador_audio->reanudarAudio();
                     }
                     break;
                 case SDLK_UP:
@@ -383,26 +387,26 @@ void Controlador::manejarEventos() {
                     moverIzquierda = true;
                     break;
                 case SDLK_1:
-                    ControladorAudio::playAudio(sonido::muerte);
+                    controlador_audio->playAudio(sonido::muerte);
                     break;
                 case SDLK_2:
-                    ControladorAudio::playAudio(sonido::bonificacion);
+                    controlador_audio->playAudio(sonido::bonificacion);
                     break;
                 case SDLK_3:
-                    ControladorAudio::playBomba({0,0,0});
+                    controlador_audio->playBomba({0,0,0});
                     break;
                 case SDLK_4 :
-                    ControladorAudio::playAudio(sonido::pasos);
+                    controlador_audio->playAudio(sonido::pasos);
                 case SDLK_5:
-                    ControladorAudio::playAudio(sonido::inicioJuego);
+                    controlador_audio->playAudio(sonido::inicioJuego);
                 case SDLK_6:
-                    ControladorAudio::playAudio(sonido::puertaAbierta);
+                    controlador_audio->playAudio(sonido::puertaAbierta);
                     break;
                 case SDLK_7:
-                    ControladorAudio::playAudio(sonido::musica);
+                    controlador_audio->playAudio(sonido::musica);
                     break;
                 case SDLK_8:
-                    ControladorAudio::playMecha({ 0,0,0 });
+                    controlador_audio->playMecha({ 0,0,0 });
                     break;
             }
             break;
@@ -445,7 +449,7 @@ void Controlador::manejarEventos() {
         case SDL_MOUSEBUTTONDOWN:
             switch (evento.button.button) {
                 case SDL_BUTTON_LEFT:
-                    colocarBomba();
+                    colocarBomba(controlador_camara, controlador_poderes, controlador_audio);
                 break;
             }
         break;
@@ -454,16 +458,16 @@ void Controlador::manejarEventos() {
     const Uint8* movimientoCamara = SDL_GetKeyboardState(NULL);
 
     if (movimientoCamara[SDL_SCANCODE_I]) {
-        ControladorLuz::moverCamara({ 0, 0, -(float)(velocidadCamara * velocidad_juego * frameDelay / 1000) });
+        controlador_luz->moverCamara({ 0, 0, -(float)(velocidadCamara * velocidad_juego * frameDelay / 1000) });
     }
     if (movimientoCamara[SDL_SCANCODE_J]) {
-        ControladorLuz::moverCamara({ -(float)(velocidadCamara * velocidad_juego * frameDelay / 1000), 0, 0 });
+        controlador_luz->moverCamara({ -(float)(velocidadCamara * velocidad_juego * frameDelay / 1000), 0, 0 });
     }
     if (movimientoCamara[SDL_SCANCODE_K]) {
-        ControladorLuz::moverCamara({ 0, 0, (float)(velocidadCamara * velocidad_juego * frameDelay / 1000) });
+        controlador_luz->moverCamara({ 0, 0, (float)(velocidadCamara * velocidad_juego * frameDelay / 1000) });
     }
     if (movimientoCamara[SDL_SCANCODE_L]) {
-        ControladorLuz::moverCamara({ (float)(velocidadCamara * velocidad_juego * frameDelay / 1000), 0, 0 });
+        controlador_luz->moverCamara({ (float)(velocidadCamara * velocidad_juego * frameDelay / 1000), 0, 0 });
     }
 }
 
@@ -482,13 +486,14 @@ void Controlador::actualizar() {
         disminuirTiempo(elapsed_time);
 
     if (puertaAbierta && puerta->intersecta(jugador)) {
-        ControladorAudio::playAudio(sonido::bonificacion);
-        ControladorPoderes::cargarPoderes();
+        controlador_audio->playAudio(sonido::bonificacion);
+        controlador_poderes->resetearPoderes();
+        cantidad_enemigos_actual++;
         aumentarNivel();
-        generarTablero();
+        inicializar_juego();
     } 
 
-    ControladorPoderes::actualizarTemporizadores();
+    controlador_poderes->actualizarTemporizadores();
 
     jugador->actualizar();
     puerta->actualizar();
@@ -521,7 +526,7 @@ void Controlador::actualizar() {
     }
 
     for (list<enemigo*>::iterator itE = enemigos.begin(); itE != enemigos.end();){
-        if (!inmortal && !ControladorPoderes::getValor(INMORTALIDAD) && (*itE)->intersecta(jugador)) {
+        if (!inmortal && !controlador_poderes->getValor(INMORTALIDAD) && (*itE)->intersecta(jugador)) {
             finJuego = true;
         }
         (*itE)->actualizar();
@@ -536,12 +541,12 @@ void Controlador::actualizar() {
 
     if (!puertaAbierta && enemigos.empty()) {
         puertaAbierta = true;
-        ControladorAudio::playAudio(sonido::puertaAbierta, puerta->getPosicion());
+        controlador_audio->playAudio(sonido::puertaAbierta, puerta->getPosicion());
     }
 
     if (!temporizador && tiempoJuego <= 10000) {
         temporizador = true;
-        ControladorAudio::playAudio(sonido::timer10);
+        controlador_audio->playAudio(sonido::timer10);
     }
 }
 
@@ -549,14 +554,13 @@ void Controlador::dibujar() {
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     glLoadIdentity();
 
-    ControladorCamara::colocarCamara(jugador->getPosicion());
+    controlador_camara->colocarCamara(jugador->getPosicion());
 
     if (texturas_habilitadas) {
-        ControladorLuz::colocarLuces(jugador->getPosicion());
+        controlador_luz->colocarLuces(jugador->getPosicion());
     }
 
-    ControladorObjetos::dibujarSuelo();
-
+    controlador_objetos->dibujarSuelo();
     jugador->dibujar();
 
     for (int i = 0; i < largoTablero; i++) {
@@ -581,7 +585,7 @@ void Controlador::dibujar() {
 
     puerta->dibujar();
 
-    ControladorLuz::quitarLuces();
+    controlador_luz->quitarLuces();
 
     for (int i = 0; i < largoTablero; i++) {
         for (int j = 0; j < anchoTablero; j++) {
@@ -595,14 +599,14 @@ void Controlador::dibujar() {
         (*it)->dibujar();
     }
 
-    ControladorObjetos::dibujarMarcadorBomba(jugador->getPosicion());
+    controlador_objetos->dibujarMarcadorBomba(jugador->getPosicion());
 
     if (pausa) {
-        ControladorInterfaz::dibujarMenu();
+        controlador_interfaz->dibujarMenu();
     }
 
     if (mostrarHud) {
-        ControladorInterfaz::dibujarHUD();
+        controlador_interfaz->dibujarHUD();
     }
 
     SDL_GL_SwapWindow(window);
@@ -640,8 +644,14 @@ Controlador::~Controlador() {
         itE = enemigos.erase(itE);
     }
 
-    ControladorAudio::limpiarAudios();
-    ControladorInterfaz::liberarInterfaz();
+
+    delete controlador_texturas;
+    delete controlador_objetos;
+    delete controlador_audio;
+    delete controlador_luz;
+    delete controlador_poderes;
+    delete controlador_camara;
+    delete controlador_interfaz;
 
     SDL_GL_DeleteContext(context);
     SDL_DestroyWindow(window);

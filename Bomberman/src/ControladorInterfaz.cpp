@@ -1,22 +1,20 @@
 #include "../lib/ControladorInterfaz.h"
 
-TTF_Font* ControladorInterfaz::interfaz = nullptr;
-hud* ControladorInterfaz::hudPuntaje = nullptr;
-hud* ControladorInterfaz::hudTiempo = nullptr;
-hud* ControladorInterfaz::hudGameOver = nullptr;
-
-map<tipo_poder, hud*> ControladorInterfaz::poderes;
-
-map<tipo_opcion, hud*> ControladorInterfaz::opciones_actuales;
-map<tipo_opcion, hud*> ControladorInterfaz::opciones_inicio;
-map<tipo_opcion, hud*> ControladorInterfaz::opciones_configuracion;
-tipo_opcion ControladorInterfaz::opcion_seleccionada = COMENZAR_JUEGO;
+ControladorInterfaz* ControladorInterfaz::instancia = nullptr;
 
 float const MARGEN_HUD = 5.0f;
 float MARGEN_PODERES = 30.f * WINDOW_RATIO;
 float posXPoder = MARGEN_HUD;
 
-void ControladorInterfaz::cargarInterfaz() {
+ControladorInterfaz* ControladorInterfaz::getInstance() {
+	if (instancia == nullptr)
+		instancia = new ControladorInterfaz();
+	return instancia;
+}
+
+ControladorInterfaz::ControladorInterfaz() {
+	opcion_seleccionada = COMENZAR_JUEGO;
+
 	interfaz = TTF_OpenFont("texturas/OpenSans-Regular.ttf", 24);
 	if (interfaz == nullptr) {
 		cerr << "Error en TTF_OpenFont: " << SDL_GetError() << endl;
@@ -51,7 +49,7 @@ void ControladorInterfaz::cargarInterfaz() {
 
 	for (int i = int(CAMBIAR_CAMARA); i <= int(ATRAS); i++) {
 		opciones_configuracion[tipo_opcion(i)] = new hud();
-		opciones_configuracion[tipo_opcion(i)]->colorMensaje = {255, 255, 255};
+		opciones_configuracion[tipo_opcion(i)]->colorMensaje = { 255, 255, 255 };
 	}
 
 	opciones_actuales = opciones_inicio;
@@ -59,9 +57,10 @@ void ControladorInterfaz::cargarInterfaz() {
 	//Fin menu
 }
 
+
 void ControladorInterfaz::setPoderes(map<tipo_poder, int> powerUp){
 	for (auto it = powerUp.begin(); it != powerUp.end(); ++it) {
-		if (ControladorPoderes::poderDependeDeTiempo(it->first)) {
+		if (ControladorPoderes::getInstance()->poderDependeDeTiempo(it->first)) {
 			setMensajeEnComponente(to_string(it->second / 1000) + "s", interfaz, poderes[it->first]);
 		} else {
 			string mensaje = to_string(it->second);
@@ -120,9 +119,9 @@ void ControladorInterfaz::setMensajeEnComponente(string mensaje, TTF_Font* fuent
 void ControladorInterfaz::dibujarComponenteHUDPoderes() {
 	posXPoder = MARGEN_HUD;
 	for (pair<const tipo_poder, hud*>& kv : poderes) {
-		if (kv.first==AUMENTAR_CANTIDAD_BOMBAS || ControladorPoderes::getValor(kv.first) != 0) {
+		if (kv.first==AUMENTAR_CANTIDAD_BOMBAS || ControladorPoderes::getInstance()->getValor(kv.first) != 0) {
 			//dibujar texto
-			if (!ControladorPoderes::poderEsBooleano(kv.first)) {
+			if (!ControladorPoderes::getInstance()->poderEsBooleano(kv.first)) {
 				glEnable(GL_TEXTURE_2D);
 				glBindTexture(GL_TEXTURE_2D, kv.second->idTextura);
 				glColor3f(kv.second->colorMensaje.r, kv.second->colorMensaje.g, kv.second->colorMensaje.b);
@@ -142,7 +141,7 @@ void ControladorInterfaz::dibujarComponenteHUDPoderes() {
 
 			//dibujar icono
 			glEnable(GL_TEXTURE_2D);
-			glBindTexture(GL_TEXTURE_2D, ControladorTexturas::getTextura(ControladorTexturas::getTipoTexturaPoder(kv.first)));
+			glBindTexture(GL_TEXTURE_2D, ControladorTexturas::getInstance()->getTextura(ControladorTexturas::getInstance()->getTipoTexturaPoder(kv.first)));
 			glColor3f(1.0f, 1.0f, 1.0f);
 			glBegin(GL_QUADS); {
 				glTexCoord2d(0.f, 1.f); glVertex3f(posXPoder, altoPantalla - MARGEN_HUD - kv.second->height, 0.f);
@@ -279,7 +278,7 @@ void ControladorInterfaz::dibujarMenu() {
 	glPushMatrix();
 
 	glEnable(GL_TEXTURE_2D);
-	glBindTexture(GL_TEXTURE_2D, ControladorTexturas::getTextura(TEXTURA_LOGO));
+	glBindTexture(GL_TEXTURE_2D, ControladorTexturas::getInstance()->getTextura(TEXTURA_LOGO));
 	glColor3f(1.0f, 1.0f, 1.0f);
 	glBegin(GL_QUADS); {
 		glTexCoord2d(0.f, 1.f); glVertex3f((largoPantalla / 2.0f) - 200, (altoPantalla / 2.0f) - 300, 0.f);
@@ -337,7 +336,7 @@ void ControladorInterfaz::seleccionar_opcion() {
 		break;
 
 	case CAMBIAR_CAMARA:
-		ControladorCamara::cambiarTipoCamara();
+		ControladorCamara::getInstance()->cambiarTipoCamara();
 		break;
 	case TOGGLE_WIREFRAME:
 		toggle(wireframe);
@@ -357,7 +356,7 @@ void ControladorInterfaz::seleccionar_opcion() {
 			glShadeModel(GL_FLAT);
 		break;
 	case TOGGLE_LUZ_AMBIENTE:
-		ControladorLuz::cambiarColorLuzAmbiente();
+		ControladorLuz::getInstance()->cambiarColorLuzAmbiente();
 		break;
 	case TOGGLE_HUD:
 		toggle(mostrarHud);
@@ -370,7 +369,7 @@ void ControladorInterfaz::seleccionar_opcion() {
 		else 
 			velocidad_juego = 1.f;
 
-		ControladorAudio::modificarVelocidad(velocidad_juego);
+		ControladorAudio::getInstance()->modificarVelocidad(velocidad_juego);
 		break;
 	case TOGGLE_INMORTAL:
 		toggle(inmortal);
@@ -382,7 +381,7 @@ void ControladorInterfaz::seleccionar_opcion() {
 		toggle(atravesar_paredes);
 		break;
 	case TOGGLE_AUDIO:
-		ControladorAudio::silenciarAudio();
+		ControladorAudio::getInstance()->silenciarAudio();
 		break;
 	case ATRAS:
 		opciones_actuales = opciones_inicio;
@@ -400,7 +399,7 @@ void ControladorInterfaz::dibujarHUD() {
 	setMensajeEnComponente("Puntaje: " + to_string(puntaje), interfaz, hudPuntaje);
 	setMensajeEnComponente("Tiempo: " + to_string(tiempoJuego / 1000), interfaz, hudTiempo);
 	setMensajeEnComponente(finJuego ? "¡PERDISTE!" : " ", interfaz, hudGameOver);
-	setPoderes(ControladorPoderes::obtenerPoderes());
+	setPoderes(ControladorPoderes::getInstance()->obtenerPoderes());
 
 	glClear(GL_DEPTH_BUFFER_BIT);
 	glDisable(GL_DEPTH_TEST);
@@ -430,7 +429,7 @@ void ControladorInterfaz::dibujarHUD() {
 	glDisable(GL_BLEND);
 }
 
-void ControladorInterfaz::liberarInterfaz() {
+ControladorInterfaz::~ControladorInterfaz() {
 	SDL_FreeSurface(hudPuntaje->mensajeSurface);
 	SDL_FreeSurface(hudPuntaje->colorSurface);
 	SDL_FreeSurface(hudTiempo->mensajeSurface);
@@ -439,7 +438,7 @@ void ControladorInterfaz::liberarInterfaz() {
 	SDL_FreeSurface(hudGameOver->colorSurface);
 
 
-	for (pair<const tipo_poder, hud*>& kv : poderes){
+	for (pair<const tipo_poder, hud*>& kv : poderes) {
 		SDL_FreeSurface(kv.second->mensajeSurface);
 		SDL_FreeSurface(kv.second->colorSurface);
 		delete kv.second;

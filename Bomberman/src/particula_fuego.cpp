@@ -37,6 +37,6 @@ void particula_fuego::actualizar() {
 void particula_fuego::dibujar() {
     glPushMatrix();
     glTranslatef(pos.x, pos.y, pos.z);
-    ControladorObjetos::dibujarCubo(tam, 0, color);
+    ControladorObjetos::getInstance()->dibujarCubo(tam, 0, color);
     glPopMatrix();
 }

@@ -1,9 +1,22 @@
 #include "../lib/ControladorPoderes.h"
 
-map<tipo_poder, int> ControladorPoderes::poderActivo;
-map<tipo_poder, int> ControladorPoderes::temporizadorPoder;
+ControladorPoderes* ControladorPoderes::instancia = nullptr;
 
-void ControladorPoderes::cargarPoderes() {
+ControladorPoderes* ControladorPoderes::getInstance() {
+	if (instancia == nullptr)
+		instancia = new ControladorPoderes();
+	return instancia;
+}
+
+ControladorPoderes::ControladorPoderes() {
+	temporizadorPoder[INMORTALIDAD] = 0;
+	temporizadorPoder[AUMENTAR_VELOCIDAD] = 0;
+	poderActivo[BOMBAS_ATRAVIESAN_ESTRUCTURAS] = 0;
+	poderActivo[AUMENTAR_CANTIDAD_BOMBAS] = 0;
+	poderActivo[AUMENTAR_ALCANCE_BOMBAS] = 0;
+}
+
+void ControladorPoderes::resetearPoderes() {
 	temporizadorPoder[INMORTALIDAD] = 0;
 	temporizadorPoder[AUMENTAR_VELOCIDAD] = 0;
 	poderActivo[BOMBAS_ATRAVIESAN_ESTRUCTURAS] = 0;
@@ -60,4 +73,8 @@ map<tipo_poder, int> ControladorPoderes::obtenerPoderes() {
 		}
 	}
 	return poderes;
+}
+
+ControladorPoderes::~ControladorPoderes() {
+
 }

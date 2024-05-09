@@ -27,13 +27,20 @@ enum tipo_direccion {
 
 class ControladorCamara{
 private:
-	static tipo_camara camara_actual;
-	static int tiempoSacudirse;
+	static ControladorCamara* instancia;
+	ControladorCamara();
+
+	tipo_camara camara_actual;
+	int tiempoSacudirse;
 public:
-	static void cambiarTipoCamara();
-	static void colocarCamara(vector_3 pos);
-	static void sacudir(int tiempo);
-	static bool camaraMiraHacia(tipo_direccion direccion);
+	static ControladorCamara* getInstance();
+
+	void cambiarTipoCamara();
+	void colocarCamara(vector_3 pos);
+	void sacudir(int tiempo);
+	bool camaraMiraHacia(tipo_direccion direccion);
+
+	~ControladorCamara();
 };
 
 #endif

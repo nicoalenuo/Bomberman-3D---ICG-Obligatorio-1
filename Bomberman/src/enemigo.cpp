@@ -199,13 +199,13 @@ void enemigo::dibujar() {
     glRotatef(rotacion_y_actual, 0, 1, 0);
     switch (color) {
         case ROJO:
-            ControladorObjetos::dibujar(OBJ_ENEMY_ROJO);
+            ControladorObjetos::getInstance()->dibujar(OBJ_ENEMY_ROJO);
             break;
         case AZUL:
-            ControladorObjetos::dibujar(OBJ_ENEMY_AZUL);
+            ControladorObjetos::getInstance()->dibujar(OBJ_ENEMY_AZUL);
             break;
         case VERDE:
-            ControladorObjetos::dibujar(OBJ_ENEMY_VERDE);
+            ControladorObjetos::getInstance()->dibujar(OBJ_ENEMY_VERDE);
             break;
     }
    

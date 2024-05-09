@@ -20,7 +20,7 @@ estructura::~estructura() {
                     { GLfloat(0.07), GLfloat(0.07), GLfloat(0.07) },
                     { 0, -25, 0 },
                     { GLfloat(dis(gen)), 10, GLfloat(dis(gen)) },
-                    ControladorTexturas::getTextura(ESTRUCTURA_DESTRUCTIBLE)
+                    ControladorTexturas::getInstance()->getTextura(ESTRUCTURA_DESTRUCTIBLE)
                 )
             );
         }
@@ -44,6 +44,6 @@ void estructura::dibujar() {
         color[1] = 175.f / 255;
         color[2] = 175.f / 255;
     }
-    ControladorObjetos::dibujarCubo(tam, ControladorTexturas::getTextura(destructible ? ESTRUCTURA_DESTRUCTIBLE : ESTRUCTURA_NO_DESTRUCTIBLE), color);
+    ControladorObjetos::getInstance()->dibujarCubo(tam, ControladorTexturas::getInstance()->getTextura(destructible ? ESTRUCTURA_DESTRUCTIBLE : ESTRUCTURA_NO_DESTRUCTIBLE), color);
     glPopMatrix();
 }

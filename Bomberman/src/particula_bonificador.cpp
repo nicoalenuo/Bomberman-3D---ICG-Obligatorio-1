@@ -27,6 +27,6 @@ GLfloat colorParticulaBonificador[3] = { 1.0f, 1.0f, 0.5f };
 void particula_bonificador::dibujar() {
     glPushMatrix();
     glTranslatef(pos.x, pos.y, pos.z);
-    ControladorObjetos::dibujarCubo(tam, 0, colorParticulaBonificador);
+    ControladorObjetos::getInstance()->dibujarCubo(tam, 0, colorParticulaBonificador);
     glPopMatrix();
 }
