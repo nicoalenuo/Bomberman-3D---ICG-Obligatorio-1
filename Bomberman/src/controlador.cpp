@@ -324,7 +324,7 @@ void Controlador::manejarEventos() {
     if (pausa) {
         while (SDL_PollEvent(&evento)) {
             switch (evento.type) {
-            case SDL_KEYDOWN:
+            case SDL_KEYUP:
                 switch (evento.key.keysym.sym) {
                 case SDLK_p:
                     pausa = false;
