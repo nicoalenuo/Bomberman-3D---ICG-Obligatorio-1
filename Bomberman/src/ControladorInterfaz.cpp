@@ -232,10 +232,10 @@ void ControladorInterfaz::dibujarComponenteHUD(hud* hud) {
 			glBindTexture(GL_TEXTURE_2D, hud->idTextura);
 			glColor3f(hud->colorMensaje.r, hud->colorMensaje.g, hud->colorMensaje.b);
 			glBegin(GL_QUADS); {
-				glTexCoord2d(0.f, 1.f); glVertex3f(largoPantalla / 2.f - hud->mensajeSurface->w / 2.f, altoPantalla / 2.f + hud->mensajeSurface->h / 2.f, 0.f);
-				glTexCoord2d(1.f, 1.f); glVertex3f(largoPantalla / 2.f + hud->mensajeSurface->w / 2.f, altoPantalla / 2.f + hud->mensajeSurface->h / 2.f, 0.f);
-				glTexCoord2d(1.f, 0.f); glVertex3f(largoPantalla / 2.f + hud->mensajeSurface->w / 2.f, altoPantalla / 2.f - hud->mensajeSurface->h / 2.f, 0.f);
-				glTexCoord2d(0.f, 0.f); glVertex3f(largoPantalla / 2.f - hud->mensajeSurface->w / 2.f, altoPantalla / 2.f - hud->mensajeSurface->h / 2.f, 0.f);
+				glTexCoord2d(0.f, 1.f); glVertex3f(WINDOW_WIDTH / 2.f - hud->mensajeSurface->w / 2.f, WINDOW_HEIGHT / 2.f + hud->mensajeSurface->h / 2.f, 0.f);
+				glTexCoord2d(1.f, 1.f); glVertex3f(WINDOW_WIDTH / 2.f + hud->mensajeSurface->w / 2.f, WINDOW_HEIGHT / 2.f + hud->mensajeSurface->h / 2.f, 0.f);
+				glTexCoord2d(1.f, 0.f); glVertex3f(WINDOW_WIDTH / 2.f + hud->mensajeSurface->w / 2.f, WINDOW_HEIGHT / 2.f - hud->mensajeSurface->h / 2.f, 0.f);
+				glTexCoord2d(0.f, 0.f); glVertex3f(WINDOW_WIDTH / 2.f - hud->mensajeSurface->w / 2.f, WINDOW_HEIGHT / 2.f - hud->mensajeSurface->h / 2.f, 0.f);
 			} glEnd();
 			glDisable(GL_TEXTURE_2D);
 			break;
@@ -243,7 +243,7 @@ void ControladorInterfaz::dibujarComponenteHUD(hud* hud) {
 }
 
 void ControladorInterfaz::dibujarMenu() {
-	GLfloat posY = (WINDOW_HEIGHT / 2.0f) - 150;
+	GLfloat posY = (WINDOW_HEIGHT / 2.0f) - 180;
 
 	setMensajeEnComponente(
 		(opcion_seleccionada == COMENZAR_JUEGO ? string("->") : "") + "Jugar" + (opcion_seleccionada == COMENZAR_JUEGO ? string("<-") : ""),
