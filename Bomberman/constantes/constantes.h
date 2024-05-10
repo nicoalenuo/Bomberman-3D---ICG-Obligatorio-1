@@ -20,11 +20,11 @@ const int WINDOW_WIDTH = 1280;
 const int WINDOW_HEIGHT = 720;
 const float WINDOW_RATIO = (float) WINDOW_WIDTH / (float) WINDOW_HEIGHT;
 
-const float velocidadCamara = 10;
-
 const int largoTablero = 29;
 const int anchoTablero = 11;
 
-const GLfloat SENSIBILIDAD_MOUSE = 0.2f;
+const GLfloat SENSIBILIDAD_MOUSE = 0.1f;
+const GLfloat VELOCIDAD_MOVIMIENTO_LUZ_AMBIENTE = 10.0f;
+
 
 #endif

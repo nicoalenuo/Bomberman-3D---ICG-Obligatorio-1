@@ -10,10 +10,10 @@ bomba::bomba(vector_3 pos, vector_3 tam, int tiempo, int largo, int id) : objeto
 
 int xBomba, zBomba, dx, dz, nx, nz;
 void bomba::actualizar() {
-    scale += GLfloat(0.005f * (elapsed_time / frameDelay));
+    scale += GLfloat(0.005f * (tiempo_entre_frames / frameDelay));
 
     if (cayendo && pos.y > 0.0f) {
-        pos.y -= 0.05f;
+        pos.y -= 0.2f * (tiempo_entre_frames / frameDelay);
 
         if (pos.y <= 0.0f) {
             pos.y = 0;
@@ -36,7 +36,7 @@ void bomba::actualizar() {
         }
     }
 
-    tiempoBomba -= int(elapsed_time);
+    tiempoBomba -= int(tiempo_entre_frames);
     bool alcanza;
     if (tiempoBomba <= 0) {
         xBomba = getIndiceTablero(pos.x);
@@ -78,9 +78,6 @@ void bomba::actualizar() {
                         estructura* est = dynamic_cast<estructura*>(estructuras[nx][nz]);
                         if (est->getDestructible()) {
                             delete est;
-                            if (estructuras[nx][nz] != nullptr) {
-                                cout << "aloh?" << endl;
-                            }
                             estructuras[nx][nz] = nullptr;
                         }
                     }
@@ -118,6 +115,6 @@ void bomba::dibujar() {
     glPushMatrix();
     glTranslatef(pos.x, pos.y, pos.z);
     glScalef(scale, scale, scale);
-    ControladorObjetos::getInstance()->dibujar(OBJ_BOMBA);
+    ControladorObjetos::getInstance()->dibujar(OBJ_BOMBA, 1.0f);
     glPopMatrix();
 }

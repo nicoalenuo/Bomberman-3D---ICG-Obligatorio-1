@@ -20,11 +20,11 @@ particula_fuego::particula_fuego(vector_3 pos, vector_3 tam, vector_3 ac, vector
 
 void particula_fuego::actualizar() {
     if ((pos.y < 2 * tile_size && tipoColor == FUEGO_ROJO) || (pos.y < 1)) {
-        tiempoParticula += elapsed_time;
+        tiempoParticula += tiempo_entre_frames;
 
-        pos.x = pos.x + velocidad.x * (elapsed_time / frameDelay);
+        pos.x = pos.x + velocidad.x * (tiempo_entre_frames / frameDelay);
         pos.y = (aceleracion.y * tiempoParticula * tiempoParticula / (1000.0f * 1000.0f)) + (velocidad.y * tiempoParticula) + pos_inicial.y;
-        pos.z = pos.z + velocidad.z * (elapsed_time / frameDelay);
+        pos.z = pos.z + velocidad.z * (tiempo_entre_frames / frameDelay);
     }
     else {
         eliminar = true;

@@ -30,10 +30,18 @@ private:
 	static ControladorCamara* instancia;
 	ControladorCamara();
 
+	vector_3 valores_camara;
+	vector_3 camara_centro;
+	vector_3 camara_direccion;
+	GLfloat distancia_a_jugador;
+
 	tipo_camara camara_actual;
 	int tiempoSacudirse;
 public:
 	static ControladorCamara* getInstance();
+
+	void actualizarValoresMouse(GLfloat diferencia_x, GLfloat diferencia_y);
+	void actualizarValoresRueda(GLfloat diferencia_rueda);
 
 	void cambiarTipoCamara();
 	void colocarCamara(vector_3 pos);

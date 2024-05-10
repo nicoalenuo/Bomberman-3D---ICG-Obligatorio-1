@@ -16,7 +16,9 @@ void bomberman::actualizar() { //perdon a la persona que tenga que entender esto
     uniform_real_distribution<> disVelocidadParticulaTierra(-0.1, 0.1);
 
     bool movimiento = false;
-    GLfloat desplazamiento = velocidad * (elapsed_time / frameDelay) * (ControladorPoderes::getInstance()->getValor(AUMENTAR_VELOCIDAD) ? 2 : 1);
+    GLfloat desplazamiento = velocidad * (tiempo_entre_frames / frameDelay) * (ControladorPoderes::getInstance()->getValor(AUMENTAR_VELOCIDAD) ? 2 : 1);
+    
+    
     if (moverArriba) {
         if (ControladorCamara::getInstance()->camaraMiraHacia(EJE_MENOS_X)) {
             rotacionY = 90;
@@ -115,12 +117,12 @@ void bomberman::actualizar() { //perdon a la persona que tenga que entender esto
 
     if (rotacion_y_actual < rotacionY) {
         if (abs(rotacion_y_actual - rotacionY) <= 180) {
-            rotacion_y_actual += GLfloat(25 * (elapsed_time / frameDelay));
+            rotacion_y_actual += GLfloat(25 * (tiempo_entre_frames / frameDelay));
             if (rotacion_y_actual > rotacionY)
                 rotacion_y_actual = rotacionY;
         }
         else {
-            rotacion_y_actual -= 25 * (elapsed_time / frameDelay);
+            rotacion_y_actual -= 25 * (tiempo_entre_frames / frameDelay);
             rotacion_y_actual = GLfloat(fmod(rotacion_y_actual, 360));
             if (rotacion_y_actual < 0)
                 rotacion_y_actual += 360;
@@ -131,7 +133,7 @@ void bomberman::actualizar() { //perdon a la persona que tenga que entender esto
     }
     else if (rotacion_y_actual > rotacionY) {
         if (abs(rotacion_y_actual - rotacionY) <= 180) {
-            rotacion_y_actual -= 25 * (elapsed_time / frameDelay);
+            rotacion_y_actual -= 25 * (tiempo_entre_frames / frameDelay);
             if (rotacion_y_actual < rotacionY)
                 rotacion_y_actual = rotacionY;
 
@@ -150,13 +152,13 @@ void bomberman::actualizar() { //perdon a la persona que tenga que entender esto
     
     if (moverArriba || moverDerecha || moverIzquierda || moverAbajo){
         if (balanceandoseDerecha) {
-            rotacion_z_actual += 2 * (elapsed_time / frameDelay);
+            rotacion_z_actual += 2 * (tiempo_entre_frames / frameDelay);
             if (rotacion_z_actual > 8) {
                 balanceandoseDerecha = false;
             }
         }
         else {
-            rotacion_z_actual -= 2 * (elapsed_time / frameDelay);
+            rotacion_z_actual -= 2 * (tiempo_entre_frames / frameDelay);
             if (rotacion_z_actual < -8) {
                 balanceandoseDerecha = true;
             }
@@ -168,7 +170,7 @@ void bomberman::actualizar() { //perdon a la persona que tenga que entender esto
 
     //Sonido de pisadas
     if (movimiento)
-        pasos += elapsed_time / frameDelay;
+        pasos += tiempo_entre_frames / frameDelay;
     else
         pasos = 0;
 
@@ -198,6 +200,6 @@ void bomberman::dibujar() {
     glTranslatef(pos.x, pos.y, pos.z);
     glRotatef(rotacion_y_actual, 0, 1, 0);
     glRotatef(rotacion_z_actual, 0, 0, 1); 
-    ControladorObjetos::getInstance()->dibujar(OBJ_PLAYER);
+    ControladorObjetos::getInstance()->dibujar(OBJ_PLAYER, 1.0f);
     glPopMatrix();
 }

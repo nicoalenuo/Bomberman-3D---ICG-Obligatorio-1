@@ -15,7 +15,7 @@ void fuego::actualizar() {
 		ControladorLuz::getInstance()->pedirLuz(pos, colorLuz);
 	}
 
-	tiempoFuego -= int(elapsed_time);
+	tiempoFuego -= int(tiempo_entre_frames);
 
 	int x = getIndiceTablero(pos.x);
 	int z = getIndiceTablero(pos.z);

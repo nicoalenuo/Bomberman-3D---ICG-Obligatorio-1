@@ -7,10 +7,6 @@ bool moverAbajo = false;
 bool moverDerecha = false;
 bool moverIzquierda = false;
 
-GLfloat mouseX = 0;
-GLfloat mouseY = 0;
-GLfloat mouseY_invertido = 45;
-
 bool pausa = true;
 bool pararTiempo = false;
 bool wireframe = false;
@@ -35,13 +31,8 @@ bomberman* jugador;
 
 door* puerta;
 
-int largoPantalla = WINDOW_WIDTH;
-int altoPantalla = WINDOW_HEIGHT;
-
-chrono::duration<int> delta_time;
-GLfloat elapsed_time;
-chrono::high_resolution_clock::time_point current_t, previous_t;
-
+GLfloat tiempo_entre_frames;
+chrono::high_resolution_clock::time_point marca_tiempo_anterior, marca_tiempo_actual;
 
 bool fin = false;
 bool finJuego = false;
@@ -49,9 +40,8 @@ bool finJuego = false;
 int nivel = 1;
 int puntaje = 0;
 int tiempoJuego = 200000; //milisegundos
-bool temporizador = false;
-
 bool puertaAbierta = false;
+bool temporizador = false;
 
 int getIndiceTablero(GLfloat coord) {
     return int(floor(coord / tile_size));
@@ -77,7 +67,7 @@ void sumarPuntaje(int puntos) {
 }
 
 void disminuirTiempo(GLfloat milisegundos){
-    tiempoJuego -= int(elapsed_time);
+    tiempoJuego -= int(tiempo_entre_frames);
     if (tiempoJuego <= 0) {
         tiempoJuego = 0;
         finJuego = true;

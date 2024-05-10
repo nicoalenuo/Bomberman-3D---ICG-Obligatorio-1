@@ -9,24 +9,24 @@ ControladorObjetos* ControladorObjetos::getInstance() {
 }
 
 ControladorObjetos::ControladorObjetos() {
-	ControladorObjetos::cargarObj("objs/player.obj", player_commands, player_data);
-	ControladorObjetos::cargarObj("objs/bomba.obj", bomba_commands, bomba_data);
-	ControladorObjetos::cargarObj("objs/enemy.obj", enemy_commands, enemy_data);
+	ControladorObjetos::cargarObj("objs/player.obj", player_data);
+	ControladorObjetos::cargarObj("objs/bomba.obj", bomba_data);
+	ControladorObjetos::cargarObj("objs/enemy.obj", enemy_data);
 }
 
-void ControladorObjetos::cargarObj(string file, vector<char>& commands_output, vector<vector<float>>& data_output) {
+void ControladorObjetos::cargarObj(string file, pair<vector<char>, vector<vector<float>>>& data_output) {
 	ifstream file_stream(file);
 	if (!file_stream) {
-		cerr << "Cannot open: " << file << endl;
+		cerr << "No se pudo abrir: " << file << endl;
 		exit(1);
 	}
-	vector<char> commands;
+	vector<char> comandos;
 	vector<vector<float>> data;
 
-	vector<unsigned int> vertex_indices, uv_indices, normal_indices;
+	vector<int> vertex_indices, uv_indices, normal_indices;
 	vector<vector<float>> temp_vertices, temp_uvs, temp_normals;
 
-	string line, subline, command, face1, face2, face3, face4;
+	string line, subline, comando, face1, face2, face3, face4;
 	vector<string> faces;
 	float x, y, z;
 	unsigned int aux;
@@ -34,24 +34,24 @@ void ControladorObjetos::cargarObj(string file, vector<char>& commands_output, v
 
 	while (getline(file_stream, line)) {
 
-		file_stream >> command;
+		file_stream >> comando;
 
-		if (command == "v") {
+		if (comando == "v") {
 			file_stream >> x >> y >> z;
 			temp_vertices.push_back({ x, y, z });
 		}
-		else if (command == "vt") {
+		else if (comando == "vt") {
 			file_stream >> x >> y;
 			temp_uvs.push_back({ x, y });
 		}
-		else if (command == "vn") {
+		else if (comando == "vn") {
 			file_stream >> x >> y >> z;
 			temp_normals.push_back({ x, y, z });
 		}
-		else if (command == "f") {
+		else if (comando == "f") {
 			file_stream >> face1 >> face2 >> face3;
 			faces = { face1, face2, face3 };
-			for (size_t i = 0; i < faces.size(); i++) {
+			for (size_t i = 0; i < 3; i++) {
 				istringstream sub_stream(faces[i]);
 				getline(sub_stream, subline, '/');
 				if (stoi(subline) < 0) {
@@ -82,93 +82,84 @@ void ControladorObjetos::cargarObj(string file, vector<char>& commands_output, v
 			}
 		}
 	}
-	commands.push_back('C');
+	comandos.push_back('C');
 	data.push_back({ 1.f, 1.f, 1.f });
 	for (size_t i = 0; i < uv_indices.size(); i++) {
-		commands.push_back('T'); data.push_back(temp_uvs[uv_indices[i]]);
-		commands.push_back('N'); data.push_back(temp_normals[normal_indices[i]]);
-		commands.push_back('V'); data.push_back(temp_vertices[vertex_indices[i]]);
+		comandos.push_back('T'); data.push_back(temp_uvs[uv_indices[i]]);
+		comandos.push_back('N'); data.push_back(temp_normals[normal_indices[i]]);
+		comandos.push_back('V'); data.push_back(temp_vertices[vertex_indices[i]]);
 	}
 
-	commands_output = commands;
-	data_output = data;
+	data_output = { comandos, data };
 }
 
-vector<char> commands;
-vector<vector<float>> data_obj;
-GLuint texture;
-void ControladorObjetos::dibujar(tipo_obj obj) {
+void ControladorObjetos::dibujar(tipo_obj obj, GLfloat transparencia) {
+	pair<vector<char>, vector<vector<float>>> data_obj;
+	GLuint textura;
 	switch (obj) {
-		case (OBJ_PLAYER):
-			commands = player_commands;
-			data_obj = player_data;
-			texture = ControladorTexturas::getInstance()->getTextura(PLAYER);
-			break;
-		case (OBJ_BOMBA):
-			commands = bomba_commands;
-			data_obj = bomba_data;
-			texture = ControladorTexturas::getInstance()->getTextura(TEXTURA_BOMBA);
-			break;
-		case (OBJ_ENEMY_ROJO):
-			commands = enemy_commands;
-			data_obj = enemy_data;
-			if (texturas_habilitadas) {
-				texture = ControladorTexturas::getInstance()->getTextura(TEXTURA_ENEMY_ROJO);
-			}
-			break;
-		case (OBJ_ENEMY_AZUL):
-			commands = enemy_commands;
-			data_obj = enemy_data;
-			if (texturas_habilitadas) {
-				texture = ControladorTexturas::getInstance()->getTextura(TEXTURA_ENEMY_AZUL);
-			}
-			break;
-		case (OBJ_ENEMY_VERDE):
-			commands = enemy_commands;
-			data_obj = enemy_data;
-			if (texturas_habilitadas) {
-				texture = ControladorTexturas::getInstance()->getTextura(TEXTURA_ENEMY_VERDE);
-			}
-			break;
+	case OBJ_PLAYER:
+		data_obj = player_data;
+		textura = ControladorTexturas::getInstance()->getTextura(PLAYER);
+		break;
+	case OBJ_BOMBA:
+		data_obj = bomba_data;
+		textura = ControladorTexturas::getInstance()->getTextura(TEXTURA_BOMBA);
+		break;
+	case OBJ_ENEMY_ROJO:
+	case OBJ_ENEMY_AZUL:
+	case OBJ_ENEMY_VERDE:
+		data_obj = enemy_data;
+		if (texturas_habilitadas) {
+			textura = ControladorTexturas::getInstance()->getTextura(
+				(obj == OBJ_ENEMY_ROJO) ? TEXTURA_ENEMY_ROJO :
+				(obj == OBJ_ENEMY_AZUL) ? TEXTURA_ENEMY_AZUL :
+				TEXTURA_ENEMY_VERDE
+			);
+		}
+		break;
+	default:
+		textura = 0;
+		return; 
 	}
 
 	if (texturas_habilitadas) {
 		glEnable(GL_TEXTURE_2D);
-		glBindTexture(GL_TEXTURE_2D, texture);
+		glBindTexture(GL_TEXTURE_2D, textura);
 	}
+
+	const vector<char>& comandos = data_obj.first;
+	const vector<vector<float>>& data = data_obj.second;
 
 	glBegin(GL_TRIANGLES);
 
-	for (size_t i = 0; i < commands.size(); i++) {
-		switch (commands[i]) {
-			case('V'): {
-				glVertex3f(data_obj[i][0], data_obj[i][1], data_obj[i][2]);
-				break;
-			}
-			case('T'): {
-				glTexCoord2d(data_obj[i][0], data_obj[i][1]);
-				break;
-			}
-			case('N'): {
-				glNormal3f(data_obj[i][0], data_obj[i][1], data_obj[i][2]);
-				break;
-			}
-			case('C'): {
-				glColor3f(data_obj[i][0], data_obj[i][1], data_obj[i][2]);
-				break;
-			}
-			case('A'): {
-				glColor4f(data_obj[i][0], data_obj[i][1], data_obj[i][2], data_obj[i][3]);
-				break;
-			}
+	for (size_t i = 0; i < data.size(); ++i) {
+		const char comando = comandos[i];
+		const vector<float>& values = data[i];
+
+		if (comando == 'V') {
+			glVertex3f(values[0], values[1], values[2]);
+		}
+		else if (comando == 'T') {
+			glTexCoord2f(values[0], values[1]);
+		}
+		else if (comando == 'N') {
+			glNormal3f(values[0], values[1], values[2]);
+		}
+		else if (comando == 'C') {
+			glColor4f(values[0], values[1], values[2], transparencia);
+		}
+		else if (comando == 'A') {
+			glColor4f(values[0], values[1], values[2], values[3]);
 		}
 	}
+
 	glEnd();
 
 	if (texturas_habilitadas) {
 		glDisable(GL_TEXTURE_2D);
 	}
 }
+
 
 void ControladorObjetos::dibujarCubo(vector_3 tam, GLuint textura, GLfloat color[3]) {
 	if (texturas_habilitadas && textura != 0) {
@@ -341,6 +332,7 @@ void ControladorObjetos::dibujarSuelo() {
 	}
 }
 
+
 void ControladorObjetos::dibujarMarcadorBomba(vector_3 pos) {
 	int posX, posZ;
 
@@ -364,20 +356,18 @@ void ControladorObjetos::dibujarMarcadorBomba(vector_3 pos) {
 
 	if (posX >= 0 && posX < largoTablero && posZ >= 0 && posZ < anchoTablero && estructuras[posX][posZ] == nullptr && bombas[posX][posZ] == nullptr) {
 
+		if (!wireframe) {
+			glEnable(GL_CULL_FACE);
+			glCullFace(GL_BACK);
+		}
 		glEnable(GL_BLEND);
 		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-
-		glColor4f(0.7f, 0.0f, 0.0f, 0.3f);
-
-		glBegin(GL_QUADS);
-
-		glVertex3f(posX * tile_size + tile_size / 8, 0.02f, posZ * tile_size + tile_size / 8);
-		glVertex3f(posX * tile_size + 7 * tile_size / 8, 0.02f, posZ * tile_size + tile_size / 8);
-		glVertex3f(posX * tile_size + 7 * tile_size/8, 0.02f, posZ * tile_size + 7 * tile_size / 8);
-		glVertex3f(posX * tile_size + tile_size / 8, 0.02f, posZ * tile_size + 7 * tile_size / 8);
-
-		glEnd();
+		glTranslatef(posX * tile_size + tile_size / 2, 0.0f, posZ * tile_size + tile_size / 2);
+		dibujar(OBJ_BOMBA, 0.8f);
 		glDisable(GL_BLEND);
+		if (!wireframe){
+			glDisable(GL_CULL_FACE);
+		}
 	}
 }
 

@@ -7,11 +7,11 @@ particula_tierra::particula_tierra(vector_3 pos, vector_3 tam, vector_3 ac, vect
 
 void particula_tierra::actualizar() {
     if (pos.y >= 0)  {
-        pos.x = pos.x + velocidad.x * (elapsed_time / frameDelay);
+        pos.x = pos.x + velocidad.x * (tiempo_entre_frames / frameDelay);
         pos.y = (aceleracion.y * tiempoParticula * tiempoParticula / (1000.0f * 1000.0f)) + (velocidad.y * (tiempoParticula / 1000.0f)) + pos_inicial.y;
-        pos.z = pos.z + velocidad.z * (elapsed_time / frameDelay);
+        pos.z = pos.z + velocidad.z * (tiempo_entre_frames / frameDelay);
 
-        tiempoParticula += elapsed_time;
+        tiempoParticula += tiempo_entre_frames;
     }
     else {
         eliminar = true;

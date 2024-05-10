@@ -77,7 +77,6 @@ void Controlador::inicializar_juego() {
 
                     random_num = dis(gen);
                     if (random_num <= generadorBonificador) {
-                        cout << "bonificador en: " << i << " " << j << endl;
                         bonificadores[i][j] = new bonificador(
                             { (GLfloat)i * tile_size + tile_size / 2, tile_size / 2, (GLfloat)j * tile_size + tile_size / 2 },
                             { 0.1f, 0.7f, 0.1f },
@@ -128,6 +127,17 @@ void Controlador::inicializar_juego() {
         delete bonificadores[1][0];
         bonificadores[1][0] = nullptr;
     }
+    if (bonificadores[2][2] == nullptr) {
+        if (estructuras[2][2] != nullptr) {
+            delete estructuras[2][2];
+            estructuras[2][2] = nullptr;
+        }
+        bonificadores[2][2] = new bonificador(
+            { tile_size * 5 / 2, tile_size / 2, tile_size * 5 / 2},
+            { 0.1f, 0.7f, 0.1f },
+            BONIFICADOR_RANDOM
+        );
+    }
 
 
     for (int i = -1; i <= largoTablero; i++) { // x toma valor -1 y largoTablero en los bordes
@@ -149,13 +159,12 @@ void Controlador::inicializar_juego() {
     vector<pair<int, int>> posEnemigos;
 
     while (cantidad_enemigos_colocados < cantidad_enemigos_actual) {
-        int posicion_enemigo_x = dis(gen)*(largoTablero - 1);
-        int posicion_enemigo_z = dis(gen)*(anchoTablero - 1);
-        if (int(posicion_enemigo_x) % 2 == 0 &&
-            int(posicion_enemigo_z) % 2 == 0 &&
-            estructuras[getIndiceTablero(int(posicion_enemigo_x))][getIndiceTablero(int(posicion_enemigo_z))] == nullptr &&
-            int(posicion_enemigo_x) + int(posicion_enemigo_z) > 6) {
-            posEnemigos.push_back({ int(posicion_enemigo_x), int(posicion_enemigo_z)});
+        int posicion_enemigo_x = int( dis(gen)*(largoTablero - 1));
+        int posicion_enemigo_z = int( dis(gen)*(anchoTablero - 1));
+        if (posicion_enemigo_x % 2 == 0 &&
+            posicion_enemigo_z % 2 == 0 &&
+            posicion_enemigo_x + posicion_enemigo_z > 6) {
+            posEnemigos.push_back({ posicion_enemigo_x, posicion_enemigo_z});
             cantidad_enemigos_colocados++;
         }
     }
@@ -181,8 +190,8 @@ void Controlador::inicializar_juego() {
 
     bool puertaColocada = false;
     while (!puertaColocada) {
-        int posicion_puerta_x = dis(gen) * (largoTablero - 1);
-        int posicion_puerta_z = dis(gen) * (anchoTablero - 1);
+        int posicion_puerta_x = int(dis(gen) * (largoTablero - 1));
+        int posicion_puerta_z = int(dis(gen) * (anchoTablero - 1));
         if (estructuras[posicion_puerta_x][posicion_puerta_z] != nullptr && 
             dynamic_cast<estructura*>(estructuras[posicion_puerta_x][posicion_puerta_z])->getDestructible() &&
             posicion_puerta_x + posicion_puerta_z > 6) {
@@ -191,13 +200,12 @@ void Controlador::inicializar_juego() {
                 { GLfloat(posicion_puerta_x * tile_size + tile_size / 2), 0, GLfloat(posicion_puerta_z * tile_size + tile_size / 2) },
                 { GLfloat(tile_size / 2), tile_size / 4, GLfloat(tile_size / 2) }
             );
-            cout << posicion_puerta_x << endl;
-            cout << posicion_puerta_z << endl;
         }
     }
 
-    current_t = chrono::high_resolution_clock::now();
+    marca_tiempo_anterior = chrono::high_resolution_clock::now();
     puertaAbierta = false;
+    temporizador = false;
 }
 
 Controlador::Controlador() {
@@ -430,21 +438,10 @@ void Controlador::manejarEventos() {
             }
         break;
         case SDL_MOUSEMOTION:
-            mouseX = GLfloat(fmod(mouseX - (evento.motion.xrel * SENSIBILIDAD_MOUSE), 360));
-            if (mouseX < 0)
-                mouseX += 360;
-
-            mouseY = mouseY - (evento.motion.yrel * SENSIBILIDAD_MOUSE);
-            if (mouseY < 1)
-                mouseY = 1;
-            else if (mouseY > 90)
-                mouseY = 90;
-
-            mouseY_invertido = mouseY_invertido + (evento.motion.yrel * SENSIBILIDAD_MOUSE);
-            if (mouseY_invertido < 5)
-                mouseY_invertido = 5;
-            else if (mouseY_invertido > 90)
-                mouseY_invertido = 90;
+            controlador_camara->actualizarValoresMouse(GLfloat(evento.motion.xrel), GLfloat(evento.motion.yrel));  
+        break;
+        case SDL_MOUSEWHEEL:
+            controlador_camara->actualizarValoresRueda(GLfloat(evento.wheel.y));
         break;
         case SDL_MOUSEBUTTONDOWN:
             switch (evento.button.button) {
@@ -458,32 +455,32 @@ void Controlador::manejarEventos() {
     const Uint8* movimientoCamara = SDL_GetKeyboardState(NULL);
 
     if (movimientoCamara[SDL_SCANCODE_I]) {
-        controlador_luz->moverCamara({ 0, 0, -(float)(velocidadCamara * velocidad_juego * frameDelay / 1000) });
+        controlador_luz->moverLuzAmbiente({ 0, 0, -VELOCIDAD_MOVIMIENTO_LUZ_AMBIENTE * velocidad_juego * frameDelay / 1000 });
     }
     if (movimientoCamara[SDL_SCANCODE_J]) {
-        controlador_luz->moverCamara({ -(float)(velocidadCamara * velocidad_juego * frameDelay / 1000), 0, 0 });
+        controlador_luz->moverLuzAmbiente({ -VELOCIDAD_MOVIMIENTO_LUZ_AMBIENTE * velocidad_juego * frameDelay / 1000, 0, 0 });
     }
     if (movimientoCamara[SDL_SCANCODE_K]) {
-        controlador_luz->moverCamara({ 0, 0, (float)(velocidadCamara * velocidad_juego * frameDelay / 1000) });
+        controlador_luz->moverLuzAmbiente({ 0, 0, VELOCIDAD_MOVIMIENTO_LUZ_AMBIENTE * velocidad_juego * frameDelay / 1000 });
     }
     if (movimientoCamara[SDL_SCANCODE_L]) {
-        controlador_luz->moverCamara({ (float)(velocidadCamara * velocidad_juego * frameDelay / 1000), 0, 0 });
+        controlador_luz->moverLuzAmbiente({ VELOCIDAD_MOVIMIENTO_LUZ_AMBIENTE * velocidad_juego * frameDelay / 1000, 0, 0 });
     }
 }
 
 void Controlador::actualizar() {
-    previous_t = current_t;
-    current_t = chrono::high_resolution_clock::now();
-    delta_time = chrono::duration_cast<chrono::duration<int>>((current_t - previous_t)*1000);
-    elapsed_time = delta_time.count() * velocidad_juego + 1;
+    marca_tiempo_anterior = marca_tiempo_actual;
+    marca_tiempo_actual = chrono::high_resolution_clock::now();
+    tiempo_entre_frames = chrono::duration_cast<chrono::duration<int>>((marca_tiempo_actual - marca_tiempo_anterior) * 1000).count() * velocidad_juego + 1; //le sumo 1 para que el juego no se detenga si el tiempo entre frames es menor a 1 milisegundo
 
     if (pausa) {
-        mouseX += 0.3f * (elapsed_time / frameDelay) * velocidad_juego;
+        controlador_camara->actualizarValoresMouse(1.5f * (tiempo_entre_frames / frameDelay) * velocidad_juego, 0.0f);
         return;
     }
 
-    if (!pausa && !finJuego && !pararTiempo)
-        disminuirTiempo(elapsed_time);
+    if (!pausa && !finJuego && !pararTiempo) {
+        disminuirTiempo(tiempo_entre_frames);
+    }
 
     if (puertaAbierta && puerta->intersecta(jugador)) {
         controlador_audio->playAudio(sonido::bonificacion);
@@ -643,7 +640,6 @@ Controlador::~Controlador() {
         (*itE)->dibujar();
         itE = enemigos.erase(itE);
     }
-
 
     delete controlador_texturas;
     delete controlador_objetos;
