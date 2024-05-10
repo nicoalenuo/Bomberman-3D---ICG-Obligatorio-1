@@ -2,6 +2,7 @@
 
 int main(int argc, char* argv[]) {
     Controlador* controlador = Controlador::getInstance();
+
     do {
         (*controlador).manejarEventos();
         (*controlador).actualizar();

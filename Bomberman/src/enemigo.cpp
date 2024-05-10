@@ -1,21 +1,5 @@
 #include "../lib/enemigo.h"
 
-enemigo::enemigo(vector_3 pos, vector_3 tam): personaje(pos, tam, GLfloat(0.1)){
-	orientacionX = true;
-    moverX = true;
-    moverNX = false;
-    moverZ = false;
-    moverNZ = false;
-    
-    eliminar = false;
-
-    probCambiarPos = 1;
-
-    rotacion_y_actual = 0;
-    rotacion_z_actual = 0;
-    balanceandoseDerecha = false;
-}
-
 enemigo::enemigo(vector_3 pos, vector_3 tam, bool orientacionX, color_enemigo color) : personaje(pos, tam, GLfloat(0.1)) {
     this->orientacionX = orientacionX;
     if (orientacionX) {
@@ -33,6 +17,9 @@ enemigo::enemigo(vector_3 pos, vector_3 tam, bool orientacionX, color_enemigo co
     eliminar = false;
 
     probCambiarPos = 0.3;
+    rotacion_y_actual = 0;
+    rotacion_z_actual = 0;
+    balanceandoseDerecha = false;
 
     this->color = color;
 }

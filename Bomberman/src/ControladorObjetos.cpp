@@ -202,20 +202,22 @@ void ControladorObjetos::dibujarCubo(vector_3 tam, GLuint textura, GLfloat color
 	glTexCoord2f(1, 0);
 	glVertex3f(-tam.x, tam.y, tam.z);
 
-	// Cara de atr�s
+	// Cara de atras
 	glNormal3f(0.0f, 0.0f, -1.0f); // Normal hacia atr�s
 
 	glTexCoord2f(0, 0);
 	glVertex3f(-tam.x, 0, -tam.z);
 
-	glTexCoord2f(0, 1);
+	glTexCoord2f(1, 0);
 	glVertex3f(tam.x, 0, -tam.z);
 
 	glTexCoord2f(1, 1);
 	glVertex3f(tam.x, tam.y, -tam.z);
 
-	glTexCoord2f(1, 0);
+	glTexCoord2f(0, 1);
 	glVertex3f(-tam.x, tam.y, -tam.z);
+
+
 
 	// Cara de adelante
 	glNormal3f(0.0f, 0.0f, 1.0f); // Normal hacia adelante
@@ -224,13 +226,13 @@ void ControladorObjetos::dibujarCubo(vector_3 tam, GLuint textura, GLfloat color
 	glVertex3f(-tam.x, 0, tam.z);
 
 	glTexCoord2f(0, 1);
-	glVertex3f(tam.x, 0, tam.z);
+	glVertex3f(-tam.x, tam.y, tam.z);
 
 	glTexCoord2f(1, 1);
 	glVertex3f(tam.x, tam.y, tam.z);
 
 	glTexCoord2f(1, 0);
-	glVertex3f(-tam.x, tam.y, tam.z);
+	glVertex3f(tam.x, 0, tam.z);
 
 	// Cara izquierda
 	glNormal3f(-1.0f, 0.0f, 0.0f); // Normal hacia la izquierda
@@ -239,28 +241,28 @@ void ControladorObjetos::dibujarCubo(vector_3 tam, GLuint textura, GLfloat color
 	glVertex3f(-tam.x, 0, -tam.z);
 
 	glTexCoord2f(0, 1);
-	glVertex3f(-tam.x, 0, tam.z);
+	glVertex3f(-tam.x, tam.y, -tam.z);
 
 	glTexCoord2f(1, 1);
 	glVertex3f(-tam.x, tam.y, tam.z);
 
 	glTexCoord2f(1, 0);
-	glVertex3f(-tam.x, tam.y, -tam.z);
+	glVertex3f(-tam.x, 0, tam.z);
 
 	// Cara derecha
 	glNormal3f(1.0f, 0.0f, 0.0f); // Normal hacia la derecha
 
 	glTexCoord2f(0, 0);
-	glVertex3f(tam.x, 0, -tam.z);
-
-	glTexCoord2f(0, 1);
 	glVertex3f(tam.x, 0, tam.z);
 
-	glTexCoord2f(1, 1);
+	glTexCoord2f(0, 1);
 	glVertex3f(tam.x, tam.y, tam.z);
 
-	glTexCoord2f(1, 0);
+	glTexCoord2f(1, 1);
 	glVertex3f(tam.x, tam.y, -tam.z);
+
+	glTexCoord2f(1, 0);
+	glVertex3f(tam.x, 0, -tam.z);
 
 	glEnd();
 

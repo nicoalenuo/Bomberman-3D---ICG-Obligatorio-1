@@ -6,7 +6,6 @@
 #include <string>
 #include <iostream>
 #include <sstream>
-
 #include "SDL_ttf.h"
 
 #include "global.h"
@@ -43,6 +42,7 @@ enum tipo_opcion {
 	TOGGLE_PARAR_TIEMPO,
 	TOGGLE_ATRAVESAR_PAREDES,
 	TOGGLE_AUDIO,
+	TOGGLE_PANTALLA,
 	ATRAS,
 };
 
@@ -62,8 +62,10 @@ class ControladorInterfaz {
 		ControladorInterfaz();
 
 		TTF_Font* interfaz;
-		hud* hudPuntaje;
 		hud* hudTiempo;
+		hud* hudEnemigos;
+		hud* hudPuntaje;
+		hud* hudNivel;
 		hud* hudGameOver;
 
 		map<tipo_poder, hud*> poderes;
@@ -72,6 +74,8 @@ class ControladorInterfaz {
 		map<tipo_opcion, hud*> opciones_inicio;
 		map<tipo_opcion, hud*> opciones_configuracion;
 		tipo_opcion opcion_seleccionada;
+
+		bool tipoOpcion; //true si esta entre [COMENZAR_JUEGO,CERRAR_JUEGO], false si esta entre [CAMBIAR_CAMARA,ATRAS]
 
 		void setMensajeEnComponente(string mensaje, TTF_Font* fuente, hud* componente);
 	public:
@@ -85,7 +89,13 @@ class ControladorInterfaz {
 
 		void opcion_anterior();
 		void opcion_siguiente();
-		void seleccionar_opcion();
+
+		bool getTipoOpcion();
+		void setTipoOpcion(bool tipo);
+		tipo_opcion getOpcionSeleccionada();
+		void setOpcionSeleccionada(tipo_opcion opcion);
+		map<tipo_opcion, hud*> getOpciones(int id);
+		void setOpciones(map<tipo_opcion, hud*> opciones, int id);
 
 		~ControladorInterfaz();
 };
