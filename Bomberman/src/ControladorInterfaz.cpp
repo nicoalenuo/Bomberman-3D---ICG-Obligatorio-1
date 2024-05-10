@@ -403,7 +403,16 @@ void ControladorInterfaz::dibujarHUD() {
 	setMensajeEnComponente("Puntaje: " + to_string(puntaje), interfaz, hudPuntaje);
 	setMensajeEnComponente(to_string(enemigos.size()), interfaz, hudEnemigos);
 	setMensajeEnComponente("Tiempo: " + to_string(tiempoJuego / 1000), interfaz, hudTiempo);
-	setMensajeEnComponente(finJuego ? "¡PERDISTE!" : " ", interfaz, hudGameOver);
+	if (finJuego) {
+		setMensajeEnComponente("¡PERDISTE!", interfaz, hudGameOver);
+	} else if(enemigos.size() == 0 && !puertaAbierta) {
+		setMensajeEnComponente("Encuentra el portal escondido", interfaz, hudGameOver);
+	} else if (enemigos.size() == 0) {
+		setMensajeEnComponente("Ingresa a la puerta", interfaz, hudGameOver);
+	} else {
+		setMensajeEnComponente(" ", interfaz, hudGameOver);
+	}
+
 	setMensajeEnComponente("Nivel " + to_string(nivel), interfaz, hudNivel);
 
 	setPoderes(ControladorPoderes::getInstance()->obtenerPoderes());
