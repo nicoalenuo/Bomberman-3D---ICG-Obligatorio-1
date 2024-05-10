@@ -5,6 +5,7 @@ ControladorInterfaz* ControladorInterfaz::instancia = nullptr;
 float const MARGEN_HUD = 5.0f;
 float MARGEN_PODERES = 30.f * WINDOW_RATIO;
 float posXPoder = MARGEN_HUD;
+vector_3 margen_left = { MARGEN_HUD,MARGEN_HUD,0 };
 
 ControladorInterfaz* ControladorInterfaz::getInstance() {
 	if (instancia == nullptr)
@@ -13,6 +14,7 @@ ControladorInterfaz* ControladorInterfaz::getInstance() {
 }
 
 ControladorInterfaz::ControladorInterfaz() {
+	tipoOpcion = true;
 	opcion_seleccionada = COMENZAR_JUEGO;
 
 	interfaz = TTF_OpenFont("texturas/OpenSans-Regular.ttf", 24);
@@ -21,8 +23,10 @@ ControladorInterfaz::ControladorInterfaz() {
 		return;
 	}
 
-	hudPuntaje = new hud();
 	hudTiempo = new hud();
+	hudEnemigos = new hud();
+	hudPuntaje = new hud();
+	hudNivel = new hud();
 	hudGameOver = new hud();
 
 	for (int i = 0; i < int(tipo_poder::BONIFICADOR_RANDOM); i++) {
@@ -31,13 +35,17 @@ ControladorInterfaz::ControladorInterfaz() {
 		poderes[static_cast<tipo_poder>(i)]->posicion = position::bottom_left;
 	}
 
-	hudPuntaje->colorMensaje = { 255, 255, 255 };
 	hudTiempo->colorMensaje = { 255, 255, 255 };
+	hudEnemigos->colorMensaje = { 255,255,255 };
+	hudPuntaje->colorMensaje = { 255, 255, 255 };
+	hudNivel->colorMensaje = { 255 ,255 ,255 };
 	hudGameOver->colorMensaje = { 255, 255, 255 };
 
-	hudPuntaje->posicion = position::top_right;
 	hudTiempo->posicion = position::top_left;
-	hudGameOver->posicion = position::top_center;
+	hudEnemigos->posicion = position::left;
+	hudPuntaje->posicion = position::top_right;
+	hudNivel->posicion = position::top_center;
+	hudGameOver->posicion = position::center;
 
 	//Menu
 
@@ -53,7 +61,6 @@ ControladorInterfaz::ControladorInterfaz() {
 	}
 
 	opciones_actuales = opciones_inicio;
-
 	//Fin menu
 }
 
@@ -126,7 +133,6 @@ void ControladorInterfaz::dibujarComponenteHUDPoderes() {
 				glBindTexture(GL_TEXTURE_2D, kv.second->idTextura);
 				glColor3f(kv.second->colorMensaje.r, kv.second->colorMensaje.g, kv.second->colorMensaje.b);
 
-				//mesaje surface es null y marcho
 				glBegin(GL_QUADS); {
 					glTexCoord2d(0.f, 1.f); glVertex3f(posXPoder, altoPantalla - MARGEN_HUD, 0.f);
 					glTexCoord2d(1.f, 1.f); glVertex3f(posXPoder + kv.second->width, altoPantalla - MARGEN_HUD, 0.f);
@@ -163,12 +169,13 @@ void ControladorInterfaz::dibujarComponenteHUD(hud* hud) {
 			glBindTexture(GL_TEXTURE_2D, hud->idTextura);
 			glColor3f(hud->colorMensaje.r, hud->colorMensaje.g, hud->colorMensaje.b);
 			glBegin(GL_QUADS); {
-				glTexCoord2d(0.f, 1.f); glVertex3f(MARGEN_HUD, MARGEN_HUD + hud->mensajeSurface->h, 0.f);
-				glTexCoord2d(1.f, 1.f); glVertex3f(MARGEN_HUD + hud->mensajeSurface->w, MARGEN_HUD + hud->mensajeSurface->h, 0.f);
-				glTexCoord2d(1.f, 0.f); glVertex3f(MARGEN_HUD + hud->mensajeSurface->w, MARGEN_HUD, 0.f);
-				glTexCoord2d(0.f, 0.f); glVertex3f(MARGEN_HUD, MARGEN_HUD, 0.f);
+				glTexCoord2d(0.f, 1.f); glVertex3f(margen_left.x, margen_left.y + hud->mensajeSurface->h, 0.f);
+				glTexCoord2d(1.f, 1.f); glVertex3f(margen_left.x + hud->mensajeSurface->w, margen_left.y + hud->mensajeSurface->h, 0.f);
+				glTexCoord2d(1.f, 0.f); glVertex3f(margen_left.x + hud->mensajeSurface->w, margen_left.y, 0.f);
+				glTexCoord2d(0.f, 0.f); glVertex3f(margen_left.x, margen_left.y, 0.f);
 			} glEnd();
 			glDisable(GL_TEXTURE_2D);
+			margen_left.y = MARGEN_HUD*3 + hud->mensajeSurface->h;
 			break;
 		case position::top_right:
 			glEnable(GL_TEXTURE_2D);
@@ -194,6 +201,44 @@ void ControladorInterfaz::dibujarComponenteHUD(hud* hud) {
 			} glEnd();
 			glDisable(GL_TEXTURE_2D);
 			break;
+		case position::left: 
+			glEnable(GL_TEXTURE_2D);
+			glBindTexture(GL_TEXTURE_2D, hud->idTextura);
+			glColor3f(hud->colorMensaje.r, hud->colorMensaje.g, hud->colorMensaje.b);
+			glBegin(GL_QUADS); {
+				glTexCoord2d(0.f, 1.f); glVertex3f(margen_left.x, margen_left.y + MARGEN_HUD + hud->mensajeSurface->h, 0.f);
+				glTexCoord2d(1.f, 1.f); glVertex3f(margen_left.x + hud->mensajeSurface->w, margen_left.y + MARGEN_HUD + hud->mensajeSurface->h, 0.f);
+				glTexCoord2d(1.f, 0.f); glVertex3f(margen_left.x + hud->mensajeSurface->w, margen_left.y + MARGEN_HUD, 0.f);
+				glTexCoord2d(0.f, 0.f); glVertex3f(margen_left.x, margen_left.y + MARGEN_HUD, 0.f);
+			} glEnd();
+			glDisable(GL_TEXTURE_2D);
+
+			margen_left.x += hud->mensajeSurface->w + MARGEN_HUD;
+			margen_left.y += MARGEN_HUD;
+			//falta dibujar una imagen de amongos a la derecha del numero
+			glEnable(GL_TEXTURE_2D);
+			glBindTexture(GL_TEXTURE_2D, ControladorTexturas::getInstance()->getTextura(TEXTURA_CANT_ENEMIGOS));
+			glColor3f(1.0f, 1.0f, 1.0f);
+			glBegin(GL_QUADS); {
+				glTexCoord2d(0.f, 0.f); glVertex3f(margen_left.x, margen_left.y + hud->mensajeSurface->h, 0.f);
+				glTexCoord2d(1.f, 0.f); glVertex3f(margen_left.x + hud->mensajeSurface->h, margen_left.y + hud->mensajeSurface->h, 0.f);
+				glTexCoord2d(1.f, 1.f); glVertex3f(margen_left.x + hud->mensajeSurface->h, margen_left.y, 0.f);
+				glTexCoord2d(0.f, 1.f); glVertex3f(margen_left.x, margen_left.y, 0.f);
+			} glEnd();
+			glDisable(GL_TEXTURE_2D);
+			break;
+		case position::center: //cambiar los valores de vertex
+			glEnable(GL_TEXTURE_2D);
+			glBindTexture(GL_TEXTURE_2D, hud->idTextura);
+			glColor3f(hud->colorMensaje.r, hud->colorMensaje.g, hud->colorMensaje.b);
+			glBegin(GL_QUADS); {
+				glTexCoord2d(0.f, 1.f); glVertex3f(largoPantalla / 2.f - hud->mensajeSurface->w / 2.f, altoPantalla / 2.f + hud->mensajeSurface->h / 2.f, 0.f);
+				glTexCoord2d(1.f, 1.f); glVertex3f(largoPantalla / 2.f + hud->mensajeSurface->w / 2.f, altoPantalla / 2.f + hud->mensajeSurface->h / 2.f, 0.f);
+				glTexCoord2d(1.f, 0.f); glVertex3f(largoPantalla / 2.f + hud->mensajeSurface->w / 2.f, altoPantalla / 2.f - hud->mensajeSurface->h / 2.f, 0.f);
+				glTexCoord2d(0.f, 0.f); glVertex3f(largoPantalla / 2.f - hud->mensajeSurface->w / 2.f, altoPantalla / 2.f - hud->mensajeSurface->h / 2.f, 0.f);
+			} glEnd();
+			glDisable(GL_TEXTURE_2D);
+			break;
 	}
 }
 
@@ -201,7 +246,7 @@ void ControladorInterfaz::dibujarMenu() {
 	GLfloat posY = (altoPantalla / 2.0f) - 150;
 
 	setMensajeEnComponente(
-		(opcion_seleccionada == COMENZAR_JUEGO ? string("->") : "") + "Comenzar juego" + (opcion_seleccionada == COMENZAR_JUEGO ? string("<-") : ""),
+		(opcion_seleccionada == COMENZAR_JUEGO ? string("->") : "") + "Jugar" + (opcion_seleccionada == COMENZAR_JUEGO ? string("<-") : ""),
 		interfaz, opciones_inicio[COMENZAR_JUEGO]);
 	setMensajeEnComponente(
 		(opcion_seleccionada == CONFIGURACIONES ? string("->") : "") + "Configuraciones" + (opcion_seleccionada == CONFIGURACIONES ? string("<-") : ""),
@@ -210,55 +255,57 @@ void ControladorInterfaz::dibujarMenu() {
 		(opcion_seleccionada == AYUDA ? string("->") : "") + "Ayuda" + (opcion_seleccionada == AYUDA ? string("<-") : ""),
 		interfaz, opciones_inicio[AYUDA]);
 	setMensajeEnComponente(
-		(opcion_seleccionada == CERRAR_JUEGO ? string("->") : "") + "Cerrar juego" + (opcion_seleccionada == CERRAR_JUEGO ? string("<-") : ""),
+		(opcion_seleccionada == CERRAR_JUEGO ? string("->") : "") + "Cerrar Juego" + (opcion_seleccionada == CERRAR_JUEGO ? string("<-") : ""),
 		interfaz, opciones_inicio[CERRAR_JUEGO]);
 
 	//Toggle camara
 	setMensajeEnComponente(
-		(opcion_seleccionada == CAMBIAR_CAMARA ? string("->") : "") + "Cambiar camara" + (opcion_seleccionada == CAMBIAR_CAMARA ? string("<-") : ""),
+		(opcion_seleccionada == CAMBIAR_CAMARA ? string("->") : "") + "Camara" + (opcion_seleccionada == CAMBIAR_CAMARA ? string("<-") : ""),
 		interfaz, opciones_configuracion[CAMBIAR_CAMARA]);
 
 	// Toggle Wireframe
-	setMensajeEnComponente((opcion_seleccionada == TOGGLE_WIREFRAME ? string("->") : "") + "Cambiar wireframe : " + (wireframe ? "Line" : "Fill") + (opcion_seleccionada == TOGGLE_WIREFRAME ? string("<-") : ""),
+	setMensajeEnComponente((opcion_seleccionada == TOGGLE_WIREFRAME ? string("->") : "") + "Wireframe : " + (wireframe ? "Line" : "Fill") + (opcion_seleccionada == TOGGLE_WIREFRAME ? string("<-") : ""),
 		interfaz, opciones_configuracion[TOGGLE_WIREFRAME]);
 
 	// Toggle Texturas
-	setMensajeEnComponente((opcion_seleccionada == TOGGLE_TEXTURAS ? string("->") : "") + " Habilitar / deshabilitar texturas : " + (texturas_habilitadas ? "Habilitadas" : "Deshabilitadas") + (opcion_seleccionada == TOGGLE_TEXTURAS ? string("<-") : ""),
+	setMensajeEnComponente((opcion_seleccionada == TOGGLE_TEXTURAS ? string("->") : "") + " Texturas : " + (texturas_habilitadas ? "Habilitadas" : "Deshabilitadas") + (opcion_seleccionada == TOGGLE_TEXTURAS ? string("<-") : ""),
 		interfaz, opciones_configuracion[TOGGLE_TEXTURAS]);
 
 	// Toggle Tipo Luz
-	setMensajeEnComponente((opcion_seleccionada == TOGGLE_TIPO_LUZ ? string("->") : "") + "Cambiar tipo luz : " + (tipoLuz ? "Smooth" : "Flat") + (opcion_seleccionada == TOGGLE_TIPO_LUZ ? string("<-") : ""),
+	setMensajeEnComponente((opcion_seleccionada == TOGGLE_TIPO_LUZ ? string("->") : "") + "Tipo Luz : " + (tipoLuz ? "Smooth" : "Flat") + (opcion_seleccionada == TOGGLE_TIPO_LUZ ? string("<-") : ""),
 		interfaz, opciones_configuracion[TOGGLE_TIPO_LUZ]);
 
 	// Toggle Luz Ambiente
-	setMensajeEnComponente((opcion_seleccionada == TOGGLE_LUZ_AMBIENTE ? string("->") : "") + "Cambiar luz ambiente" + (opcion_seleccionada == TOGGLE_LUZ_AMBIENTE ? string("<-") : ""),
+	setMensajeEnComponente((opcion_seleccionada == TOGGLE_LUZ_AMBIENTE ? string("->") : "") + "Luz Ambiente" + (opcion_seleccionada == TOGGLE_LUZ_AMBIENTE ? string("<-") : ""),
 		interfaz, opciones_configuracion[TOGGLE_LUZ_AMBIENTE]);
 
 	// Toggle HUD
-	setMensajeEnComponente((opcion_seleccionada == TOGGLE_HUD ? string("->") : "") + "Habilitar / deshabilitar hud : " + (mostrarHud ? "Habilitado" : "Deshabilitado") + (opcion_seleccionada == TOGGLE_HUD ? string("<-") : ""),
+	setMensajeEnComponente((opcion_seleccionada == TOGGLE_HUD ? string("->") : "") + "HUD : " + (mostrarHud ? "Habilitado" : "Deshabilitado") + (opcion_seleccionada == TOGGLE_HUD ? string("<-") : ""),
 		interfaz, opciones_configuracion[TOGGLE_HUD]);
 
 	// Toggle Velocidad Juego
-	setMensajeEnComponente((opcion_seleccionada == TOGGLE_VELOCIDAD_JUEGO ? string("->") : "") + "Cambiar velocidad juego : " + to_string(velocidad_juego) + (opcion_seleccionada == TOGGLE_VELOCIDAD_JUEGO ? string("<-") : ""),
+	setMensajeEnComponente((opcion_seleccionada == TOGGLE_VELOCIDAD_JUEGO ? string("->") : "") + "Velocidad Juego : " + to_string(velocidad_juego) + (opcion_seleccionada == TOGGLE_VELOCIDAD_JUEGO ? string("<-") : ""),
 		interfaz, opciones_configuracion[TOGGLE_VELOCIDAD_JUEGO]);
 
 	// Toggle Inmortal
-	setMensajeEnComponente((opcion_seleccionada == TOGGLE_INMORTAL ? string("->") : "") + "Habilitar / deshabilitar inmortalidad : " + (inmortal ? "Habilitado" : "Deshabilitado") + (opcion_seleccionada == TOGGLE_INMORTAL ? string("<-") : ""),
+	setMensajeEnComponente((opcion_seleccionada == TOGGLE_INMORTAL ? string("->") : "") + "Inmortalidad : " + (inmortal ? "Habilitado" : "Deshabilitado") + (opcion_seleccionada == TOGGLE_INMORTAL ? string("<-") : ""),
 		interfaz, opciones_configuracion[TOGGLE_INMORTAL]);
 
 	// Toggle Parar Tiempo
-	setMensajeEnComponente((opcion_seleccionada == TOGGLE_PARAR_TIEMPO ? string("->") : "") + "Habilitar / deshabilitar parar tiempo : " + (pararTiempo ? "Habilitado" : "Deshabilitado") + (opcion_seleccionada == TOGGLE_PARAR_TIEMPO ? string("<-") : ""),
+	setMensajeEnComponente((opcion_seleccionada == TOGGLE_PARAR_TIEMPO ? string("->") : "") + "Parar Tiempo : " + (pararTiempo ? "Habilitado" : "Deshabilitado") + (opcion_seleccionada == TOGGLE_PARAR_TIEMPO ? string("<-") : ""),
 		interfaz, opciones_configuracion[TOGGLE_PARAR_TIEMPO]);
 
 	// Toggle Atravesar Paredes
-	setMensajeEnComponente((opcion_seleccionada == TOGGLE_ATRAVESAR_PAREDES ? string("->") : "") + "Habilitar / deshabilitar atravesar paredes : " + (atravesar_paredes ? "Habilitado" : "Deshabilitado") + (opcion_seleccionada == TOGGLE_ATRAVESAR_PAREDES ? string("<-") : ""),
+	setMensajeEnComponente((opcion_seleccionada == TOGGLE_ATRAVESAR_PAREDES ? string("->") : "") + "Atravesar Paredes : " + (atravesar_paredes ? "Habilitado" : "Deshabilitado") + (opcion_seleccionada == TOGGLE_ATRAVESAR_PAREDES ? string("<-") : ""),
 		interfaz, opciones_configuracion[TOGGLE_ATRAVESAR_PAREDES]);
 
-
 	// Toggle Audio
-	setMensajeEnComponente((opcion_seleccionada == TOGGLE_AUDIO ? string("->") : "") + "Habilitar / deshabilitar audio : " + (!mute ? "Habilitado" : "Deshabilitado") + (opcion_seleccionada == TOGGLE_AUDIO ? string("<-") : ""),
+	setMensajeEnComponente((opcion_seleccionada == TOGGLE_AUDIO ? string("->") : "") + "Sonidos : " + (!mute ? "Habilitados" : "Deshabilitados") + (opcion_seleccionada == TOGGLE_AUDIO ? string("<-") : ""),
 		interfaz, opciones_configuracion[TOGGLE_AUDIO]);
 
+	// Toggle Pantalla Completa
+	setMensajeEnComponente((opcion_seleccionada == TOGGLE_PANTALLA ? string("->") : "") + "Pantalla : " + (!pantallaCompleta ? "Normal" : "Completa") + (opcion_seleccionada == TOGGLE_PANTALLA ? string("<-") : ""),
+		interfaz, opciones_configuracion[TOGGLE_PANTALLA]);
 
 	setMensajeEnComponente((opcion_seleccionada == ATRAS ? string("->") : "") + "Atras" + (opcion_seleccionada == ATRAS ? string("<-") : ""),
 		interfaz, opciones_configuracion[ATRAS]);
@@ -313,82 +360,37 @@ void ControladorInterfaz::dibujarMenu() {
 }
 
 void ControladorInterfaz::opcion_anterior() {
-	if (opcion_seleccionada != COMENZAR_JUEGO && opcion_seleccionada != CAMBIAR_CAMARA) 
-		opcion_seleccionada = tipo_opcion(int(opcion_seleccionada) - 1);
+	if (tipoOpcion) { // esta entre tipo_opcion::COMENZAR_JUEGO y tipo_opcion::CERRAR_JUEGO (0 a 3)
+		if (opcion_seleccionada == tipo_opcion::COMENZAR_JUEGO) {
+			opcion_seleccionada = tipo_opcion::CERRAR_JUEGO;
+		} else {
+			opcion_seleccionada = tipo_opcion((int(opcion_seleccionada) - 1));
+		}
+	} else { // esta entre tipo_opcion::CAMBIAR_CAMARA y tipo_opcion::ATRAS 4 a 15
+		if (opcion_seleccionada == tipo_opcion::CAMBIAR_CAMARA) {
+			opcion_seleccionada = tipo_opcion::ATRAS;
+		} else {
+			opcion_seleccionada = tipo_opcion((int(opcion_seleccionada) - 1));
+		}
+	}
 }
 
 void ControladorInterfaz::opcion_siguiente() {
-	if (opcion_seleccionada != CERRAR_JUEGO && opcion_seleccionada != ATRAS) 
-		opcion_seleccionada = tipo_opcion(int(opcion_seleccionada) + 1);
-}
-
-void ControladorInterfaz::seleccionar_opcion() {
-	switch (opcion_seleccionada) {
-	case COMENZAR_JUEGO:
-		pausa = false;
-		break;
-	case CONFIGURACIONES:
-		opciones_actuales = opciones_configuracion;
-		opcion_seleccionada = CAMBIAR_CAMARA;
-		break;
-	case CERRAR_JUEGO:
-		fin = true;
-		break;
-
-	case CAMBIAR_CAMARA:
-		ControladorCamara::getInstance()->cambiarTipoCamara();
-		break;
-	case TOGGLE_WIREFRAME:
-		toggle(wireframe);
-		if (wireframe)
-			glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-		else
-			glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
-		break;
-	case TOGGLE_TEXTURAS:
-		toggle(texturas_habilitadas);
-		break;
-	case TOGGLE_TIPO_LUZ:
-		toggle(tipoLuz);
-		if (tipoLuz)
-			glShadeModel(GL_SMOOTH);
-		else
-			glShadeModel(GL_FLAT);
-		break;
-	case TOGGLE_LUZ_AMBIENTE:
-		ControladorLuz::getInstance()->cambiarColorLuzAmbiente();
-		break;
-	case TOGGLE_HUD:
-		toggle(mostrarHud);
-		break;
-	case TOGGLE_VELOCIDAD_JUEGO:
-		if (velocidad_juego == 1) 
-			velocidad_juego = 2.f;
-		else if (velocidad_juego == 2) 
-			velocidad_juego = 0.5f;
-		else 
-			velocidad_juego = 1.f;
-
-		ControladorAudio::getInstance()->modificarVelocidad(velocidad_juego);
-		break;
-	case TOGGLE_INMORTAL:
-		toggle(inmortal);
-		break;
-	case TOGGLE_PARAR_TIEMPO:
-		toggle(pararTiempo);
-		break;
-	case TOGGLE_ATRAVESAR_PAREDES:
-		toggle(atravesar_paredes);
-		break;
-	case TOGGLE_AUDIO:
-		ControladorAudio::getInstance()->silenciarAudio();
-		break;
-	case ATRAS:
-		opciones_actuales = opciones_inicio;
-		opcion_seleccionada = COMENZAR_JUEGO;
-		break;
-	default:
-		break;
+	if (tipoOpcion) { // esta entre tipo_opcion::COMENZAR_JUEGO y tipo_opcion::CERRAR_JUEGO (0 a 3)
+		if (opcion_seleccionada == tipo_opcion::CERRAR_JUEGO) {
+			opcion_seleccionada = tipo_opcion::COMENZAR_JUEGO;
+		}
+		else {
+			opcion_seleccionada = tipo_opcion((int(opcion_seleccionada) + 1));
+		}
+	}
+	else { // esta entre tipo_opcion::CAMBIAR_CAMARA y tipo_opcion::ATRAS 4 a 15
+		if (opcion_seleccionada == tipo_opcion::ATRAS) {
+			opcion_seleccionada = tipo_opcion::CAMBIAR_CAMARA;
+		}
+		else {
+			opcion_seleccionada = tipo_opcion((int(opcion_seleccionada) + 1));
+		}
 	}
 }
 
@@ -396,9 +398,14 @@ void ControladorInterfaz::dibujarHUD() {
 	glEnable(GL_BLEND);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
+	margen_left = { MARGEN_HUD, MARGEN_HUD, 0 };
+
 	setMensajeEnComponente("Puntaje: " + to_string(puntaje), interfaz, hudPuntaje);
+	setMensajeEnComponente(to_string(enemigos.size()), interfaz, hudEnemigos);
 	setMensajeEnComponente("Tiempo: " + to_string(tiempoJuego / 1000), interfaz, hudTiempo);
 	setMensajeEnComponente(finJuego ? "¡PERDISTE!" : " ", interfaz, hudGameOver);
+	setMensajeEnComponente("Nivel " + to_string(nivel), interfaz, hudNivel);
+
 	setPoderes(ControladorPoderes::getInstance()->obtenerPoderes());
 
 	glClear(GL_DEPTH_BUFFER_BIT);
@@ -414,6 +421,8 @@ void ControladorInterfaz::dibujarHUD() {
 
 	dibujarComponenteHUD(hudTiempo);
 	dibujarComponenteHUD(hudPuntaje);
+	dibujarComponenteHUD(hudNivel);
+	dibujarComponenteHUD(hudEnemigos);
 	if (finJuego) {
 		dibujarComponenteHUD(hudGameOver);
 	}
@@ -429,6 +438,53 @@ void ControladorInterfaz::dibujarHUD() {
 	glDisable(GL_BLEND);
 }
 
+
+
+bool ControladorInterfaz::getTipoOpcion() {
+	return this->tipoOpcion;
+}
+
+void ControladorInterfaz::setTipoOpcion(bool tipo) {
+	tipoOpcion = tipo;
+}
+
+tipo_opcion ControladorInterfaz::getOpcionSeleccionada() {
+	return this->opcion_seleccionada;
+}
+
+void ControladorInterfaz::setOpcionSeleccionada(tipo_opcion opcion) {
+	opcion_seleccionada = opcion;
+}
+
+map<tipo_opcion, hud*> ControladorInterfaz::getOpciones(int id) {
+	switch (id) {
+		case 0:
+			return opciones_actuales;
+			break;
+		case 1: 
+			return opciones_inicio;
+			break;
+		case 2:
+			return opciones_configuracion;
+			break;
+	}
+	return map<tipo_opcion, hud*>();
+}
+
+void ControladorInterfaz::setOpciones(map<tipo_opcion, hud*> opciones, int id) {
+	switch (id) {
+	case 0:
+		opciones_actuales = opciones;
+		break;
+	case 1:
+		opciones_inicio = opciones;
+		break;
+	case 2:
+		opciones_configuracion = opciones;
+		break;
+	}
+}
+
 ControladorInterfaz::~ControladorInterfaz() {
 	SDL_FreeSurface(hudPuntaje->mensajeSurface);
 	SDL_FreeSurface(hudPuntaje->colorSurface);
@@ -436,6 +492,10 @@ ControladorInterfaz::~ControladorInterfaz() {
 	SDL_FreeSurface(hudTiempo->colorSurface);
 	SDL_FreeSurface(hudGameOver->mensajeSurface);
 	SDL_FreeSurface(hudGameOver->colorSurface);
+	SDL_FreeSurface(hudNivel->mensajeSurface);
+	SDL_FreeSurface(hudNivel->colorSurface);
+	SDL_FreeSurface(hudEnemigos->mensajeSurface);
+	SDL_FreeSurface(hudEnemigos->colorSurface);
 
 
 	for (pair<const tipo_poder, hud*>& kv : poderes) {

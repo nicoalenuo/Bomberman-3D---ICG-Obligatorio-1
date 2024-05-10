@@ -149,11 +149,11 @@ void Controlador::inicializar_juego() {
     vector<pair<int, int>> posEnemigos;
 
     while (cantidad_enemigos_colocados < cantidad_enemigos_actual) {
-        int posicion_enemigo_x = dis(gen)*(largoTablero - 1);
-        int posicion_enemigo_z = dis(gen)*(anchoTablero - 1);
+        int posicion_enemigo_x = int(dis(gen)*(largoTablero - 1));
+        int posicion_enemigo_z = int(dis(gen)*(anchoTablero - 1));
         if (int(posicion_enemigo_x) % 2 == 0 &&
             int(posicion_enemigo_z) % 2 == 0 &&
-            estructuras[getIndiceTablero(int(posicion_enemigo_x))][getIndiceTablero(int(posicion_enemigo_z))] == nullptr &&
+            estructuras[getIndiceTablero(GLfloat(posicion_enemigo_x))][getIndiceTablero(GLfloat(posicion_enemigo_z))] == nullptr &&
             int(posicion_enemigo_x) + int(posicion_enemigo_z) > 6) {
             posEnemigos.push_back({ int(posicion_enemigo_x), int(posicion_enemigo_z)});
             cantidad_enemigos_colocados++;
@@ -181,13 +181,13 @@ void Controlador::inicializar_juego() {
 
     bool puertaColocada = false;
     while (!puertaColocada) {
-        int posicion_puerta_x = dis(gen) * (largoTablero - 1);
-        int posicion_puerta_z = dis(gen) * (anchoTablero - 1);
+        int posicion_puerta_x = int(dis(gen) * (largoTablero - 1));
+        int posicion_puerta_z = int(dis(gen) * (anchoTablero - 1));
         if (estructuras[posicion_puerta_x][posicion_puerta_z] != nullptr && 
             dynamic_cast<estructura*>(estructuras[posicion_puerta_x][posicion_puerta_z])->getDestructible() &&
             posicion_puerta_x + posicion_puerta_z > 6) {
             puertaColocada = true;
-            puerta = new door(
+            door = new puerta(
                 { GLfloat(posicion_puerta_x * tile_size + tile_size / 2), 0, GLfloat(posicion_puerta_z * tile_size + tile_size / 2) },
                 { GLfloat(tile_size / 2), tile_size / 4, GLfloat(tile_size / 2) }
             );
@@ -316,7 +316,7 @@ void Controlador::manejarEventos() {
     if (pausa) {
         while (SDL_PollEvent(&evento)) {
             switch (evento.type) {
-            case SDL_KEYDOWN:
+            case SDL_KEYUP:
                 switch (evento.key.keysym.sym) {
                 case SDLK_p:
                     pausa = false;
@@ -330,7 +330,82 @@ void Controlador::manejarEventos() {
                     controlador_interfaz->opcion_siguiente();
                     break;
                 case SDLK_RETURN:
-                    controlador_interfaz->seleccionar_opcion();
+                    tipo_opcion opcion_seleccionada = controlador_interfaz->getOpcionSeleccionada();
+                    bool tipoOpcion = controlador_interfaz->getTipoOpcion();
+                    switch (opcion_seleccionada) {
+                    case COMENZAR_JUEGO:
+                        pausa = false;
+                        break;
+                    case CONFIGURACIONES:
+                        toggle(tipoOpcion);
+                        controlador_interfaz->setTipoOpcion(tipoOpcion);
+                        controlador_interfaz->setOpciones(controlador_interfaz->getOpciones(2),0);
+                        controlador_interfaz->setOpcionSeleccionada(CAMBIAR_CAMARA);
+                        break;
+                    case CERRAR_JUEGO:
+                        fin = true;
+                        break;
+                    case CAMBIAR_CAMARA:
+                        ControladorCamara::getInstance()->cambiarTipoCamara();
+                        break;
+                    case TOGGLE_WIREFRAME:
+                        toggle(wireframe);
+                        if (wireframe)
+                            glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+                        else
+                            glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+                        break;
+                    case TOGGLE_TEXTURAS:
+                        toggle(texturas_habilitadas);
+                        break;
+                    case TOGGLE_TIPO_LUZ:
+                        toggle(tipoLuz);
+                        if (tipoLuz)
+                            glShadeModel(GL_SMOOTH);
+                        else
+                            glShadeModel(GL_FLAT);
+                        break;
+                    case TOGGLE_LUZ_AMBIENTE:
+                        ControladorLuz::getInstance()->cambiarColorLuzAmbiente();
+                        break;
+                    case TOGGLE_HUD:
+                        toggle(mostrarHud);
+                        break;
+                    case TOGGLE_VELOCIDAD_JUEGO:
+                        if (velocidad_juego == 1)
+                            velocidad_juego = 2.f;
+                        else if (velocidad_juego == 2)
+                            velocidad_juego = 0.5f;
+                        else
+                            velocidad_juego = 1.f;
+
+                        ControladorAudio::getInstance()->modificarVelocidad(velocidad_juego);
+                        break;
+                    case TOGGLE_INMORTAL:
+                        toggle(inmortal);
+                        break;
+                    case TOGGLE_PARAR_TIEMPO:
+                        toggle(pararTiempo);
+                        break;
+                    case TOGGLE_ATRAVESAR_PAREDES:
+                        toggle(atravesar_paredes);
+                        break;
+                    case TOGGLE_AUDIO:
+                        ControladorAudio::getInstance()->silenciarAudio();
+                        break;
+                    case TOGGLE_PANTALLA:
+                        toggle(pantallaCompleta);
+                        SDL_SetWindowFullscreen(window, SDL_GetWindowFlags(window) & SDL_WINDOW_FULLSCREEN ? 0 : SDL_WINDOW_FULLSCREEN);
+                        break;
+                    case ATRAS:
+                        toggle(tipoOpcion);
+                        controlador_interfaz->setTipoOpcion(tipoOpcion);
+                        controlador_interfaz->setOpciones(controlador_interfaz->getOpciones(1), 0);
+                        controlador_interfaz->setOpcionSeleccionada(COMENZAR_JUEGO);
+                        break;
+                    default:
+                        break;
+                    }
                     break;
                 }
                 break;
@@ -342,7 +417,7 @@ void Controlador::manejarEventos() {
     if (finJuego) {
         moverArriba = false; moverAbajo = false; moverDerecha = false; moverIzquierda = false;
         while (SDL_PollEvent(&evento)) {
-            if (evento.type == SDL_KEYDOWN) {
+            if (evento.type == SDL_KEYUP) {
                 if (evento.key.keysym.sym == SDLK_ESCAPE)
                     fin = true;
                 else if (evento.key.keysym.sym == SDLK_p)
@@ -359,21 +434,6 @@ void Controlador::manejarEventos() {
             break;
         case SDL_KEYDOWN:
             switch (evento.key.keysym.sym) {
-                case SDLK_ESCAPE:
-                case SDLK_q:
-                    fin = true;
-                    break;
-                case SDLK_b:
-                    colocarBomba(controlador_camara, controlador_poderes, controlador_audio);
-                    break;
-                case SDLK_p:
-                    toggle(pausa);
-                    if (pausa) {
-                        controlador_audio->pausarAudio();
-                    } else {
-                        controlador_audio->reanudarAudio();
-                    }
-                    break;
                 case SDLK_UP:
                     moverArriba = true;
                     break;
@@ -386,6 +446,40 @@ void Controlador::manejarEventos() {
                 case SDLK_LEFT:
                     moverIzquierda = true;
                     break;
+            }
+            break;
+        case SDL_KEYUP:
+            switch (evento.key.keysym.sym) {
+                case SDLK_ESCAPE:
+                case SDLK_q:
+                    fin = true;
+                    break;
+                case SDLK_b:
+                    colocarBomba(controlador_camara, controlador_poderes, controlador_audio);
+                    break;
+                case SDLK_v:
+                    controlador_camara->cambiarTipoCamara();
+                    break;
+                case SDLK_p:
+                    toggle(pausa);
+                    if (pausa) {
+                        controlador_audio->pausarAudio();
+                    } else {
+                        controlador_audio->reanudarAudio();
+                    }
+                    break;
+                case SDLK_UP:
+                    moverArriba = false;
+                    break;
+                case SDLK_RIGHT:
+                    moverDerecha = false;
+                    break;
+                case SDLK_DOWN:
+                    moverAbajo = false;
+                    break;
+                case SDLK_LEFT:
+                    moverIzquierda = false;
+                    break; 
                 case SDLK_1:
                     controlador_audio->playAudio(sonido::muerte);
                     break;
@@ -393,9 +487,9 @@ void Controlador::manejarEventos() {
                     controlador_audio->playAudio(sonido::bonificacion);
                     break;
                 case SDLK_3:
-                    controlador_audio->playBomba({0,0,0});
+                    controlador_audio->playBomba({ 0,0,0 });
                     break;
-                case SDLK_4 :
+                case SDLK_4:
                     controlador_audio->playAudio(sonido::pasos);
                 case SDLK_5:
                     controlador_audio->playAudio(sonido::inicioJuego);
@@ -408,23 +502,56 @@ void Controlador::manejarEventos() {
                 case SDLK_8:
                     controlador_audio->playMecha({ 0,0,0 });
                     break;
-            }
-            break;
-        case SDL_KEYUP:
-            switch (evento.key.keysym.sym) {
-                case SDLK_UP:
-                    moverArriba = false;
+                case SDLK_m://mute
+                    controlador_audio->silenciarAudio();
                     break;
-                case SDLK_RIGHT:
-                    moverDerecha = false;
+                case SDLK_F1:
+                    toggle(wireframe);
+                    if (wireframe)
+                        glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+                    else
+                        glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
                     break;
-                case SDLK_DOWN:
-                    moverAbajo = false;
+                case SDLK_F2:
+                    toggle(texturas_habilitadas);
                     break;
-                case SDLK_LEFT:
-                    moverIzquierda = false;
+                case SDLK_F3:
+                    toggle(tipoLuz);
+                    if (tipoLuz)
+                        glShadeModel(GL_SMOOTH);
+                    else
+                        glShadeModel(GL_FLAT);
+                    break;
+                case SDLK_F4:
+                    //cambiar el color de luz (ambiente)
+                    controlador_luz->cambiarColorLuzAmbiente();
+                    //Recordar hacer sombras
+                    //No esta cambiando nada
+                        break;
+                case SDLK_F5:
+                    toggle(mostrarHud);
+                    break;
+                case SDLK_F6:
+                    //acelerar o disminuir velocidad de juego (global)
+                    if (velocidad_juego == 1)
+                        velocidad_juego = 2.f;
+                    else if (velocidad_juego == 2)
+                        velocidad_juego = 0.5f;
+                    else
+                        velocidad_juego = 1.f;
+                    controlador_audio->modificarVelocidad(velocidad_juego);
+                    break;
+                case SDLK_F7:
+                    toggle(inmortal);
+                    break;
+                case SDLK_F8:
+                    toggle(pararTiempo);
+                    break;
+                case SDLK_F9:
+                    toggle(atravesar_paredes);
                     break;
                 case SDLK_F11:
+                    toggle(pantallaCompleta);
                     SDL_SetWindowFullscreen(window, SDL_GetWindowFlags(window) & SDL_WINDOW_FULLSCREEN ? 0 : SDL_WINDOW_FULLSCREEN);
                     break;
             }
@@ -485,7 +612,7 @@ void Controlador::actualizar() {
     if (!pausa && !finJuego && !pararTiempo)
         disminuirTiempo(elapsed_time);
 
-    if (puertaAbierta && puerta->intersecta(jugador)) {
+    if (puertaAbierta && door->intersecta(jugador)) {
         controlador_audio->playAudio(sonido::bonificacion);
         controlador_poderes->resetearPoderes();
         cantidad_enemigos_actual++;
@@ -496,7 +623,7 @@ void Controlador::actualizar() {
     controlador_poderes->actualizarTemporizadores();
 
     jugador->actualizar();
-    puerta->actualizar();
+    door->actualizar();
 
     for (int i = 0; i < largoTablero; i++) {
         for (int j = 0; j < anchoTablero; j++) {
@@ -541,7 +668,7 @@ void Controlador::actualizar() {
 
     if (!puertaAbierta && enemigos.empty()) {
         puertaAbierta = true;
-        controlador_audio->playAudio(sonido::puertaAbierta, puerta->getPosicion());
+        controlador_audio->playAudio(sonido::puertaAbierta, door->getPosicion());
     }
 
     if (!temporizador && tiempoJuego <= 10000) {
@@ -583,7 +710,7 @@ void Controlador::dibujar() {
         (*itE)->dibujar();
     }
 
-    puerta->dibujar();
+    door->dibujar();
 
     controlador_luz->quitarLuces();
 

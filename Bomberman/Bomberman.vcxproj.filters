@@ -78,7 +78,7 @@
     <ClCompile Include="src\ControladorLuz.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\door.cpp">
+    <ClCompile Include="src\puerta.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\ControladorPoderes.cpp">
@@ -161,7 +161,7 @@
     <ClInclude Include="lib\recursoAudio.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="lib\door.h">
+    <ClInclude Include="lib\puerta.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="lib\ControladorPoderes.h">
@@ -229,6 +229,21 @@
     <Image Include="texturas\verde.jpg">
       <Filter>Resource Files</Filter>
     </Image>
+    <Image Include="texturas\azul.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="texturas\logo.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="texturas\rojo.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="texturas\verde.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="texturas\cant_enemigos.png">
+      <Filter>Resource Files</Filter>
+    </Image>
   </ItemGroup>
   <ItemGroup>
     <Media Include="audio\bomberman.wav">
@@ -250,6 +265,18 @@
       <Filter>Resource Files</Filter>
     </Media>
     <Media Include="audio\puertaAbierta.wav">
+      <Filter>Resource Files</Filter>
+    </Media>
+    <Media Include="audio\explosion_v1.wav">
+      <Filter>Resource Files</Filter>
+    </Media>
+    <Media Include="audio\mecha.wav">
+      <Filter>Resource Files</Filter>
+    </Media>
+    <Media Include="audio\musica.wav">
+      <Filter>Resource Files</Filter>
+    </Media>
+    <Media Include="audio\timer.wav">
       <Filter>Resource Files</Filter>
     </Media>
   </ItemGroup>

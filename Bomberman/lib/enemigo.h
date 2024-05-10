@@ -26,8 +26,6 @@ private:
 	GLfloat rotacion_y_actual, rotacion_z_actual;
 
 public:
-	enemigo(vector_3 pos, vector_3 tam);
-
 	enemigo(vector_3 pos, vector_3 tam, bool orientacionX, color_enemigo color);
 
 	bool getOrientacionX();

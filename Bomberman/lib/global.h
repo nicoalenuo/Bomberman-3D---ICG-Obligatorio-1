@@ -18,7 +18,7 @@ struct vector_3 {
 class objeto;
 class particula;
 class bomberman;
-class door;
+class puerta;
 class enemigo;
 
 extern bool moverArriba;
@@ -38,6 +38,7 @@ extern bool mostrarHud;
 extern bool inmortal;
 extern bool pararTiempo;
 extern bool atravesar_paredes;
+extern bool pantallaCompleta;
 
 extern bool pausa;
 extern bool mute;
@@ -52,7 +53,7 @@ extern list<particula*> particulas;
 extern list<enemigo*> enemigos;
 
 extern bomberman* jugador;
-extern door* puerta;
+extern puerta* door;
 
 extern int getIndiceTablero(GLfloat coord);
 

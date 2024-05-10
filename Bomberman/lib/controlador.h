@@ -18,7 +18,7 @@
 #include "enemigo.h"
 #include "bomberman.h"
 #include "bonificador.h"
-#include "door.h"
+#include "puerta.h"
 
 #include "ControladorCamara.h"
 #include "ControladorObjetos.h"

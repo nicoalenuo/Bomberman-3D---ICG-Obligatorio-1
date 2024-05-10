@@ -18,6 +18,7 @@ bool texturas_habilitadas = true;
 bool mute = false; //cambiar a false para que inicie con sonido
 bool mostrarHud = true;
 bool inmortal = false;
+bool pantallaCompleta = false;
 
 bool tipoLuz = true; //false = facetado, true = interpolado
 bool atravesar_paredes = false;
@@ -33,7 +34,7 @@ list<enemigo*> enemigos;
 
 bomberman* jugador;
 
-door* puerta;
+puerta* door;
 
 int largoPantalla = WINDOW_WIDTH;
 int altoPantalla = WINDOW_HEIGHT;
@@ -62,17 +63,19 @@ void toggle(bool &valor){
 }
 
 void aumentarNivel() {
-    nivel++;
     tiempoJuego = 200000;
-    if (nivel >= INT_MAX) {
+    if (nivel <= INT_MAX - 1) {
+        nivel++;
+    } else {
         nivel = INT_MAX;
     }
 }
 
 void sumarPuntaje(int puntos) {
-    puntaje += puntos;
-    if (puntos > INT_MAX) {
-        puntos = INT_MAX;
+    if (puntaje <= INT_MAX - puntos) {
+        puntaje += puntos;
+    } else {
+        puntaje = INT_MAX;
     }
 }
 

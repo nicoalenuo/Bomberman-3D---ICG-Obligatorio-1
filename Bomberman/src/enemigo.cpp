@@ -1,21 +1,5 @@
 #include "../lib/enemigo.h"
 
-enemigo::enemigo(vector_3 pos, vector_3 tam): personaje(pos, tam, GLfloat(0.1)){
-	orientacionX = true;
-    moverX = true;
-    moverNX = false;
-    moverZ = false;
-    moverNZ = false;
-    
-    eliminar = false;
-
-    probCambiarPos = 1;
-
-    rotacion_y_actual = 0;
-    rotacion_z_actual = 0;
-    balanceandoseDerecha = false;
-}
-
 enemigo::enemigo(vector_3 pos, vector_3 tam, bool orientacionX, color_enemigo color) : personaje(pos, tam, GLfloat(0.1)) {
     this->orientacionX = orientacionX;
     if (orientacionX) {
@@ -33,6 +17,9 @@ enemigo::enemigo(vector_3 pos, vector_3 tam, bool orientacionX, color_enemigo co
     eliminar = false;
 
     probCambiarPos = 0.3;
+    rotacion_y_actual = 0;
+    rotacion_z_actual = 0;
+    balanceandoseDerecha = false;
 
     this->color = color;
 }
@@ -81,14 +68,14 @@ bool posicion_valida_parcial(vector_3 pos, bool orientacionX) {
     objeto *obj_1, *obj_2, *obj_3, *obj_4 = nullptr;
 
     if (orientacionX) {
-        p = min(x + 1, largoTablero);
+        p = min(x + 1, largoTablero-1);
         n = max(x - 1, 0);
         obj_1 = estructuras[p][z];
         obj_2 = estructuras[n][z];
         obj_3 = bombas[p][z];
         obj_4 = bombas[n][z];
     } else {
-        p = min(z + 1, anchoTablero);
+        p = min(z + 1, anchoTablero-1);
         n = max(z - 1, 0);
         obj_1 = estructuras[x][p];
         obj_2 = estructuras[x][n];

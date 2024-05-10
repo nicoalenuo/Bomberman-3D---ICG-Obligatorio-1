@@ -112,7 +112,7 @@
     <ClCompile Include="src\cargadorAudio.cpp" />
     <ClCompile Include="src\bufferAudio.cpp" />
     <ClCompile Include="src\recursoAudio.cpp" />
-    <ClCompile Include="src\door.cpp" />
+    <ClCompile Include="src\puerta.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="constantes\constantes.h" />
@@ -141,7 +141,7 @@
     <ClInclude Include="lib\cargadorAudio.h" />
     <ClInclude Include="lib\bufferAudio.h" />
     <ClInclude Include="lib\recursoAudio.h" />
-    <ClInclude Include="lib\door.h" />
+    <ClInclude Include="lib\puerta.h" />
   </ItemGroup>
   <ItemGroup>
     <Font Include="texturas\OpenSans-Regular.ttf" />
@@ -150,27 +150,36 @@
     <Image Include="texturas\aumentar_alcance_bombas.png" />
     <Image Include="texturas\aumentar_cantidad_bombas.png" />
     <Image Include="texturas\aumentar_velocidad.png" />
+    <Image Include="texturas\azul.png" />
     <Image Include="texturas\bomba.png" />
     <Image Include="texturas\bombas_atraviesan_estructuras.png" />
+    <Image Include="texturas\cant_enemigos.png" />
     <Image Include="texturas\chayang.jpeg" />
     <Image Include="texturas\estructura_destructible.jpg" />
     <Image Include="texturas\estructura_no_destructible.png" />
     <Image Include="texturas\inmortalidad.png" />
+    <Image Include="texturas\logo.png" />
     <Image Include="texturas\player.png" />
     <Image Include="texturas\puerta.jpg" />
+    <Image Include="texturas\rojo.png" />
     <Image Include="texturas\suelo.jpg" />
     <Image Include="texturas\rojo.jpg" />
     <Image Include="texturas\azul.jpg" />
     <Image Include="texturas\verde.jpg" />
+    <Image Include="texturas\verde.png" />
   </ItemGroup>
   <ItemGroup>
     <Media Include="audio\bomberman.wav" />
     <Media Include="audio\bonificacion.wav" />
     <Media Include="audio\explosion.wav" />
+    <Media Include="audio\explosion_v1.wav" />
     <Media Include="audio\inicioJuego.wav" />
+    <Media Include="audio\mecha.wav" />
     <Media Include="audio\muerte.wav" />
+    <Media Include="audio\musica.wav" />
     <Media Include="audio\pasos.wav" />
     <Media Include="audio\puertaAbierta.wav" />
+    <Media Include="audio\timer.wav" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
