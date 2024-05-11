@@ -46,7 +46,6 @@ private:
 	SDL_Event evento;
 
 	int cantidad_enemigos_actual;
-	
 public:
 	static Controlador* getInstance();
 	~Controlador();

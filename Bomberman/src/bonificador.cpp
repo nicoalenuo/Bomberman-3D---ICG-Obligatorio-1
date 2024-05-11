@@ -35,20 +35,20 @@ void bonificador::actualizar() {
         visible = true;
 
     if (visible) {
-        tiempo_entre_particulas += int(elapsed_time);
+        tiempo_entre_particulas += int(tiempo_entre_frames);
 
         if (subiendo) {
-            pos.y += 0.03f * (elapsed_time / frameDelay);
+            pos.y += 0.03f * (tiempo_entre_frames / frameDelay);
             if (pos.y > tile_size)
                 subiendo = false;
         }
         else {
-            pos.y -= 0.03f * (elapsed_time / frameDelay);
+            pos.y -= 0.03f * (tiempo_entre_frames / frameDelay);
             if (pos.y < tile_size / 2)
                 subiendo = true;
         }
 
-        rotacion_y += 4 * (elapsed_time / frameDelay);
+        rotacion_y += 4 * (tiempo_entre_frames / frameDelay);
         rotacion_y = GLfloat(fmod(rotacion_y, 360));
 
         GLfloat colorLuz[4] = { 1.0f, 1.0f, 0.0f, 0.1f };

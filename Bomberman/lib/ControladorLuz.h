@@ -21,13 +21,11 @@ class ControladorLuz {
 		static ControladorLuz* instancia;
 		ControladorLuz();
 
-		GLfloat light_position[4];
-		GLfloat light_color[4];
-		GLfloat material_ambient_diffuse_color[4];
-		GLfloat material_specular_color[4];
-		GLfloat light_offset_x;
-		GLfloat light_offset_y;
-		GLfloat light_offset_z;
+		GLfloat posicionLuz[4];
+		GLfloat colorLuz[4];
+		GLfloat colorDiffuse[4];
+		GLfloat colorSpecular[4];
+		vector_3 desplazamiento_luz;
 		TIPO_LUZ_AMBIENTE colorLuzAmbiente;
 
 		stack<GLenum> lucesDisponibles;
@@ -39,7 +37,7 @@ class ControladorLuz {
 		void colocarLuces(vector_3 pos);
 		void quitarLuces();
 		void cambiarColorLuzAmbiente();
-		void moverCamara(vector_3 pos);
+		void moverLuzAmbiente(vector_3 pos);
 
 		~ControladorLuz();
 };

@@ -10,26 +10,26 @@ GLfloat tiempoSegundos;
 void particula_estructura::actualizar() {
     if (pos.y > 0.1f) {
         tiempoSegundos = tiempoParticula / 1000.0f;
-        pos.x = pos.x + velocidad.x * (elapsed_time / frameDelay);
+        pos.x = pos.x + velocidad.x * (tiempo_entre_frames / frameDelay);
 
         pos.y = max(aceleracion.y * tiempoSegundos * tiempoSegundos +
             velocidad.y * tiempoSegundos +
             pos_inicial.y, 0.1f);
 
-        pos.z = pos.z + velocidad.z * (elapsed_time / frameDelay);
-        tiempoParticula += elapsed_time;
+        pos.z = pos.z + velocidad.z * (tiempo_entre_frames / frameDelay);
+        tiempoParticula += tiempo_entre_frames;
     }
     else {
         if (tiempoEliminacion > 4000) {
             if (color_alpha > 0.0f) {
-                color_alpha -= 0.02f * elapsed_time / frameDelay;
+                color_alpha -= 0.02f * tiempo_entre_frames / frameDelay;
             }
             else {
                 eliminar = true;
             }
         }
         else {
-            tiempoEliminacion += int(elapsed_time);
+            tiempoEliminacion += int(tiempo_entre_frames);
         }
     }
 

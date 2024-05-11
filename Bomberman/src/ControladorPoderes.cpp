@@ -27,7 +27,7 @@ void ControladorPoderes::resetearPoderes() {
 void ControladorPoderes::actualizarTemporizadores() {
 	for (pair<const tipo_poder, int>& kv : temporizadorPoder) {
 		if (kv.second > 0)
-			kv.second -= int(elapsed_time);
+			kv.second -= int(tiempo_entre_frames);
 		if (kv.second <= 0)
 			kv.second = 0;
 	}

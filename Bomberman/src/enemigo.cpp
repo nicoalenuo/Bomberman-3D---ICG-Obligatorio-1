@@ -68,14 +68,14 @@ bool posicion_valida_parcial(vector_3 pos, bool orientacionX) {
     objeto *obj_1, *obj_2, *obj_3, *obj_4 = nullptr;
 
     if (orientacionX) {
-        p = min(x + 1, largoTablero-1);
+        p = min(x + 1, largoTablero - 1);
         n = max(x - 1, 0);
         obj_1 = estructuras[p][z];
         obj_2 = estructuras[n][z];
         obj_3 = bombas[p][z];
         obj_4 = bombas[n][z];
     } else {
-        p = min(z + 1, anchoTablero-1);
+        p = min(z + 1, anchoTablero - 1);
         n = max(z - 1, 0);
         obj_1 = estructuras[x][p];
         obj_2 = estructuras[x][n];
@@ -95,7 +95,7 @@ void enemigo::actualizar() {
     random_device rd;
     mt19937 gen(rd());
     uniform_real_distribution<> dis(0.0, 1.0);
-    GLfloat desplazamiento = velocidad * (elapsed_time / frameDelay);
+    GLfloat desplazamiento = velocidad * (tiempo_entre_frames / frameDelay);
 
     if (orientacionX) {
         if (centroConMovimiento(pos) && (dis(gen) < probCambiarPos) && posicion_valida_parcial(pos, false)) {
@@ -160,13 +160,13 @@ void enemigo::actualizar() {
     }
 
     if (balanceandoseDerecha) {
-        rotacion_z_actual += GLfloat(2 * (elapsed_time / frameDelay));
+        rotacion_z_actual += GLfloat(2 * (tiempo_entre_frames / frameDelay));
         if (rotacion_z_actual > 8) {
             balanceandoseDerecha = false;
         }
     }
     else {
-        rotacion_z_actual -= 2 * (elapsed_time / frameDelay);
+        rotacion_z_actual -= 2 * (tiempo_entre_frames / frameDelay);
         if (rotacion_z_actual < -8) {
             balanceandoseDerecha = true;
         }
@@ -186,13 +186,13 @@ void enemigo::dibujar() {
     glRotatef(rotacion_y_actual, 0, 1, 0);
     switch (color) {
         case ROJO:
-            ControladorObjetos::getInstance()->dibujar(OBJ_ENEMY_ROJO);
+            ControladorObjetos::getInstance()->dibujar(OBJ_ENEMY_ROJO, 1.0f);
             break;
         case AZUL:
-            ControladorObjetos::getInstance()->dibujar(OBJ_ENEMY_AZUL);
+            ControladorObjetos::getInstance()->dibujar(OBJ_ENEMY_AZUL, 1.0f);
             break;
         case VERDE:
-            ControladorObjetos::getInstance()->dibujar(OBJ_ENEMY_VERDE);
+            ControladorObjetos::getInstance()->dibujar(OBJ_ENEMY_VERDE, 1.0f);
             break;
     }
    

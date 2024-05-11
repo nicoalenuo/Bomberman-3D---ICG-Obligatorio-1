@@ -4,8 +4,8 @@
 #define GLOBAL_H
 
 #include "../constantes/constantes.h"
-#include <list>
 #include <chrono>
+#include <list>
 
 using namespace std;
 
@@ -26,13 +26,9 @@ extern bool moverAbajo;
 extern bool moverDerecha;
 extern bool moverIzquierda;
 
-extern GLfloat mouseX;
-extern GLfloat mouseY;
-extern GLfloat mouseY_invertido;
-
+//flags
 extern bool wireframe;
 extern bool texturas_habilitadas;
-extern float velocidad_juego;
 extern bool tipoLuz;
 extern bool mostrarHud;
 extern bool inmortal;
@@ -42,6 +38,9 @@ extern bool pantallaCompleta;
 
 extern bool pausa;
 extern bool mute;
+extern bool fin;
+extern bool finJuego;
+//-----
 
 extern objeto*** estructuras;
 extern objeto*** bombas;
@@ -57,25 +56,20 @@ extern puerta* door;
 
 extern int getIndiceTablero(GLfloat coord);
 
-extern bool fin;
-extern bool finJuego;
 extern int nivel;
 extern int puntaje; 
 extern int tiempoJuego; //milisegundos
-extern bool temporizador;
+extern float velocidad_juego;
 extern bool puertaAbierta;
+extern bool temporizador;
 
-extern chrono::duration<int> delta_time;
-extern GLfloat elapsed_time;
-extern chrono::high_resolution_clock::time_point current_t, previous_t;
+extern GLfloat tiempo_entre_frames;
+extern chrono::high_resolution_clock::time_point marca_tiempo_anterior, marca_tiempo_actual;
 
 extern void toggle(bool& valor);
 
 extern void aumentarNivel();
 extern void sumarPuntaje(int puntos);
 extern void disminuirTiempo(GLfloat milisegundos);
-
-extern int largoPantalla;
-extern int altoPantalla;
 
 #endif
