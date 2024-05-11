@@ -160,6 +160,7 @@
     <Image Include="texturas\estructura_no_destructible.png" />
     <Image Include="texturas\inmortalidad.png" />
     <Image Include="texturas\logo.png" />
+    <Image Include="texturas\pasto.png" />
     <Image Include="texturas\player.png" />
     <Image Include="texturas\puerta.jpg" />
     <Image Include="texturas\rojo.png" />

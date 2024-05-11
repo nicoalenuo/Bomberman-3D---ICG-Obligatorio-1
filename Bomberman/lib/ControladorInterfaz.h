@@ -11,6 +11,7 @@
 #include "global.h"
 #include "ControladorPoderes.h"
 #include "bomberman.h"
+#include "puerta.h"
 
 using namespace std;
 

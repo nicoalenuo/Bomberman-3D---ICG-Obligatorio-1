@@ -68,10 +68,10 @@ void bonificador::actualizar() {
     }
 
     if (visible &&
-        jugador->getPosicion().x + jugador->getTamanio().x > pos.x + tam.x && 
-        jugador->getPosicion().x - jugador->getTamanio().x < pos.x - tam.x &&
-        jugador->getPosicion().z + jugador->getTamanio().z > pos.z + tam.z &&
-        jugador->getPosicion().z - jugador->getTamanio().x < pos.z - tam.z) {
+        jugador->getPosicion().x + jugador->getTamanio().x > pos.x - tile_size / 4 && 
+        jugador->getPosicion().x - jugador->getTamanio().x < pos.x + tile_size / 4 &&
+        jugador->getPosicion().z + jugador->getTamanio().z > pos.z - tile_size / 4 &&
+        jugador->getPosicion().z - jugador->getTamanio().x < pos.z + tile_size / 4) {
             int x = getIndiceTablero(pos.x);
             int z = getIndiceTablero(pos.z);
             bonificadores[x][z] = nullptr;

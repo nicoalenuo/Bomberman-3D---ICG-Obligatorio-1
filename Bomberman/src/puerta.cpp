@@ -12,8 +12,9 @@ bool puerta::intersecta(bomberman* b) {
 }
 
 void puerta::actualizar() {
-    if (!visible && estructuras[getIndiceTablero(pos.x)][getIndiceTablero(pos.z)] == nullptr)
+    if (!visible && estructuras[getIndiceTablero(pos.x)][getIndiceTablero(pos.z)] == nullptr) {
         visible = true;
+    }
 }
 
 void puerta::dibujar() {
