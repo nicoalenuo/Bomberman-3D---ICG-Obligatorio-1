@@ -25,6 +25,7 @@ class ControladorLuz {
 		GLfloat colorLuz[4];
 		GLfloat colorDiffuse[4];
 		GLfloat colorSpecular[4];
+		GLfloat* shininess;
 		vector_3 desplazamiento_luz;
 		TIPO_LUZ_AMBIENTE colorLuzAmbiente;
 

@@ -105,6 +105,7 @@
     <ClCompile Include="src\objeto.cpp" />
     <ClCompile Include="src\particula.cpp" />
     <ClCompile Include="src\particula_bonificador.cpp" />
+    <ClCompile Include="src\particula_enemigo_derrotado.cpp" />
     <ClCompile Include="src\particula_estructura.cpp" />
     <ClCompile Include="src\particula_fuego.cpp" />
     <ClCompile Include="src\particula_tierra.cpp" />
@@ -134,6 +135,7 @@
     <ClInclude Include="lib\objeto.h" />
     <ClInclude Include="lib\particula.h" />
     <ClInclude Include="lib\particula_bonificador.h" />
+    <ClInclude Include="lib\particula_enemigo_derrotado.h" />
     <ClInclude Include="lib\particula_estructura.h" />
     <ClInclude Include="lib\particula_fuego.h" />
     <ClInclude Include="lib\particula_tierra.h" />

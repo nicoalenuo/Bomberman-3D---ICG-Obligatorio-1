@@ -6,6 +6,8 @@
 #include "personaje.h"
 #include "bomberman.h"
 
+#include "particula_enemigo_derrotado.h"
+
 enum color_enemigo {
 	ROJO,
 	AZUL,
@@ -37,7 +39,8 @@ public:
 
 	void actualizar();
 	void dibujar();
-};
 
+	enemigo::~enemigo();
+};
 
 #endif

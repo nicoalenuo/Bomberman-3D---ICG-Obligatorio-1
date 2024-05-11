@@ -658,7 +658,7 @@ void Controlador::actualizar() {
         }
         (*itE)->actualizar();
         if ((*itE)->getEliminar()) {
-            delete (*itE);
+            delete dynamic_cast<enemigo*>((*itE));
             itE = enemigos.erase(itE);
         }
         else {
@@ -686,8 +686,6 @@ void Controlador::dibujar() {
     if (texturas_habilitadas) {
         controlador_luz->colocarLuces(jugador->getPosicion());
     }
-
-    controlador_objetos->dibujarSuelo();
     jugador->dibujar();
 
     for (int i = 0; i < largoTablero; i++) {
@@ -711,6 +709,8 @@ void Controlador::dibujar() {
     }
 
     door->dibujar();
+
+    controlador_objetos->dibujarSuelo();
 
     controlador_luz->quitarLuces();
 

@@ -422,7 +422,7 @@ void ControladorInterfaz::dibujarHUD() {
 		setMensajeEnComponente("!PERDISTE!", interfaz, hudGameOver);
 	} else if (enemigos.size() == 0 && !door->getVisible()) {
 		setMensajeEnComponente("Encuentra el portal escondido", interfaz, hudGameOver);
-	} else if (enemigos.size() == 0) {
+	} else if (puertaAbierta) {
 		setMensajeEnComponente("Ingresa a la puerta", interfaz, hudGameOver);
 	} else {
 		setMensajeEnComponente(" ", interfaz, hudGameOver);

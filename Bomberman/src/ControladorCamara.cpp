@@ -48,10 +48,10 @@ void ControladorCamara::actualizarValoresMouse(GLfloat diferencia_x, GLfloat dif
 		valores_camara.x += 360;
 
 	valores_camara.y = valores_camara.y - (diferencia_y * SENSIBILIDAD_MOUSE);
-	if (valores_camara.y < 1)
-		valores_camara.y = 1;
-	else if (valores_camara.y > 90)
-		valores_camara.y = 90;
+	if (valores_camara.y < 5.0f)
+		valores_camara.y = 5.0f;
+	else if (valores_camara.y > 90.0f)
+		valores_camara.y = 90.0f;
 }
 
 void ControladorCamara::actualizarValoresRueda(GLfloat diferencia_rueda) {

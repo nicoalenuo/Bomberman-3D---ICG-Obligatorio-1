@@ -6,14 +6,12 @@ particula_estructura::particula_estructura(vector_3 pos, vector_3 tam, vector_3 
     this->textura = textura;
 }
 
-GLfloat tiempoSegundos;
 void particula_estructura::actualizar() {
     if (pos.y > 0.1f) {
-        tiempoSegundos = tiempoParticula / 1000.0f;
         pos.x = pos.x + velocidad.x * (tiempo_entre_frames / frameDelay);
 
-        pos.y = max(aceleracion.y * tiempoSegundos * tiempoSegundos +
-            velocidad.y * tiempoSegundos +
+        pos.y = max(aceleracion.y * tiempoParticula * tiempoParticula / (1000.0f * 1000.0f) +
+            velocidad.y * tiempoParticula / 1000.0f +
             pos_inicial.y, 0.1f);
 
         pos.z = pos.z + velocidad.z * (tiempo_entre_frames / frameDelay);

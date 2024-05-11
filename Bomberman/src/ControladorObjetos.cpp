@@ -12,6 +12,28 @@ ControladorObjetos::ControladorObjetos() {
 	ControladorObjetos::cargarObj("objs/player.obj", player_data);
 	ControladorObjetos::cargarObj("objs/bomba.obj", bomba_data);
 	ControladorObjetos::cargarObj("objs/enemy.obj", enemy_data);
+
+	//Se generan display lists una unica vez, para ser llamadas repetidas veces luego
+
+	displayListIds[OBJ_PLAYER] = glGenLists(1);
+	glNewList(displayListIds[OBJ_PLAYER], GL_COMPILE);
+	cargarDisplayList(OBJ_PLAYER);
+	glEndList();
+
+	displayListIds[OBJ_ENEMY_ROJO] = glGenLists(2);
+	glNewList(displayListIds[OBJ_ENEMY_ROJO], GL_COMPILE);
+	cargarDisplayList(OBJ_ENEMY_ROJO);
+	glEndList();
+
+	displayListIds[OBJ_ENEMY_VERDE] = glGenLists(3);
+	glNewList(displayListIds[OBJ_ENEMY_VERDE], GL_COMPILE);
+	cargarDisplayList(OBJ_ENEMY_VERDE);
+	glEndList();
+
+	displayListIds[OBJ_ENEMY_AZUL] = glGenLists(4);
+	glNewList(displayListIds[OBJ_ENEMY_AZUL], GL_COMPILE);
+	cargarDisplayList(OBJ_ENEMY_AZUL);
+	glEndList();
 }
 
 void ControladorObjetos::cargarObj(string file, pair<vector<char>, vector<vector<float>>>& data_output) {
@@ -93,7 +115,72 @@ void ControladorObjetos::cargarObj(string file, pair<vector<char>, vector<vector
 	data_output = { comandos, data };
 }
 
+void ControladorObjetos::cargarDisplayList(tipo_obj obj) {
+	pair<vector<char>, vector<vector<float>>> data_obj;
+	GLuint textura = 0;
+	switch (obj) {
+	case OBJ_PLAYER:
+		data_obj = player_data;
+		textura = ControladorTexturas::getInstance()->getTextura(PLAYER);
+		break;
+	case OBJ_BOMBA:
+		data_obj = bomba_data;
+		textura = ControladorTexturas::getInstance()->getTextura(TEXTURA_BOMBA);
+		break;
+	case OBJ_ENEMY_ROJO:
+	case OBJ_ENEMY_AZUL:
+	case OBJ_ENEMY_VERDE:
+		data_obj = enemy_data;
+		if (texturas_habilitadas) {
+			textura = ControladorTexturas::getInstance()->getTextura(
+				(obj == OBJ_ENEMY_ROJO) ? TEXTURA_ENEMY_ROJO :
+				(obj == OBJ_ENEMY_AZUL) ? TEXTURA_ENEMY_AZUL :
+				TEXTURA_ENEMY_VERDE
+			);
+		}
+		break;
+	}
+
+	glEnable(GL_TEXTURE_2D);
+	glBindTexture(GL_TEXTURE_2D, textura);
+
+	const vector<char>& comandos = data_obj.first;
+	const vector<vector<float>>& data = data_obj.second;
+
+	glBegin(GL_TRIANGLES);
+
+	for (size_t i = 0; i < data.size(); ++i) {
+		const char comando = comandos[i];
+		const vector<float>& values = data[i];
+
+		if (comando == 'V') {
+			glVertex3f(values[0], values[1], values[2]);
+		}
+		else if (comando == 'T') {
+			glTexCoord2f(values[0], values[1]);
+		}
+		else if (comando == 'N') {
+			glNormal3f(values[0], values[1], values[2]);
+		}
+		else if (comando == 'C') {
+			glColor3f(values[0], values[1], values[2]);
+		}
+		else if (comando == 'A') {
+			glColor4f(values[0], values[1], values[2], values[3]);
+		}
+	}
+
+	glEnd();
+
+	glDisable(GL_TEXTURE_2D);
+}
+
 void ControladorObjetos::dibujar(tipo_obj obj, GLfloat transparencia) {
+	if (texturas_habilitadas && displayListIds.count(obj) == 1) { //si tiene una display list, la utiliza
+		glCallList(displayListIds[obj]);
+		return;
+	}
+
 	pair<vector<char>, vector<vector<float>>> data_obj;
 	GLuint textura;
 	switch (obj) {

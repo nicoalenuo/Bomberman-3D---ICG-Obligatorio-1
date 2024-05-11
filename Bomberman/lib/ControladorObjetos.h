@@ -33,7 +33,10 @@ private:
     pair<vector<char>, vector<vector<float>>> player_data;
     pair<vector<char>, vector<vector<float>>> enemy_data;
 
+    map<tipo_obj, GLuint> displayListIds;
+
     void cargarObj(string file, pair<vector<char>, vector<vector<float>>>&data_output);
+    void cargarDisplayList(tipo_obj obj);
 public:
     static ControladorObjetos* getInstance();
 

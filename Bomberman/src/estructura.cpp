@@ -24,7 +24,6 @@ estructura::~estructura() {
                 )
             );
         }
-
     }
 }
 
