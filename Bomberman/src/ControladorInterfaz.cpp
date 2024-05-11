@@ -246,7 +246,7 @@ void ControladorInterfaz::dibujarComponenteHUD(hud* hud) {
 }
 
 void ControladorInterfaz::dibujarMenu() {
-	GLfloat posY = (altoPantalla / 2.0f) - 180;
+	GLfloat posY = (WINDOW_HEIGHT / 2.0f) - 180;
 
 	setMensajeEnComponente(
 		(opcion_seleccionada == COMENZAR_JUEGO ? string("->") : "") + "Jugar" + (opcion_seleccionada == COMENZAR_JUEGO ? string("<-") : ""),
@@ -516,10 +516,10 @@ void ControladorInterfaz::dibujarAyuda() {
 	glBindTexture(GL_TEXTURE_2D, ControladorTexturas::getInstance()->getTextura(TEXTURA_AYUDA));
 	glColor3f(1.0f, 1.0f, 1.0f);
 	glBegin(GL_QUADS); {
-		glTexCoord2d(0.f, 0.f); glVertex3f(largoPantalla / 4.f - MARGEN_HUD * 10, altoPantalla - MARGEN_HUD * 3, 0.f);
-		glTexCoord2d(1.f, 0.f); glVertex3f(3 * largoPantalla / 4.f + MARGEN_HUD * 10, altoPantalla - MARGEN_HUD * 3, 0.f);
-		glTexCoord2d(1.f, 1.f); glVertex3f(3 * largoPantalla / 4.f + MARGEN_HUD * 10, altoPantalla / 2.f - MARGEN_HUD * 25, 0.f);
-		glTexCoord2d(0.f, 1.f); glVertex3f(largoPantalla / 4.f - MARGEN_HUD * 10, altoPantalla / 2.f - MARGEN_HUD * 25, 0.f);
+		glTexCoord2d(0.f, 0.f); glVertex3f(WINDOW_WIDTH / 4.f - MARGEN_HUD * 10, WINDOW_HEIGHT - MARGEN_HUD * 3, 0.f);
+		glTexCoord2d(1.f, 0.f); glVertex3f(3 * WINDOW_WIDTH / 4.f + MARGEN_HUD * 10, WINDOW_HEIGHT - MARGEN_HUD * 3, 0.f);
+		glTexCoord2d(1.f, 1.f); glVertex3f(3 * WINDOW_WIDTH / 4.f + MARGEN_HUD * 10, WINDOW_HEIGHT / 2.f - MARGEN_HUD * 25, 0.f);
+		glTexCoord2d(0.f, 1.f); glVertex3f(WINDOW_WIDTH / 4.f - MARGEN_HUD * 10, WINDOW_HEIGHT / 2.f - MARGEN_HUD * 25, 0.f);
 	} glEnd();
 	glDisable(GL_TEXTURE_2D);
 }
