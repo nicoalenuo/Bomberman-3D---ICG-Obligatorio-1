@@ -43,7 +43,14 @@ enum tipo_opcion {
 	TOGGLE_ATRAVESAR_PAREDES,
 	TOGGLE_AUDIO,
 	TOGGLE_PANTALLA,
-	ATRAS,
+	ATRAS_CONFIGURACION,
+	ATRAS_AYUDA,
+};
+
+enum tipo_setting {
+	SETTING_INICIAL,
+	SETTING_CONFIGURACION,
+	SETTING_AYUDA,
 };
 
 struct hud {
@@ -73,9 +80,10 @@ class ControladorInterfaz {
 		map<tipo_opcion, hud*> opciones_actuales;
 		map<tipo_opcion, hud*> opciones_inicio;
 		map<tipo_opcion, hud*> opciones_configuracion;
+		map<tipo_opcion, hud*> opciones_ayuda;
 		tipo_opcion opcion_seleccionada;
 
-		bool tipoOpcion; //true si esta entre [COMENZAR_JUEGO,CERRAR_JUEGO], false si esta entre [CAMBIAR_CAMARA,ATRAS]
+		tipo_setting tipoOpcion; //true si esta entre [COMENZAR_JUEGO,CERRAR_JUEGO], false si esta entre [CAMBIAR_CAMARA,ATRAS]
 
 		void setMensajeEnComponente(string mensaje, TTF_Font* fuente, hud* componente);
 	public:
@@ -90,8 +98,10 @@ class ControladorInterfaz {
 		void opcion_anterior();
 		void opcion_siguiente();
 
-		bool getTipoOpcion();
-		void setTipoOpcion(bool tipo);
+		void dibujarAyuda();
+
+		void setTipoOpcion(tipo_setting tipo);
+
 		tipo_opcion getOpcionSeleccionada();
 		void setOpcionSeleccionada(tipo_opcion opcion);
 		map<tipo_opcion, hud*> getOpciones(int id);

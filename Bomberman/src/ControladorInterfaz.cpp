@@ -14,7 +14,7 @@ ControladorInterfaz* ControladorInterfaz::getInstance() {
 }
 
 ControladorInterfaz::ControladorInterfaz() {
-	tipoOpcion = true;
+	tipoOpcion = SETTING_INICIAL;
 	opcion_seleccionada = COMENZAR_JUEGO;
 
 	interfaz = TTF_OpenFont("texturas/OpenSans-Regular.ttf", 24);
@@ -55,10 +55,13 @@ ControladorInterfaz::ControladorInterfaz() {
 	}
 
 
-	for (int i = int(CAMBIAR_CAMARA); i <= int(ATRAS); i++) {
+	for (int i = int(CAMBIAR_CAMARA); i <= int(ATRAS_CONFIGURACION); i++) {
 		opciones_configuracion[tipo_opcion(i)] = new hud();
 		opciones_configuracion[tipo_opcion(i)]->colorMensaje = { 255, 255, 255 };
 	}
+
+	opciones_ayuda[tipo_opcion(int(ATRAS_AYUDA))] = new hud();
+	opciones_ayuda[tipo_opcion(int(ATRAS_AYUDA))]->colorMensaje = { 255, 255, 255 };
 
 	opciones_actuales = opciones_inicio;
 	//Fin menu
@@ -215,7 +218,7 @@ void ControladorInterfaz::dibujarComponenteHUD(hud* hud) {
 
 			margen_left.x += hud->mensajeSurface->w + MARGEN_HUD;
 			margen_left.y += MARGEN_HUD;
-			//falta dibujar una imagen de amongos a la derecha del numero
+			//Se dibuja el icono del enemigo
 			glEnable(GL_TEXTURE_2D);
 			glBindTexture(GL_TEXTURE_2D, ControladorTexturas::getInstance()->getTextura(TEXTURA_CANT_ENEMIGOS));
 			glColor3f(1.0f, 1.0f, 1.0f);
@@ -243,7 +246,7 @@ void ControladorInterfaz::dibujarComponenteHUD(hud* hud) {
 }
 
 void ControladorInterfaz::dibujarMenu() {
-	GLfloat posY = (altoPantalla / 2.0f) - 150;
+	GLfloat posY = (altoPantalla / 2.0f) - 180;
 
 	setMensajeEnComponente(
 		(opcion_seleccionada == COMENZAR_JUEGO ? string("->") : "") + "Jugar" + (opcion_seleccionada == COMENZAR_JUEGO ? string("<-") : ""),
@@ -307,8 +310,11 @@ void ControladorInterfaz::dibujarMenu() {
 	setMensajeEnComponente((opcion_seleccionada == TOGGLE_PANTALLA ? string("->") : "") + "Pantalla : " + (!pantallaCompleta ? "Normal" : "Completa") + (opcion_seleccionada == TOGGLE_PANTALLA ? string("<-") : ""),
 		interfaz, opciones_configuracion[TOGGLE_PANTALLA]);
 
-	setMensajeEnComponente((opcion_seleccionada == ATRAS ? string("->") : "") + "Atras" + (opcion_seleccionada == ATRAS ? string("<-") : ""),
-		interfaz, opciones_configuracion[ATRAS]);
+	setMensajeEnComponente((opcion_seleccionada == ATRAS_CONFIGURACION ? string("->") : "") + "Atras" + (opcion_seleccionada == ATRAS_CONFIGURACION ? string("<-") : ""),
+		interfaz, opciones_configuracion[ATRAS_CONFIGURACION]);
+
+	setMensajeEnComponente((opcion_seleccionada == ATRAS_AYUDA ? string("->") : "") + "Atras" + (opcion_seleccionada == ATRAS_AYUDA ? string("<-") : ""),
+		interfaz, opciones_ayuda[ATRAS_AYUDA]);
 
 	glEnable(GL_BLEND);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
@@ -360,37 +366,46 @@ void ControladorInterfaz::dibujarMenu() {
 }
 
 void ControladorInterfaz::opcion_anterior() {
-	if (tipoOpcion) { // esta entre tipo_opcion::COMENZAR_JUEGO y tipo_opcion::CERRAR_JUEGO (0 a 3)
+	switch (tipoOpcion) {
+	case SETTING_INICIAL:
 		if (opcion_seleccionada == tipo_opcion::COMENZAR_JUEGO) {
 			opcion_seleccionada = tipo_opcion::CERRAR_JUEGO;
-		} else {
+		}
+		else {
 			opcion_seleccionada = tipo_opcion((int(opcion_seleccionada) - 1));
 		}
-	} else { // esta entre tipo_opcion::CAMBIAR_CAMARA y tipo_opcion::ATRAS 4 a 15
+		break;
+	case SETTING_CONFIGURACION:
 		if (opcion_seleccionada == tipo_opcion::CAMBIAR_CAMARA) {
-			opcion_seleccionada = tipo_opcion::ATRAS;
-		} else {
+			opcion_seleccionada = tipo_opcion::ATRAS_CONFIGURACION;
+		}
+		else {
 			opcion_seleccionada = tipo_opcion((int(opcion_seleccionada) - 1));
 		}
+		break;
+	case SETTING_AYUDA:
+		opcion_seleccionada = tipo_opcion::ATRAS_AYUDA;
 	}
 }
 
 void ControladorInterfaz::opcion_siguiente() {
-	if (tipoOpcion) { // esta entre tipo_opcion::COMENZAR_JUEGO y tipo_opcion::CERRAR_JUEGO (0 a 3)
+	switch (tipoOpcion) {
+	case SETTING_INICIAL:
 		if (opcion_seleccionada == tipo_opcion::CERRAR_JUEGO) {
 			opcion_seleccionada = tipo_opcion::COMENZAR_JUEGO;
-		}
-		else {
+		} else {
 			opcion_seleccionada = tipo_opcion((int(opcion_seleccionada) + 1));
 		}
-	}
-	else { // esta entre tipo_opcion::CAMBIAR_CAMARA y tipo_opcion::ATRAS 4 a 15
-		if (opcion_seleccionada == tipo_opcion::ATRAS) {
+		break;
+	case SETTING_CONFIGURACION:
+		if (opcion_seleccionada == tipo_opcion::ATRAS_CONFIGURACION) {
 			opcion_seleccionada = tipo_opcion::CAMBIAR_CAMARA;
-		}
-		else {
+		} else {
 			opcion_seleccionada = tipo_opcion((int(opcion_seleccionada) + 1));
 		}
+		break;
+	case SETTING_AYUDA:
+		opcion_seleccionada = tipo_opcion::ATRAS_AYUDA;
 	}
 }
 
@@ -405,7 +420,7 @@ void ControladorInterfaz::dibujarHUD() {
 	setMensajeEnComponente("Tiempo: " + to_string(tiempoJuego / 1000), interfaz, hudTiempo);
 	if (finJuego) {
 		setMensajeEnComponente("¡PERDISTE!", interfaz, hudGameOver);
-	} else if(enemigos.size() == 0 && !puertaAbierta) {
+	} else if (enemigos.size() == 0 && !puertaAbierta) {
 		setMensajeEnComponente("Encuentra el portal escondido", interfaz, hudGameOver);
 	} else if (enemigos.size() == 0) {
 		setMensajeEnComponente("Ingresa a la puerta", interfaz, hudGameOver);
@@ -432,11 +447,13 @@ void ControladorInterfaz::dibujarHUD() {
 	dibujarComponenteHUD(hudPuntaje);
 	dibujarComponenteHUD(hudNivel);
 	dibujarComponenteHUD(hudEnemigos);
-	if (finJuego) {
-		dibujarComponenteHUD(hudGameOver);
-	}
+	dibujarComponenteHUD(hudGameOver);
 
 	dibujarComponenteHUDPoderes(); 
+
+	if (tipoOpcion == SETTING_AYUDA) {
+		dibujarAyuda();
+	}
 
 	glPopMatrix();
 
@@ -447,13 +464,7 @@ void ControladorInterfaz::dibujarHUD() {
 	glDisable(GL_BLEND);
 }
 
-
-
-bool ControladorInterfaz::getTipoOpcion() {
-	return this->tipoOpcion;
-}
-
-void ControladorInterfaz::setTipoOpcion(bool tipo) {
+void ControladorInterfaz::setTipoOpcion(tipo_setting tipo) {
 	tipoOpcion = tipo;
 }
 
@@ -476,6 +487,9 @@ map<tipo_opcion, hud*> ControladorInterfaz::getOpciones(int id) {
 		case 2:
 			return opciones_configuracion;
 			break;
+		case 3:
+			return opciones_ayuda;
+			break;
 	}
 	return map<tipo_opcion, hud*>();
 }
@@ -491,7 +505,23 @@ void ControladorInterfaz::setOpciones(map<tipo_opcion, hud*> opciones, int id) {
 	case 2:
 		opciones_configuracion = opciones;
 		break;
+	case 3:
+		opciones_ayuda = opciones;
+		break;
 	}
+}
+
+void ControladorInterfaz::dibujarAyuda() {
+	glEnable(GL_TEXTURE_2D);
+	glBindTexture(GL_TEXTURE_2D, ControladorTexturas::getInstance()->getTextura(TEXTURA_AYUDA));
+	glColor3f(1.0f, 1.0f, 1.0f);
+	glBegin(GL_QUADS); {
+		glTexCoord2d(0.f, 0.f); glVertex3f(largoPantalla / 4.f - MARGEN_HUD * 10, altoPantalla - MARGEN_HUD * 3, 0.f);
+		glTexCoord2d(1.f, 0.f); glVertex3f(3 * largoPantalla / 4.f + MARGEN_HUD * 10, altoPantalla - MARGEN_HUD * 3, 0.f);
+		glTexCoord2d(1.f, 1.f); glVertex3f(3 * largoPantalla / 4.f + MARGEN_HUD * 10, altoPantalla / 2.f - MARGEN_HUD * 25, 0.f);
+		glTexCoord2d(0.f, 1.f); glVertex3f(largoPantalla / 4.f - MARGEN_HUD * 10, altoPantalla / 2.f - MARGEN_HUD * 25, 0.f);
+	} glEnd();
+	glDisable(GL_TEXTURE_2D);
 }
 
 ControladorInterfaz::~ControladorInterfaz() {

@@ -147,6 +147,7 @@
     <Font Include="texturas\OpenSans-Regular.ttf" />
   </ItemGroup>
   <ItemGroup>
+    <Image Include="texturas\atajos.jpg" />
     <Image Include="texturas\aumentar_alcance_bombas.png" />
     <Image Include="texturas\aumentar_cantidad_bombas.png" />
     <Image Include="texturas\aumentar_velocidad.png" />

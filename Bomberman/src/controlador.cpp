@@ -331,22 +331,25 @@ void Controlador::manejarEventos() {
                     break;
                 case SDLK_RETURN:
                     tipo_opcion opcion_seleccionada = controlador_interfaz->getOpcionSeleccionada();
-                    bool tipoOpcion = controlador_interfaz->getTipoOpcion();
                     switch (opcion_seleccionada) {
                     case COMENZAR_JUEGO:
                         pausa = false;
                         break;
                     case CONFIGURACIONES:
-                        toggle(tipoOpcion);
-                        controlador_interfaz->setTipoOpcion(tipoOpcion);
+                        controlador_interfaz->setTipoOpcion(SETTING_CONFIGURACION);
                         controlador_interfaz->setOpciones(controlador_interfaz->getOpciones(2),0);
                         controlador_interfaz->setOpcionSeleccionada(CAMBIAR_CAMARA);
+                        break;
+                    case AYUDA:
+                        controlador_interfaz->setTipoOpcion(SETTING_AYUDA);
+                        controlador_interfaz->setOpciones(controlador_interfaz->getOpciones(3),0);
+                        controlador_interfaz->setOpcionSeleccionada(ATRAS_AYUDA);
                         break;
                     case CERRAR_JUEGO:
                         fin = true;
                         break;
                     case CAMBIAR_CAMARA:
-                        ControladorCamara::getInstance()->cambiarTipoCamara();
+                        controlador_camara->cambiarTipoCamara();
                         break;
                     case TOGGLE_WIREFRAME:
                         toggle(wireframe);
@@ -366,7 +369,7 @@ void Controlador::manejarEventos() {
                             glShadeModel(GL_FLAT);
                         break;
                     case TOGGLE_LUZ_AMBIENTE:
-                        ControladorLuz::getInstance()->cambiarColorLuzAmbiente();
+                        controlador_luz->cambiarColorLuzAmbiente();
                         break;
                     case TOGGLE_HUD:
                         toggle(mostrarHud);
@@ -379,7 +382,7 @@ void Controlador::manejarEventos() {
                         else
                             velocidad_juego = 1.f;
 
-                        ControladorAudio::getInstance()->modificarVelocidad(velocidad_juego);
+                        controlador_audio->modificarVelocidad(velocidad_juego);
                         break;
                     case TOGGLE_INMORTAL:
                         toggle(inmortal);
@@ -391,17 +394,21 @@ void Controlador::manejarEventos() {
                         toggle(atravesar_paredes);
                         break;
                     case TOGGLE_AUDIO:
-                        ControladorAudio::getInstance()->silenciarAudio();
+                        controlador_audio->silenciarAudio();
                         break;
                     case TOGGLE_PANTALLA:
                         toggle(pantallaCompleta);
                         SDL_SetWindowFullscreen(window, SDL_GetWindowFlags(window) & SDL_WINDOW_FULLSCREEN ? 0 : SDL_WINDOW_FULLSCREEN);
                         break;
-                    case ATRAS:
-                        toggle(tipoOpcion);
-                        controlador_interfaz->setTipoOpcion(tipoOpcion);
+                    case ATRAS_CONFIGURACION:
+                        controlador_interfaz->setTipoOpcion(SETTING_INICIAL);
                         controlador_interfaz->setOpciones(controlador_interfaz->getOpciones(1), 0);
-                        controlador_interfaz->setOpcionSeleccionada(COMENZAR_JUEGO);
+                        controlador_interfaz->setOpcionSeleccionada(CONFIGURACIONES);
+                        break;
+                    case ATRAS_AYUDA:
+                        controlador_interfaz->setTipoOpcion(SETTING_INICIAL);
+                        controlador_interfaz->setOpciones(controlador_interfaz->getOpciones(1), 0);
+                        controlador_interfaz->setOpcionSeleccionada(AYUDA);
                         break;
                     default:
                         break;
@@ -523,16 +530,12 @@ void Controlador::manejarEventos() {
                         glShadeModel(GL_FLAT);
                     break;
                 case SDLK_F4:
-                    //cambiar el color de luz (ambiente)
                     controlador_luz->cambiarColorLuzAmbiente();
-                    //Recordar hacer sombras
-                    //No esta cambiando nada
                         break;
                 case SDLK_F5:
                     toggle(mostrarHud);
                     break;
                 case SDLK_F6:
-                    //acelerar o disminuir velocidad de juego (global)
                     if (velocidad_juego == 1)
                         velocidad_juego = 2.f;
                     else if (velocidad_juego == 2)

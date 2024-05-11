@@ -244,6 +244,9 @@
     <Image Include="texturas\cant_enemigos.png">
       <Filter>Resource Files</Filter>
     </Image>
+    <Image Include="texturas\atajos.jpg">
+      <Filter>Resource Files</Filter>
+    </Image>
   </ItemGroup>
   <ItemGroup>
     <Media Include="audio\bomberman.wav">

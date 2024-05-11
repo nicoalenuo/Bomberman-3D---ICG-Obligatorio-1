@@ -33,6 +33,7 @@ enum tipo_textura { //agregar aca en caso de agregar mas texturas, y la direccio
 	TEXTURA_LOGO,
 	TEXTURA_PASTO,
 	TEXTURA_CANT_ENEMIGOS,
+	TEXTURA_AYUDA,
 };
 
 class ControladorTexturas{
