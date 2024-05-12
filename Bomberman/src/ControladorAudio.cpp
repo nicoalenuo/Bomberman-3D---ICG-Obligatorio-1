@@ -50,6 +50,8 @@ ControladorAudio::ControladorAudio() {
 	buffers.push_back(bufferAudio::agregarSonido("audio/puertaAbierta.wav"));
 	buffers.push_back(bufferAudio::agregarSonido("audio/musica.wav"));
 	buffers.push_back(bufferAudio::agregarSonido("audio/timer.wav"));
+	buffers.push_back(bufferAudio::agregarSonido("audio/menu.wav"));
+	buffers.push_back(bufferAudio::agregarSonido("audio/muerteEnemigo.wav"));
 
 	int i = 0;
 	for (auto audio = buffers.begin(); audio != buffers.end(); ++audio) {
@@ -161,6 +163,9 @@ void ControladorAudio::detenerAudio() { //creo que ya no usamos el detenerAudio 
 		for (int i = 0; i < cantFuentesBomba; i++) {
 			sonidosBomba[i]->detener();
 		}
+		for (int i = 0; i < cantFuentesBomba; i++) {
+			sonidosMecha[i]->detener();
+		}
 	}
 	mute = !mute;
 }
@@ -172,6 +177,9 @@ void ControladorAudio::silenciarAudio() {
 	}
 	for (int i = 0; i < cantFuentesBomba; i++) {
 		sonidosBomba[i]->silenciar(mute);
+	}
+	for (int i = 0; i < cantFuentesBomba; i++) {
+		sonidosMecha[i]->silenciar(mute);
 	}
 }
 

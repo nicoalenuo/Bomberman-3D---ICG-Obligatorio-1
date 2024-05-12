@@ -16,7 +16,7 @@
 
 using namespace std;
 
-enum class sonido { muerte, bonificacion, pasos, inicioJuego, puertaAbierta, musica, timer10}; //explosion
+enum class sonido { muerte, bonificacion, pasos, inicioJuego, puertaAbierta, musica, timer10, menu, muerteEnemigo}; //explosion
 
 struct sounds{
 	sonido sonido;

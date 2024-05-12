@@ -184,6 +184,8 @@
     <Media Include="audio\pasos.wav" />
     <Media Include="audio\puertaAbierta.wav" />
     <Media Include="audio\timer.wav" />
+    <Media Include="audio\muerteEnemigo.wav" />
+	<Media Include="audio\menu.wav" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

@@ -203,6 +203,8 @@ random_device rdParticulaEnemigoDerrotado;
 mt19937 genParticulaEnemigoDerrotado(rdParticulaEnemigoDerrotado());
 uniform_real_distribution<> disParticulaEnemigoDerrotado(-0.3, 0.3);
 enemigo::~enemigo() {
+    ControladorAudio::getInstance()->playAudio(sonido::muerteEnemigo);
+
     for (int j = 0; j < 150; j++) {
         particulas.push_back(
             new particula_enemigo_derrotado(

@@ -366,6 +366,8 @@ void ControladorInterfaz::dibujarMenu() {
 }
 
 void ControladorInterfaz::opcion_anterior() {
+	ControladorAudio::getInstance()->playAudio(sonido::menu);
+
 	switch (tipoOpcion) {
 	case SETTING_INICIAL:
 		if (opcion_seleccionada == tipo_opcion::COMENZAR_JUEGO) {
@@ -389,6 +391,8 @@ void ControladorInterfaz::opcion_anterior() {
 }
 
 void ControladorInterfaz::opcion_siguiente() {
+	ControladorAudio::getInstance()->playAudio(sonido::menu);
+
 	switch (tipoOpcion) {
 	case SETTING_INICIAL:
 		if (opcion_seleccionada == tipo_opcion::CERRAR_JUEGO) {
