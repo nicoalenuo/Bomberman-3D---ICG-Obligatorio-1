@@ -62,6 +62,7 @@ extern int tiempoJuego; //milisegundos
 extern float velocidad_juego;
 extern bool puertaAbierta;
 extern bool temporizador;
+extern bool musica;
 
 extern GLfloat tiempo_entre_frames;
 extern chrono::high_resolution_clock::time_point marca_tiempo_anterior, marca_tiempo_actual;

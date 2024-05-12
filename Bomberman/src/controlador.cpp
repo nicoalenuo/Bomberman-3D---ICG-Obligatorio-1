@@ -268,7 +268,6 @@ Controlador::Controlador() {
     controlador_camara = ControladorCamara::getInstance();
     controlador_interfaz = ControladorInterfaz::getInstance();
 
-    controlador_audio->playAudio(sonido::inicioJuego);
     controlador_audio->playAudio(sonido::musica);
 }
 
@@ -516,7 +515,8 @@ void Controlador::manejarEventos() {
                     controlador_audio->playAudio(sonido::puertaAbierta);
                     break;
                 case SDLK_7:
-                    controlador_audio->playAudio(sonido::musica);
+                    toggle(musica);
+                    controlador_audio->pausarMusica();
                     break;
                 case SDLK_8:
                     controlador_audio->playMecha({ 0,0,0 });
@@ -528,6 +528,7 @@ void Controlador::manejarEventos() {
                     controlador_audio->playAudio(sonido::menu);
                     break;
                 case SDLK_m://mute
+                    toggle(musica);
                     controlador_audio->silenciarAudio();
                     break;
                 case SDLK_F1:
@@ -738,6 +739,8 @@ void Controlador::dibujar() {
 
     controlador_objetos->dibujarMarcadorBomba(jugador->getPosicion());
 
+    glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+
     if (pausa) {
         controlador_interfaz->dibujarMenu();
     }
@@ -745,6 +748,11 @@ void Controlador::dibujar() {
     if (mostrarHud) {
         controlador_interfaz->dibujarHUD();
     }
+
+    if (wireframe)
+        glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+    else
+        glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 
     SDL_GL_SwapWindow(window);
 }

@@ -8,23 +8,23 @@ ControladorAudio* ControladorAudio::getInstance() {
 	return instancia;
 }
 
-void ControladorAudio::initOpenAl() {
+void ControladorAudio::initOpenAl() { //se comentan los exit para que funcione en dispositivos sin audio
 	openALDevice = alcOpenDevice(nullptr); //obtengo el dispositivo
 	if (!openALDevice) {
 		cerr << "Error al inicilizar openAL" << endl;
-		exit(1);
+		//exit(1);
 	}
 
 	openALContext = alcCreateContext(openALDevice, nullptr); //creo el contexto
 	if (!openALContext) {
 		cerr << "Error al crear el contexto del audio" << endl;
-		exit(1);
+		//exit(1);
 	}
 
 	contextMadeCurrent = alcMakeContextCurrent(openALContext); //actulizo el contexto
 	if (!contextMadeCurrent || (contextMadeCurrent != ALC_TRUE)) {
 		cerr << "Error al actualizar el contexto del audio" << endl;
-		exit(1);
+		//exit(1);
 	}
 }
 
@@ -201,6 +201,16 @@ void ControladorAudio::modificarVelocidad(float velocidad) {
 	}
 	for (int i = 0; i < cantFuentesBomba; i++) {
 		sonidosMecha[i]->setTono(velocidad);
+	}
+}
+
+void ControladorAudio::pausarMusica() {
+	bool encontrado = false;
+	for (auto songs = sonidos.begin(); !encontrado && songs != sonidos.end(); ++songs) {
+		if (songs->sonido == sonido::musica) {
+			encontrado = true;
+			songs->recurso->silenciar(!musica);
+		}
 	}
 }
 

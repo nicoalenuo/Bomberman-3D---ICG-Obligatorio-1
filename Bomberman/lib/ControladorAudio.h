@@ -53,6 +53,7 @@ public:
 	void reanudarAudio();
 	void detenerAudio();
 	void silenciarAudio();
+	void pausarMusica();
 
 	void modificarVelocidad(float velocidad);
 };

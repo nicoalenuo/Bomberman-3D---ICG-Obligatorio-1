@@ -18,6 +18,7 @@ bool pantallaCompleta = false;
 
 bool tipoLuz = true; //false = facetado, true = interpolado
 bool atravesar_paredes = false;
+bool musica = true;
 
 objeto*** estructuras = new objeto * *[largoTablero];
 objeto*** bombas = new objeto * *[largoTablero];
