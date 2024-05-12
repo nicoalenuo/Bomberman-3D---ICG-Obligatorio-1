@@ -57,6 +57,8 @@ ControladorAudio::ControladorAudio() {
 	for (auto audio = buffers.begin(); audio != buffers.end(); ++audio) {
 		sounds sound = {static_cast<sonido>(i),new recursoAudio((*audio)) };
 		sonidos.push_back(sound);
+		if (static_cast<sonido>(i) == sonido::musica)
+			sound.recurso->setBucle(true);
 		i++;
 	}
 
@@ -130,7 +132,11 @@ void ControladorAudio::playAudio(sonido s, vector_3 pos) {
 void ControladorAudio::pausarAudio() { //se lo llama cuando se pausa el juego
 	if (!mute) {
 		for (auto songs = sonidos.begin(); songs != sonidos.end(); ++songs) {
-			songs->recurso->pausar();
+			if (songs->sonido == sonido::musica)
+				songs->recurso->silenciar(mute);
+			else
+				songs->recurso->pausar();
+			
 		}
 		for (int i = 0; i < cantFuentesBomba; i++) {
 			sonidosBomba[i]->pausar();
@@ -144,7 +150,10 @@ void ControladorAudio::pausarAudio() { //se lo llama cuando se pausa el juego
 void ControladorAudio::reanudarAudio() { //se lo llama cuando se saca la pausa al juego
 	if (!mute) {
 		for (auto songs = sonidos.begin(); songs != sonidos.end(); ++songs) {
-			songs->recurso->reanudar();
+			if (songs->sonido == sonido::musica)
+				songs->recurso->silenciar(mute);
+			else
+				songs->recurso->reanudar();
 		}
 		for (int i = 0; i < cantFuentesBomba; i++) {
 			sonidosBomba[i]->reanudar();
@@ -189,6 +198,9 @@ void ControladorAudio::modificarVelocidad(float velocidad) {
 	}
 	for (int i = 0; i < cantFuentesBomba; i++) {
 		sonidosBomba[i]->setTono(velocidad);
+	}
+	for (int i = 0; i < cantFuentesBomba; i++) {
+		sonidosMecha[i]->setTono(velocidad);
 	}
 }
 

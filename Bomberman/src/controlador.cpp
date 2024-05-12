@@ -269,6 +269,7 @@ Controlador::Controlador() {
     controlador_interfaz = ControladorInterfaz::getInstance();
 
     controlador_audio->playAudio(sonido::inicioJuego);
+    controlador_audio->playAudio(sonido::musica);
 }
 
 Controlador* Controlador::getInstance() {
