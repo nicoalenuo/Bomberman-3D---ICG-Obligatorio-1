@@ -38,6 +38,8 @@ void Controlador::inicializar_juego() {
         jugador->setPosicionX(tile_size / 2);
         jugador->setPosicionY(0);
         jugador->setPosicionZ(tile_size / 2);
+        jugador->setCantBomba(0);
+        jugador->setMoverBomba(false);
     }
 
     for (int i = 0; i < largoTablero; i++) {
@@ -338,6 +340,7 @@ void Controlador::manejarEventos() {
                     controlador_interfaz->opcion_siguiente();
                     break;
                 case SDLK_RETURN:
+                    controlador_audio->playAudio(sonido::menu);
                     tipo_opcion opcion_seleccionada = controlador_interfaz->getOpcionSeleccionada();
                     switch (opcion_seleccionada) {
                     case COMENZAR_JUEGO:
@@ -516,6 +519,12 @@ void Controlador::manejarEventos() {
                     break;
                 case SDLK_8:
                     controlador_audio->playMecha({ 0,0,0 });
+                    break;
+                case SDLK_9:
+                    controlador_audio->playAudio(sonido::muerteEnemigo);
+                    break;
+                case SDLK_0:
+                    controlador_audio->playAudio(sonido::menu);
                     break;
                 case SDLK_m://mute
                     controlador_audio->silenciarAudio();

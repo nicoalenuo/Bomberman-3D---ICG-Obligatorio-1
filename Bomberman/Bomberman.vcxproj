@@ -51,6 +51,7 @@
     <LibraryPath>..\Freeimage;..\SDL2-2.0.12\lib\x86;..\SDL2_ttf-2.0.15\lib\x86;..\OpenAL\lib;$(LibraryPath)</LibraryPath>
     <PublicIncludeDirectories>$(ProjectDir);$(ProjectDir)headers;$(PublicIncludeDirectories)</PublicIncludeDirectories>
     <ExecutablePath>$(VC_ExecutablePath_x86);$(WindowsSDK_ExecutablePath);$(VS_ExecutablePath);$(MSBuild_ExecutablePath);$(SystemRoot)\SysWow64;$(FxCopDir);$(PATH);</ExecutablePath>
+    <EnableMicrosoftCodeAnalysis>true</EnableMicrosoftCodeAnalysis>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -185,7 +186,7 @@
     <Media Include="audio\puertaAbierta.wav" />
     <Media Include="audio\timer.wav" />
     <Media Include="audio\muerteEnemigo.wav" />
-	<Media Include="audio\menu.wav" />
+    <Media Include="audio\menu.wav" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
