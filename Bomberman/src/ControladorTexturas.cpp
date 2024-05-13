@@ -29,7 +29,8 @@ ControladorTexturas::ControladorTexturas() {
         {TEXTURA_LOGO, "texturas/logo.png"},
         {TEXTURA_PASTO, "texturas/pasto.png"},
         {TEXTURA_CANT_ENEMIGOS, "texturas/cant_enemigos.png"},
-        {TEXTURA_AYUDA, "texturas/atajos.jpg"}
+        {TEXTURA_AYUDA, "texturas/atajos.jpg"},
+        {TEXTURA_SOMBRA, "texturas/sombra.png"}
     };
 
     FREE_IMAGE_FORMAT fif;

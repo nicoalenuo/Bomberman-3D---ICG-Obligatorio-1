@@ -722,6 +722,20 @@ void Controlador::dibujar() {
 
     controlador_objetos->dibujarMarcadorBomba(jugador->getPosicion());
 
+    for (list<enemigo*>::iterator itE = enemigos.begin(); itE != enemigos.end(); itE++) {
+        controlador_objetos->dibujarSombra((*itE)->getPosicion());
+    }
+
+    for (int i = 0; i < largoTablero; i++) {
+        for (int j = 0; j < anchoTablero; j++) {
+            if (bombas[i][j] != nullptr) {
+                controlador_objetos->dibujarSombra(bombas[i][j]->getPosicion());
+            }
+        }
+    }
+
+    controlador_objetos->dibujarSombra(jugador->getPosicion());
+
     glPolygonMode(GL_FRONT_AND_BACK, GL_FILL); //deshabilitamos el wireframe para dibujar el hud
 
     if (pausa) {

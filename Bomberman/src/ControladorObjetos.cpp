@@ -430,13 +430,49 @@ void ControladorObjetos::dibujarMarcadorBomba(vector_3 pos) {
 		}
 		glEnable(GL_BLEND);
 		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+		glPushMatrix();
 		glTranslatef(posX * tile_size + tile_size / 2, 0.0f, posZ * tile_size + tile_size / 2);
 		dibujar(OBJ_BOMBA, 0.8f);
 		glDisable(GL_BLEND);
 		if (!wireframe){
 			glDisable(GL_CULL_FACE);
 		}
+		glPopMatrix();
 	}
+}
+
+
+void ControladorObjetos::dibujarSombra(vector_3 pos) {
+	glPushMatrix();
+	glTranslatef(pos.x, 0, pos.z);
+
+	glEnable(GL_BLEND);
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+	if (texturas_habilitadas) {
+		glBindTexture(GL_TEXTURE_2D, ControladorTexturas::getInstance()->getTextura(TEXTURA_SOMBRA));
+		glColor4f(0.0f, 0.0f, 0.0f, 0.25f);
+	}
+	else {
+		glColor4f(0.0f, 0.0f, 0.0f, 0.25f);
+	}
+	glBegin(GL_TRIANGLE_FAN);
+
+	glVertex3f(0, 0.01f, 0); // center of circle
+	for (int i = 0; i <= 40; i++) {
+		glTexCoord2f(
+			0.65f * cos(i * 2 * PI / 40),
+			0.65f * sin(i * 2 * PI / 40)
+		);
+		glVertex3f(
+			0.65f * cos(i * 2 * PI / 40),
+			0.01f,
+			0.65f * sin(i * 2 * PI / 40)
+		);
+	}
+
+	glEnd();
+	glDisable(GL_BLEND);
+	glPopMatrix();
 }
 
 ControladorObjetos::~ControladorObjetos() {

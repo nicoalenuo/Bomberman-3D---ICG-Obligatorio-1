@@ -44,6 +44,7 @@ public:
     void dibujarCubo(vector_3 tam, GLuint textura, GLfloat color[3]); //textura es 0 si no tiene
     void dibujarSuelo();
     void dibujarMarcadorBomba(vector_3 pos);
+    void dibujarSombra(vector_3 pos);
 
     ~ControladorObjetos();
 };
