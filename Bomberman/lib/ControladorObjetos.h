@@ -36,7 +36,7 @@ private:
     map<tipo_obj, GLuint> displayListIds;
 
     void cargarObj(string file, pair<vector<char>, vector<vector<float>>>&data_output);
-    void cargarDisplayList(tipo_obj obj);
+    void cargarDisplayList(tipo_obj obj, GLfloat transparencia);
 public:
     static ControladorObjetos* getInstance();
 

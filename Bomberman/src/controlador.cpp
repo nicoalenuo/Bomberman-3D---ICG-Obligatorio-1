@@ -326,6 +326,16 @@ void Controlador::manejarEventos() {
     if (pausa) {
         while (SDL_PollEvent(&evento)) {
             switch (evento.type) {
+            case SDL_KEYDOWN:
+                switch (evento.key.keysym.sym) {
+                case SDLK_UP:
+                    controlador_interfaz->opcion_anterior();
+                    break;
+                case SDLK_DOWN:
+                    controlador_interfaz->opcion_siguiente();
+                    break;
+                }
+                break;
             case SDL_KEYUP:
                 switch (evento.key.keysym.sym) {
                 case SDLK_p:
@@ -333,12 +343,6 @@ void Controlador::manejarEventos() {
                     break;
                 case SDLK_ESCAPE:
                     fin = true;
-                case SDLK_UP:
-                    controlador_interfaz->opcion_anterior();
-                    break;
-                case SDLK_DOWN:
-                    controlador_interfaz->opcion_siguiente();
-                    break;
                 case SDLK_RETURN:
                     controlador_audio->playAudio(sonido::menu);
                     tipo_opcion opcion_seleccionada = controlador_interfaz->getOpcionSeleccionada();
@@ -364,20 +368,14 @@ void Controlador::manejarEventos() {
                         break;
                     case TOGGLE_WIREFRAME:
                         toggle(wireframe);
-                        if (wireframe)
-                            glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-                        else
-                            glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+                        glPolygonMode(GL_FRONT_AND_BACK, wireframe ? GL_LINE : GL_FILL);
                         break;
                     case TOGGLE_TEXTURAS:
                         toggle(texturas_habilitadas);
                         break;
                     case TOGGLE_TIPO_LUZ:
                         toggle(tipoLuz);
-                        if (tipoLuz)
-                            glShadeModel(GL_SMOOTH);
-                        else
-                            glShadeModel(GL_FLAT);
+                        glShadeModel(tipoLuz ? GL_SMOOTH : GL_FLAT);
                         break;
                     case TOGGLE_LUZ_AMBIENTE:
                         controlador_luz->cambiarColorLuzAmbiente();
@@ -386,13 +384,7 @@ void Controlador::manejarEventos() {
                         toggle(mostrarHud);
                         break;
                     case TOGGLE_VELOCIDAD_JUEGO:
-                        if (velocidad_juego == 1)
-                            velocidad_juego = 2.f;
-                        else if (velocidad_juego == 2)
-                            velocidad_juego = 0.5f;
-                        else
-                            velocidad_juego = 1.f;
-
+                        velocidad_juego = velocidad_juego == 1.0f ? 2.0f : velocidad_juego == 2.0f ? 0.5f : 1.0f;
                         controlador_audio->modificarVelocidad(velocidad_juego);
                         break;
                     case TOGGLE_INMORTAL:
@@ -535,20 +527,14 @@ void Controlador::manejarEventos() {
                     break;
                 case SDLK_F1:
                     toggle(wireframe);
-                    if (wireframe)
-                        glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-                    else
-                        glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+                    glPolygonMode(GL_FRONT_AND_BACK, wireframe ? GL_LINE : GL_FILL);
                     break;
                 case SDLK_F2:
                     toggle(texturas_habilitadas);
                     break;
                 case SDLK_F3:
                     toggle(tipoLuz);
-                    if (tipoLuz)
-                        glShadeModel(GL_SMOOTH);
-                    else
-                        glShadeModel(GL_FLAT);
+                    glShadeModel(tipoLuz ? GL_SMOOTH : GL_FLAT);
                     break;
                 case SDLK_F4:
                     controlador_luz->cambiarColorLuzAmbiente();
@@ -557,12 +543,7 @@ void Controlador::manejarEventos() {
                     toggle(mostrarHud);
                     break;
                 case SDLK_F6:
-                    if (velocidad_juego == 1)
-                        velocidad_juego = 2.f;
-                    else if (velocidad_juego == 2)
-                        velocidad_juego = 0.5f;
-                    else
-                        velocidad_juego = 1.f;
+                    velocidad_juego = velocidad_juego == 1.0f ? 2.0f : velocidad_juego == 2.0f ? 0.5f : 1.0f;
                     controlador_audio->modificarVelocidad(velocidad_juego);
                     break;
                 case SDLK_F7:
@@ -741,7 +722,7 @@ void Controlador::dibujar() {
 
     controlador_objetos->dibujarMarcadorBomba(jugador->getPosicion());
 
-    glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+    glPolygonMode(GL_FRONT_AND_BACK, GL_FILL); //deshabilitamos el wireframe para dibujar el hud
 
     if (pausa) {
         controlador_interfaz->dibujarMenu();
@@ -751,10 +732,7 @@ void Controlador::dibujar() {
         controlador_interfaz->dibujarHUD();
     }
 
-    if (wireframe)
-        glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-    else
-        glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+    glPolygonMode(GL_FRONT_AND_BACK, wireframe ? GL_LINE : GL_FILL);
 
     SDL_GL_SwapWindow(window);
 }

@@ -13,28 +13,23 @@ ControladorLuz::ControladorLuz() {
 
 	colorLuzAmbiente = NOCHE;
 
-	posicionLuz[0] = 0;
-	posicionLuz[1] = 0;
-	posicionLuz[2] = 0;
-	posicionLuz[3] = 1;
+	posicionLuz[0] = 0;	posicionLuz[1] = 0;	posicionLuz[2] = 0;	posicionLuz[3] = 1;
 
 	colorLuz[0] = 0.f; colorLuz[1] = 0.2f; colorLuz[2] = 0.5f;
 
-	colorDiffuse[0] = 0.5f;
-	colorDiffuse[1] = 0.5f;
-	colorDiffuse[2] = 0.5f;
-	colorDiffuse[3] = 0.5f;
+	colorDiffuse[0] = 0.5f;	colorDiffuse[1] = 0.5f; colorDiffuse[2] = 0.5f; colorDiffuse[3] = 0.5f;
 
-	colorSpecular[0] = 1.0f;
-	colorSpecular[1] = 1.0f;
-	colorSpecular[2] = 1.0f;
-	colorSpecular[3] = 1.0f;
+	colorSpecular[0] = 1.0f; colorSpecular[1] = 1.0f; colorSpecular[2] = 1.0f; colorSpecular[3] = 1.0f;
 
 	desplazamiento_luz = { 0.0f, 10.0f, -1.0f };
 
 	for (int idLuz = GL_LIGHT1; idLuz <= GL_LIGHT7; idLuz++) {
 		lucesDisponibles.push(idLuz);
 	}
+
+	glMaterialfv(GL_FRONT, GL_DIFFUSE, colorDiffuse);
+	glMaterialfv(GL_FRONT, GL_SPECULAR, colorSpecular);
+	glMaterialfv(GL_FRONT, GL_SHININESS, shininess);
 }
 
 void ControladorLuz::pedirLuz(vector_3 pos, GLfloat color[4]) {
@@ -50,29 +45,18 @@ void ControladorLuz::pedirLuz(vector_3 pos, GLfloat color[4]) {
 }
 
 void ControladorLuz::colocarLuces(vector_3 pos) {
-	glMaterialfv(GL_FRONT, GL_DIFFUSE, colorDiffuse);
-	glMaterialfv(GL_FRONT, GL_SPECULAR, colorSpecular);
-	glMaterialfv(GL_FRONT, GL_SHININESS, shininess);
-
 	glEnable(GL_LIGHTING);
 	glEnable(GL_LIGHT0); 
-	posicionLuz[0] = pos.x + desplazamiento_luz.x;
-	posicionLuz[1] = pos.y + desplazamiento_luz.y;
-	posicionLuz[2] = pos.z + desplazamiento_luz.z;
-	colorSpecular[0] = 0.1f;
-	colorSpecular[1] = 0.1f;
-	colorSpecular[2] = 0.1f;
-	colorSpecular[3] = 0.1f;
+
+	posicionLuz[0] = pos.x + desplazamiento_luz.x; posicionLuz[1] = pos.y + desplazamiento_luz.y; posicionLuz[2] = pos.z + desplazamiento_luz.z;
+	
+	colorSpecular[0] = colorSpecular[1] = colorSpecular[2] = colorSpecular[3] = 0.1f;
 
 	glLightfv(GL_LIGHT0, GL_AMBIENT, colorLuz);
 	glLightfv(GL_LIGHT0, GL_SPECULAR, colorSpecular);
 	glLightfv(GL_LIGHT0, GL_POSITION, posicionLuz);
 
-
-	colorSpecular[0] = 1.0f;
-	colorSpecular[1] = 1.0f;
-	colorSpecular[2] = 1.0f;
-	colorSpecular[3] = 1.0f;
+	colorSpecular[0] = colorSpecular[1] = colorSpecular[2] = colorSpecular[3] = 1.0f;
 
 	while (!lucesAMostrar.empty()) {
 		luz luzAMostrar = lucesAMostrar.top();

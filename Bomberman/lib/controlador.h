@@ -30,7 +30,6 @@
 class Controlador {
 private:
 	Controlador();
-
 	static Controlador* instancia;
 
 	ControladorAudio* controlador_audio;
@@ -55,7 +54,6 @@ public:
 	void manejarEventos();
 	void actualizar();
 	void dibujar();
-
 };
 
 #endif

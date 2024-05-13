@@ -17,22 +17,27 @@ ControladorObjetos::ControladorObjetos() {
 
 	displayListIds[OBJ_PLAYER] = glGenLists(1);
 	glNewList(displayListIds[OBJ_PLAYER], GL_COMPILE);
-	cargarDisplayList(OBJ_PLAYER);
+	cargarDisplayList(OBJ_PLAYER, 1.0f);
 	glEndList();
 
 	displayListIds[OBJ_ENEMY_ROJO] = glGenLists(2);
 	glNewList(displayListIds[OBJ_ENEMY_ROJO], GL_COMPILE);
-	cargarDisplayList(OBJ_ENEMY_ROJO);
+	cargarDisplayList(OBJ_ENEMY_ROJO, 1.0f);
 	glEndList();
 
 	displayListIds[OBJ_ENEMY_VERDE] = glGenLists(3);
 	glNewList(displayListIds[OBJ_ENEMY_VERDE], GL_COMPILE);
-	cargarDisplayList(OBJ_ENEMY_VERDE);
+	cargarDisplayList(OBJ_ENEMY_VERDE, 1.0f);
 	glEndList();
 
 	displayListIds[OBJ_ENEMY_AZUL] = glGenLists(4);
 	glNewList(displayListIds[OBJ_ENEMY_AZUL], GL_COMPILE);
-	cargarDisplayList(OBJ_ENEMY_AZUL);
+	cargarDisplayList(OBJ_ENEMY_AZUL, 1.0f);
+	glEndList();
+
+	displayListIds[OBJ_BOMBA] = glGenLists(5);
+	glNewList(displayListIds[OBJ_BOMBA], GL_COMPILE);
+	cargarDisplayList(OBJ_BOMBA, 0.8f);
 	glEndList();
 }
 
@@ -45,10 +50,10 @@ void ControladorObjetos::cargarObj(string file, pair<vector<char>, vector<vector
 	vector<char> comandos;
 	vector<vector<float>> data;
 
-	vector<int> vertex_indices, uv_indices, normal_indices;
-	vector<vector<float>> temp_vertices, temp_uvs, temp_normals;
+	vector<int> vertices_indices, texturas_indices, normales_indices;
+	vector<vector<float>> temp_vertices, temp_texturas, temp_normales;
 
-	string line, subline, comando, face1, face2, face3, face4;
+	string line, subline, comando, face1, face2, face3;
 	vector<string> faces;
 	float x, y, z;
 	unsigned int aux;
@@ -64,11 +69,11 @@ void ControladorObjetos::cargarObj(string file, pair<vector<char>, vector<vector
 		}
 		else if (comando == "vt") {
 			file_stream >> x >> y;
-			temp_uvs.push_back({ x, y });
+			temp_texturas.push_back({ x, y });
 		}
 		else if (comando == "vn") {
 			file_stream >> x >> y >> z;
-			temp_normals.push_back({ x, y, z });
+			temp_normales.push_back({ x, y, z });
 		}
 		else if (comando == "f") {
 			file_stream >> face1 >> face2 >> face3;
@@ -82,40 +87,39 @@ void ControladorObjetos::cargarObj(string file, pair<vector<char>, vector<vector
 				else {
 					aux = stoi(subline) - 1;
 				}
-				vertex_indices.push_back(aux);
+				vertices_indices.push_back(aux);
 
 				getline(sub_stream, subline, '/');
 				if (stoi(subline) < 0) {
-					aux = temp_uvs.size() - stoi(subline);
+					aux = temp_texturas.size() - stoi(subline);
 				}
 				else {
 					aux = stoi(subline) - 1;
 				}
-				uv_indices.push_back(aux);
+				texturas_indices.push_back(aux);
 
 				getline(sub_stream, subline, '/');
 				if (stoi(subline) < 0) {
-					aux = temp_normals.size() - stoi(subline);
+					aux = temp_normales.size() - stoi(subline);
 				}
 				else {
 					aux = stoi(subline) - 1;
 				}
-				normal_indices.push_back(aux);
+				normales_indices.push_back(aux);
 			}
 		}
 	}
-	comandos.push_back('C');
-	data.push_back({ 1.f, 1.f, 1.f });
-	for (size_t i = 0; i < uv_indices.size(); i++) {
-		comandos.push_back('T'); data.push_back(temp_uvs[uv_indices[i]]);
-		comandos.push_back('N'); data.push_back(temp_normals[normal_indices[i]]);
-		comandos.push_back('V'); data.push_back(temp_vertices[vertex_indices[i]]);
+	comandos.push_back('C'); data.push_back({ 1.f, 1.f, 1.f });
+	for (size_t i = 0; i < vertices_indices.size(); i++) {
+		comandos.push_back('T'); data.push_back(temp_texturas[texturas_indices[i]]);
+		comandos.push_back('N'); data.push_back(temp_normales[normales_indices[i]]);
+		comandos.push_back('V'); data.push_back(temp_vertices[vertices_indices[i]]);
 	}
 
 	data_output = { comandos, data };
 }
 
-void ControladorObjetos::cargarDisplayList(tipo_obj obj) {
+void ControladorObjetos::cargarDisplayList(tipo_obj obj, GLfloat transparencia) {
 	pair<vector<char>, vector<vector<float>>> data_obj;
 	GLuint textura = 0;
 	switch (obj) {
@@ -141,33 +145,22 @@ void ControladorObjetos::cargarDisplayList(tipo_obj obj) {
 		break;
 	}
 
-	glEnable(GL_TEXTURE_2D);
-	glBindTexture(GL_TEXTURE_2D, textura);
-
 	const vector<char>& comandos = data_obj.first;
 	const vector<vector<float>>& data = data_obj.second;
 
+	glEnable(GL_TEXTURE_2D);
+	glBindTexture(GL_TEXTURE_2D, textura);
+
 	glBegin(GL_TRIANGLES);
 
-	for (size_t i = 0; i < data.size(); ++i) {
+	for (int i = 0; i < data.size(); ++i) {
 		const char comando = comandos[i];
 		const vector<float>& values = data[i];
 
-		if (comando == 'V') {
-			glVertex3f(values[0], values[1], values[2]);
-		}
-		else if (comando == 'T') {
-			glTexCoord2f(values[0], values[1]);
-		}
-		else if (comando == 'N') {
-			glNormal3f(values[0], values[1], values[2]);
-		}
-		else if (comando == 'C') {
-			glColor3f(values[0], values[1], values[2]);
-		}
-		else if (comando == 'A') {
-			glColor4f(values[0], values[1], values[2], values[3]);
-		}
+		if (comando == 'V') { glVertex3f(values[0], values[1], values[2]); }
+		else if (comando == 'T') { glTexCoord2f(values[0], values[1]); }
+		else if (comando == 'N') { glNormal3f(values[0], values[1], values[2]); }
+		else if (comando == 'C') { glColor4f(values[0], values[1], values[2], transparencia); }
 	}
 
 	glEnd();
@@ -209,35 +202,24 @@ void ControladorObjetos::dibujar(tipo_obj obj, GLfloat transparencia) {
 		return; 
 	}
 
+	const vector<char>& comandos = data_obj.first;
+	const vector<vector<float>>& data = data_obj.second;
+
 	if (texturas_habilitadas) {
 		glEnable(GL_TEXTURE_2D);
 		glBindTexture(GL_TEXTURE_2D, textura);
 	}
 
-	const vector<char>& comandos = data_obj.first;
-	const vector<vector<float>>& data = data_obj.second;
-
 	glBegin(GL_TRIANGLES);
 
-	for (size_t i = 0; i < data.size(); ++i) {
+	for (int i = 0; i < data.size(); ++i) {
 		const char comando = comandos[i];
 		const vector<float>& values = data[i];
 
-		if (comando == 'V') {
-			glVertex3f(values[0], values[1], values[2]);
-		}
-		else if (comando == 'T') {
-			glTexCoord2f(values[0], values[1]);
-		}
-		else if (comando == 'N') {
-			glNormal3f(values[0], values[1], values[2]);
-		}
-		else if (comando == 'C') {
-			glColor4f(values[0], values[1], values[2], transparencia);
-		}
-		else if (comando == 'A') {
-			glColor4f(values[0], values[1], values[2], values[3]);
-		}
+		if (comando == 'V') { glVertex3f(values[0], values[1], values[2]); }
+		else if (comando == 'T') { glTexCoord2f(values[0], values[1]); }
+		else if (comando == 'N') { glNormal3f(values[0], values[1], values[2]); }
+		else if (comando == 'C') { glColor4f(values[0], values[1], values[2], transparencia); }
 	}
 
 	glEnd();
@@ -303,8 +285,6 @@ void ControladorObjetos::dibujarCubo(vector_3 tam, GLuint textura, GLfloat color
 
 	glTexCoord2f(0, 1);
 	glVertex3f(-tam.x, tam.y, -tam.z);
-
-
 
 	// Cara de adelante
 	glNormal3f(0.0f, 0.0f, 1.0f); // Normal hacia adelante
@@ -420,7 +400,6 @@ void ControladorObjetos::dibujarSuelo() {
 		glDisable(GL_TEXTURE_2D);
 	}
 }
-
 
 void ControladorObjetos::dibujarMarcadorBomba(vector_3 pos) {
 	int posX, posZ;
