@@ -680,7 +680,10 @@ void Controlador::dibujar() {
     if (texturas_habilitadas) {
         controlador_luz->colocarLuces(jugador->getPosicion());
     }
-    jugador->dibujar();
+
+    if (controlador_camara->getCamaraActual() != CAMARA_PRIMERA_PERSONA) {
+        jugador->dibujar();
+    }
 
     for (int i = 0; i < largoTablero; i++) {
         for (int j = 0; j < anchoTablero; j++) {
@@ -706,6 +709,8 @@ void Controlador::dibujar() {
 
     controlador_objetos->dibujarSuelo();
 
+    controlador_objetos->dibujarMarcadorBomba(jugador->getPosicion());
+
     controlador_luz->quitarLuces();
 
     for (int i = 0; i < largoTablero; i++) {
@@ -720,8 +725,7 @@ void Controlador::dibujar() {
         (*it)->dibujar();
     }
 
-    controlador_objetos->dibujarMarcadorBomba(jugador->getPosicion());
-
+    controlador_objetos->dibujarSombra(jugador->getPosicion());
     for (list<enemigo*>::iterator itE = enemigos.begin(); itE != enemigos.end(); itE++) {
         controlador_objetos->dibujarSombra((*itE)->getPosicion());
     }
@@ -733,8 +737,6 @@ void Controlador::dibujar() {
             }
         }
     }
-
-    controlador_objetos->dibujarSombra(jugador->getPosicion());
 
     glPolygonMode(GL_FRONT_AND_BACK, GL_FILL); //deshabilitamos el wireframe para dibujar el hud
 

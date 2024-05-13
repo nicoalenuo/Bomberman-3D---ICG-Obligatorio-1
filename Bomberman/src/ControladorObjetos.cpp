@@ -153,7 +153,7 @@ void ControladorObjetos::cargarDisplayList(tipo_obj obj, GLfloat transparencia) 
 
 	glBegin(GL_TRIANGLES);
 
-	for (int i = 0; i < data.size(); ++i) {
+	for (size_t i = 0; i < data.size(); ++i) {
 		const char comando = comandos[i];
 		const vector<float>& values = data[i];
 
@@ -212,7 +212,7 @@ void ControladorObjetos::dibujar(tipo_obj obj, GLfloat transparencia) {
 
 	glBegin(GL_TRIANGLES);
 
-	for (int i = 0; i < data.size(); ++i) {
+	for (size_t i = 0; i < data.size(); ++i) {
 		const char comando = comandos[i];
 		const vector<float>& values = data[i];
 
@@ -450,11 +450,8 @@ void ControladorObjetos::dibujarSombra(vector_3 pos) {
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 	if (texturas_habilitadas) {
 		glBindTexture(GL_TEXTURE_2D, ControladorTexturas::getInstance()->getTextura(TEXTURA_SOMBRA));
-		glColor4f(0.0f, 0.0f, 0.0f, 0.25f);
 	}
-	else {
-		glColor4f(0.0f, 0.0f, 0.0f, 0.25f);
-	}
+	glColor4f(0.0f, 0.0f, 0.0f, 0.25f);
 	glBegin(GL_TRIANGLE_FAN);
 
 	glVertex3f(0, 0.01f, 0); // center of circle

@@ -48,6 +48,8 @@ public:
 	void sacudir(int tiempo);
 	bool camaraMiraHacia(tipo_direccion direccion);
 
+	tipo_camara getCamaraActual() const { return camara_actual; };
+
 	~ControladorCamara();
 };
 

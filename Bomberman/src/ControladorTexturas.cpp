@@ -30,7 +30,7 @@ ControladorTexturas::ControladorTexturas() {
         {TEXTURA_PASTO, "texturas/pasto.png"},
         {TEXTURA_CANT_ENEMIGOS, "texturas/cant_enemigos.png"},
         {TEXTURA_AYUDA, "texturas/atajos.jpg"},
-        {TEXTURA_SOMBRA, "texturas/sombra.png"}
+        {TEXTURA_SOMBRA, "texturas/somba.png"}
     };
 
     FREE_IMAGE_FORMAT fif;
