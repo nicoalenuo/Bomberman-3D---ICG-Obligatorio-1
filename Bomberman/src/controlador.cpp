@@ -509,8 +509,10 @@ void Controlador::manejarEventos() {
                     break;
                 case SDLK_4:
                     controlador_audio->playAudio(sonido::pasos);
+                    break;
                 case SDLK_5:
                     controlador_audio->playAudio(sonido::inicioJuego);
+                    break;
                 case SDLK_6:
                     controlador_audio->playAudio(sonido::puertaAbierta);
                     break;
@@ -624,7 +626,7 @@ void Controlador::actualizar() {
     }
 
     if (puertaAbierta && door->intersecta(jugador)) {
-        controlador_audio->playAudio(sonido::bonificacion);
+        controlador_audio->playAudio(sonido::inicioJuego);
         controlador_poderes->resetearPoderes();
         cantidad_enemigos_actual++;
         aumentarNivel();

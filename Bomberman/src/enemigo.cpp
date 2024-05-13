@@ -44,10 +44,10 @@ void enemigo::setOrientacionX(bool orientacionX) {
 }
 
 bool enemigo::intersecta(bomberman* b) {
-    return pos.x < b->getPosicion().x + b->getTamanio().x &&
-        pos.x + tam.x > b->getPosicion().x &&
-        pos.z < b->getPosicion().z + b->getTamanio().z &&
-        pos.z + tam.z > b->getPosicion().z;
+    return pos.x - tam.x < b->getPosicion().x + b->getTamanio().x &&
+        pos.x + tam.x > b->getPosicion().x - b->getTamanio().x &&
+        pos.z - tam.z < b->getPosicion().z + b->getTamanio().z &&
+        pos.z + tam.z > b->getPosicion().z - b->getTamanio().z;
 }
 
 bool centroConMovimiento(vector_3 pos) {
