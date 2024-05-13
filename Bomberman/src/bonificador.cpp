@@ -4,10 +4,8 @@ random_device rdBonificador;
 mt19937 genBonificador(rdBonificador());
 uniform_real_distribution<> disBonificador(0.0, 1.0); 
 bonificador::bonificador(vector_3 pos, vector_3 tam, tipo_poder tipo_p) : objeto(pos, tam) {
-    //tremenda funci�n me acabo de hacer, y que paseo que te acabo de meter ;)
-    //que manera de robar codigo de internet ahre
     if (tipo_p == BONIFICADOR_RANDOM) {
-        double intervalo = 1.0 / ((static_cast<int>(tipo_poder::BONIFICADOR_RANDOM)) - 1);
+        double intervalo = 1.0 / ((static_cast<int>(tipo_poder::BONIFICADOR_RANDOM)));
         int aux = 0;
         double random_num = disBonificador(genBonificador);
         while (random_num > intervalo) {

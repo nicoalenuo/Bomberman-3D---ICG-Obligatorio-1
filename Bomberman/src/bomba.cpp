@@ -79,6 +79,8 @@ void bomba::actualizar() {
                         if (est->getDestructible()) {
                             delete est;
                             estructuras[nx][nz] = nullptr;
+                        } else {
+                            alcanza = true;
                         }
                     }
                 }
